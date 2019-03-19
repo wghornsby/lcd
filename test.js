@@ -93,26 +93,25 @@ assert(Function.isFunction(as.each), true, 'as.each == fn')
 assert(as.length, 0, 'as.length');
 
 class Dog extends _Obj {
-	onbark(volume) {}
+	onbark(name, volume) {}
 	//
-	constructor(name) {
-		super();
+	init(name) {
 		this.name = name;
 	}
 	pet() {
-		this.onbark(1);
+		this.onbark(this.name, 1);
 	}
 	outside() {
-		this.onbark(10);
+		this.onbark(this.name, 10);
 	}
 }
 var db = 0, db2 = 0;
-function dogbark(volume) {
-	log('bark ' + volume);
+function dogbark(name, volume) {
+	log('bark ' + name + ' @' + volume);
 	db += volume;
 }
-function dogbark2(volume) {
-	log('bark2 ' + volume);
+function dogbark2(name, volume) {
+	log('bark2 ' + name + ' @' + volume);
 	db2 += volume;
 }
 var d1 = new Dog('Fido')
@@ -127,5 +126,38 @@ assert(db2, 2, 'db2 pet');
 d1.outside();
 assert(db, 11, 'db outside');
 assert(db2, 22, 'db2 outside');
+
+class Kennel extends _Obj {
+  onbark(name, volume) {}
+  //
+  init(dogs) {
+    this.dogs = dogs;
+    dogs.each(this, function(dog) {
+      dog.bubble('bark', this);
+    })
+  }
+  petOne() {
+    var i = rnd(this.dogs.length);
+    this.dogs[i].pet();
+  }
+}
+d1 = new Dog('Alpha');
+d2 = new Dog('Beta');
+d3 = new Dog('Gamma');
+d4 = new Dog('Delta');
+var dogs = new _Array([d1,d2,d3,d4]);
+
+var adb = 0;
+function anybark(name, volume) {
+  adb++;
+  log('anybark ' + name + ' @' + volume);
+}
+var k = new Kennel(dogs)
+  .on('bark', anybark);
+k.petOne();
+k.petOne();
+k.petOne();
+assert(adb, 3, 'adb pet');
+
 
 logg(1);
