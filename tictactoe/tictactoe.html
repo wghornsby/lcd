@@ -1,0 +1,54 @@
+<html>
+<head>
+  <script type='text/javascript' src='../lcd-3.0.js?1'></script>
+  <script type='text/javascript' src='tictactoe.data.js?1'></script>
+  <script type='text/javascript' src='tictactoe.ui.js?1'></script>
+  <style>
+TABLE {
+  border-collapse:collapse;
+  font-family:"Arial Rounded MT";
+  font-size:18pt;
+  line-height:18pt;
+  border:2px solid white;
+}
+TD {
+  border:1px solid #c0c0c0;
+  width:20px;
+  height:20px;
+  text-align:center;
+  padding:2px;
+}
+SPAN.x {
+  color:#24bef2
+}
+SPAN.o {
+  color:#e923ed;
+}
+SPAN {
+  cursor:default;
+}
+TD.win {
+  background-color:black;
+}
+DIV.board {
+  display:inline-block;
+}
+  </style>
+</head>
+<body>
+  <div class='board' id='tboard'>
+  </div>
+  <div class='board' id='tboard2'>
+  </div>
+  <div class='board' id='tboard3'>
+  </div>
+  <div class='board' id='tboard4'>
+  </div>
+</body>
+<script>
+new $Board($('#tboard'));
+new $Board($('#tboard2'));
+new $Board($('#tboard3'));
+new $Board($('#tboard4'));
+</script>
+</html>
