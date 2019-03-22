@@ -12,6 +12,7 @@ Node.prototype.on = window.on = function(event, fn) {
 }   
 NodeList.prototype.on = function(name, ctxOrFn, fn) {
   this.forEach((elem, i) => {elem.on(name, ctxOrFn, fn)});
+  return this;
 }
 
 /** Extensions */
@@ -23,7 +24,7 @@ Array.prototype.findValue = function(e) {
 } 
 Array.prototype.sortBy = function(refs) {
   /*
-   * this.load(recs.sort('-active, app().name, route().short(), vendor().name')));
+   * recs.sortBy('-active, app().name, route().short(), vendor().name'));
    */
   var orders = [];
   if (refs) {
@@ -56,7 +57,7 @@ Array.prototype.sortBy = function(refs) {
 }
 Array.prototype.filterBy = function(refmap) {
   /*
-   * this.filter({'vendor().name':['ALPHA','BETA'],'active':1})
+   * arr = arr.filterBy({'vendor().name':['ALPHA','BETA'],'active':1})
    */
   each(refmap, function(values, ref) {
     if (! Array.isArray(values)) {

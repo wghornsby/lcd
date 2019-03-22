@@ -2,11 +2,11 @@
  * TicTacToeBoard
  * UI controller
  */
-class $Board extends _Obj {
+var $Board = class extends _Obj {
   //
   init(div) {
     div.innerHTML = $Board.html();
-    this.$grid = new $Grid(div)
+    this.$grid = new $Board.Grid(div)
       .on('click', (cell) => this.$grid_onclick(cell));
     this.board = new Board()
       .on('change', () => this.draw());
@@ -36,7 +36,7 @@ class $Board extends _Obj {
     return "<table><tr><td class='c00'>&nbsp;</td><td class='c01'><span class='x'>X</span></td><td class='c02'>&nbsp;</td></tr><tr><td class='c10'>&nbsp;</td><td class='c11'><span class='o'>O</span></td><td class='c12'>&nbsp;</td></tr><tr><td class='c20'>&nbsp;</td><td class='c21'>&nbsp;</td><td class='c22'>&nbsp;</td></tr></table>";    
   }
 } 
-class $Grid extends _Obj {
+$Board.Grid = class extends _Obj {
   onclick(cell) {}
   //
   init(div) {
@@ -44,7 +44,7 @@ class $Grid extends _Obj {
     for (var r = 0; r <= 2; r++) {
       for (var c = 0; c <= 2; c++) {
         var td = div.getElementsByClassName('c' + r + c)[0];
-        this.$cells[r][c] = new $Cell(td, r, c)
+        this.$cells[r][c] = new $Board.Grid.Cell(td, r, c)
           .bubble('click', this);
       }
     }
@@ -69,7 +69,7 @@ class $Grid extends _Obj {
     }
   }
 }
-class $Cell extends _Obj {
+$Board.Grid.Cell = class extends _Obj {
   onclick($cell) {}
   //
   init(td, r, c) {
