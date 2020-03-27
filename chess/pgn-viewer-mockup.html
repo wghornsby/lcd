@@ -1,0 +1,383 @@
+<html>
+<head>
+  <script type='text/javascript' src='../lcd-core.js?1'></script>
+  <script type='text/javascript' src='chess.data.js?1'></script>
+  <script type='text/javascript' src='pgn-viewer.js?1'></script>
+  <style>
+BODY {
+  margin:0;
+  font-family:Segoe UI;
+  font-size:11pt;
+} 
+.wrapper {
+  height:100vh;
+  width:100vw;
+  background:#ccc;
+  display:flex;
+  flex-direction:column;
+  position:fixed;
+}
+.header, .footer {
+  height:50px;
+  background:#666;
+  color:#fff;
+}
+.content {
+  display:flex;
+  flex:1;
+  background:#999;
+  color:#000;
+  overflow:auto;
+}
+.columns {
+  display:flex;
+  flex:1;
+}
+.main {
+  flex:1;
+  order:2;
+  background:white;
+  padding:2em;
+  overflow-y:scroll;
+  border:10px solid #f0d9b5; 
+}
+.sidebar-first {
+  width:25%;
+  min-width:400px;
+  padding:10px;
+  background:#444;
+  order:1;
+}
+.sidebar-second { 
+  width:25%;
+  order:3;
+  background:#444;
+}
+SPAN.player {
+  display:block;
+  text-align:center;
+  font-size:15pt;
+  font-family:'Segoe UI';
+  height:30px;
+  line-height:30px;
+  background-color:#755942;
+  color:white;
+}
+TABLE.board {
+  border-spacing:0;
+  border-collapse:collapse;
+  border:2px solid #755942;
+}
+TABLE.board TD {
+  padding:0;
+}
+TABLE.board TD.w {
+  height:45px;
+  width:45px;
+  position:relative;
+  background-color:#f0d9b5;
+}
+TABLE.board TD.b {
+  height:45px;
+  width:45px;
+  position:relative;
+  background-color:#b58863;
+}
+TABLE.board DIV {
+  height:45px;
+  width:45px;  
+  background-size:45px 45px;
+  position:absolute;
+  top:0px;
+  -webkit-transition:transform 0.5s;
+}
+TABLE.board DIV.br {
+  background-image:url('img/bR.png');
+}
+TABLE.board DIV.bn {
+  background-image:url('img/bN.png');
+}
+TABLE.board DIV.bb {
+  background-image:url('img/bB.png');
+}
+TABLE.board DIV.bq {
+  background-image:url('img/bQ.png');
+}
+TABLE.board DIV.bk {
+  background-image:url('img/bK.png');
+}
+TABLE.board DIV.bp {
+  background-image:url('img/bP.png');
+}
+TABLE.board DIV.wr {
+  background-image:url('img/wR.png');
+}
+TABLE.board DIV.wn {
+  background-image:url('img/wN.png');
+}
+TABLE.board DIV.wb {
+  background-image:url('img/wB.png');
+}
+TABLE.board DIV.wq {
+  background-image:url('img/wQ.png');
+}
+TABLE.board DIV.wk {
+  background-image:url('img/wK.png');
+}
+TABLE.board DIV.wp {
+  background-image:url('img/wP.png');
+}
+DIV.pgn {
+  line-height:1.5em;
+}
+DIV.pgn SPAN {
+  margin-left:0.5em;
+}
+DIV.pgn SPAN.m0 {
+  margin-left:0;
+}
+DIV.pgn SPAN.vn {
+}
+DIV.pgn A {
+  font-weight:bold;
+  text-decoration:none;
+  padding-left:3px;
+  padding-right:3px;
+}
+DIV.pgn A.hilite {
+  background-color:yellow;
+  color:red;
+}
+DIV.pgn DIV.note {
+  margin-bottom:10px;
+}
+DIV.pgn DIV.var {
+  margin:1em 0 1em 2em;
+  font-style:italic;
+}
+DIV.pgn DIV.var SPAN {
+  margin-left:0.3em;
+}
+DIV.pgn DIV.var DIV.var {
+  margin:0 0 1em 2em;
+  font-style:italic;
+}
+DIV.pgn DIV.h {
+font-size:1.2em;
+margin-bottom:1em;
+}
+TABLE.boardw {
+  float:right;
+}
+TD.nav {
+  padding-top:5px;
+}
+TD.movel {
+  width:100px;
+  text-align:left;
+}
+TD.mover {
+  width:100px;
+  text-align:right;
+}
+TD.nav SPAN {
+  background:#ccc;
+  color:black;
+  padding:5px 10px;
+  width:25px;
+  display:inline-block;
+  border-radius:10px;
+  cursor:hand;
+  text-align:center;
+  -webkit-transition:background-color 200ms linear;
+}
+TD.nav SPAN:hover {
+  background:white;
+}
+TD.move {
+  color:white;
+  text-align:center;
+}
+</style>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="header"></header>
+    <section class="content">
+      <div class="columns">
+        <div class="main">
+          <div id='pgn' class='pgn'>
+<div class='h'>
+<b>Morphy, Paul</b> vs. <b>Anderssen, Adolf</b>
+</div>   
+<span class='m0'>1.</span><a href='.'>e4</a><a href='.'>e5</a><span>2.</span><a href='.'>Nf3</a><a href='.'>Nc6</a><span>3.</span><a href='.'>c3</a><a href='.'>d6</a><span>4.</span><a href='.'>O-O</a><a href='.'>Nf6</a>
+<div class='note'>
+Black should play either 5...Bb6 or 5...Qe7, since now his own e-pawn is weak.
+</div>
+<span class='m0'>6.</span><a href='.' class='hilite'>d4</a><a href='.'>exd4</a>
+<div class='note'>
+Now black suffers from a nasty cramp.
+</div>
+<div class='var'>
+<span class='m0'>6...</span><a href='.'>Bb6</a><span class='vn'>was a better, but still unhappy line.</span>
+</div>
+<span class='m0'>7.</span><a href='.'>cxd4</a><a href='.'>Bb6</a><span>8.</span><a href='.'>h3</a>
+<div class='note'>
+Keeping Black cramped.
+</div>
+<div class='var'>
+<span class='vn'>Now</span><span>8...</span><a href='.'>Nxe4</a><span class='vn'>is dangerous after</span><span>9.</span><a href='.'>d5</a>
+<div class='var'>
+<span class='vn'>or</span><span>9.</span><a href='.'>Re1</a><a href='.'>d5</a><span>10.</span><a href='.'>Bxd5</a><a href='.'>Qxd5</a><span>11.</span><a href='.'>Nc3</a>
+</div>
+</div>
+<span class='m0'>8...</span><a href='.'>h6</a>
+<div class='note'>
+Black fears 8...O-O, but now he's dangerously behind in development.
+</div>
+<span class='m0'>1.</span><a href='.'>e4</a><a href='.'>e5</a><span>2.</span><a href='.'>Nf3</a><a href='.'>Nc6</a><span>3.</span><a href='.'>c3</a><a href='.'>d6</a><span>4.</span><a href='.'>O-O</a><a href='.'>Nf6</a>
+<div class='note'>
+Black should play either 5...Bb6 or 5...Qe7, since now his own e-pawn is weak.
+</div>
+<span class='m0'>6.</span><a href='.'>d4</a><a href='.'>exd4</a>
+<div class='note'>
+Now black suffers from a nasty cramp.
+</div>
+<div class='var'>
+<span class='m0'>6...</span><a href='.'>Bb6</a><span class='vn'>was a better, but still unhappy line.</span>
+</div>
+<span class='m0'>7.</span><a href='.'>cxd4</a><a href='.'>Bb6</a><span>8.</span><a href='.'>h3</a>
+<div class='note'>
+Keeping Black cramped.
+</div>
+<div class='var'>
+<span class='vn'>Now</span><span>8...</span><a href='.'>Nxe4</a><span class='vn'>is dangerous after</span><span>9.</span><a href='.'>d5</a>
+<div class='var'>
+<span class='vn'>or</span><span>9.</span><a href='.'>Re1</a><a href='.'>d5</a><span>10.</span><a href='.'>Bxd5</a><a href='.'>Qxd5</a><span>11.</span><a href='.'>Nc3</a>
+</div>
+</div>
+<span class='m0'>8...</span><a href='.'>h6</a>
+<div class='note'>
+Black fears 8...O-O, but now he's dangerously behind in development.
+</div>
+          </div>
+        </div>
+        <aside class="sidebar-first">
+          <table class='boardw'>
+            <tr>
+              <td>
+                <table class='board'>
+                  <tr>
+                    <td class='name' colspan='8'><span class='player'>Anderssen, Adolf</span></td>
+                  </tr>
+                  <tr>
+                    <td id='a8' class='w'></td>
+                    <td id='b8' class='b'></td>
+                    <td id='c8' class='w'></td>
+                    <td id='d8' class='b'></td>
+                    <td id='e8' class='w'></td>
+                    <td id='f8' class='b'></td>
+                    <td id='g8' class='w'></td>
+                    <td id='h8' class='b'></td>
+                  </tr>
+                  <tr>
+                    <td id='a7' class='b'></td>
+                    <td id='b7' class='w'></td>
+                    <td id='c7' class='b'></td>
+                    <td id='d7' class='w'></td>
+                    <td id='e7' class='b'></td>
+                    <td id='f7' class='w'></td>
+                    <td id='g7' class='b'></td>
+                    <td id='h7' class='w'></td>
+                  </tr>
+                  <tr>
+                    <td id='a6' class='w'></td>
+                    <td id='b6' class='b'></td>
+                    <td id='c6' class='w'></td>
+                    <td id='d6' class='b'></td>
+                    <td id='e6' class='w'></td>
+                    <td id='f6' class='b'></td>
+                    <td id='g6' class='w'></td>
+                    <td id='h6' class='b'></td>
+                  </tr>
+                  <tr>
+                    <td id='a5' class='b'></td>
+                    <td id='b5' class='w'></td>
+                    <td id='c5' class='b'></td>
+                    <td id='d5' class='w'></td>
+                    <td id='e5' class='b'></td>
+                    <td id='f5' class='w'></td>
+                    <td id='g5' class='b'></td>
+                    <td id='h5' class='w'></td>
+                  </tr>
+                  <tr>
+                    <td id='a4' class='w'></td>
+                    <td id='b4' class='b'></td>
+                    <td id='c4' class='w'></td>
+                    <td id='d4' class='b'></td>
+                    <td id='e4' class='w'></td>
+                    <td id='f4' class='b'></td>
+                    <td id='g4' class='w'></td>
+                    <td id='h4' class='b'></td>
+                  </tr>
+                  <tr>
+                    <td id='a3' class='b'></td>
+                    <td id='b3' class='w'></td>
+                    <td id='c3' class='b'></td>
+                    <td id='d3' class='w'></td>
+                    <td id='e3' class='b'></td>
+                    <td id='f3' class='w'></td>
+                    <td id='g3' class='b'></td>
+                    <td id='h3' class='w'></td>
+                  </tr>
+                  <tr>
+                    <td id='a2' class='w'></td>
+                    <td id='b2' class='b'></td>
+                    <td id='c2' class='w'></td>
+                    <td id='d2' class='b'></td>
+                    <td id='e2' class='w'></td>
+                    <td id='f2' class='b'></td>
+                    <td id='g2' class='w'></td>
+                    <td id='h2' class='b'></td>
+                  </tr>
+                  <tr>
+                    <td id='a1' class='b'></td>
+                    <td id='b1' class='w'></td>
+                    <td id='c1' class='b'></td>
+                    <td id='d1' class='w'></td>
+                    <td id='e1' class='b'></td>
+                    <td id='f1' class='w'></td>
+                    <td id='g1' class='b'></td>
+                    <td id='h1' class='w'></td>
+                  </tr>
+                  <tr>
+                    <td class='name' colspan='8'><span class='player'>Morphy, Paul</span></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td class='nav'>
+                <table style='width:100%'>
+                  <tr>
+                    <td class='movel'>
+                      <span>&#x2759;&#x25C0;</span>
+                      <span>&#x25C0;</span>
+                    </td>
+                    <td class='move'>6. d4</td>
+                    <td class='mover'>
+                      <span>&#x25B6;</span>
+                      <span>&#x25B6;&#x2759;</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </aside>
+        <aside class="sidebar-second"></aside>
+      </div>
+    </section>
+    <footer class="footer"></footer>
+  </div>
+</body>

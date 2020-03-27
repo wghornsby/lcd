@@ -1,0 +1,175 @@
+<html>
+<head>
+  <script type='text/javascript' src='../lcd-core.js?1'></script>
+  <script type='text/javascript' src='chess.data.js?1'></script>
+</head>
+<body>
+</body>
+<script>
+var b = new Board();
+
+logg('b.each');
+b.each((r,f,p)=>{log(r+','+f);if(p){log(p)}})
+logg();
+
+logg('b.pieces');
+var pieces = b.pieces();
+log(pieces);
+pieces = b.pieces(p => p.white);
+log(pieces);
+pieces = b.pieces(p => p.white && p.pawn);
+log(pieces);
+logg();
+
+logg('Coord');
+var pos = new Coord(3, 2);
+log(pos);
+pos = Coord.fromString("e2");
+log(pos);
+var pos2 = new Coord(5, 2);
+log(pos.equals(pos2));
+logg();
+
+logg('pawn.hits');
+var coords;
+var p = b.pieces(p => p.white && p.pawn)[0];
+log(p);
+coords = p.hits(b);
+log(coords);
+log(coords.toString());
+logg();
+
+logg('knight.hits');
+p = b.pieces(p => p.white && p.knight)[0];
+log(p);
+coords = p.hits(b);
+log(coords);
+log(coords.toString());
+b.move_byString('b1','c3');
+log(p);
+coords = p.hits(b);
+log(coords);
+log(coords.toString());
+b.move_byString('c3','d5');
+log(p);
+log(b.toString());
+coords = p.hits(b);
+log(coords);
+log(coords.toString());
+logg();
+
+logg('bishop.hits');
+p = b.pieces(p => p.white && p.bishop)[0];
+log(p);
+coords = p.hits(b);
+log(coords);
+b.move_byString('d2','d3');
+log(b.toString());
+coords = p.hits(b);
+log(coords);
+log(coords.toString());
+b.move_byString('c1','f4');
+log(b.toString());
+coords = p.hits(b);
+log(coords);
+log(coords.toString());
+logg();
+
+logg('board.move_byAlgebra');
+b.reset();
+log(b.toString());
+b.move_byAlgebra(1, 'e4');
+log(PGN.Move.fromBoardMove(b).toString());
+b.move_byAlgebra(-1, 'e5');
+log(PGN.Move.fromBoardMove(b).toString());
+log(b.toString());
+b.move_byAlgebra(1, 'Nf3');
+log(PGN.Move.fromBoardMove(b).toString());
+b.move_byAlgebra(-1, 'Nf6');
+log(PGN.Move.fromBoardMove(b).toString());
+log(b.toString());
+b.move_byAlgebra(1, 'Nxe5');
+log(PGN.Move.fromBoardMove(b).toString());
+b.move_byAlgebra(-1, 'd6');
+log(PGN.Move.fromBoardMove(b).toString());
+log(b.toString());
+b.move_byAlgebra(1, 'Nf3');
+log(PGN.Move.fromBoardMove(b).toString());
+b.move_byAlgebra(-1, 'Nxe4');
+log(PGN.Move.fromBoardMove(b).toString());
+log(b.toString());
+b.move_byAlgebra(1, 'd4');
+log(PGN.Move.fromBoardMove(b).toString());
+b.move_byAlgebra(-1, 'd5');
+log(PGN.Move.fromBoardMove(b).toString());
+log(b.toString());
+logg();
+
+logg('board.validMoves');
+log(b.validMoves(1));
+logg();
+
+logg('Fools mate');
+b.reset();
+log(b.toString());
+b.move_byAlgebra(1, 'f3');
+log(PGN.Move.fromBoardMove(b).toString());
+b.move_byAlgebra(-1, 'e5');
+log(PGN.Move.fromBoardMove(b).toString());
+log(b.toString());
+log(b.inCheck(1));
+log(b.inMate(1));
+log(b.undo);
+b.move_byAlgebra(1, 'g4??');
+log(PGN.Move.fromBoardMove(b).toString());
+b.move_byAlgebra(-1, 'Qh4#');
+log(PGN.Move.fromBoardMove(b).toString());
+log(b.toString());
+log(b.inCheck(1));
+log(b.inMate(1));
+log(b.undo);
+logg();
+
+logg('PGN parsing');
+var s = `[Event "New Orleans"]
+[Site "?"]
+[Date "1849.??.??"]
+[Round "?"]
+[White "Morphy"]
+[Black "Morphy,E"]
+[Result "1-0"]
+[PlyCount "39"]
+
+1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.c3 d6 5.O-O Nf6 
+{Black should play either 5...Bb6 or 5...Qe7, since now his own e-pawn is weak.} 
+6.d4 exd4 
+{Now Black suffers from a nasty cramp.} 
+(6...Bb6 {was a better, but still unhappy line.}) 
+7.cxd4 Bb6 8.h3 
+{Keeping Black cramped.}
+({Now} 8... Nxe4 {is dangerous after} 9.d5 ({or} 9.Re1 d5 10.Bxd5 Qxd5 11.Nc3)) 
+8...h6 
+{Black fears 8...O-O, but now he's dangerously behind in development.} 
+9.Nc3 O-O 10.Be3 Re8 
+{Weakening f7, though it shouldn't be terminal.} 
+11.d5 Bxe3 
+{But this is a serious mistake. White can now open the a2-g8 diagonal and the tactics will be awful for Black.} 
+12.dxc6 Bb6 13.e5 
+{White encourages Black to give up pawn control of e5 so he can later use his knight against f7. Black doesn't want to move his knight, since White will have threats like Qd5, hitting both f7 and b7, but that was the best chance.} 
+13...dxe5 14.Qb3 Re7 15.Bxf7+ Rxf7 
+{Black now loses because of the pin on the rook, but he probably didn't like the idea of moving the king because of 16 Nh4.} 
+16.Nxe5 Qe8 17.cxb7 
+{Now Black has no chance of breaking the pin on his rook.} 
+Bxb7 18.Rae1 Ba6 19.Ng6 Qd8 20.Re7 1-0`;
+log(s);
+var pgn = new PGN(s);
+log(pgn.tags);
+b.reset();
+pgn.plays.forEach(play => {
+  log(play.move.toString());
+  b.move_byAlgebra(play.color, play.move.source);
+  log(b.toString());
+})
+logg();
+</script>
+</html>
