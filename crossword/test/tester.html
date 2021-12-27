@@ -1,0 +1,110 @@
+<html>
+<head>
+  <script type='text/javascript' src='../../lcd-core.js?1'></script>
+  <script type='text/javascript' src='../data/crossword.js?1'></script>
+</head>
+<body>
+</body>
+<script>
+var board = new Board(15, 15, Board.SYMMETRY.ROTATIONAL);
+var out = (cap) => loggg(cap, () => log(board.cells.toString()));
+log(board.width + "," + board.height);
+log(board.symmetry);
+log(board.cells.length);
+log(board.cells[0].length);
+var cell = board.get(2, 5);
+log(cell);
+var sym = board.getSym(2, 5);
+log(sym);
+cell = board.get(2, 5);
+board.set(2, 5, 'H');
+log(cell);
+board.toggle(2, 5);
+log(cell);
+log(sym);
+board.toggle(2, 5);
+log(cell);
+log(sym);
+board.set(2, 5, 'REBUS', Board.Cell.FILL.CIRCLE);
+log(cell);
+board.set(2, 5, 'A', Board.Cell.FILL.CIRCLE);
+loggg('all', () => {
+  board.cells.all(cell => log(cell));  
+})
+var a = this.board.cells.filter(cell => cell.y == 2);
+log(a);
+a = this.board.cells.line(2, 2, 1);
+log(a);
+a = this.board.cells.line(2, 2, -1);
+log(a);
+var cursor = board.cursor;
+log(cursor);
+var sel = cursor.getSel();
+log(sel);
+board.refresh();
+loggg('refresh, no sel', () => {
+  board.cells.all(cell => log(cell));
+})
+var cells = board.getSel();
+loggg('getSel', () => log(cells));
+cursor.sel(3, 1, 6, 3);
+log(cursor);
+board.refresh();
+loggg('refresh, sel', () => {
+  board.cells.all(cell => log(cell));  
+})
+cells = board.getSel();
+loggg('getSel', () => log(cells));
+var line = board.cells.line(5, 2, -1);
+log(line);
+log(line.words, 'words');
+board.toggle(5, 4);
+board.toggle(5, 10);
+var line = board.cells.line(5, 2, -1);
+log(line);
+log(line.words, 'words after toggle');
+board.toggle(1, 1);
+var line = board.cells.line(0, 1, 1);
+log(line);
+log(line.words);
+loggg('all', () => {
+  board.cells.all(cell => log(cell));  
+})
+out('toString');
+board.uiDown(1);
+out('down(1)');
+board.uiDown(1);
+out('down(1)');
+board.uiDown(1);
+out('down(1)');
+board.uiRight(1);
+out('right(1)');
+board.uiRight(1);
+out('right(1)');
+board.uiRight(1);
+out('right(1)');
+board.uiRight(1);
+out('right(1)');
+board.uiSelWord();
+out('selWord');
+board.uiSet('W');
+out('set');
+board.uiMoveTo(1, 2);
+out('moveto 1,2');
+board.uiRight(1);
+board.uiRight(1);
+out('uiright x2');
+board.uiToggle();
+out('toggle');
+board.uiRight();
+out('uiright');
+board.uiToggle();
+out('toggle');
+board.uiRight();
+board.uiSelWord();
+out('selword');
+board.uiToggleLock();
+out('togglelock');
+board.uiDown();
+out('down');
+</script>

@@ -142,16 +142,19 @@ function priv(target, map/*{fid:val,fid:val...}*/) {
     Object.defineProperty(target, fid, {value:val,writable:true});
   })
 }
-function log(o) {
+function log(o, cap/*=null*/) {
+  if (cap) {
+    log(cap);
+  }
   if (typeof o === 'object') { 
     console.log(js(o));
   } else {
     console.log(o);
   }
 }
-function logg(cap/*string=start group, null=close group, true=close group and show elapsed time*/) {
+function logg(cap/*string=start group, null=close group, true=close group and show elapsed time*/, collapsed/*=0*/) {
   if (cap && cap.length) {
-    console.group(cap);
+    collapsed ? console.groupCollapsed(cap) : console.group(cap);
     if (logg.timer == null) {
       logg.timer = [];
     }
@@ -167,9 +170,9 @@ function logg(cap/*string=start group, null=close group, true=close group and sh
   }
 }
 function loggg(cap, fn) {
-  logg(cap);
+  logg(cap,1);
   fn();
-  logg(1);
+  logg();
 }
 function assert(value, expected, cap = null) {
   value = js(value);
