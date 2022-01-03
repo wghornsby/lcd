@@ -1,110 +1,151 @@
 class Board {
   /**
    * i width, height
+   * i mx, my
    * i symmetry
    * i minWordLen
    * Cursor cursor
    * Cell[][] cells
    */
-  constructor(width, height, symmetry/*=ROTATIONAL*/, minWordLen/*=3*/) {
-    this.width = width;
-    this.height = height;
-    this.mx = width - 1;
-    this.my = height - 1;
+  constructor(width/*=15*/, height/*=15*/, symmetry/*=ROTATIONAL*/, minWordLen/*=3*/) {
+    this.width = width || 15;
+    this.height = height || 15;
+    this.mx = this.width - 1;
+    this.my = this.height - 1;
     this.symmetry = symmetry || Board.SYMMETRY.ROTATIONAL;
     this.minWordLen = minWordLen || 3;
     this.cursor = new Board.Cursor(this.width, this.height);
-    this.cells = Board.Cells.create(width, height);
+    this.cells = Board.Cells.create(this.width, this.height);
     this.refresh();
   }
-  uiSet(text, fill/*=null*/) {
-    this.set(cursor.x, cursor.y, text, fill);
+  set(text) {
+    this.setCell(this.cursor.x, this.cursor.y, text);
     this.cursor.advance();
     this.refresh();
   }
-  uiUp(shift) {
+  clear(hard) {
+    this.getSel().each(cell => {
+      cell.set();
+      if (hard && cell.isBlack()) {
+        this.toggleCell(cell);
+      }
+    })
+    this.cursor.resetSel();
+    this.refresh();
+  }
+  backspace() {
+    var del = this.hasText();
+    if (del) {
+      this.setCell(this.cursor.x, this.cursor.y, null);
+    }
+    this.cursor.retreat();
+    if (! del) {
+      this.setCell(this.cursor.x, this.cursor.y, null);
+    }
+  }
+  goUp(shift) {
     this.cursor.move(0, -1, shift);
     this.refresh();
   }
-  uiDown(shift) {
+  goDown(shift) {
     this.cursor.move(0, 1, shift);
     this.refresh();
   }
-  uiLeft(shift) {
+  goLeft(shift) {
     this.cursor.move(-1, 0, shift);
     this.refresh();
   }
-  uiRight(shift) {
+  goRight(shift) {
     this.cursor.move(1, 0, shift);
     this.refresh();
   }
-  uiHome(shift) {
+  goHome(shift) {
     this.cursor.moveHome(shift);
     this.refresh();
   }
-  uiEnd(shift) {
+  goEnd(shift) {
     this.cursor.moveEnd(shift);
     this.refresh();
   }
-  uiSym() {
+  goSym() {
     var sym = this.getSym(this.cursor.x, this.cursor.y);
     this.cursor.moveTo(sym.x, sym.y);
     this.refresh();
   }
-  uiToggle() {
-    this.getSel().each(cell => this.toggle(cell.x, cell.y));
+  toggle() {
+    this.getSel().each(cell => this.toggleCell(cell));
+    this.cursor.advance();
     this.refresh();
   }
-  uiToggleLock() {
-    this.getSel().each(cell => this.toggleLock(cell.x, cell.y));
+  toggleCircle() {
+    this.getSel().each(cell => cell.toggleCircle());
+    this.cursor.advance();
     this.refresh();
   }
-  uiSelAll() {
+  toggleLock() {
+    this.getSel().each(cell => cell.toggleLock());
+    this.cursor.resetSel();
+    this.refresh();
+  }
+  toggleCursor() {
+    this.cursor.toggle();
+    this.refresh();
+  }
+  selAll() {
     this.cursor.selAll();
     this.refresh();
   }
-  uiSelWord() {
+  selWord() {
     var line = this.cells.line(this.cursor.x, this.cursor.y, this.cursor.dir);
     var word = line.getWord(this.cursor.x, this.cursor.y);
     this.cursor.selCells(word);
     this.refresh();
   }
-  uiMoveTo(x, y) {
+  moveTo(x, y) {
     this.cursor.moveTo(x, y);
     this.refresh();
   }
+  each(fn/*(row, y)*/) {
+    this.cells.each(fn);
+  }
+  all(fn/*(cell, x, y)*/) {
+    this.cells.all(fn);
+  }
   //
-  /*Cell*/get(x, y) {
+  hasText() {
+    return this.getCell(this.cursor.x, this.cursor.y).text?.length;
+  }
+  refresh() {
+    this.cells.refresh(this.cursor, this.minWordLen);
+  }
+  /*Cell*/getCell(x, y) {
     return this.cells.get(x, y);
   }
   /*Cells*/getSel() {
     return this.cells.fromCursor(this.cursor);
   }
-  set(x, y, text, fill) {
-    this.get(x, y).set(text, fill);
+  setCell(x, y, text) {
+    this.getCell(x, y).set(text);
   }
-  toggle(x, y) {
-    this.get(x, y).toggle();
-    this.getSym(x, y)?.toggle();
-  }
-  toggleLock(x, y) {
-    this.get(x, y).toggleLock();
-  }
-  refresh() {
-    this.cells.refresh(this.cursor, this.minWordLen);
+  toggleCell(cell) {
+    var sym = this.getSym(cell.x, cell.y);
+    cell.toggle();
+    if (sym && ! sym.equals(cell)) {
+      sym.toggle();
+    }
   }
   /*Cell*/getSym(x, y) {
     switch (this.symmetry) {
       case Board.SYMMETRY.ROTATIONAL:
-        return this.get(this.mx - x, this.my - y);
+        return this.getCell(this.mx - x, this.my - y);
       case Board.SYMMETRY.MIRROR_VERTICAL:
-        return this.get(this.mx - x, y);
+        return this.getCell(this.mx - x, y);
       case Board.SYMMETRY.MIRROR_HORIZONTAL:
-        return this.get(x, this.my - y);
+        return this.getCell(x, this.my - y);
       case Board.SYMMETRY.MIRROR_NW_TO_SE:
-        return this.get(y, x);
+        return this.getCell(y, x);
       case Board.SYMMETRY.MIRROR_SW_TO_NE:
-        return this.get(this.mx - y, this.my - x);
+        return this.getCell(this.mx - y, this.my - x);
       default:
         return null;
     }
@@ -283,6 +324,102 @@ Board.Cells.Word/*Cell[]*/ = class extends Array {
     this.each(cell => cell.setErr());
   }
 }
+Board.Cell = class {
+  /**
+   * i x
+   * i y
+   * s text
+   * i fill
+   * b locked
+   * s css
+   * s num
+   */
+  constructor(x, y, text, fill, locked) {
+    this.x = x;
+    this.y = y;
+    this.id = 'c' + x + 'x' + y;
+    this.text = text;
+    this.fill = fill;
+    this.locked = locked;
+  }
+  set(text) {
+    if (! this.locked && ! this.isBlack()) {
+      this.text = text || '';
+    }
+  }
+  setCss(css) {
+    this.css = css;
+    if (this.locked) {
+      this.css += ' lock';
+    }
+    if (this.fill) {
+      this.css += ' f' + this.fill;
+    }
+  }
+  resetErr() {
+    this.css = this.css.replace('err', '');
+  }
+  setErr() {
+    this.css = (this.css + ' err').trim();
+  }
+  setNum(s) {
+    this.num = s;
+  }
+  resetNum() {
+    this.num = '';
+  }
+  toggle() {
+    if (this.isBlack()) {
+      this.fill = Board.Cell.FILL.NONE;
+    } else {
+      this.fill = Board.Cell.FILL.BLACK;
+      this.resetErr();
+    }
+  }
+  toggleCircle() {
+    this.fill = this.isCircle() ? Board.Cell.FILL.NONE : Board.Cell.FILL.CIRCLE;
+  }
+  toggleLock() {
+    this.locked = ! this.locked;
+  }
+  isBlack() {
+    return this.fill == Board.Cell.FILL.BLACK;
+  }
+  isCircle() {
+    return this.fill == Board.Cell.FILL.CIRCLE;
+  }
+  equals(that) {
+    return this.x == that.x && this.y == that.y;
+  }
+  toString() {
+    var text = String.denull(this.text).padEnd(1);
+    var css = this.css.padEnd(12);
+    switch (this.fill) {
+      case Board.Cell.FILL.BLACK:
+        return '#####' + css;
+      case Board.Cell.FILL.GRAY:
+        return '==' + text + '==' + css;
+      case Board.Cell.FILL.CIRCLE:
+        return '( ' + text + ' )' + css;
+      default:
+        switch (text.trim().length) {
+          case 0:
+            return '.....' + css;
+          case 1:
+            return '  ' + text + '  ' + css;
+          default:
+            return text.padEnd(5) + css;
+        }
+    }
+  }
+  //
+  static FILL = {
+    'NONE':0,
+    'BLACK':1,
+    'CIRCLE':2,
+    'GRAY':3
+  }
+}
 Board.Cursor = class {
   /**
    * i x, y
@@ -302,12 +439,16 @@ Board.Cursor = class {
   resetSel() {
     this._sel = null;
   }
-  advance() {
+  advance(i/*=1*/) {
+    i = i || 1;
     if (this.dir == 1) {
-      this.move(1, 0);
+      this.move(i, 0);
     } else {
-      this.move(0, 1);
+      this.move(0, i);
     }
+  }
+  retreat() {
+    this.advance(-1);
   }
   toggle() {
     this.dir = -this.dir;
@@ -317,10 +458,10 @@ Board.Cursor = class {
     var x, y;
     x = this.x + dx;
     y = this.y + dy;
-    x = (x < 0) ? this.mx : x;
-    x = (x > this.mx) ? 0 : x;
-    y = (y < 0) ? this.my : y;
-    y = (y > this.my) ? 0 : y;
+    x = (x < 0) ? 0 : x;
+    x = (x > this.mx) ? this.mx : x;
+    y = (y < 0) ? 0 : y;
+    y = (y > this.my) ? this.my : y;
     this.moveTo(x, y, shift);
   }
   moveHome(shift) {
@@ -375,7 +516,7 @@ Board.Cursor = class {
     this.sel(x0, y0, x1, y1);
   }
   css(x, y) {
-    var css = this._sel ? this._sel.css(x, y) : "";
+    var css = this._sel ? this._sel.css(x, y) : '';
     if (this.x == x && this.y == y) {
       css += ' c' + (this.dir == 1 ? 'h' : 'v');
     }
@@ -404,137 +545,52 @@ Board.Cursor.Sel = class {
     this.yi = y0;
   }
   moveTo(x, y) {
-    if (x != this.xi) {
-      if ((x < this.x0) || (x > this.x0 && x <= this.x1)) {
-        this.x0 = x;
-      }
-      if (x > this.x1) {
-        this.x1 = x;
-      }  
+    if (x >= this.xi && y >= this.yi) {
+      this.x0 = this.xi;
+      this.y0 = this.yi;
+      this.x1 = x;
+      this.y1 = y;
+      return;
     }
-    if (y != this.yi) {
-      if ((y < this.y0) || (y > this.y0 && y <= this.y1)) {
-        this.y0 = y;
-      }
-      if (y > this.y1) {
-        this.y1 = y;
-      }  
+    if (x >= this.xi && y < this.yi) {
+      this.x0 = this.xi;
+      this.y0 = y;
+      this.x1 = x;
+      this.y1 = this.yi;
+      return;
     }
-    this.xi = x;
-    this.yi = y;
+    if (x < this.xi && y <= this.yi) {
+      this.x0 = x;
+      this.y0 = y;
+      this.x1 = this.xi;
+      this.y1 = this.yi;
+      return;
+    }
+    this.x0 = x;
+    this.y0 = this.yi;
+    this.x1 = this.xi;
+    this.y1 = y;
   }
   within(x, y) {
     return x >= this.x0 && x <= this.x1 && y >= this.y0 && y <= this.y1;
   }
   css(x, y) {
-    var css = "";
+    var css = '';
     if (this.within(x, y)) {
-      css += "sel ";
-      if (x == this.x0 && y == this.y0) {
-        css += "nw ";
+      css += 'sel ';
+      if (x >= this.x0 && x <= this.x1 && y == this.y0) {
+        css += 'n ';
       }
-      if (x == this.x0 && y == this.y1) {
-        css += "sw ";
+      if (x >= this.x0 && x <= this.x1 && y == this.y1) {
+        css += 's ';
       }
-      if (x == this.x1 && y == this.y0) {
-        css += "ne ";
+      if (y >= this.y0 && y <= this.y1 && x == this.x0) {
+        css += 'w ';
       }
-      if (x == this.x1 && y == this.y1) {
-        css += "se ";
-      }
-      if (x > this.x0 && x < this.x1 && y == this.y0) {
-        css += "n ";
-      }
-      if (x > this.x0 && x < this.x1 && y == this.y1) {
-        css += "s ";
-      }
-      if (y > this.y0 && y < this.y1 && x == this.x0) {
-        css += "w ";
-      }
-      if (y > this.y0 && y < this.y1 && x == this.x1) {
-        css += "e ";
+      if (y >= this.y0 && y <= this.y1 && x == this.x1) {
+        css += 'e ';
       }
     }
     return css.trim();
-  }
-}
-Board.Cell = class {
-  /**
-   * i x
-   * i y
-   * s text
-   * i fill
-   * b locked
-   * s css
-   * i num
-   */
-  constructor(x, y, text, fill, locked) {
-    this.x = x;
-    this.y = y;
-    this.text = text;
-    this.fill = fill;
-    this.locked = locked;
-  }
-  set(text, fill) {
-    if (! this.locked) {
-      this.text = text;
-      this.fill = fill;        
-    }
-  }
-  setCss(css) {
-    this.css = css;
-    if (this.locked) {
-      this.css += ' lock';
-    }
-  }
-  setErr() {
-    this.css = (this.css + ' err').trim();
-  }
-  setNum(i) {
-    this.num = i;
-  }
-  resetNum() {
-    delete this.num;
-  }
-  toggle() {
-    if (this.isBlack()) {
-      this.fill = Board.Cell.FILL.NONE;
-    } else {
-      this.fill = Board.Cell.FILL.BLACK;
-    }
-  }
-  toggleLock() {
-    this.locked = ! this.locked;
-  }
-  isBlack() {
-    return this.fill == Board.Cell.FILL.BLACK;
-  }
-  toString() {
-    var text = String.denull(this.text).padEnd(1);
-    var css = this.css.padEnd(12);
-    switch (this.fill) {
-      case Board.Cell.FILL.BLACK:
-        return '#####' + css;
-      case Board.Cell.FILL.GRAY:
-        return '==' + text + '==' + css;
-      case Board.Cell.FILL.CIRCLE:
-        return '( ' + text + ' )' + css;
-      default:
-        switch (text.trim().length) {
-          case 0:
-            return '.....' + css;
-          case 1:
-            return '  ' + text + '  ' + css;
-          default:
-            return text.padEnd(5) + css;
-        }
-    }
-  }
-  //
-  static FILL = {
-    'NONE':0,
-    'BLACK':1,
-    'GRAY':2,
-    'CIRCLE':3
   }
 }
