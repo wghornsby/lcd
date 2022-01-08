@@ -4,34 +4,40 @@ class Board {
    * i mx, my
    * i symmetry
    * i minWordLen
+   * s title
    * Cursor cursor
    * Cell[][] cells
    */
-  constructor(width/*=15*/, height/*=15*/, symmetry/*=ROTATIONAL*/, minWordLen/*=3*/) {
+  constructor(width/*=15*/, height/*=15*/, symmetry/*=ROTATIONAL*/, minWordLen/*=3*/, title, id) {
     this.width = width || 15;
     this.height = height || 15;
     this.mx = this.width - 1;
     this.my = this.height - 1;
     this.symmetry = symmetry || Board.SYMMETRY.ROTATIONAL;
     this.minWordLen = minWordLen || 3;
+    this.title = title;
+    this.id = id;
     this.cursor = new Board.Cursor(this.width, this.height);
     this.cells = Board.Cells.create(this.width, this.height);
-    this.refresh();
   }
   set(text) {
     this.setCell(this.cursor.x, this.cursor.y, text);
     this.cursor.advance();
-    this.refresh();
+    this.refresh(1);
   }
   clear(hard) {
     this.getSel().each(cell => {
       cell.set();
-      if (hard && cell.isBlack()) {
-        this.toggleCell(cell);
+      if (hard) {
+        if (cell.isBlack()) {
+          this.toggleCell(cell);
+        } else if (cell.isCircle()) {
+          cell.toggleCircle();
+        }
       }
     })
     this.cursor.resetSel();
-    this.refresh();
+    this.refresh(1);
   }
   backspace() {
     var del = this.hasText();
@@ -42,6 +48,7 @@ class Board {
     if (! del) {
       this.setCell(this.cursor.x, this.cursor.y, null);
     }
+    this.refresh(1);
   }
   goUp(shift) {
     this.cursor.move(0, -1, shift);
@@ -75,17 +82,17 @@ class Board {
   toggle() {
     this.getSel().each(cell => this.toggleCell(cell));
     this.cursor.advance();
-    this.refresh();
+    this.refresh(1);
   }
   toggleCircle() {
     this.getSel().each(cell => cell.toggleCircle());
     this.cursor.advance();
-    this.refresh();
+    this.refresh(1);
   }
   toggleLock() {
     this.getSel().each(cell => cell.toggleLock());
     this.cursor.resetSel();
-    this.refresh();
+    this.refresh(1);
   }
   toggleCursor() {
     this.cursor.toggle();
@@ -111,12 +118,21 @@ class Board {
   all(fn/*(cell, x, y)*/) {
     this.cells.all(fn);
   }
+  undo() {
+    this._actions.undo();
+  }
+  redo() {
+    this._actions.redo();
+  }
   //
   hasText() {
     return this.getCell(this.cursor.x, this.cursor.y).text?.length;
   }
-  refresh() {
+  refresh(save) {
     this.cells.refresh(this.cursor, this.minWordLen);
+    if (save) {
+      this._actions.save();
+    }
   }
   /*Cell*/getCell(x, y) {
     return this.cells.get(x, y);
@@ -149,6 +165,43 @@ class Board {
       default:
         return null;
     }
+  }
+  toPojo() {
+    var o = pojo(this);
+    delete o.mx;
+    delete o.my;
+    delete o.cursor;
+    return o;
+  }
+  loadAction(o) {
+    this.cursor.loadAction(o.cursor);
+    this.cells.loadAction(o.cells);
+  }
+  toAction() {
+    return clone(this, 'toAction');
+  }
+  init() {
+    this.refresh();
+    priv(this, '_actions', new Board.Actions(this));
+  }
+  //
+  static fromPojo(o) {
+    var me = new Board(
+      o.width,
+      o.height,
+      o.symmetry,
+      o.minWordLen,
+      o.title,
+      o.id);
+    me.cells.loadPojo(o.cells);
+    me.init();
+    return me;
+  }
+  static asNew(width, height, symmetry, minWordLen) {
+    var me = new Board(width, height, symmetry, minWordLen);
+    me.id = self.crypto.randomUUID();
+    me.init();
+    return me;
   }
   static SYMMETRY = {
     'ROTATIONAL':1,
@@ -221,6 +274,13 @@ Board.Cells = class extends Array {
     var lines = new Board.Cells.Lines(this);
     return lines.words();
   }
+  loadPojo(a) {
+    this.each((row, y) => row.each((cell, x) => cell.loadPojo(a[y][x])));
+  }
+  loadAction(a) {
+    this.each((row, y) => row.each((cell, x) => cell.loadAction(a[y][x])));
+  }
+  //
   static create(width, height) {
     var me = Board.Cells.from(
       {length:height}, (v, y) => Array.from(
@@ -326,8 +386,8 @@ Board.Cells.Word/*Cell[]*/ = class extends Array {
 }
 Board.Cell = class {
   /**
-   * i x
-   * i y
+   * i x, y
+   * s id
    * s text
    * i fill
    * b locked
@@ -377,7 +437,9 @@ Board.Cell = class {
     }
   }
   toggleCircle() {
-    this.fill = this.isCircle() ? Board.Cell.FILL.NONE : Board.Cell.FILL.CIRCLE;
+    if (! this.locked) {
+      this.fill = this.isCircle() ? Board.Cell.FILL.NONE : Board.Cell.FILL.CIRCLE;
+    }
   }
   toggleLock() {
     this.locked = ! this.locked;
@@ -412,6 +474,27 @@ Board.Cell = class {
         }
     }
   }
+  toPojo() {
+    var o = pojo(this);
+    delete o.x;
+    delete o.y;
+    delete o.id;
+    delete o.css;
+    delete o.num;
+    return o;
+  }
+  loadPojo(o) {
+    this.text = o.text;
+    this.fill = o.fill;
+    this.locked = o.locked;
+  }
+  loadAction(o) {
+    this.text = o.text;
+    this.fill = o.fill;
+    this.locked = o.locked;
+    this.css = o.css;
+    this.num = o.num;
+  }
   //
   static FILL = {
     'NONE':0,
@@ -424,11 +507,14 @@ Board.Cursor = class {
   /**
    * i x, y
    * i dir (1=horizontal, -1=vertical);
+   * i tran (1=apply motion css transition)
    */
   constructor(width, height) {
-    this.mx = width - 1;
-    this.my = height - 1;
-    this.reset();
+    if (width) {
+      this.mx = width - 1;
+      this.my = height - 1;
+      this.reset();
+    }
   }
   reset() {
     this.x = 0;
@@ -462,7 +548,7 @@ Board.Cursor = class {
     x = (x > this.mx) ? this.mx : x;
     y = (y < 0) ? 0 : y;
     y = (y > this.my) ? this.my : y;
-    this.moveTo(x, y, shift);
+    this.moveTo(x, y, shift, 1);
   }
   moveHome(shift) {
     if (this.dir == 1) {
@@ -488,7 +574,8 @@ Board.Cursor = class {
     }
     this.moveTo(this.mx, this.my, shift);
   }
-  moveTo(x, y, shift) {
+  moveTo(x, y, shift, tran) {
+    this.tran = tran;
     if (shift && ! this._sel) {
       this._sel = new Board.Cursor.Sel(this.x, this.y);
     }
@@ -504,6 +591,7 @@ Board.Cursor = class {
     this._sel = new Board.Cursor.Sel(x0, y0, x1, y1);
     this.x = x0;
     this.y = y0;
+    this.tran = null;
   }
   selAll() {
     this.sel(0, 0, this.mx, this.my);
@@ -524,6 +612,14 @@ Board.Cursor = class {
   }
   /*Sel*/getSel() {
     return this._sel;
+  }
+  loadAction(o) {
+    this.x = o.x;
+    this.y = o.y;
+    if (o._sel) {
+      this._sel = new Board.Cursor.Sel(o._sel.x0, o._sel.y0, o._sel.x1, o._sel.y1);
+    }
+    this.tran = null;
   }
 }
 Board.Cursor.Sel = class {
@@ -592,5 +688,32 @@ Board.Cursor.Sel = class {
       }
     }
     return css.trim();
+  }
+}
+Board.Actions = class {
+  //
+  constructor(/*Board*/board) {
+    this.board = board;
+    this.a = [];
+    this.save();
+  }
+  save() {
+    this.a.push(this.board.toAction());
+    this.i = this.a.length - 1;
+  }
+  undo() {
+    if (this.i > 0) {
+      this.i--;
+      this.load();
+    }
+  }
+  redo() {
+    if (this.i < this.a.length - 1) {
+      this.i++;
+      this.load();
+    }
+  }
+  load() {
+    this.board.loadAction(this.a[this.i]);
   }
 }

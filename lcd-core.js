@@ -1,5 +1,5 @@
 /** 
- * LCD v3.2.05
+ * LCD v3.2.06
  * JavaScript library (c)2020 Warren Hornsby 
  **/
 
@@ -20,6 +20,9 @@ NodeList.prototype.on = function(name, fn, options) {
 }
 
 /** Extensions */
+Object.assign(Object, {
+  isObject:e => e?.constructor?.name === "Object" || e?.constructor?.name === ''
+})
 Object.assign(Function, {
   isFunction:e => typeof e === 'function'
 })
@@ -137,10 +140,14 @@ function resolve(o, ref, toUpperCase = null) {
   }
   return o;
 }
-function priv(target, map/*{fid:val,fid:val...}*/) {
-  each(map, (val, fid) => {
-    Object.defineProperty(target, fid, {value:val,writable:true});
-  })
+function priv(target, fid, val) {
+  /**
+   * priv(this, 'actions', []);
+   */
+   Object.defineProperty(target, fid, {value:val,writable:true});
+}
+function privmap(target, map/*{fid:val,fid:val...}*/) {
+  each(map, (val, fid) => priv(target, fid, val));
 }
 function log(o, cap/*=null*/) {
   if (cap) {
@@ -192,6 +199,30 @@ function rnd(max) {
 function jscopy(o) {
   return JSON.parse(JSON.stringify(o));
 }
+function clone(o, fname) {
+  /**
+   * toAction() {
+   *   var o = clone(this, 'toAction'); // to call toAction on child objects
+   *   delete o._i;
+   *   return o;
+   * }
+   */
+  var p = Array.isArray(o) ? [] : {};
+  each(o, (val, fid) => {
+    if (Object.isObject(val)) {
+      p[fid] = (val[fname]) ? val[fname]() : clone(val, fname);
+    } else if (Array.isArray(val)) {
+      p[fid] = clone(val, fname);
+    } else {
+      p[fid] = val;
+    }
+  })
+  return p;
+}
+function pojo(o) {
+  return clone(o, 'toPojo');
+}
+const mix = Object.assign;
 const js = JSON.stringify;
 
 /** Object library */
@@ -203,10 +234,10 @@ class Rec {
   init() {
   }
   mix(o) {
-    return Object.assign(this, o);
+    return mix(this, o);
   }
-  priv(map) {
-    priv(this, map);
+  priv(fid, val) {
+    priv(this, fid, val);
   }
   each(fn) {
     return each(this, fn);

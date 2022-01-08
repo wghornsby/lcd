@@ -1,0 +1,133 @@
+<html>
+<head>
+  <script type='text/javascript' src='words.js?1'></script>
+  <script type='text/javascript' src='yordle.js?1'></script>
+  <script type='text/javascript' src='yordleui.js?1'></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+  <style>
+body {
+  margin:0;
+  background-color:#000;
+  font-family:'Roboto', sans-serif;
+}
+#board {
+  padding:40px 0;
+}
+header {
+  width:100%;
+  text-align:center;
+}
+.title {
+  font-size:40px;
+  font-weight:bold;
+  color:deepskyblue;
+  letter-spacing:4px;
+}
+#grid {
+  margin:2em auto 2em auto;
+  border-spacing:4px;
+  border:1px solid #666;
+}
+#grid td {
+  border:1px solid #666;
+  color:white;
+  height:36px;
+  width:36px;
+  font-size:26px;
+  line-height:26px;
+  text-align:center;
+  cursor:pointer;
+}
+.c1 {
+  background-color:#3a3a3c !important;
+}
+.c2 {
+  background-color:#b59f3b !important;
+}
+.c3 {
+  background-color:#538d4e !important;
+}
+#board {
+  text-align:center;
+}
+#keyboard {
+  text-align:center;
+}
+#keyboard button {
+  border:0;
+  padding:0 1em;
+  margin:0 3px 6px 0;
+  height:40px;
+  min-width:40px;
+  border-radius:4px;
+  cursor:pointer;
+  user-select: none;
+  text-transform:uppercase;
+  background-color:#818384;
+  color:white;
+  font-family:'Roboto';
+  font-size:15px;
+}
+#keyboard .bs {
+  position:relative;
+  top:5px;
+  left:-1px;
+  font-size:30px;
+  line-height:20px;
+  padding-left:15px;
+  padding-right:15px;
+}
+#keyboard .last {
+  margin-top:-5px;
+}
+  </style>
+</head>
+<body>
+  <div id='board'>
+    <header>
+      <div class='title'>YORDLE</div>
+    </header>
+    <table id='grid'></table>
+    <div id='keyboard'>
+      <div>
+        <button>q</button>
+        <button>w</button>
+        <button>e</button>
+        <button>r</button>
+        <button>t</button>
+        <button>y</button>
+        <button>u</button>
+        <button>i</button>
+        <button>o</button>
+        <button>p</button>
+      </div>
+      <div>
+        <button>a</button>
+        <button>s</button>
+        <button>d</button>
+        <button>f</button>
+        <button>g</button>
+        <button>h</button>
+        <button>j</button>
+        <button>k</button>
+        <button>l</button>
+      </div>
+      <div class='last'>
+        <button>enter</button>
+        <button>z</button>
+        <button>x</button>
+        <button>c</button>
+        <button>v</button>
+        <button>b</button>
+        <button>n</button>
+        <button>m</button>
+        <button class='bs'>⌫</button>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  window.on('DOMContentLoaded', () => new UiPage());
+</script>

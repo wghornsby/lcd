@@ -1,0 +1,114 @@
+<html>
+<head>
+  <script type='text/javascript' src='words.js?1'></script>
+  <script type='text/javascript' src='yordle.js?1'></script>
+</head>
+<body>
+</body>
+<script>
+function log(o) {
+  if (typeof o === 'object') { 
+    console.log(JSON.stringify(o));
+  } else {
+    console.log(o);
+  }
+}
+var y = new Yordle();
+y.reset('PRIDE');
+log(y);
+var tray = y.tray();
+log(tray);
+y.set('P');
+log(tray);
+y.set('R');
+y.set('E');
+log(tray);
+y.backspace();
+log(tray);
+y.backspace();
+log(tray);
+y.set('R');
+log(tray);
+y.set('E');
+y.set('S');
+var b = y.set('S');
+log(b);
+log(tray);
+b = y.set('X');
+log(b);
+log(tray);
+y.backspace();
+log(tray);
+log('enter');
+b = y.enter();
+log(b);
+log(tray);
+y.set('S');
+log(tray);
+b = y.enter();
+log(b);
+log(tray);
+tray = y.tray();
+log(tray);
+y.set('T');
+y.set('H');
+y.set('I');
+y.set('N');
+y.set('G');
+b = y.enter();
+log(b);
+tray = y.tray();
+log(tray);
+y.set('T');
+y.set('H');
+y.set('I');
+y.set('N');
+y.set('G');
+b = y.enter();
+log(b);
+tray = y.tray();
+log(tray)
+y.set('T');
+y.set('H');
+y.set('I');
+y.set('N');
+y.set('G');
+b = y.enter();
+log(b);
+tray = y.tray();
+log(tray);
+y.set('T');
+y.set('H');
+y.set('I');
+y.set('N');
+y.set('G');
+b = y.enter();
+log(b);
+tray = y.tray();
+log(tray);
+y.set('T');
+y.set('H');
+y.set('I');
+y.set('N');
+y.set('G');
+b = y.enter();
+log(b);
+var wl = Yordle.Wordlist.create(5);
+log(wl.length);
+log(wl.random());
+log(wl.random());
+log(wl.random());
+log(wl.verify('WORLD'));
+log(wl.verify('FXXTL'));
+y.reset('PRIDE');
+var tray = y.tray();
+log(tray);
+y.set('D');
+y.set('R');
+y.set('I');
+y.set('N');
+y.set('K');
+log(tray.getWord());
+y.enter();
+log(y.keyboard);
+</script>
