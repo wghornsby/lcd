@@ -64,7 +64,7 @@ class UiPage extends Ui {
             alert('we have a weiner');
           }
           if (r.lose) {
-            alert('you are such a pathetic loser!');
+            alert('you are such a pathetic loser! ' + r.tray.word);
           }
         }
         return;
@@ -147,7 +147,12 @@ class UiKeyboard extends Ui {
     })    
   }
   setColors(tray) {
-    tray.tiles.forEach(tile => this.$map[tile.guess].className = 'c' + tile.color);
+    tray.tiles.forEach(tile => {
+      let $b = this.$map[tile.guess];
+      if ($b.className != 'c3') {
+        $b.className = 'c' + tile.color;
+      }
+    })
   }
   mapButtons() {
     this.$map = {};

@@ -19,6 +19,7 @@ class Yordle {
     this.word = word || this.wordlist.random();
     this.trays.reset(this.word);
     this.keyboard.reset();
+    return this;
   }
   set(letter) {
     return this.tray().set(letter); // true if letter set
@@ -165,7 +166,26 @@ Yordle.Tiles = class extends Array {
   }
   enter() {
     if (this.isFull()) {
-      this.forEach((tile, i) => tile.setColor(this.word));
+      var word = this.word.split('');
+      this.forEach((tile, i) => {
+        if (tile.guess == word[i]) {
+          tile.setColor(3);
+          word[i] = '/';
+        }
+      })
+      this.forEach((tile, i) => {
+        if (tile.color == 0) {
+          word.forEach((letter, w) => {
+            if (tile.color == 0 && tile.guess == letter) {
+              tile.setColor(2);
+              word[w] = '/';
+            }
+          })
+          if (tile.color == 0) {
+            tile.setColor(1);
+          }
+        }
+      })
       return true;
     }
   }
@@ -217,12 +237,8 @@ Yordle.Tile = class {
   set(guess) {
     this.guess = guess;
   }
-  setColor(word) {
-    if (this.guess == word.substr(this.ix, 1)) {
-      this.color = 3;
-    } else {
-      this.color = (word.indexOf(this.guess) == -1) ? 1 : 2;
-    }
+  setColor(color) {
+    this.color = color;
   }
   isEmpty() {
     return this.guess == '';
