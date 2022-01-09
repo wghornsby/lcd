@@ -2,7 +2,7 @@ class Yordle {
   /**
    * i len (word length)
    * i tries (how many attempts)
-   * i mode (1=no word lookup, 2=normal, 2=revealed hints must be used in subsequent guesses)
+   * i mode (1=no word lookup, 2=normal, 3=revealed hints must be used in subsequent guesses)
    * s word
    * Trays trays
    */
@@ -30,13 +30,18 @@ class Yordle {
   enter() {
     var tray = this.tray();
     if (tray.isFull()) {
-      if (this.mode >= 2 && ! this.wordlist.verify(tray.getWord())) {
-        return {
-          error:"Not in word list"
+      if (this.mode == 3 && this.prevTray) {
+        let err = this.hardVerify(tray);
+        if (err) {
+          return {error:err};
         }
       }
-      var r = this.trays.enter(); // 1=try again, 2=win, 3=lose
+      //if (this.mode >= 2 && ! this.wordlist.verify(tray.getWord())) {
+      //  return {error:"Not in word list"};
+      //}
+      let r = this.trays.enter(); // 1=try again, 2=win, 3=lose
       this.keyboard.setFromTray(tray);
+      this.prevTray = tray;
       return {
         tray:tray,
         win:r == 2,
@@ -56,6 +61,23 @@ class Yordle {
   }
   tile() {
     return this.tray().tiles.active();
+  }
+  hardVerify(tray) {
+    var yellows = '';
+    for (var i = 0; i < tray.tiles.length; i++) {
+      let lt = this.prevTray.tiles[i];
+      let t = tray.tiles[i];
+      if (lt.isGreen() && lt.guess != t.guess) {
+        return nth(i + 1) + ' letter must be ' + lt.guess;
+      }
+      if (lt.isYellow()) {
+        yellows += lt.guess;
+      }
+    }
+    tray.tiles.forEach(tile => yellows = yellows.replace(tile.guess, ''));
+    if (yellows.length) {
+      return 'Guess must contain ' + yellows.substring(0, 1);
+    }
   }
 }
 Yordle.Trays = class extends Array {
@@ -240,6 +262,12 @@ Yordle.Tile = class {
   setColor(color) {
     this.color = color;
   }
+  isGreen() {
+    return this.color == 3;
+  }
+  isYellow() {
+    return this.color == 2;
+  }
   isEmpty() {
     return this.guess == '';
   }
@@ -250,7 +278,7 @@ Yordle.Wordlist = class extends Array {
   }
   random() {
     var i = Math.floor(Math.random() * Math.floor(this.length));
-    return this[i];
+    return this[i].toUpperCase();
   }
   verify(guess) {
     return this.findIndex(word => word == guess) > -1;
@@ -279,4 +307,15 @@ Yordle.Keyboard = class {
     this.map[letter] = color;   
   }
 }
- 
+function nth(i) {
+  switch (i) {
+    case 1:
+      return '1st';
+    case 2:
+      return '2nd';
+    case 3:
+      return '3rd';
+    default:
+      return i + 'th';
+  }
+}

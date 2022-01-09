@@ -100,7 +100,7 @@ class UiBoard extends Ui {
     this.reset();
   }
   reset() {
-    this.yordle = new Yordle(5, 6, 1);
+    this.yordle = new Yordle(5, 6, 3);
     this.$grid.innerHTML = '';
     this.yordle.trays.forEach(tray => {
       var $tr = this.$grid.insertRow();
@@ -149,8 +149,9 @@ class UiKeyboard extends Ui {
   setColors(tray) {
     tray.tiles.forEach(tile => {
       let $b = this.$map[tile.guess];
-      if ($b.className != 'c3') {
-        $b.className = 'c' + tile.color;
+      let cn = 'c' + tile.color;
+      if (cn > $b.className) {
+        $b.className = cn;
       }
     })
   }
