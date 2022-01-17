@@ -49,6 +49,10 @@ class UiPage extends Ui {
       .on('click', text => this.uikeyboard_onclick(text));
     window.on('keydown', e => this.onkeydown(e));
   }
+  reset() {
+    this.uiboard.reset();
+    this.uikeyboard.reset();
+  }
   onkeydown(e) {
     switch (e.key) {
       case 'Backspace':
@@ -56,12 +60,20 @@ class UiPage extends Ui {
         return;
       case 'Enter':
         let r = this.uiboard.enter();
+        if (! r) {
+          return;
+        }
         if (r.error) {
           alert(r.error);
         } else {
           this.uikeyboard.setColors(r.tray);
           if (r.win) {
-            alert('we have a weiner');
+            setTimeout(() => this.uiboard.win(), 500);
+            setTimeout(() => {
+              if (confirm('we have a weiner')) {
+                this.reset();
+              }
+            }, 1100);
           }
           if (r.lose) {
             alert('you are such a pathetic loser! ' + r.tray.word);
@@ -124,11 +136,17 @@ class UiBoard extends Ui {
     this.yordle.backspace();
     this.refresh();
   }
+  win() {
+    this.yordle.tray().tiles.forEach(tile => {
+      var $td = $('#' + tile.id);
+      $td.className = 'win';
+    })
+  }
   refresh() {
     this.yordle.tiles(tile => {
       var $td = $('#' + tile.id);
       $td.innerText = tile.guess;
-      $td.className = 'C' + tile.color;
+      $td.className = 'c' + tile.color;
     })
   }
 }

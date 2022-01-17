@@ -36,9 +36,12 @@ class Yordle {
           return {error:err};
         }
       }
-      //if (this.mode >= 2 && ! this.wordlist.verify(tray.getWord())) {
-      //  return {error:"Not in word list"};
-      //}
+      if (this.mode >= 2) {
+        let guess = tray.getWord();
+        if (guess != this.word && ! this.wordlist.verify(guess)) {
+          return {error:"Not in word list"};
+        }
+      }
       let r = this.trays.enter(); // 1=try again, 2=win, 3=lose
       this.keyboard.setFromTray(tray);
       this.prevTray = tray;
@@ -281,7 +284,7 @@ Yordle.Wordlist = class extends Array {
     return this[i].toUpperCase();
   }
   verify(guess) {
-    return this.findIndex(word => word == guess) > -1;
+    return validwords.findIndex(word => word == guess) > -1;
   }
   //
   static create(len) {
