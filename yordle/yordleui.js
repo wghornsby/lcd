@@ -76,7 +76,9 @@ class UiPage extends Ui {
             }, 1100);
           }
           if (r.lose) {
-            alert('you are such a pathetic loser! ' + r.tray.word);
+            if (confirm('you are such a pathetic loser! ' + r.tray.word)) {
+              this.reset();
+            }
           }
         }
         return;
@@ -109,10 +111,11 @@ class UiBoard extends Ui {
   constructor() {
     super();
     this.$grid = $('#grid');
+    this.yordle = new Yordle(5, 6, 3);
     this.reset();
   }
   reset() {
-    this.yordle = new Yordle(5, 6, 3);
+    this.yordle.reset();
     this.$grid.innerHTML = '';
     this.yordle.trays.forEach(tray => {
       var $tr = this.$grid.insertRow();

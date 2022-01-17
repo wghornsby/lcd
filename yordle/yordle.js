@@ -13,7 +13,6 @@ class Yordle {
     this.trays = Yordle.Trays.create(this.len, this.tries);
     this.wordlist = Yordle.Wordlist.create(this.len);
     this.keyboard = new Yordle.Keyboard();
-    this.reset();
   }
   reset(word) {
     this.word = word || this.wordlist.random();
@@ -275,20 +274,22 @@ Yordle.Tile = class {
     return this.guess == '';
   }
 }
-Yordle.Wordlist = class extends Array {
-  constructor() {
-    super();
+Yordle.Wordlist = class {
+  constructor(words) {
+    this.words = words;
   }
   random() {
-    var i = Math.floor(Math.random() * Math.floor(this.length));
-    return this[i].toUpperCase();
+    var i = Math.floor(Math.random() * Math.floor(this.words.length));
+    var word = this.words[i];
+    this.words.splice(i, 1);
+    return word;
   }
   verify(guess) {
     return validwords.findIndex(word => word == guess) > -1;
   }
   //
   static create(len) {
-    return Yordle.Wordlist.from(words[len]);
+    return new Yordle.Wordlist(words[len]);
   }
 }
 Yordle.Keyboard = class {
