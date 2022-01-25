@@ -16,13 +16,13 @@ class YordleAi {
     YordleAi.VOWS = YordleAi.Letters.asVowels();
     YordleAi.CONS = YordleAi.Letters.asConsonants();
   }
-  play(result/*=null on first turn*/) {
+  play(result) {
     if (result) {
       this.process(result);
     }
     if (! this.played) {
       this.played = 1;
-      return 'STERN';
+      return 'STERN'; // best by test
     }
     return this.guess();
   }
