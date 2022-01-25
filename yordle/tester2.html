@@ -1,0 +1,72 @@
+<html>
+<head>
+  <script type='text/javascript' src='words.js?1'></script>
+  <script type='text/javascript' src='yordle.js?1'></script>
+  <script type='text/javascript' src='yordleai.js?1'></script>
+</head>
+<body>
+</body>
+<script>
+function log(o) {
+  if (typeof o === 'object') { 
+    console.log(JSON.stringify(o));
+  } else {
+    console.log(o);
+  }
+}
+var y = new Yordle();
+// y.reset('PRIDE');
+// var tray = y.tray();
+// log(tray);
+// var r = y.enter('PRESS');
+// log(r);
+var ai = new YordleAi();
+// var f = 'ERNTS';
+// var p = ai.wordlist.permutations(f);
+// log(p);
+// log('====');
+// log(ai.wordlist.length);
+// y.reset('PRIDE'); // -STERN = RE
+// var g = ai.play();
+// log(g);
+// r = y.enter(g);
+// log(r);
+// g = ai.play(r);
+// log(g);
+// log(ai.wordlist.length);
+// log(ai.both);
+// g = 'CRUDE';
+// r = y.enter(g);
+// log(r);
+// g = ai.play(r);
+// log(g);
+// log(ai.wordlist);
+// log(ai.both);
+// log('====');
+// ai.reset();
+// y.reset('PRIDE'); // -STERN = RE
+// g = ai.play();
+// log(g);
+// r = y.enter(g);
+// log(r);
+// g = ai.play(r);
+// log(g);
+// r = y.enter(g);
+// log(r);
+// g = ai.play(r);
+// log(g);
+var i;
+ai.reset();
+y.reset();
+log(y.word);
+log('==============');
+r = null;
+i = 0;
+while (! r?.win && ! r?.lose && i < 6) {
+  i++;
+  g = ai.play(r);
+  log(g);
+  r = y.enter(g);
+  log(r);
+}
+</script>

@@ -3,6 +3,7 @@
   <script type='text/javascript' src='words.js?1'></script>
   <script type='text/javascript' src='yordle.js?1'></script>
   <script type='text/javascript' src='yordleui.js?1'></script>
+  <script type='text/javascript' src='yordleai.js?1'></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
@@ -17,6 +18,7 @@ body {
 }
 header {
   width:100%;
+  height:45px;
   text-align:center;
 }
 .title {
@@ -38,7 +40,10 @@ header {
   font-size:26px;
   line-height:26px;
   text-align:center;
+}
+#grid td.pointer {
   cursor:pointer;
+  user-select:none;
 }
 .c1, .eb {
   background-color:#3a3a3c !important;
@@ -61,6 +66,7 @@ header {
 }
 #keyboard {
   text-align:center;
+  display:none;
 }
 #keyboard button {
   border:0;
@@ -89,6 +95,25 @@ header {
 #keyboard .last {
   margin-top:-5px;
 }
+#ai {
+  text-align:center;
+  display:none;
+}
+#ai button {
+  border:0;
+  padding:0 1em;
+  margin:0 3px 6px 0;
+  height:40px;
+  min-width:80px;
+  border-radius:4px;
+  cursor:pointer;
+  user-select: none;
+  text-transform:uppercase;
+  background-color:#818384;
+  color:white;
+  font-family:'Roboto';
+  font-size:15px;
+}
   </style>
 </head>
 <body>
@@ -97,6 +122,10 @@ header {
       <div class='title'>YORDLE</div>
     </header>
     <table id='grid'></table>
+    <div id='ai'>
+      <button>ok !</button>
+      <button>redo</button>
+    </div>
     <div id='keyboard'>
       <div>
         <button>q</button>

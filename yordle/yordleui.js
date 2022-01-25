@@ -42,24 +42,53 @@ class UiPage extends Ui {
   /**
    * UiBoard uiboard
    */
-  constructor() {
+  constructor(aimode) {
     super();
-    this.uiboard = new UiBoard();
-    this.uikeyboard = new UiKeyboard()
+    this.yordle = new Yordle(5, 6, 3);
+    this.uiboard = new UiBoard(this.yordle, aimode);
+    this.uikeyboard = new UiKeyboard(aimode)
       .on('click', text => this.uikeyboard_onclick(text));
-    window.on('keydown', e => this.onkeydown(e));
+    if (aimode) {
+      this.ai = new YordleAi();
+      this.playai();
+    } else {
+      window.on('keydown', e => this.onkeydown(e));
+    }
   }
   reset() {
     this.uiboard.reset();
-    this.uikeyboard.reset();
+    this.uikeyboard.reset(this.ai);
+    if (this.ai) {
+      this.ai.reset();
+      this.playai();
+    }
+  }
+  playself(result) {
+    setTimeout(() => {
+      var guess = this.ai.play(result);
+      this.uiboard.setGuess(guess);
+      let r = this.uiboard.enter();
+      if (! r.error) {
+        this.uikeyboard.setColors(r.tray);
+      }
+      if (r.retry) {
+        this.playself(r);
+      }
+      this.winlose(r);
+    }, 100);
+  }
+  playai(result) {
+    var guess = this.ai.play(result);
+    this.uiboard.setGuess(guess);
   }
   onkeydown(e) {
+    var r;
     switch (e.key) {
       case 'Backspace':
         this.uiboard.backspace();
         return;
       case 'Enter':
-        let r = this.uiboard.enter();
+        r = this.uiboard.enter();
         if (! r) {
           return;
         }
@@ -67,26 +96,48 @@ class UiPage extends Ui {
           alert(r.error);
         } else {
           this.uikeyboard.setColors(r.tray);
-          if (r.win) {
-            setTimeout(() => this.uiboard.win(), 500);
-            setTimeout(() => {
-              if (confirm('we have a weiner')) {
-                this.reset();
-              }
-            }, 1100);
-          }
-          if (r.lose) {
-            if (confirm('you are such a pathetic loser! ' + r.tray.word)) {
-              this.reset();
-            }
-          }
+          this.winlose(r);
         }
         return;
+      case 'OK !':
+        r = this.yordle.aiok();
+        this.winlose(r);
+        if (r.retry) {
+          this.playai(r);          
+        }
+        break;
+      case 'REDO':
+        r = this.yordle.airedo();
+        this.playai(r);
+        break;
     }
     var s = e.key.toUpperCase();
     var i = s.charCodeAt(0);
     if (s.length == 1 && i >= 65 && i <= 90) {
       let r = this.uiboard.set(s);
+    }
+  }
+  winlose(r) {
+    if (r.win) {
+      if (this.ai) {
+        if (confirm('we have a weiner')) {
+          this.reset();
+        }  
+      } else {
+        delay(500, () => this.uiboard.win());
+        delay(1100, () => {
+          if (confirm('we have a weiner')) {
+            this.reset();
+          }
+        });
+      }
+    }
+    if (r.lose) {
+      delay(50, () => {
+        if (confirm('you are such a pathetic loser! ' + r.word)) {
+          this.reset();
+        }  
+      })
     }
   }
   uikeyboard_onclick(text) {
@@ -108,10 +159,13 @@ class UiBoard extends Ui {
   /**
    * Yordle yordle
    */
-  constructor() {
+  constructor(yordle, aimode) {
     super();
+    this.yordle = yordle;
     this.$grid = $('#grid');
-    this.yordle = new Yordle(5, 6, 3);
+    if (aimode) {
+      this.$grid.on('click', e => this.$grid_onclick(e));
+    }
     this.reset();
   }
   reset() {
@@ -126,6 +180,15 @@ class UiBoard extends Ui {
     })
     this.refresh();
   }
+  setGuess(guess) {
+    var tray = this.yordle.tray();
+    for (var i = 0; i < guess.length; i++) {
+      if (tray.tiles[i].isBlack()) {
+        this.yordle.aitoggle(tray.tiles[i].id);
+      }
+      this.set(guess.substring(i, i + 1));
+    }
+  }
   set(letter) {
     this.yordle.set(letter);
     this.refresh();
@@ -139,25 +202,37 @@ class UiBoard extends Ui {
     this.yordle.backspace();
     this.refresh();
   }
-  win() {
+  win(c3) {
     this.yordle.tray().tiles.forEach(tile => {
       var $td = $('#' + tile.id);
-      $td.className = 'win';
+      $td.className = c3 ? 'c3' : 'win';
     })
   }
   refresh() {
+    var tray = this.yordle.tray();
     this.yordle.tiles(tile => {
       var $td = $('#' + tile.id);
       $td.innerText = tile.guess;
       $td.className = 'c' + tile.color;
+      if (tile.in(tray)) {
+        $td.className += ' pointer';
+      }
     })
+  }
+  $grid_onclick(e) {
+    var $td = e.srcElement, tile;
+    if ($td.classList.contains('pointer')) {
+      this.yordle.aitoggle($td.id);
+      this.refresh();
+    }
   }
 }
 class UiKeyboard extends Ui {
   onclick(text) {}
   //
-  constructor() {
+  constructor(aimode) {
     super();
+    aimode ? $('#ai').style.display = 'block' : $('#keyboard').style.display = 'block';
     this.$buttons = $$('button')
       .on('click', e => this.onclick(e.srcElement.innerText));
     this.mapButtons();
@@ -182,4 +257,7 @@ class UiKeyboard extends Ui {
       this.$map[$b.innerText] = $b;
     })
   }
+}
+function delay(ms, fn) {
+  setTimeout(fn, ms);
 }

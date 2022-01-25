@@ -16,7 +16,7 @@ class Yordle {
   }
   reset(word) {
     this.word = word || this.wordlist.random();
-    this.trays.reset(this.word);
+    this.trays.reset();
     this.keyboard.reset();
     return this;
   }
@@ -26,7 +26,12 @@ class Yordle {
   backspace() {
     this.tray().backspace();
   }
-  enter() {
+  enter(guess/*=null*/) {
+    if (guess) {
+      for (let i = 0; i < guess.length; i++) {
+        this.set(guess[i]);
+      }
+    }
     var tray = this.tray();
     if (tray.isFull()) {
       if (this.mode == 3 && this.prevTray) {
@@ -36,19 +41,17 @@ class Yordle {
         }
       }
       if (this.mode >= 2) {
-        let guess = tray.getWord();
+        let guess = tray.getGuess();
         if (guess != this.word && ! this.wordlist.verify(guess)) {
-          return {error:"Not in word list"};
+          return {
+            error:'Not in word list',
+            guess:guess};
         }
       }
-      let r = this.trays.enter(); // 1=try again, 2=win, 3=lose
+      let r = this.trays.enter(this.word); // 1=try again, 2=win, 3=lose
       this.keyboard.setFromTray(tray);
       this.prevTray = tray;
-      return {
-        tray:tray,
-        win:r == 2,
-        lose:r == 3
-      };
+      return this.result(tray, r);
     }
   }
   getKeyColor(letter) {
@@ -57,7 +60,46 @@ class Yordle {
   tiles(fn) {
     this.trays.forEach(tray => tray.tiles.forEach(tile => fn(tile)));
   }
+  aitoggle(id) { 
+    this.tray().tile(id)?.toggleColor();
+  }
+  aiok() {
+    var tray = this.tray(), r;
+    if (tray.isCorrect()) {
+      r = 2;
+    } else {
+      if (tray.ix < this.trays.length - 1) {
+        this.trays.next();
+        this.tray().tiles.forEach(tile => {
+          if (tray.tiles[tile.ix].isGreen()) {
+            tile.setColor(3);
+          }
+        })
+        r = 1;
+      } else {
+        r = 3;
+      }
+    }
+    return this.result(tray, r);
+  }
+  airedo() {
+    return {
+      error:'Not in word list',
+      guess:this.tray().getGuess()};
+  }
   //
+  result(tray, r) {
+    let result = {
+      tray:tray,
+      win:r == 2,
+      lose:r == 3,
+      retry:r == 1
+    }
+    if (r.lose) {
+      result.word = this.word;
+    }
+    return result;
+}
   tray() {
     return this.trays.active();
   }
@@ -89,15 +131,15 @@ Yordle.Trays = class extends Array {
   constructor() {
     super();
   }
-  reset(word) {
+  reset() {
     this.ix = 0;
-    this.forEach(tray => tray.reset(word));
+    this.forEach(tray => tray.reset());
   }
   active() {
     return this[this.ix];
   }
-  enter() {
-    var r = this.active().enter();
+  enter(word) {
+    var r = this.active().enter(word);
     if (r == 2) {
       return 2/*win*/;
     }
@@ -123,15 +165,13 @@ Yordle.Tray = class {
   /**
    * Tiles tiles 
    * i ix
-   * s word
    */
   constructor(len, ix) {
     this.ix = ix;
     this.tiles = Yordle.Tiles.create(len, ix);
   }
-  reset(word) {
-    this.word = word;
-    this.tiles.reset(word);
+  reset() {
+    this.tiles.reset();
     this.done = null;
   }
   set(letter) {
@@ -140,14 +180,14 @@ Yordle.Tray = class {
   backspace() {
     this.tiles.backspace();
   }
-  enter() {
-    if (this.tiles.enter()) {
+  enter(word) {
+    if (this.tiles.enter(word)) {
       this.done = true;
       return this.isCorrect() ? 2 : 1;
     }
   }
-  getWord() {
-    return this.tiles.getWord();
+  getGuess() {
+    return this.tiles.getGuess();
   }
   isCorrect() {
     return this.tiles.isCorrect();
@@ -158,19 +198,20 @@ Yordle.Tray = class {
   isDone() {
     return this.done;
   }
+  tile(id) {
+    return this.tiles.byId(id);
+  }
 }
 Yordle.Tiles = class extends Array {
   /**
    * i ix
-   * s word
    */
   constructor() {
     super();
   }
-  reset(word) {
-    this.word = word;
+  reset() {
     this.ix = 0;
-    this.forEach((tile, i) => tile.reset(word));
+    this.forEach((tile, i) => tile.reset());
   }
   set(letter) {
     var tile = this.active();
@@ -188,9 +229,9 @@ Yordle.Tiles = class extends Array {
       tile.reset();
     }
   }
-  enter() {
+  enter(word) {
     if (this.isFull()) {
-      var word = this.word.split('');
+      word = word.split('');
       this.forEach((tile, i) => {
         if (tile.guess == word[i]) {
           tile.setColor(3);
@@ -213,7 +254,7 @@ Yordle.Tiles = class extends Array {
       return true;
     }
   }
-  getWord() {
+  getGuess() {
     var word = '';
     this.forEach(tile => word += tile.guess);
     return word;
@@ -238,6 +279,13 @@ Yordle.Tiles = class extends Array {
     }
     return this.active();
   }
+  byId(id) {
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].id == id) {
+        return this[i];
+      }
+    }
+  }
   //
   static create(len, ix) {
     return Yordle.Tiles.from({length:len}, (v, i) => new Yordle.Tile(i, ix));
@@ -246,12 +294,14 @@ Yordle.Tiles = class extends Array {
 Yordle.Tile = class {
   /**
    * i ix
+   * i iy
    * s id
    * s guess
    * i color (0=none, 1=wrong, 2=yellow, 3=green)
    */
   constructor(ix, iy) {
     this.ix = ix;
+    this.iy = iy;
     this.id = 'T' + iy + 'x' + ix;
   }
   reset() {
@@ -264,14 +314,26 @@ Yordle.Tile = class {
   setColor(color) {
     this.color = color;
   }
+  toggleColor() {
+    this.color = this.color == 3 ? 1 : this.color + 1;
+  }
   isGreen() {
     return this.color == 3;
   }
   isYellow() {
     return this.color == 2;
   }
+  isWrong() {
+    return this.color == 1;
+  }
+  isBlack() {
+    return this.color == 0;
+  }
   isEmpty() {
     return this.guess == '';
+  }
+  in(tray) {
+    return this.iy == tray?.ix;
   }
 }
 Yordle.Wordlist = class {
