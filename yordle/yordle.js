@@ -70,17 +70,40 @@ class Yordle {
     } else {
       if (tray.ix < this.trays.length - 1) {
         this.trays.next();
-        this.tray().tiles.forEach(tile => {
-          if (tray.tiles[tile.ix].isGreen()) {
-            tile.setColor(3);
-          }
-        })
         r = 1;
       } else {
         r = 3;
       }
     }
     return this.result(tray, r);
+  }
+  aicolor() {
+    var tray = this.tray();
+    tray.tiles.forEach(tile => tile.setColor(1));
+    if (tray.ix == 0) {
+      return;
+    }
+    var prev = this.trays[tray.ix - 1];
+    var yellows = [];
+    prev.tiles.forEach(tile => {
+      if (tile.isYellow()) {
+        yellows.push(tile.guess);
+      } else if (tile.isGreen()) {
+        tray.tiles[tile.ix].setColor(3);
+      }
+    })
+    if (yellows.length) {
+      tray.tiles.forEach(tile => {
+        if (! tile.isGreen()) {
+          var i = yellows.findIndex(s => s == tile.guess);
+          if (i > -1) {
+            tile.setColor(2);
+            yellows[i] = ' ';
+          }
+        }
+      })
+    }
+
   }
   airedo() {
     return {
@@ -122,6 +145,10 @@ class Yordle {
     if (yellows.length) {
       return 'Guess must contain ' + yellows.substring(0, 1);
     }
+  }
+  //
+  static hardMode(len/*=5*/, tries/*=6*/) {
+    return new Yordle(len, tries, 3);
   }
 }
 Yordle.Trays = class extends Array {

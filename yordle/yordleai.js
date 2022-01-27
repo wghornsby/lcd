@@ -22,7 +22,7 @@ class YordleAi {
     }
     if (! this.played) {
       this.played = 1;
-      return 'STERN'; // best by test
+      return 'STAND'; // current leader
     }
     return this.guess();
   }
@@ -69,46 +69,53 @@ class YordleAi {
   }
   setCandidates() {
     var filter = this.filter();
-    var i = 5;
+    var i = 3;
     var cands = this.wordlist.permutations(filter.substring(0, i));
     while (i < filter.length) {
       i++;
-      cands = cands.concat(this.wordlist.permutations(filter.substring(0, i)));
+      cands = [...new Set([...cands, ...this.wordlist.permutations(filter.substring(0, i))])];
     }
     this.candidates = cands;
-    if (cands.length == 0) breakme();  // TODO
+    if (cands.length == 0) breakme(); // TODO
   }
   bestCandidate() {
-    var bi = -1;
-    for (let i = 0; i < this.candidates.length; i++) {
+    if (this.tray.ix < 2) {
+      this.bcs_letterCount();
+    } else {
+      this.bcs_common();
+    }
+    return this.candidates[0];
+  }
+  bcs_letterCount() {
+    var good = [];
+    var bad = [];
+    this.candidates.forEach(word => {
       var c = {};
-      let word = this.candidates[i];
       for (let j = 0; j < word.length; j++) {
         if (c[word[j]] === undefined) {
           c[word[j]] = 0;
         }
         c[word[j]] = c[word[j]] + 1;
       }
-      bi = i;
+      var b = 0;
       for (const [letter, count] of Object.entries(c)) {
         if (this.counts[letter] === undefined) {
           if (count > 1) {
-            bi = -1;
+            b = 1;
           }
         } else {
           if (count > this.counts[letter].count) {
-            bi = -1;
+            b = 1;
           }
         }
       }
-      if (bi > -1) {
-        break;
-      }
-    }
-    if (bi == -1) {
-      bi = Math.floor(Math.random() * Math.floor(this.candidates.length));
-    }
-    return this.candidates[bi];
+      b ? bad.push(word) : good.push(word);
+    })
+    this.candidates = good.concat(bad);
+  }
+  bcs_common() {
+    var bcs = this.candidates.filter(word => this.wordlist.isCommon(word));
+    this.candidates = bcs.length ? bcs : this.candidates;
   }
   filter() {
     var f = this.both;
@@ -150,11 +157,18 @@ class YordleAi {
   isVowel(s) {
     return 'AEIOU'.indexOf(s) > -1;
   }
+  vowelCount(word) {
+    return this.lc(word, 'A') + this.lc(word, 'E') + this.lc(word, 'I') + this.lc(word, 'O') + this.lc(word, 'U');
+  }
+  lc(word, letter) {
+    return word.split(letter).length - 1;
+  }
 }
 YordleAi.Wordlist = class extends Array {
   //
   constructor() {
     super();
+    this.common = words[5];
   }
   permutations(filter) {
     return this.filter(w => {
@@ -189,6 +203,9 @@ YordleAi.Wordlist = class extends Array {
     if (i > -1) {
       this.splice(i, 1);
     }
+  }
+  isCommon(word) {
+    return this.common.find(w => w == word);
   }
   count(word, letter) {
     return word.split(letter).length - 1;
@@ -231,3 +248,4 @@ YordleAi.Letters = class extends Array {
 }
 const VOWS = ['E','A','I','O','U'];
 const CONS = ['R','T','N','S','L','C','D','P','M','H','G','B','F','Y','W','K','V','X','Z','J','Q'];
+const FREQ = ['E','A','R','I','O','T','N','S','L','C','U','D','P','M','H','G','B','F','Y','W','K','V','X','Z','J','Q'];
