@@ -63,7 +63,7 @@ class AiTester extends Ui {
   constructor() {
     super();
     this.yordle = Yordle.hardMode();
-    this.words = this.yordle.wordlist.words;
+    //this.words = this.yordle.wordlist.words;
     this.words = wordles;
     this.ix = 0;
     this.ai = new YordleAi(1);

@@ -41,3 +41,9 @@ class Ui {
 function delay(ms, fn) {
   setTimeout(fn, ms);
 }
+function pct(n, d) {
+  return round(n / d * 100.);
+}
+function round(x) {
+  return (Math.round(x * 100) / 100).toFixed(2);
+}

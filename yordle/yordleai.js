@@ -12,25 +12,28 @@ class YordleAi {
     this.cons = '';
     this.both = '';
     this.played = 0;
+    this.redo = 0;
     this.candidates = null;
     YordleAi.VOWS = YordleAi.Letters.asVowels();
     YordleAi.CONS = YordleAi.Letters.asConsonants();
   }
   play(result) {
     if (result) {
+      if (result.error && result.guess) {
+        this.redo = 1;
+        return this.invalid(result.guess);
+      }
+      this.redo = 0;
       this.process(result);
     }
     if (! this.played) {
       this.played = 1;
-      return 'STAND'; // current leader
+      return 'STAND'; // best by test
     }
     return this.guess();
   }
   //
   process(result) {
-    if (result.error && result.guess) {
-      return this.invalid(result.guess);
-    }
     this.candidates = null;
     this.tray = result.tray;
     this.counts = this.count(this.tray.tiles);
@@ -47,7 +50,7 @@ class YordleAi {
     if (! this.candidates) {
       this.setCandidates();
     }
-    return this.bestCandidate();
+    return this.candidates.length == 0 ? null : this.bestCandidate();
   }
   //
   count(tiles) {
@@ -76,7 +79,6 @@ class YordleAi {
       cands = [...new Set([...cands, ...this.wordlist.permutations(filter.substring(0, i))])];
     }
     this.candidates = cands;
-    if (cands.length == 0) breakme(); // TODO
   }
   bestCandidate() {
     if (this.tray.ix < 2) {
@@ -135,7 +137,9 @@ class YordleAi {
   }
   invalid(guess) {
     this.wordlist.removeWord(guess);
-    return this.play();
+    this.candidates = null;
+    var guess = this.play();
+    return guess;
   }
   save(s) {
     if (this.both.indexOf(s) == -1) {

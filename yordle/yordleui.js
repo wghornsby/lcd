@@ -10,6 +10,7 @@ class UiPage extends Ui {
       .on('click', text => this.uikeyboard_onclick(text));
     if (aimode) {
       this.ai = new YordleAi();
+      this.resetTitle();
       this.playai();
     } else {
       window.on('keydown', e => this.onkeydown(e));
@@ -19,9 +20,13 @@ class UiPage extends Ui {
     this.uiboard.reset();
     this.uikeyboard.reset(this.ai);
     if (this.ai) {
+      this.resetTitle();
       this.ai.reset();
       this.playai();
     }
+  }
+  resetTitle() {
+    $('.title').innerText = 'YORDLE AI';
   }
   playself(result) {
     setTimeout(() => {
@@ -39,8 +44,43 @@ class UiPage extends Ui {
   }
   playai(result) {
     var guess = this.ai.play(result);
-    this.uiboard.setGuess(guess);
-    $('.title').innerText = this.ai.wordlist.length - 1;
+    if (guess == null) {
+      if (confirm('i don\'t know your word, so i suspect you messed up the colors')) {
+        this.reset();
+      } else {
+        this.aiundo()
+      }
+    } else {
+      this.uiboard.setGuess(guess);
+      this.setTitle();
+    }
+  }
+  setTitle() {
+    var trays = 5 - this.yordle.tray().ix;
+    var words = this.ai.wordlist.length - 1;
+    var left = words - trays;
+    var odds = left <= trays ? 100. : pct(trays, left);
+    if (odds == 100) {
+      $('.title').innerText = words == 0 ? 'I WON' : 'RESISTANCE IS FUTILE';
+    } else if (odds >= 70 && trays >= 2) {
+      $('.title').innerText = 'NEARLY THERE';
+    } else if (odds >= 50 && trays >= 2) {
+      $('.title').innerText ='GETTING CLOSE NOW';
+    } else if (odds >= 30 && trays >= 3) {
+      $('.title').innerText = 'THE END IS NIGH';
+    } else if (odds >= 10 && trays >= 3) {
+      $('.title').innerText = 'GETTING WARM';
+    } else {
+      $('.title').innerText = odds + '%';
+    }
+    if (this.ai.redo) {
+      $('.title').innerText = 'REDONE, ' + odds + '%';
+      return;
+    }
+    if (words == 0) {
+      this.uiboard.win();
+      delay(1100, () => this.winlose({win:1}));
+    }
   }
   onkeydown(e) {
     var r;
@@ -67,9 +107,12 @@ class UiPage extends Ui {
           this.playai(r);          
         }
         break;
-      case 'REDO':
-        r = this.yordle.airedo();
+      case 'NOT IN WORDLIST':
+        r = this.yordle.ainotfound();
         this.playai(r);
+        break;
+      case 'UNDO':
+        this.aiundo();
         break;
     }
     var s = e.key.toUpperCase();
@@ -78,12 +121,22 @@ class UiPage extends Ui {
       let r = this.uiboard.set(s);
     }
   }
+  aiundo() {
+    var results = this.yordle.aiundo();
+    this.ai.reset();
+    this.ai.play();
+    if (results) {
+      results.forEach(r => this.ai.play(r));
+    }
+    this.uiboard.refresh();
+    this.setTitle();
+  }
   winlose(r) {
     if (r.win) {
       if (this.ai) {
         if (confirm('we have a weiner')) {
           this.reset();
-        }  
+        } 
       } else {
         delay(500, () => this.uiboard.win());
         delay(1100, () => {
@@ -94,11 +147,17 @@ class UiPage extends Ui {
       }
     }
     if (r.lose) {
-      delay(50, () => {
-        if (confirm('you are such a pathetic loser! ' + r.word)) {
+      if (this.ai) {
+        if (confirm('i am such a pathetic loser')) {
           this.reset();
-        }  
-      })
+        }
+      } else {
+        delay(50, () => {
+          if (confirm('you are such a pathetic loser! ' + r.word)) {
+            this.reset();
+          }  
+        })
+      }
     }
   }
   uikeyboard_onclick(text) {
@@ -162,10 +221,10 @@ class UiBoard extends Ui {
     this.yordle.backspace();
     this.refresh();
   }
-  win(c3) {
+  win() {
     this.yordle.tray().tiles.forEach(tile => {
       var $td = $('#' + tile.id);
-      $td.className = c3 ? 'c3' : 'win';
+      $td.className = 'win';
     })
   }
   refresh() {

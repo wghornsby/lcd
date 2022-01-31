@@ -18,6 +18,7 @@ class Yordle {
     this.word = word || this.wordlist.random();
     this.trays.reset();
     this.keyboard.reset();
+    this.results = [];
     return this;
   }
   set(letter) {
@@ -75,7 +76,9 @@ class Yordle {
         r = 3;
       }
     }
-    return this.result(tray, r);
+    var result = this.result(tray, r);
+    this.results.push(result);
+    return result;
   }
   aicolor() {
     var tray = this.tray();
@@ -103,12 +106,23 @@ class Yordle {
         }
       })
     }
-
   }
-  airedo() {
+  ainotfound() {
+    var guess = this.tray().getGuess();
+    this.tray().reset();
     return {
       error:'Not in word list',
-      guess:this.tray().getGuess()};
+      guess:guess};
+  }
+  aiundo() {
+    var ix = this.tray().ix - 1;
+    if (ix < 0) {
+      return;
+    }
+    this.tray().reset();
+    this.trays.ix--;
+    this.results = this.results.filter(r => r.tray.ix < ix);
+    return this.results;
   }
   //
   result(tray, r) {
@@ -155,8 +169,8 @@ Yordle.Trays = class extends Array {
   /**
    * i ix
    */
-  constructor() {
-    super();
+  constructor(e) {
+    super(e);
   }
   reset() {
     this.ix = 0;
@@ -183,6 +197,13 @@ Yordle.Trays = class extends Array {
   isDone() {
     return this[this.length - 1].isDone();
   }
+  clone() {
+    var trays = [];
+    this.forEach(tray => trays.push(tray.clone()));
+    trays = Yordle.Trays.from(trays);
+    trays.ix = this.ix;
+    return trays;
+  }
   //
   static create(len, tries) {
     return Yordle.Trays.from({length:tries}, (v, i) => new Yordle.Tray(len, i));
@@ -193,9 +214,9 @@ Yordle.Tray = class {
    * Tiles tiles 
    * i ix
    */
-  constructor(len, ix) {
+  constructor(len, ix, tiles/*=null*/) {
     this.ix = ix;
-    this.tiles = Yordle.Tiles.create(len, ix);
+    this.tiles = tiles || Yordle.Tiles.create(len, ix);
   }
   reset() {
     this.tiles.reset();
@@ -228,13 +249,16 @@ Yordle.Tray = class {
   tile(id) {
     return this.tiles.byId(id);
   }
+  clone() {
+    return new Yordle.Tray(null, this.ix, this.tiles.clone());
+  }
 }
 Yordle.Tiles = class extends Array {
   /**
    * i ix
    */
-  constructor() {
-    super();
+  constructor(e) {
+    super(e);
   }
   reset() {
     this.ix = 0;
@@ -313,6 +337,13 @@ Yordle.Tiles = class extends Array {
       }
     }
   }
+  clone() {
+    var tiles = [];
+    this.forEach(tile => tiles.push(tile.clone()))
+    tiles = Yordle.Tiles.from(tiles);
+    tiles.ix = this.ix;
+    return tiles;
+  }
   //
   static create(len, ix) {
     return Yordle.Tiles.from({length:len}, (v, i) => new Yordle.Tile(i, ix));
@@ -326,10 +357,12 @@ Yordle.Tile = class {
    * s guess
    * i color (0=none, 1=wrong, 2=yellow, 3=green)
    */
-  constructor(ix, iy) {
+  constructor(ix, iy, guess/*=null*/, color/*=null*/) {
     this.ix = ix;
     this.iy = iy;
     this.id = 'T' + iy + 'x' + ix;
+    this.guess = guess;
+    this.color = color;
   }
   reset() {
     this.guess = '';
@@ -361,6 +394,9 @@ Yordle.Tile = class {
   }
   in(tray) {
     return this.iy == tray?.ix;
+  }
+  clone() {
+    return new Yordle.Tile(this.ix, this.iy, this.guess, this.color);
   }
 }
 Yordle.Wordlist = class {
