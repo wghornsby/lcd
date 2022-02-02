@@ -136,7 +136,7 @@ class Yordle {
       result.word = this.word;
     }
     return result;
-}
+  }
   tray() {
     return this.trays.active();
   }
