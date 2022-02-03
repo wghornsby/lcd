@@ -246,6 +246,9 @@ Yordle.Tray = class {
   isDone() {
     return this.done;
   }
+  totalWrong() {
+    return this.tiles.filter(tile => tile.isWrong()).length;
+  }
   tile(id) {
     return this.tiles.byId(id);
   }

@@ -81,7 +81,7 @@ class YordleAi {
     this.candidates = cands;
   }
   bestCandidate() {
-    if (this.tray.ix < 2) {
+    if (this.candidates.length >= 20) {
       this.bcs_letterCount();
     } else {
       this.bcs_common();
@@ -114,6 +114,18 @@ class YordleAi {
       b ? bad.push(word) : good.push(word);
     })
     this.candidates = good.concat(bad);
+  }
+  bcs_firstLetter() {
+    if (this.candidates.length == 1) {
+      return this.candidates[0];
+    }
+    for (var i = 0; i < 26; i++) {
+      for (var j = 0; j < this.candidates.length; j++) {
+        if (this.candidates[j].substring(0, 1) == FREQ1[i]) {
+          return this.candidates[j];
+        }
+      }
+    }
   }
   bcs_common() {
     var bcs = this.candidates.filter(word => this.wordlist.isCommon(word));
@@ -253,3 +265,5 @@ YordleAi.Letters = class extends Array {
 const VOWS = ['E','A','I','O','U'];
 const CONS = ['R','T','N','S','L','C','D','P','M','H','G','B','F','Y','W','K','V','X','Z','J','Q'];
 const FREQ = ['E','A','R','I','O','T','N','S','L','C','U','D','P','M','H','G','B','F','Y','W','K','V','X','Z','J','Q'];
+const FREQ1 = ['S','C','P','D','B','R','A','M','T','F','E','I','H','G','L','U','W','O','N','V','J','K','Q','Y','Z','X'];
+

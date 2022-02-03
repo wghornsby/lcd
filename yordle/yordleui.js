@@ -26,7 +26,8 @@ class UiPage extends Ui {
     }
   }
   resetTitle() {
-    $('.title').innerText = 'YORDLE AI';
+    $('.title').innerText = '';
+    this.titles = ['STARTING TO FEEL IT','GETTING WARM','CLOSING IN','THE END IS NIGH','RESISTANCE IS FUTILE'];
   }
   playself(result) {
     setTimeout(() => {
@@ -48,7 +49,7 @@ class UiPage extends Ui {
       if (confirm('i don\'t know your word, so i suspect you messed up the colors')) {
         this.reset();
       } else {
-        this.aiundo()
+        this.aiundo();
       }
     } else {
       this.uiboard.setGuess(guess);
@@ -58,23 +59,23 @@ class UiPage extends Ui {
   setTitle() {
     var trays = 5 - this.yordle.tray().ix;
     var words = this.ai.wordlist.length - 1;
-    var left = words - trays;
-    var odds = left <= trays ? 100. : pct(trays, left);
+    var left = trays - words;
+    var odds = left >= 0 ? 100. : pct(trays, words);
     if (odds == 100) {
-      $('.title').innerText = words == 0 ? 'I WON' : 'RESISTANCE IS FUTILE';
-    } else if (odds >= 70 && trays >= 2) {
-      $('.title').innerText = 'NEARLY THERE';
-    } else if (odds >= 50 && trays >= 2) {
-      $('.title').innerText ='GETTING CLOSE NOW';
-    } else if (odds >= 30 && trays >= 3) {
-      $('.title').innerText = 'THE END IS NIGH';
+      $('.title').innerText = words == 0 ? 'I WON' : this.titles[5 - words] + '!';
+    } else if (odds >= 50 && trays >= 1) {
+      $('.title').innerText = this.titles[3];
+    } else if (odds >= 30 && trays >= 2) {
+      $('.title').innerText = this.titles[2];
+    } else if (odds >= 20 && trays >= 3) {
+      $('.title').innerText = this.titles[1];
     } else if (odds >= 10 && trays >= 3) {
-      $('.title').innerText = 'GETTING WARM';
+      $('.title').innerText = this.titles[0];
     } else {
-      $('.title').innerText = odds + '%';
+      $('.title').innerText = odds + '%' + ' ' + words;
     }
     if (this.ai.redo) {
-      $('.title').innerText = 'REDONE, ' + odds + '%';
+      $('.title').innerText = 'REDONE';
       return;
     }
     if (words == 0) {
