@@ -115,6 +115,11 @@ header {
   font-family:'Roboto';
   font-size:15px;
 }
+#ai button.dis {
+  background-color:#484949;
+  color:#888;
+  cursor:default;
+}
   </style>
 </head>
 <body>
@@ -124,9 +129,10 @@ header {
     </header>
     <table id='grid'></table>
     <div id='ai'>
-      <button>ok !</button>
-      <button>not in wordlist</button>
-      <button>undo</button>
+      <button id='ok'>ok !</button>
+      <button class='cd'>not in wordlist</button>
+      <button class='cd'>undo</button>
+      <button>reset</button>
     </div>
     <div id='keyboard'>
       <div>

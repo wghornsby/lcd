@@ -10,8 +10,8 @@ class UiPage extends Ui {
       .on('click', text => this.uikeyboard_onclick(text));
     if (aimode) {
       this.ai = new YordleAi();
-      this.resetTitle();
-      this.playai();
+      this.titles = ['STARTING TO FEEL IT','GETTING WARM','CLOSING IN','THE END IS NIGH','RESISTANCE IS FUTILE'];
+      this.reset();
     } else {
       window.on('keydown', e => this.onkeydown(e));
     }
@@ -20,14 +20,9 @@ class UiPage extends Ui {
     this.uiboard.reset();
     this.uikeyboard.reset(this.ai);
     if (this.ai) {
-      this.resetTitle();
       this.ai.reset();
       this.playai();
     }
-  }
-  resetTitle() {
-    $('.title').innerText = '';
-    this.titles = ['STARTING TO FEEL IT','GETTING WARM','CLOSING IN','THE END IS NIGH','RESISTANCE IS FUTILE'];
   }
   playself(result) {
     setTimeout(() => {
@@ -46,42 +41,47 @@ class UiPage extends Ui {
   playai(result) {
     var guess = this.ai.play(result);
     if (guess == null) {
-      if (confirm('i don\'t know your word, so i suspect you messed up the colors')) {
-        this.reset();
-      } else {
-        this.aiundo();
-      }
+      this.title("I THINK YOU CHEATED?");
     } else {
       this.uiboard.setGuess(guess);
+      this.uikeyboard.setColors(this.yordle.tray());
       this.setTitle();
     }
   }
   setTitle() {
-    var trays = 5 - this.yordle.tray().ix;
+    var ix = this.yordle.tray().ix;
+    var trays = 5 - ix;
     var words = this.ai.wordlist.length - 1;
     var left = trays - words;
     var odds = left >= 0 ? 100. : pct(trays, words);
     if (odds == 100) {
-      $('.title').innerText = words == 0 ? 'I WON' : this.titles[5 - words] + '!';
+      if (words == 0) {
+        this.winlose({win:1});
+      } else {
+        this.title(this.titles[5 - words] + '!');
+      }
     } else if (odds >= 50 && trays >= 1) {
-      $('.title').innerText = this.titles[3];
+      this.title(this.titles[3]);
     } else if (odds >= 30 && trays >= 2) {
-      $('.title').innerText = this.titles[2];
+      this.title(this.titles[2]);
     } else if (odds >= 20 && trays >= 3) {
-      $('.title').innerText = this.titles[1];
+      this.title(this.titles[1]);
     } else if (odds >= 10 && trays >= 3) {
-      $('.title').innerText = this.titles[0];
+      this.title(this.titles[0]);
     } else {
-      $('.title').innerText = odds + '%' + ' ' + words;
+      this.title(this.yordle.tray().ix == 0 ? "LET'S GO" : 'HMMM' + '.'.repeat(ix + 2));
     }
     if (this.ai.redo) {
-      $('.title').innerText = 'REDONE';
+      this.title('REDONE');
       return;
     }
     if (words == 0) {
       this.uiboard.win();
       delay(1100, () => this.winlose({win:1}));
     }
+  }
+  title(s) {
+    $('.title').innerText = s;
   }
   onkeydown(e) {
     var r;
@@ -110,12 +110,17 @@ class UiPage extends Ui {
         break;
       case 'NOT IN WORDLIST':
         r = this.yordle.ainotfound();
-        this.playai(r);
+        if (r) {
+          this.playai(r);
+        }
         break;
       case 'UNDO':
         this.aiundo();
         break;
-    }
+      case 'RESET':
+        this.reset();
+        break;
+      }
     var s = e.key.toUpperCase();
     var i = s.charCodeAt(0);
     if (s.length == 1 && i >= 65 && i <= 90) {
@@ -130,14 +135,15 @@ class UiPage extends Ui {
       results.forEach(r => this.ai.play(r));
     }
     this.uiboard.refresh();
+    this.uikeyboard.setColors(this.yordle.tray());
     this.setTitle();
   }
   winlose(r) {
     if (r.win) {
       if (this.ai) {
-        if (confirm('we have a weiner')) {
-          this.reset();
-        } 
+        this.title('I WIN');
+        this.uiboard.win();
+        this.uikeyboard.setColors();
       } else {
         delay(500, () => this.uiboard.win());
         delay(1100, () => {
@@ -149,9 +155,8 @@ class UiPage extends Ui {
     }
     if (r.lose) {
       if (this.ai) {
-        if (confirm('i am such a pathetic loser')) {
-          this.reset();
-        }
+        this.title('I LOSE');
+        this.uikeyboard.setColors();
       } else {
         delay(50, () => {
           if (confirm('you are such a pathetic loser! ' + r.word)) {
@@ -252,9 +257,10 @@ class UiKeyboard extends Ui {
   //
   constructor(aimode) {
     super();
+    this.aimode = aimode;
     aimode ? $('#ai').style.display = 'block' : $('#keyboard').style.display = 'block';
     this.$buttons = $$('button')
-      .on('click', e => this.onclick(e.srcElement.innerText));
+      .on('click', e => this.aiClick(e.srcElement));
     this.mapButtons();
   }
   reset() {
@@ -263,13 +269,28 @@ class UiKeyboard extends Ui {
     })    
   }
   setColors(tray) {
-    tray.tiles.forEach(tile => {
-      let $b = this.$map[tile.guess];
-      let cn = 'c' + tile.color;
-      if (cn > $b.className) {
-        $b.className = cn;
+    if (this.aimode) {
+      if (tray) {
+        $$('#ai .cd').forEach($e => $e.className = ! tray?.ix ? 'cd dis' : 'cd');
+        $('#ok').className = '';
+      } else {
+        $$('#ai .cd').forEach($e => $e.className = 'cd dis');
+        $('#ok').className = 'dis';
       }
-    })
+    } else {
+      tray.tiles.forEach(tile => {
+        let $b = this.$map[tile.guess];
+        let cn = 'c' + tile.color;
+        if (cn > $b.className) {
+          $b.className = cn;
+        }
+      })  
+    }
+  }
+  aiClick($e) {
+    if (! $e.classList.contains('dis')) {
+      this.onclick($e.innerText);
+    }
   }
   mapButtons() {
     this.$map = {};

@@ -108,11 +108,13 @@ class Yordle {
     }
   }
   ainotfound() {
-    var guess = this.tray().getGuess();
-    this.tray().reset();
-    return {
-      error:'Not in word list',
-      guess:guess};
+    if (this.tray().ix) {
+      var guess = this.tray().getGuess();
+      this.tray().reset();
+      return {
+        error:'Not in word list',
+        guess:guess};  
+    }
   }
   aiundo() {
     var ix = this.tray().ix - 1;
