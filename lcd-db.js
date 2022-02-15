@@ -242,23 +242,35 @@ LocalDb.Table = class {
   }
 }
 
-/** Local client */
+/** Local client/server */
+class LocalServer {
+  //
+  process(action/*'ex. 'getPatient'*/, args/*ex. {id:5}*/, data/*posted object*/) {
+    /**
+    switch(action) {
+    }
+    */
+  }
+}
 class LocalClient {
   //
   constructor(server) {
     this.server = server;
   }
-  ajax_get(action, args, onsuccess, onerror) {
-    this.ajax('GET', action, args, null, onsuccess, onerror);
+  async ajax_get(action, args) {
+    if (Number.isInteger(args)) {
+      args = {id:args};
+    }
+    return await this.ajax('GET', action, args, onsuccess);
   }
-  ajax_post(action, body, onsuccess, onerror) {
-    this.ajax('POST', action, null, body, onsuccess, onerror);
+  async ajax_post(action, body) {
+    return await this.ajax('POST', action, body);
   }
-  ajax(method, action, args, body, onsuccess, onerror) {
-    var data = body ? jscopy(body) : null;
-    wait(1000).then(() => {
-      var j = this.server.process(action, args, data);
-      onsuccess(JSON.parse(j));
+  async ajax(method, action, o) {
+    var data = o && jscopy(o);
+    wait(500).then(() => {
+      var j = this.server.process(action, data);
+      return JSON.parse(j);
     })
   }
 }
@@ -273,29 +285,29 @@ class LocalResponse extends Array {
   static asOKOrNotFound(row) {
     return row ? this.asOK(row) : this.asNotFound();
   }
-  static asBadRequest(msg) {
-    return js(new this(400, msg || 'Bad Request'));
+  static asBadRequest(msg = 'Bad Request') {
+    return js(new this(400, msg));
   }
-  static asUnauthorized(msg) {
-    return js(new this(401, msg || 'Unauthorized'));
+  static asUnauthorized(msg = 'Unauthorized') {
+    return js(new this(401, msg));
   }
-  static asForbidden(msg) {
-    return js(new this(403, msg || 'Forbidden'));
+  static asForbidden(msg = 'Forbidden') {
+    return js(new this(403, msg));
   }
-  static asNotFound(msg) {
-    return js(new this(404, msg || 'Not Found'));
+  static asNotFound(msg = 'Not Found') {
+    return js(new this(404, msg));
   }
 }
 
 /** Local session */
 class LocalSession {
   //
-  static open(key, minToExpire = null/*30*/) {
+  static open(key, minToExpire = 30) {
     return new this(key, minToExpire);
   }
   //
-  constructor(key, minToExpire) {
-    this.store = new Storage(key, minToExpire || 30);
+  constructor(key, minToExpire = 30) {
+    this.store = new Storage(key, minToExpire);
     this.data = {};
     this.fetch();
   }
@@ -334,4 +346,27 @@ class Storage {
   erase() {
     localStorage.removeItem(this.key);
   }    
+}
+/** Storage */
+class Storage {
+  //
+  constructor(key, minToExpire/*=null(never)*/) {
+    this.key = key;
+    this.minToExpire = minToExpire;
+  }
+  save(o) {
+    let expires = this.minToExpire ? Date.now() + this.minToExpire * 60000 : null;
+    localStorage.setItem(this.key, JSON.stringify({obj:o,expires:expires}));
+  }
+  fetch() {
+    var o = JSON.parse(localStorage.getItem(this.key));
+    if (o && o.expires && Date.now() > o.expires) {
+      this.erase();
+      o = null;
+    }
+    return o && o.obj;
+  }
+  erase() {
+    localStorage.removeItem(this.key);
+  }
 }

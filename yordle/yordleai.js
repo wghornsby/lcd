@@ -28,7 +28,7 @@ class YordleAi {
     }
     if (! this.played) {
       this.played = 1;
-      return 'STAND'; // best by test
+      return 'STAND'; // best by test (tests/ai.html)
     }
     return this.guess();
   }

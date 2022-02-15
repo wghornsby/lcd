@@ -1,20 +1,28 @@
-var file = '{"width":15,"height":15,"symmetry":1,"minWordLen":3,"cells":[[{"text":"A"},{"text":"S"},{"text":"D"},{"text":"A"},{"text":"S"},{"fill":1},{"text":"S"},{"text":"D"},{"text":"A"},{"text":"S"},{"text":"D"},{"fill":1},{"text":"A"},{"text":"S"},{"text":"S"}],[{},{},{},{},{"fill":0},{"fill":1},{},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{"fill":1},{"fill":0},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{},{"fill":1},{},{},{},{},{},{},{},{}],[{},{},{"text":"D"},{},{},{},{},{},{},{},{},{},{},{},{}],[{},{},{"text":"I"},{},{},{},{},{},{},{},{},{},{},{},{}],[{},{},{"text":"D"},{},{},{},{},{"fill":1},{"text":"L","locked":true},{"text":"O","locked":true},{"text":"C","locked":true},{"text":"K","locked":true},{"text":"E","locked":true},{"text":"D","locked":true},{"fill":1}],[{},{},{"text":"I"},{},{},{},{},{"fill":1},{},{},{},{},{},{},{}],[{"fill":1},{},{"text":"T"},{},{},{},{},{"fill":1},{},{},{},{},{},{},{}],[{},{},{"text":"W"},{},{},{},{},{},{},{},{},{},{},{},{}],[{},{},{"text":"O"},{},{},{},{},{},{},{},{},{},{},{},{}],[{},{},{"text":"R"},{},{},{},{},{},{"fill":1},{},{},{},{},{},{}],[{},{},{"text":"K"},{},{},{},{},{},{"fill":0},{"fill":1},{},{},{},{},{}],[{},{},{"text":"?"},{},{},{},{},{},{},{"fill":1},{"fill":0},{},{},{},{}],[{},{},{},{"fill":1},{},{},{},{},{},{"fill":1},{},{},{},{},{}]]}';
-
-class UiEditor extends Ui {
+class UiEditor extends Obj {
   //
   constructor() {
     super();
-    this.board = Board.asNew(15, 15);
-    //this.board = Board.fromPojo(JSON.parse(file));
-    this.uiboard = new UiEditor.Board(this.board)
+    this.id = qs().id;
+    this.uibrowser = new UiEditor.Browser()
+      .on('load', () => this.uibrowser_onload());
+    this.uiboard = new UiEditor.Board()
       .on('click', cell => this.uiboard_onclick(cell));
-    this.uicursor = new UiEditor.Cursor(this.board.cursor);
+    this.uicursor = new UiEditor.Cursor();
     window
       .on('keydown', e => this.onkeydown(e))
       .on('beforeunload', e => {
         e.preventDefault();
         e.returnValue = '';
       });
+    this.load();
+  }
+  load() {
+    this.board = Board.asNew(15, 15);
+    this.uiboard.load(this.board);
+    this.uicursor.load(this.board.cursor)
+  }
+  uibrowser_onload() {
+    window.focus();
   }
   onkeydown(e) {
     if (e.ctrlKey) {
@@ -30,6 +38,7 @@ class UiEditor extends Ui {
           break;
         case 'S':
           this.board.selWord();
+          this.uibrowser.nav(this.board.getSelText());
           break;
         case 'Y':
           this.board.redo();
@@ -89,10 +98,9 @@ class UiEditor extends Ui {
     this.refresh();
   }
 }
-UiEditor.Cursor = class extends Ui {
+UiEditor.Cursor = class extends Obj {
   //
-  constructor(cursor) {
-    super();
+  load(cursor) {
     this.cursor = cursor;
     this.$cursor = $('#cursor');
     this.refresh();
@@ -108,14 +116,16 @@ UiEditor.Cursor = class extends Ui {
     this.$cursor.style.transform = 'translate3d(' + px + 'px,' + py + 'px,0px)';
   }
 }
-UiEditor.Board = class extends Ui {
+UiEditor.Board = class extends Obj {
   onclick(cell) {}
   //
-  constructor(board) {
+  constructor() {
     super();
-    this.board = board;
-    this.uicells = new UiEditor.Cells(board)
-      .bubble('click', this);
+    this.uicells = new UiEditor.Cells()
+      .on('click', cell => this.onclick(cell));
+  }
+  load(board) {
+    this.uicells.load(board);
     this.reset();
   }
   reset() {
@@ -126,19 +136,21 @@ UiEditor.Board = class extends Ui {
     this.uicells.refresh();
   }
 }
-UiEditor.Cells = class extends Ui {
+UiEditor.Cells = class extends Obj {
   onclick(cell) {}
   //
-  constructor(board) {
+  constructor() {
     super();
-    this.board = board;
     this.$grid = $('#grid');
+  }
+  load(board) {
+    this.board = board;
   }
   reset() {
     this.$grid.innerHTML = '';
-    this.board.each(row => {
+    this.board.forEach(row => {
       var $tr = this.$grid.insertRow();
-      row.each(cell => {
+      row.forEach(cell => {
         var $td = $tr.insertCell();
         $td.x = cell.x;
         $td.y = cell.y;
@@ -158,4 +170,21 @@ UiEditor.Cells = class extends Ui {
   $get(cell) {
     return $('#' + cell.id);
   }
+}
+UiEditor.Browser = class extends Obj {
+  onload() {}
+  //
+  constructor(board) {
+    super();
+    this.$if = $('#if')
+      .on('load', e => this.onload());
+    this.$if.src = this.url();
+  }
+  nav(s) {
+    this.$if.src = this.url() + '?w=' + s + '&ssbp=1';
+  }
+  //
+  url() {
+    return 'https://www.onelook.com';
+  } 
 }

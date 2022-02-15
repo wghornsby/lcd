@@ -1,4 +1,23 @@
-class Board {
+class Crossword extends Obj {
+  /**
+   * Board board
+   */
+  constructor(board) {
+    this.board = board;
+  }
+  async save() {
+    this.board = await MyClient.saveCrossword(this.board);
+  }
+  //
+  static async fetch(id) {
+    var o = await MyClient.getCrossword(id);
+    return new this(Board.fromPojo(o));
+  }
+  static asNew(width, height, symmetry, minWordLen) {
+    return new this(Board.asNew(width, height, symmetry, minWordLen));
+  }
+}
+class Board extends Obj {
   /**
    * i width, height
    * i mx, my
@@ -8,13 +27,14 @@ class Board {
    * Cursor cursor
    * Cell[][] cells
    */
-  constructor(width/*=15*/, height/*=15*/, symmetry/*=ROTATIONAL*/, minWordLen/*=3*/, title, id) {
-    this.width = width || 15;
-    this.height = height || 15;
+  constructor(width = 15, height = 15, symmetry = Board.SYMMETRY.ROTATIONAL, minWordLen = 3, title, id) {
+    super();
+    this.width = width;
+    this.height = height;
     this.mx = this.width - 1;
     this.my = this.height - 1;
-    this.symmetry = symmetry || Board.SYMMETRY.ROTATIONAL;
-    this.minWordLen = minWordLen || 3;
+    this.symmetry = symmetry;
+    this.minWordLen = minWordLen;
     this.title = title;
     this.id = id;
     this.cursor = new Board.Cursor(this.width, this.height);
@@ -26,7 +46,7 @@ class Board {
     this.refresh(1);
   }
   clear(hard) {
-    this.getSel().each(cell => {
+    this.getSel().forEach(cell => {
       cell.set();
       if (hard) {
         if (cell.isBlack()) {
@@ -80,17 +100,17 @@ class Board {
     this.refresh();
   }
   toggle() {
-    this.getSel().each(cell => this.toggleCell(cell));
+    this.getSel().forEach(cell => this.toggleCell(cell));
     this.cursor.advance();
     this.refresh(1);
   }
   toggleCircle() {
-    this.getSel().each(cell => cell.toggleCircle());
+    this.getSel().forEach(cell => cell.toggleCircle());
     this.cursor.advance();
     this.refresh(1);
   }
   toggleLock() {
-    this.getSel().each(cell => cell.toggleLock());
+    this.getSel().forEach(cell => cell.toggleLock());
     this.cursor.resetSel();
     this.refresh(1);
   }
@@ -112,8 +132,8 @@ class Board {
     this.cursor.moveTo(x, y);
     this.refresh();
   }
-  each(fn/*(row, y)*/) {
-    this.cells.each(fn);
+  forEach(fn/*(row, y)*/) {
+    this.cells.forEach(fn);
   }
   all(fn/*(cell, x, y)*/) {
     this.cells.all(fn);
@@ -139,6 +159,11 @@ class Board {
   }
   /*Cells*/getSel() {
     return this.cells.fromCursor(this.cursor);
+  }
+  getSelText() {
+    var s = '';
+    this.getSel().forEach(cell => {s += cell.text ? cell.text : '?'});
+    return s;
   }
   setCell(x, y, text) {
     this.getCell(x, y).set(text);
@@ -182,11 +207,12 @@ class Board {
   }
   init() {
     this.refresh();
-    priv(this, '_actions', new Board.Actions(this));
+    this._actions = new Board.Actions(this);
+    this.priv('_actions');
   }
   //
   static fromPojo(o) {
-    var me = new Board(
+    var me = new this(
       o.width,
       o.height,
       o.symmetry,
@@ -199,7 +225,6 @@ class Board {
   }
   static asNew(width, height, symmetry, minWordLen) {
     var me = new Board(width, height, symmetry, minWordLen);
-    me.id = self.crypto.randomUUID();
     me.init();
     return me;
   }
@@ -221,7 +246,7 @@ Board.Cells = class extends Array {
     return this[y][x];
   }
   all(fn/*(cell, x, y))*/) {
-    this.each((row, y) => row.each((cell, x) => fn(cell, x, y)));
+    this.forEach((row, y) => row.forEach((cell, x) => fn(cell, x, y)));
   }
   /*Cells*/filter(fn) {
     return Board.Cells.from([].filter.call(this.flat(), fn));
@@ -241,8 +266,8 @@ Board.Cells = class extends Array {
   }
   toString() {
     var s = '\n';
-    this.each((row, y) => {
-      row.each((cell, x) => {
+    this.forEach((row, y) => {
+      row.forEach((cell, x) => {
         s += cell.toString() + ' ';
       })
       s += '\n';
@@ -252,7 +277,7 @@ Board.Cells = class extends Array {
   //
   setNum() {
     this.all(cell => cell.resetNum());
-    this.words().each(word => word[0].setNum('#'));
+    this.words().forEach(word => word[0].setNum('#'));
     var i = 1;
     this.all(cell => {
       if (cell.num == '#') {
@@ -275,10 +300,10 @@ Board.Cells = class extends Array {
     return lines.words();
   }
   loadPojo(a) {
-    this.each((row, y) => row.each((cell, x) => cell.loadPojo(a[y][x])));
+    this.forEach((row, y) => row.forEach((cell, x) => cell.loadPojo(a[y][x])));
   }
   loadAction(a) {
-    this.each((row, y) => row.each((cell, x) => cell.loadAction(a[y][x])));
+    this.forEach((row, y) => row.forEach((cell, x) => cell.loadAction(a[y][x])));
   }
   //
   static create(width, height) {
@@ -301,11 +326,11 @@ Board.Cells.Lines = class extends Array {
     }
   }
   setErr(min) {
-    this.each(line => line.words.setErr(min));
+    this.forEach(line => line.words.setErr(min));
   }
   words() {
     var words = [];
-    this.each(line => {
+    this.forEach(line => {
       words = words.concat(line.words);
     })
     return words;
@@ -341,7 +366,7 @@ Board.Cells.Words = class extends Array {
     super();
     if (line) {
       var word  = new Board.Cells.Word();
-      line.each(cell => {
+      line.forEach(cell => {
         if (cell.isBlack() && word.length > 0) {
           this.push(word);
           word = new Board.Cells.Word();
@@ -362,7 +387,7 @@ Board.Cells.Words = class extends Array {
     }
   }
   setErr(min) {
-    this.each(word => {
+    this.forEach(word => {
       if (word.length < min) {
         word.setErr();
       }
@@ -381,7 +406,7 @@ Board.Cells.Word/*Cell[]*/ = class extends Array {
     return x >= x0 && x <= x1 && y >= y0 && y <= y1;
   }
   setErr() {
-    this.each(cell => cell.setErr());
+    this.forEach(cell => cell.setErr());
   }
 }
 Board.Cell = class {
@@ -525,8 +550,7 @@ Board.Cursor = class {
   resetSel() {
     this._sel = null;
   }
-  advance(i/*=1*/) {
-    i = i || 1;
+  advance(i = 1) {
     if (this.dir == 1) {
       this.move(i, 0);
     } else {
