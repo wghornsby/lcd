@@ -1,28 +1,36 @@
-class UiEditor extends Obj {
+class UiCrossword extends Obj {
   //
   constructor() {
     super();
-    this.id = qs().id;
-    this.uibrowser = new UiEditor.Browser()
-      .on('load', () => this.uibrowser_onload());
+    this.uieditor = new UiEditor()
+      .on('lookup', (text) => this.uibrowser.nav(text))
+    this.uibrowser = new UiBrowser()
+      .on('load', () => window.focus());
+    this.setup();
+  }
+  async setup() {
+    await MyClient.login('test', 'test');
+    this.crossword = await Crossword.fetchMyLast();
+    this.uieditor.load(this.crossword);
+  }
+}
+class UiEditor extends Obj {
+  onlookup(text) {}
+  //
+  constructor() {
+    super();
     this.uiboard = new UiEditor.Board()
       .on('click', cell => this.uiboard_onclick(cell));
     this.uicursor = new UiEditor.Cursor();
     window
-      .on('keydown', e => this.onkeydown(e))
-      .on('beforeunload', e => {
-        e.preventDefault();
-        e.returnValue = '';
-      });
-    this.load();
+      .on('keydown', e => this.onkeydown(e));
   }
-  load() {
-    this.board = Board.asNew(15, 15);
+  load(crossword) {
+    this.crossword = crossword;
+    this.board = crossword.board;
     this.uiboard.load(this.board);
-    this.uicursor.load(this.board.cursor)
-  }
-  uibrowser_onload() {
-    window.focus();
+    this.uicursor.load(this.board.cursor);
+    this._sel = null;
   }
   onkeydown(e) {
     if (e.ctrlKey) {
@@ -38,7 +46,15 @@ class UiEditor extends Obj {
           break;
         case 'S':
           this.board.selWord();
-          this.uibrowser.nav(this.board.getSelText());
+          this.onlookup(this.board.getSelText());
+          break;
+        case 'V':
+          this.board.setSelText(this._sel);
+          this._sel == null;
+          break;
+        case 'X':
+          this._sel = this.board.getSelText();
+          this.board.clear();
           break;
         case 'Y':
           this.board.redo();
@@ -171,7 +187,7 @@ UiEditor.Cells = class extends Obj {
     return $('#' + cell.id);
   }
 }
-UiEditor.Browser = class extends Obj {
+UiBrowser = class extends Obj {
   onload() {}
   //
   constructor(board) {

@@ -3,7 +3,7 @@
   <script type='text/javascript' src='lib/lcd-simple.js?2'></script>
   <script type='text/javascript' src='lib/lcd-db.js?2'></script>
   <script type='text/javascript' src='crossword.js?2'></script>
-  <script type='text/javascript' src='ui/editor.js?2'></script>
+  <script type='text/javascript' src='crosswordui.js?2'></script>
   <script type='text/javascript' src='server/server.js?2'></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -146,5 +146,5 @@ BODY {
   </div>
 </body>
 <script>
-  window.on('DOMContentLoaded', () => new UiEditor());
+window.on('DOMContentLoaded', () => new UiCrossword());
 </script>

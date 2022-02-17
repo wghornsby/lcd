@@ -21,7 +21,8 @@ NodeList.prototype.on = function(name, fn, options) {
 
 /** Extensions */
 Object.assign(Object, {
-  isObject:e => e?.constructor?.name === "Object" || e?.constructor?.name === ''
+  isObject:e => e && typeof e === 'object' && ! Array.isArray(e),
+  isEmpty:e => Object.keys(e).length === 0
 })
 Object.assign(Function, {
   isFunction:e => typeof e === 'function'
@@ -117,7 +118,9 @@ const pojo = o => clone(o, 'toPojo');
 const clone = (o, fname) => {
   let p = Array.isArray(o) ? [] : {};
   each(o, (val, fid) => {
-    if (Object.isObject(val)) {
+    if (Array.isArray(val)) {
+      p[fid] = clone(val, fname);
+    } else if (Object.isObject(val)) {
       p[fid] = (val[fname]) ? val[fname]() : clone(val, fname);
     } else if (Array.isArray(val)) {
       p[fid] = clone(val, fname);

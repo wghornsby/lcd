@@ -8,7 +8,11 @@ class LocalDb {
   //
   static open(name) {
     var me = new this(name);
-    return me.open();
+    me.open();
+    if (me.notSetup()) {
+      me.setup();
+    }
+    return me;
   }
   //
   constructor(name) {
@@ -46,6 +50,10 @@ class LocalDb {
     var table = this.table(tname, 1);
     return table.insert();
   }
+  insertOrUpdate(tname) {
+    var table = this.table(tname, 1);
+    return table.insertOrUpdate();
+  }
   select(tname) {
     var table = this.table(tname, 1);
     return table.select();
@@ -59,6 +67,12 @@ class LocalDb {
     return table.delete();
   }
   //
+  notSetup() {
+    return Object.isEmpty(this._tables);
+  }
+  setup() {
+    // override to create tables on first open
+  }
   table(tname, throwIfNotFound) {
     var table = this._tables[tname];
     if (table === undefined && throwIfNotFound) {
@@ -75,7 +89,7 @@ class LocalDb {
       this._tables[tname] = LocalDb.Table.open(this, tname, pkf);
       return null;
     })
-    return this; 
+    return this;
   }
   saveTables() {
     LocalDb.store(this.key('tables'), this._tpkfs);
@@ -119,7 +133,7 @@ LocalDb.Table = class {
     return this;
   }
   drop() {
-    this._pks.all(pk => this.eraseRow(pk));
+    this._pks.forEach(pk => this.eraseRow(pk));
     this.eraseStats();
   }
   select() {
@@ -144,7 +158,7 @@ LocalDb.Table = class {
   }
   selectAll() {
     var rows = [];
-    this._pks.all(pk => rows.push(LocalDb.fetch(this.key(pk))));
+    this._pks.forEach(pk => rows.push(LocalDb.fetch(this.key(pk))));
     return rows;
   }
   delete() {
@@ -201,7 +215,7 @@ LocalDb.Table = class {
   }
   insertByValues(e) {
     var recs = (Array.isArray(e)) ? e : [e], row;
-    recs.all(rec => {
+    recs.forEach(rec => {
       row = this.insertRec(rec);
     })
     return row;
@@ -225,7 +239,7 @@ LocalDb.Table = class {
   }
   updateRows(rows, setter) {
     var row;
-    rows.all(r => {
+    rows.forEach(r => {
       setter(r);
       this.save(r);
       row = r;
@@ -271,26 +285,48 @@ var LocalServer = {
   }
 }
 */
-class LocalClient {
-  //
+class LocalClient extends Obj {
+  onworking(b) {}
+  /**
+   * Optional events - if not implemented, throw will be done instead
+   * onexpired() {}
+   * onerror(msg) {}
+   */
   constructor(server) {
+    super();
     this.server = server;
   }
   async ajax_get(action, args) {
     if (Number.isInteger(args)) {
       args = {id:args};
     }
-    return await this.ajax('GET', action, args, onsuccess);
+    return await this.ajax('GET', action, args);
   }
   async ajax_post(action, body) {
     return await this.ajax('POST', action, body);
   }
   async ajax(method, action, o) {
-    var data = o && jscopy(o);
-    wait(500).then(() => {
-      var j = this.server.process(action, data);
-      return JSON.parse(j);
-    })
+    this.onworking(1);
+    await wait(1);
+    try {
+      var data = o && jscopy(o);
+      var lresp = JSON.parse(this.server.process(action, data));
+      if (lresp[0] == 200) {
+        return lresp[1];
+      } else {
+        if (lresp[0] == 419 && this.onexpired) {
+          return this.onexpired();
+        }
+        if (this.onerror) {
+          return this.onerror(lresp[1]);
+        } else {
+          throw lresp[1];
+        }
+      }
+    } catch (e) {
+      log(e);
+      throw 'Unknown Error';
+    }
   }
 }
 class LocalResponse extends Array {
@@ -310,11 +346,20 @@ class LocalResponse extends Array {
   static asUnauthorized(msg = 'Unauthorized') {
     return js(new this(401, msg));
   }
+  static asBadLogin(msg = 'Bad Login') {
+    return js(new this(401, msg));
+  }
   static asForbidden(msg = 'Forbidden') {
     return js(new this(403, msg));
   }
   static asNotFound(msg = 'Not Found') {
     return js(new this(404, msg));
+  }
+  static asExpired(msg = 'Session Expired') {
+    return js(new this(419, msg));
+  }
+  static asServerError(msg = 'Internal Server Error') {
+    return js(new this(500, msg));
   }
 }
 
@@ -334,12 +379,12 @@ class LocalSession {
     return this.data;
   }
   set(fid, value) {
-    this.data.fid = value;
+    this.data[fid] = value;
     this.save();
     return this;
   }
   get(fid) {
-    return this.data.fid;
+    return this.data[fid];
   }
   save() {
     this.store.save(this.data);
@@ -368,7 +413,7 @@ class Storage {
         this.erase();
         o = null;
       } else {
-        this.save(o); // to update expires
+        this.save(o.obj); // to update expires
       }
     }
     return o?.obj;
@@ -376,4 +421,56 @@ class Storage {
   erase() {
     localStorage.removeItem(this.key);
   }    
+}
+Array.prototype.sortBy = function(refs) {
+  /*
+   * recs.sortBy('-active, app().name, route().short(), vendor().name'));
+   */
+  var orders = [];
+  if (refs) {
+    refs = refs.split(',');
+    for (var i = 0; i < refs.length; i++) {
+      refs[i] = refs[i].trim();
+      if (refs[i].substr(0, 1) == '-') {
+        refs[i] = refs[i].substr(1);
+        orders.push(-1);
+      } else {
+        orders.push(1);
+      }
+    }
+    [].sort.call(this, function(a, b) {
+      var va, vb;
+      for (var i = 0; i < refs.length; i++) {
+        va = resolve(a, refs[i], 1);
+        vb = resolve(b, refs[i], 1);
+        if (va > vb) {
+          return 1 * orders[i];
+        }
+        if (va < vb) {
+          return -1 * orders[i];
+        }
+      }
+      return 0;
+    })
+  }
+  return this;		
+}
+function resolve(o, ref, toUpperCase = null) {
+  /*
+   * o = {vendor:function(){return{name:'fred'}}}
+   * v = resolve(o, 'vendor().name'); 
+   */
+  if (ref) {
+    var refs = ref.split('.'), a;
+    for (var i = 0; i < refs.length; i++) {
+      if (o != null) {
+        a = refs[i].split('()');
+        o = (a.length == 1) ? o[a[0]] : o[a[0]]();
+      }
+    }
+  }
+  if (toUpperCase && String.isString(o)) {
+    o = o.toUpperCase();
+  }
+  return o;
 }

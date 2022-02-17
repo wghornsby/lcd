@@ -1,26 +1,34 @@
+var MyDb;
+var MyClient;
+var MySession;
+var MyUser;
+//
 class CrosswordDb extends LocalDb {
   //
   static open() {
-    var me = LocalDb.open('Crossword-WGH');
-    var initUser = ! me.table('USERS');
-    me.createTables({
-      'USERS':'id',
-      'CROSSWORDS':'id',
-      'CROSSWORD':'id'
+    return LocalDb.open('Crossword-WGH');
+  }
+  setup() {
+    this.createTables({
+        'USERS':'id',
+        'CROSSWORDS':'id',
+        'CROSSWORD':'id'
     });
-    if (initUser) {
-      me.insert('USERS').values({'name':'me'});
-    }
-    return me;
+    this.insert('USERS').values({'name':'me'});
   }
 }
 class CrosswordSession extends LocalSession {
-  //
+  /**
+   * User user
+   */
   static open() {
     return LocalSession.open('Crossword-WGH-Session');
   }
 }
 class CrosswordClient extends LocalClient {
+  onworking(b) {}
+  onexpired() {}
+  onerror(msg) {}
   //
   constructor() {
     super(CrosswordServer);
@@ -30,6 +38,9 @@ class CrosswordClient extends LocalClient {
   }
   async getCrosswords() {
     return await this.ajax_get('getMyCrosswords');
+  }
+  async getMyLastCrossword() {
+    return await this.ajax_get('getMyLastCrossword');
   }
   async getCrossword(id) {
     return await this.ajax_get('getCrossword', id);
@@ -41,28 +52,43 @@ class CrosswordClient extends LocalClient {
 var CrosswordServer = {
   //
   process(action, data) {
-    if (action == 'login') {
-      var user = MyDb.select('USERS').pk(1);
-      if (user) {
-        return MySession.erase().set('user', user).fetch();
+    try {
+      var o;
+      if (action == 'login') {
+        var user = MyDb.select('USERS').pk(1);
+        if (user) {
+          o = MySession.erase().set('user', user).fetch();
+        } else {
+          return LocalResponse.asBadLogin();
+        }
       } else {
-        throw 'Invalid login';
+        MySession.fetch();
+        MyUser = MySession?.get('user');
+        if (! MySession || ! MyUser) {
+          return LocalResponse.asExpired();
+        }
+        switch (action) {
+          case 'getMyCrosswords':
+            o = MyDb.select('CROSSWORDS').where(row => row.uid == MyUser.id);
+            break;
+          case 'getMyLastCrossword':
+            o = MyDb.select('CROSSWORDS').where(row => row.uid == MyUser.id).pop();
+            break;
+          case 'getCrossword':
+            o = MyDb.select('CROSSWORDS').where(row => row.uid == MyUser.id && row.id == data.id);
+            break;
+          case 'saveCrossword':
+            o = MyDb.insertOrUpdate('CROSSWORDS').values(data);
+            break;
+        }
       }
-    }
-    MySession.fetch();
-    MyUser = MySession.get('user');
-    switch (action) {
-      case 'getMyCrosswords':
-        return MyDb.select('CROSSWORDS').where(row => row.uid == MyUser.id);
-      case 'getCrossword':
-        return MyDb.select('CROSSWORDS').where(row => row.uid == MyUser.id && row.id == data.id);
-      case 'saveCrossword':
-        return MyDb.insertOrUpdate('Crossword').values(data);
-      
+      return LocalResponse.asOK(o);
+    } catch (e) {
+      log(e);
+      return LocalResponse.asServerError();
     }
   }
 }
-var MyDb = CrosswordDb.open();
-var MyClient = new CrosswordClient();
-var MySession = CrosswordSession.open();
-var MyUser;
+MyDb = CrosswordDb.open();
+MyClient = new CrosswordClient();
+MySession = CrosswordSession.open();

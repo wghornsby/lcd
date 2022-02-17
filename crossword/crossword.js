@@ -1,33 +1,60 @@
 class Crossword extends Obj {
   /**
+   * i id
+   * i uid
+   * s title
    * Board board
    */
-  constructor(board) {
-    this.board = board;
+  constructor(id, title, board) {
+    super();
+    this.id = id;
+    this.uid = MyUser.id;
+    this.title = title || 'New Crossword';
+    this.board = board
+      .on('update', () => this.save());
+    MyClient
+      .on('error', (msg) => alert(msg))
+      .on('expired', () => alert('expired'));
   }
   async save() {
-    this.board = await MyClient.saveCrossword(this.board);
+    var rec = await MyClient.saveCrossword(this.toPojo());
+    if (! this.id) {
+      this.id = rec.id;
+    }
+  }
+  toPojo() {
+    return pojo(this);
   }
   //
+  static async fetchMyLast() {
+    var o = await MyClient.getMyLastCrossword();
+    return o ? this.fromPojo(o) : this.asNew();
+  }
   static async fetch(id) {
     var o = await MyClient.getCrossword(id);
-    return new this(Board.fromPojo(o));
+    return this.fromPojo(o);
   }
   static asNew(width, height, symmetry, minWordLen) {
-    return new this(Board.asNew(width, height, symmetry, minWordLen));
+    return new this(null, null, Board.asNew(width, height, symmetry, minWordLen));
+  }
+  static fromPojo(o) {
+    return new this(
+      o.id,
+      o.title,
+      Board.fromPojo(o.board));
   }
 }
 class Board extends Obj {
+  onupdate() {}
   /**
    * i width, height
    * i mx, my
    * i symmetry
    * i minWordLen
-   * s title
    * Cursor cursor
    * Cell[][] cells
    */
-  constructor(width = 15, height = 15, symmetry = Board.SYMMETRY.ROTATIONAL, minWordLen = 3, title, id) {
+  constructor(width = 15, height = 15, symmetry = Board.SYMMETRY.ROTATIONAL, minWordLen = 3) {
     super();
     this.width = width;
     this.height = height;
@@ -35,15 +62,13 @@ class Board extends Obj {
     this.my = this.height - 1;
     this.symmetry = symmetry;
     this.minWordLen = minWordLen;
-    this.title = title;
-    this.id = id;
     this.cursor = new Board.Cursor(this.width, this.height);
     this.cells = Board.Cells.create(this.width, this.height);
   }
-  set(text) {
+  set(text, refresh = 1) {
     this.setCell(this.cursor.x, this.cursor.y, text);
     this.cursor.advance();
-    this.refresh(1);
+    refresh && this.refresh(1);
   }
   clear(hard) {
     this.getSel().forEach(cell => {
@@ -144,6 +169,27 @@ class Board extends Obj {
   redo() {
     this._actions.redo();
   }
+  setSelText(text) {
+    if (text.length) {
+      var cell = this.getSel()[0];
+      this.cursor.resetSel().moveTo(cell.x, cell.y);
+      for (var i = 0, j = 0; i < text.length; i++) {
+        if (this.cursor.atMax()) {
+          j++;
+          if (j == 2) {
+            break;
+          }
+        }
+        this.set(text[i] == '?' ? '' : text[i], 0);
+      }
+      this.refresh(1);
+    }
+  }
+  getSelText() {
+    var s = '';
+    this.getSel().forEach(cell => {s += cell.text ? cell.text : '?'});
+    return s;
+  }
   //
   hasText() {
     return this.getCell(this.cursor.x, this.cursor.y).text?.length;
@@ -152,6 +198,7 @@ class Board extends Obj {
     this.cells.refresh(this.cursor, this.minWordLen);
     if (save) {
       this._actions.save();
+      this.onupdate();
     }
   }
   /*Cell*/getCell(x, y) {
@@ -159,11 +206,6 @@ class Board extends Obj {
   }
   /*Cells*/getSel() {
     return this.cells.fromCursor(this.cursor);
-  }
-  getSelText() {
-    var s = '';
-    this.getSel().forEach(cell => {s += cell.text ? cell.text : '?'});
-    return s;
   }
   setCell(x, y, text) {
     this.getCell(x, y).set(text);
@@ -216,9 +258,7 @@ class Board extends Obj {
       o.width,
       o.height,
       o.symmetry,
-      o.minWordLen,
-      o.title,
-      o.id);
+      o.minWordLen);
     me.cells.loadPojo(o.cells);
     me.init();
     return me;
@@ -549,6 +589,7 @@ Board.Cursor = class {
   }
   resetSel() {
     this._sel = null;
+    return this;
   }
   advance(i = 1) {
     if (this.dir == 1) {
@@ -556,13 +597,19 @@ Board.Cursor = class {
     } else {
       this.move(0, i);
     }
+    return this;
   }
   retreat() {
     this.advance(-1);
+    return this;
   }
   toggle() {
     this.dir = -this.dir;
     this._sel = null;
+    return this;
+  }
+  atMax() {
+    return (this.dir == 1) ? this.x == this.mx : this.y == this.my;
   }
   move(dx, dy, shift) {
     var x, y;
@@ -572,7 +619,7 @@ Board.Cursor = class {
     x = (x > this.mx) ? this.mx : x;
     y = (y < 0) ? 0 : y;
     y = (y > this.my) ? this.my : y;
-    this.moveTo(x, y, shift, 1);
+    return this.moveTo(x, y, shift, 1);
   }
   moveHome(shift) {
     if (this.dir == 1) {
@@ -584,7 +631,7 @@ Board.Cursor = class {
         return this.moveTo(this.x, 0, shift);
       }
     }
-    this.moveTo(0, 0, shift);
+    return this.moveTo(0, 0, shift);
   }
   moveEnd(shift) {
     if (this.dir == 1) {
@@ -596,7 +643,7 @@ Board.Cursor = class {
         return this.moveTo(this.x, this.my, shift);
       }
     }
-    this.moveTo(this.mx, this.my, shift);
+    return this.moveTo(this.mx, this.my, shift);
   }
   moveTo(x, y, shift, tran) {
     this.tran = tran;
@@ -610,22 +657,24 @@ Board.Cursor = class {
     } else {
       this.resetSel();
     }
+    return this;
   }
   sel(x0, y0, x1, y1) {
     this._sel = new Board.Cursor.Sel(x0, y0, x1, y1);
     this.x = x0;
     this.y = y0;
     this.tran = null;
+    return this;
   }
   selAll() {
-    this.sel(0, 0, this.mx, this.my);
+    return this.sel(0, 0, this.mx, this.my);
   }
   selCells(cells) {
     var x0 = cells[0].x;
     var y0 = cells[0].y;
     var x1 = cells[cells.length - 1].x;
     var y1 = cells[cells.length - 1].y;
-    this.sel(x0, y0, x1, y1);
+    return this.sel(x0, y0, x1, y1);
   }
   css(x, y) {
     var css = this._sel ? this._sel.css(x, y) : '';
