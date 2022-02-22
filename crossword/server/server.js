@@ -6,15 +6,16 @@ var MyUser;
 class CrosswordDb extends LocalDb {
   //
   static open() {
-    return LocalDb.open('Crossword-WGH');
-  }
-  setup() {
-    this.createTables({
+    return LocalDb.open('Crossword-WGH', me => {
+      me.createTables({
         'USERS':'id',
         'CROSSWORDS':'id',
-        'CROSSWORD':'id'
+        'CROSSWORD':'id',
+        'THEMES':'id',
+        'EDITING':'id'
+      });
+      me.insert('USERS').values({'name':'me'});
     });
-    this.insert('USERS').values({'name':'me'});
   }
 }
 class CrosswordSession extends LocalSession {
@@ -36,6 +37,18 @@ class CrosswordClient extends LocalClient {
   async login(id, pw) {
     return await this.ajax_post('login', {id:id, pw:pw});
   }
+  async getTheme(id) {
+    return await this.ajax_get('getTheme', id);
+  }
+  async saveTheme(o) {  
+    return await this.ajax_post('saveTheme', o);
+  }
+  async getEditing() {
+    return await this.ajax_get('getEditing');  
+  }
+  async saveEditing(o) {  
+    return await this.ajax_post('saveEditing', o);
+  }
   async getCrosswords() {
     return await this.ajax_get('getMyCrosswords');
   }
@@ -45,8 +58,8 @@ class CrosswordClient extends LocalClient {
   async getCrossword(id) {
     return await this.ajax_get('getCrossword', id);
   }
-  async saveCrossword(rec) {
-    return await this.ajax_post('saveCrossword', rec);
+  async saveCrossword(o) {
+    return await this.ajax_post('saveCrossword', o);
   }
 }
 var CrosswordServer = {
@@ -55,9 +68,9 @@ var CrosswordServer = {
     try {
       var o;
       if (action == 'login') {
-        var user = MyDb.select('USERS').pk(1);
-        if (user) {
-          o = MySession.erase().set('user', user).fetch();
+        MyUser = MyDb.select('USERS').pk(1);
+        if (MyUser) {
+          o = MySession.erase().set('user', MyUser).fetch();
         } else {
           return LocalResponse.asBadLogin();
         }
@@ -68,25 +81,56 @@ var CrosswordServer = {
           return LocalResponse.asExpired();
         }
         switch (action) {
+          case 'getMyThemes':
+            o = this.fetchMine('THEMES');
+            break;
+          case 'getTheme':
+            o = this.fetchByPk('THEMES', data);
+            break;
+          case 'saveTheme':
+            o = this.save('THEMES', data);
+            break;
+          case 'getEditing':
+            o = this.fetchMine('EDITING').pop();
+            break;
+          case 'saveEditing':
+            o = this.save('EDITING', data);
+            break;
           case 'getMyCrosswords':
-            o = MyDb.select('CROSSWORDS').where(row => row.uid == MyUser.id);
+            o = this.fetchMine('CROSSWORDS');
             break;
           case 'getMyLastCrossword':
-            o = MyDb.select('CROSSWORDS').where(row => row.uid == MyUser.id).pop();
+            o = this.fetchMine('CROSSWORDS').pop();
             break;
           case 'getCrossword':
-            o = MyDb.select('CROSSWORDS').where(row => row.uid == MyUser.id && row.id == data.id);
+            o = this.fetchByPk('CROSSWORDS', data);
             break;
           case 'saveCrossword':
-            o = MyDb.insertOrUpdate('CROSSWORDS').values(data);
+            o = this.save('CROSSWORDS', data);
             break;
         }
       }
       return LocalResponse.asOK(o);
     } catch (e) {
-      log(e);
+      console.log(e);
       return LocalResponse.asServerError();
     }
+  },
+  fetchMine(table) {
+    return MyDb.select(table).where(row => row.uid == MyUser.id);
+  },
+  fetchByPk(table, data) {
+    return MyDb.select(table).where(row => row.uid == MyUser.id && row.id == data.id).pop();
+  },
+  save(table, data) {
+    var o;
+    if (data.id) {
+      o = MyDb.select(table).pk(data.id);
+    }
+    if ((data.uid && data.uid != MyUser.id) || (o && o.uid && o.uid != MyUser.id)) {
+      throw 'Forbidden to save, MyUser: ' + js(MyUser) + ', record: ' + js(data);
+    }
+    return MyDb.insertOrUpdate(table).values(data);
   }
 }
 MyDb = CrosswordDb.open();

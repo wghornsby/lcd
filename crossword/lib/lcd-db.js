@@ -1,16 +1,16 @@
 /** 
- * LCD v3.2.01
+ * LCD v3.2.1
  * JavaScript library (c)2019 Warren Hornsby 
  **/
 
 /** Local database */
 class LocalDb {
   //
-  static open(name) {
+  static open(name, setup) {
     var me = new this(name);
     me.open();
-    if (me.notSetup()) {
-      me.setup();
+    if (setup && me.notSetup()) {
+      setup(me);
     }
     return me;
   }
@@ -22,7 +22,7 @@ class LocalDb {
   }
   createTables(tpfks) {
     each(tpfks, (pkf, tname) => {
-      if (! this.table(tname)) {
+      if (! this.table(tname, 1)) {
         this.createTable(tname, pkf);
       }
     })
@@ -39,7 +39,7 @@ class LocalDb {
     this.eraseTables();
   }
   dropTable(tname) {
-    var table = this.table(tname, 1);
+    var table = this.table(tname);
     table.drop();
     this._tables[tname] = null;
     delete this._tables[tname];
@@ -47,23 +47,23 @@ class LocalDb {
     this.saveTables();
   }
   insert(tname) {
-    var table = this.table(tname, 1);
+    var table = this.table(tname);
     return table.insert();
   }
   insertOrUpdate(tname) {
-    var table = this.table(tname, 1);
+    var table = this.table(tname);
     return table.insertOrUpdate();
   }
   select(tname) {
-    var table = this.table(tname, 1);
+    var table = this.table(tname);
     return table.select();
   }
   update(tname) {
-    var table = this.table(tname, 1);
+    var table = this.table(tname);
     return table.update();    
   }
   delete(tname) {
-    var table = this.table(tname, 1);
+    var table = this.table(tname);
     return table.delete();
   }
   //
@@ -73,9 +73,9 @@ class LocalDb {
   setup() {
     // override to create tables on first open
   }
-  table(tname, throwIfNotFound) {
+  table(tname, allowUndef) {
     var table = this._tables[tname];
-    if (table === undefined && throwIfNotFound) {
+    if (table === undefined && ! allowUndef) {
       throw "Table " + tname + " not defined"
     }
     return table;

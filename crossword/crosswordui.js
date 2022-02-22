@@ -9,9 +9,10 @@ class UiCrossword extends Obj {
     this.setup();
   }
   async setup() {
-    await MyClient.login('test', 'test');
-    this.crossword = await Crossword.fetchMyLast();
-    this.uieditor.load(this.crossword);
+    await MyClient.login();
+    var tid = await Editing.fetchTid();
+    this.theme = tid ? await Theme.fetch(tid) : Theme.asNew();
+    this.uieditor.load(this.theme);
   }
 }
 class UiEditor extends Obj {
@@ -23,11 +24,14 @@ class UiEditor extends Obj {
       .on('click', cell => this.uiboard_onclick(cell));
     this.uicursor = new UiEditor.Cursor();
     window
-      .on('keydown', e => this.onkeydown(e));
+      .on('keydown', e => this.onkeydown(e))
+      .on('blur', e => this.uicursor.show(0))
+      .on('focus', e => this.uicursor.show(1));
   }
-  load(crossword) {
-    this.crossword = crossword;
-    this.board = crossword.board;
+  load(theme) {
+    this.theme = theme;
+    this.crossword = this.theme.crossword;
+    this.board = this.crossword.board;
     this.uiboard.load(this.board);
     this.uicursor.load(this.board.cursor);
     this._sel = null;
@@ -120,6 +124,9 @@ UiEditor.Cursor = class extends Obj {
     this.cursor = cursor;
     this.$cursor = $('#cursor');
     this.refresh();
+  }
+  show(b) {
+    this.$cursor.style.display = b ? '' : 'none';
   }
   refresh() {
     this.$cursor.className = 

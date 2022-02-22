@@ -1,26 +1,86 @@
-class Crossword extends Obj {
+class Theme extends Obj {
   /**
    * i id
    * i uid
    * s title
-   * Board board
+   * s desc
+   * i width, height
+   * i symmetry
+   * i minWordLen
+   * i targetDay (0=Sun,..6=Sat)
+   * i cids[]
+   * i cid (when finalized)
+   * Crossword crossword (currently editing)
    */
-  constructor(id, title, board) {
+  constructor(id, title, desc, width, height, symmetry, minWordLen, targetDay, cids, cid, crossword) {
     super();
     this.id = id;
     this.uid = MyUser.id;
-    this.title = title || 'New Crossword';
-    this.board = board
-      .on('update', () => this.save());
+    this.title = title || 'New Theme';
+    this.desc = desc || '';
+    this.width = width || 15;
+    this.height = height || 15;
+    this.symmetry = symmetry || Board.SYMMETRY.ROTATIONAL;
+    this.minWordLen = minWordLen = 3;
+    this.targetDay = targetDay;
+    this.cids = cids || [];
+    this.cid = cid;
+    crossword && this.setCrossword(crossword);
     MyClient
       .on('error', (msg) => alert(msg))
       .on('expired', () => alert('expired'));
   }
   async save() {
-    var rec = await MyClient.saveCrossword(this.toPojo());
-    if (! this.id) {
-      this.id = rec.id;
+    var cid = this.crossword.id;
+    await this.crossword.save();
+    if (! cid) {
+      this.cids.unshift(this.crossword.id);
     }
+    this.id = (await MyClient.saveTheme(this.toPojo())).id;
+    Editing.save(this.id);
+  }
+  setCrossword(crossword) {
+    this.crossword = crossword
+      .on('update', () => this.save());
+  }
+  newCrossword() {
+    this.setCrossword(Crossword.asNew(this.width, this.height, this.symmetry, this.minWordLen));
+  }
+  toPojo() {
+    var o = pojo(this);
+    delete o.crossword;
+    return o;
+  }
+  //
+  static async fetch(id) {
+    var o = await MyClient.getTheme(id);
+    o.crossword = await MyClient.getCrossword(o.cid || o.cids[0]);
+    return this.fromPojo(o);
+  }
+  static fromPojo(o) {
+    return new this(o.id, o.title, o.desc, o.width, o.height, o.symmetry, o.minWordLen, o.targetDay, o.cids, o.cid, 
+      Crossword.fromPojo(o.crossword));
+  }
+  static asNew(title, desc, width, height, symmetry, minWordLen, targetDay) {
+    return (new this(null, title, desc, width, height, symmetry, minWordLen, targetDay)).newCrossword();
+  }
+}
+class Crossword extends Obj {
+  onupdate() {}
+  /**
+   * i id
+   * i uid
+   * Board board
+   */
+  constructor(id, board) {
+    super();
+    this.id = id;
+    this.uid = MyUser.id;
+    this.board = board
+      .on('update', () => this.onupdate());
+  }
+  async save() {
+    this.id = (await MyClient.saveCrossword(this.toPojo())).id;
   }
   toPojo() {
     return pojo(this);
@@ -35,20 +95,16 @@ class Crossword extends Obj {
     return this.fromPojo(o);
   }
   static asNew(width, height, symmetry, minWordLen) {
-    return new this(null, null, Board.asNew(width, height, symmetry, minWordLen));
+    return new this(null, Board.asNew(width, height, symmetry, minWordLen));
   }
   static fromPojo(o) {
-    return new this(
-      o.id,
-      o.title,
-      Board.fromPojo(o.board));
+    return new this(o.id, Board.fromPojo(o.board));
   }
 }
 class Board extends Obj {
   onupdate() {}
   /**
    * i width, height
-   * i mx, my
    * i symmetry
    * i minWordLen
    * Cursor cursor
@@ -58,12 +114,12 @@ class Board extends Obj {
     super();
     this.width = width;
     this.height = height;
-    this.mx = this.width - 1;
-    this.my = this.height - 1;
     this.symmetry = symmetry;
     this.minWordLen = minWordLen;
     this.cursor = new Board.Cursor(this.width, this.height);
     this.cells = Board.Cells.create(this.width, this.height);
+    this.mx = this.width - 1;
+    this.my = this.height - 1;
   }
   set(text, refresh = 1) {
     this.setCell(this.cursor.x, this.cursor.y, text);
@@ -254,11 +310,7 @@ class Board extends Obj {
   }
   //
   static fromPojo(o) {
-    var me = new this(
-      o.width,
-      o.height,
-      o.symmetry,
-      o.minWordLen);
+    var me = new this(o.width, o.height, o.symmetry, o.minWordLen);
     me.cells.loadPojo(o.cells);
     me.init();
     return me;
@@ -788,5 +840,32 @@ Board.Actions = class {
   }
   load() {
     this.board.loadAction(this.a[this.i]);
+  }
+}
+class Editing extends Obj {
+  /**
+   * i id
+   * i uid
+   * i tid
+   */
+  constructor(id, tid) {
+    super();
+    this.id = id;
+    this.uid = MyUser.id;
+    this.tid = tid;
+  }
+  //
+  static async fetch() {
+    var o = await MyClient.getEditing();
+    return o ? new this(o.id, o.tid) : new this();
+  }
+  static async fetchTid() {
+    var o = await MyClient.getEditing();
+    return o && o.tid;
+  }
+  static async save(tid) {
+    var me = await Editing.fetch();
+    me.tid = tid;
+    await MyClient.saveEditing(me);
   }
 }
