@@ -2,10 +2,9 @@ class UiCrossword extends Obj {
   //
   constructor() {
     super();
+    this.uitabs = new UiTabs();
     this.uieditor = new UiEditor()
-      .on('lookup', (text) => this.uibrowser.nav(text))
-    this.uibrowser = new UiBrowser()
-      .on('load', () => window.focus());
+      .on('lookup', (text) => this.uitabs.nav(text));
     this.setup();
   }
   async setup() {
@@ -15,28 +14,101 @@ class UiCrossword extends Obj {
     this.uieditor.load(this.theme);
   }
 }
+class UiTabs extends Obj {
+  //
+  constructor() {
+    super();
+    this.uibrowser = new UiBrowser()
+      .on('load', () => window.focus());
+    this.$$tabs = $$('#t2a span')
+      .on('click', e => this.$$tabs_onclick(e.srcElement));
+    this.$$frames = $$('.tile2 .tab');
+    this.$$tabs.forEach(($tab, i) => $tab.innerText = UiTabs.CAPTIONS[i]);
+    this._i = -1;
+    this.select(0);
+  }
+  nav(text) {
+    if (this._i == 1) {
+      this.uibrowser.nav(text);
+    }
+  }
+  select(i) {
+    if (i != this._i) {
+      this.$$tabs.forEach(($tab, j) => {
+        $tab.className = i == j ? 'sel' : '';
+        this.$$frames[j].className = i == j ? 'tab tsel' : 'tab';
+      })
+      this._i = i;
+    }
+  }
+  $$tabs_onclick($tab) {
+    this.select(UiTabs.CAPTIONS.findValue($tab.innerText));
+  }
+  //
+  static CAPTIONS = ['Clue List', 'OneLook', 'Clever Clues'];
+}
 class UiEditor extends Obj {
   onlookup(text) {}
+  onversion(i) {}
+  onnewversion() {}
   //
   constructor() {
     super();
     this.uiboard = new UiEditor.Board()
       .on('click', cell => this.uiboard_onclick(cell));
+    this.uiversions = new UiEditor.Versions()
+      .on('change', cix => this.uiversions_onchange(cix));
     this.uicursor = new UiEditor.Cursor();
-    window
-      .on('keydown', e => this.onkeydown(e))
-      .on('blur', e => this.uicursor.show(0))
-      .on('focus', e => this.uicursor.show(1));
+    this._blurred = 0;
+    this.$title = $('#title')
+      .on('click', e => this.$title_onclick());
   }
   load(theme) {
     this.theme = theme;
-    this.crossword = this.theme.crossword;
-    this.board = this.crossword.board;
+    this.uiversions.load(this.theme);
+    this.loadCrossword(theme.crossword);
+    this._sel = null;
+    this.drawTheme();
+    window
+      .on('keydown', e => this.onkeydown(e))
+      .on('blur', () => this.blur())
+      .on('focus', () => this.focus());
+  }
+  loadCrossword(crossword) {
+    this.crossword = crossword;
+    this.board = crossword.board;
     this.uiboard.load(this.board);
     this.uicursor.load(this.board.cursor);
-    this._sel = null;
+  }
+  drawTheme() {
+    this.$title.innerText = this.theme.title;
+  }
+  $title_onclick() {
+    UiSettingsPop.show(this.theme.toPojo())
+      .on('save', o => {
+        this.theme.save(o);
+        this.drawTheme();
+        this.loadCrossword(this.theme.crossword);
+      })
+  }
+  async uiversions_onchange(cix) {
+    await this.theme.setVersion(cix);
+    this.loadCrossword(this.theme.crossword);
+  }
+  blur() {
+    this.uicursor.show(0);
+    this._blurred = 1;
+  }
+  focus() {
+    if (document.activeElement.tagName == 'BODY') {
+      this.uicursor.show(1);
+      this._blurred = 0;
+    }
   }
   onkeydown(e) {
+    if (this._blurred) {
+      return;
+    }
     if (e.ctrlKey) {
       switch (e.key.toUpperCase()) {
         case 'A':
@@ -49,8 +121,9 @@ class UiEditor extends Obj {
           this.board.toggleLock();
           break;
         case 'S':
-          this.board.selWord();
-          this.onlookup(this.board.getSelText());
+          if (this.board.selWord()) {
+            this.onlookup(this.board.getSelText());
+          }
           break;
         case 'V':
           this.board.setSelText(this._sel);
@@ -68,7 +141,7 @@ class UiEditor extends Obj {
           break;
       }
       e.preventDefault();
-      this.refresh();
+      this.drawBoard();
       return;
     }
     switch (e.key) {
@@ -107,15 +180,54 @@ class UiEditor extends Obj {
           this.board.set(e.key.toUpperCase());
         }
     }
-    this.refresh();
+    this.drawBoard();
   }
-  refresh() {
+  drawBoard() {
     this.uicursor.refresh();
     this.uiboard.refresh();
   }
   uiboard_onclick(cell) {
     this.board.moveTo(cell.x, cell.y);
-    this.refresh();
+    this.drawBoard();
+  }
+}
+UiEditor.Versions = class extends Obj {
+  onchange(cix) {}
+  //
+  constructor() {
+    super();
+    this.reset();
+  }
+  reset() {
+    $('#xvers').innerHTML = '';
+    this.$tabs = [];
+  }
+  load(theme) {
+    this.theme = theme;
+    theme.cids.forEach((cid, i) => this.createTab(i));
+    this.createTab(-1);
+    this.cix = theme.cix;
+    this.$tab_onclick(this.cix);
+  }
+  createTab(i) {
+    var $tab = document.createElement('span');
+    $tab.innerText = i >= 0 ? 'v' + (i + 1) : '+';
+    $tab.className = i == this.theme.cids.length - 1 ? 'sel' : '';
+    $tab.on('click', e => this.$tab_onclick(i));
+    $('#xvers').appendChild($tab);
+    if (i >= 0) {
+      this.$tabs.push($tab);
+    }
+  }
+  $tab_onclick(i) {
+    if (i >= 0) {
+      $$('#xvers span').forEach($tab => $tab.className = '');
+      this.$tabs[i].className = 'sel';
+      if (i != this.cix) {
+        this.cix = i;
+        this.onchange(i);
+      }
+    }
   }
 }
 UiEditor.Cursor = class extends Obj {
@@ -123,10 +235,14 @@ UiEditor.Cursor = class extends Obj {
   load(cursor) {
     this.cursor = cursor;
     this.$cursor = $('#cursor');
+    var r = $('#c0x0').getBoundingClientRect();
+    this.$cursor.style.top = r.top - 3;
+    this.$cursor.style.left = r.left - 3;
     this.refresh();
   }
   show(b) {
     this.$cursor.style.display = b ? '' : 'none';
+    log('cursor=' + this.$cursor.style.display);
   }
   refresh() {
     this.$cursor.className = 
@@ -210,4 +326,58 @@ UiBrowser = class extends Obj {
   url() {
     return 'https://www.onelook.com';
   } 
+}
+class UiSettingsPop extends Dialog {
+  onsave(pojo) {}
+  //
+  init() {
+    Dialog.loadSelect($('#dcs_symmetry'), Board.SYMMETRY_OPTIONS);
+    Dialog.loadSelect($('#dcs_targetDay'), Board.DAY_OPTIONS);
+    return this;
+  }
+  load(pojo) {
+    this.pojo = pojo
+    $('#dcs_title').value = pojo.title;
+    $('#dcs_desc').value = pojo.desc || '';
+    $('#dcs_minWordLen').value = pojo.minWordLen;
+    $('#dcs_height').value = pojo.height;
+    $('#dcs_width').value = pojo.width;
+    $('#dcs_symmetry').selectedIndex = pojo.symmetry;
+    $('#dcs_targetDay').selectedIndex = pojo.targetDay;
+    return this;
+  }
+  show() {
+    super.show();
+    $('#dcs_title').select();
+    return this;
+  }
+  get() {
+    let o = {
+      title:$('#dcs_title').value,
+      desc:$('#dcs_desc').value,
+      minWordLen:$('#dcs_minWordLen').value,
+      height:$('#dcs_height').value,
+      value:$('#dcs_width').value,
+      symmetry:$('#dcs_symmetry').selectedIndex,
+      targetDay:$('#dcs_targetDay').selectedIndex  
+    }
+    return Object.assign(this.pojo, o);
+  }
+  onclick(event) {
+    if (event == 'onsave') {
+      this.onsave(this.get());
+    } else {
+      super.onclick(event);
+    }
+  }
+  loadSelect($select, a) {
+    a.forEach((text, i) => $select[i] = new Option(text, i));
+  }
+  //
+  static show(theme) {
+    if (! this.me) {
+      this.me = this.asSaveCancel('Crossword Settings', $('#dCrosswordSettings')).init();
+    }
+    return this.me.load(theme).show();
+  }
 }

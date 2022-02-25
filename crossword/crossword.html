@@ -8,139 +8,62 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
-  <style>
-BODY {
-  margin:0;
-  background-color:#000;
-}
-.rc {
-  background-color:#333;
-  padding:10px;
-  display:inline-block;
-  border:1px solid #666;
-}
-#editor {
-  height:100%;
-}
-.body {
-  padding:1em;
-  display:flex;
-  height:90%;
-}
-.body .tile {
-  flex:1;
-}
-.body .tile2 {
-  flex-grow:2;
-  padding-left:1em;
-}
-.tile2 #if {
-  width:100%;
-  height:100%;
-  border:0;
-  zoom:80%;
-}
-#grid {
-  border-spacing:0;
-  border:1px solid #666;
-}
-#grid TD {
-  border:1px solid #666;
-  background-color:#111;
-  color:#eee;
-  padding:8px 0 0 0;
-  height:36px;
-  width:36px;
-  min-width:36px;
-  font-family:'Roboto', sans-serif;
-  font-size:26px;
-  line-height:26px;
-  text-align:center;
-  cursor:pointer;
-}
-#grid TD SPAN {
-  font-family:'Calibri';
-  font-size:11px;
-  color:#aaa;
-  display:block;
-  position:absolute;
-  margin:-15px 0 0 2px;
-  z-index:999;
-}
-#grid TD.f1 {
-  background-color:#bbb;
-  color:#bbb;
-  border-color:#bbb;
-}
-#grid TD.f2 {
-  background-image: radial-gradient(35px circle, #666 50%, transparent 55%);
-}
-#grid TD.err {
-  background-color:rgb(197, 0, 0);
-  border-color:rgb(197, 0, 0);
-}
-#grid TD.lock {
-  color:white;
-  background-image: linear-gradient(45deg, #666666 10%, #111111 10%, #111111 50%, #666666 50%, #666666 60%, #111111 60%, #111111 100%);
-  background-size: 7.07px 7.07px;
-}                                                   
-#grid TD.sel {
-  background-color:darkcyan;
-}
-#grid TD.n {
-  border-top:1px double cyan;
-}
-#grid TD.e {
-  border-right:1px double cyan;
-}
-#grid TD.w {
-  border-left:1px double cyan;
-}
-#grid TD.s {
-  border-bottom:1px double cyan;
-}
-#cursor {
-  position:absolute;
-  top:25;
-  left:25;
-  animation-name:cursor;
-  animation-duration:0.5s;
-  animation-iteration-count:infinite;
-}
-#cursor.tran {
-  transition:transform 0.1s linear;
-}
-#cursor.h {
-  height:36px;
-  width:43px;
-  border-top:3px solid green;
-  border-bottom:3px solid green;
-}
-#cursor.v {
-  height:42px;
-  width:38px;
-  border-left:3px solid green;
-  border-right:3px solid green;
-}
-@keyframes cursor {
-  0% {border-color:rgb(0, 81, 255);}
-  50% {border-color:orange;}
-  100% {border-color:rgb(0, 81, 255);}
-}
-</style>
+  <link href='crossword.css' rel='stylesheet'>
 </head>
 <body>
-  <div id='cursor' class='v'></div>
-  <div id='editor'>
+  <!-- Design page -->
+  <div id='page'>
+    <div id='cursor' class='v'></div>
     <div class='body'>
-      <div class='tile'>
-        <div class='rc'>
+      <div class='tile1'>
+        <div id='t1h' class='head'>
+          <span id='title'></span>
+        </div>
+        <div class='xword'>
           <table id='grid'>
           </table>
         </div>
+        <div id='xvers' class='foot'>
+          <span class='sel'>v1</span>
+          <span>+</span>
+        </div>
       </div>
       <div class='tile2'>
-        <iframe id='if'></iframe>
+        <div id='t2a' class='foot'><span>Clue List</span><span>OneLook</span><span>Clever Clues</span></div>
+        <div id='cluelist' class='tab'>
+          <div class='flex'>
+            <div class='cluetile'>
+              <div class='head'>Across</div>
+            </div>
+            <div class='cluetile'>
+              <div class='head'>Down</div>
+            </div>
+          </div>
+        </div>
+        <div id='browser' class='tab'>
+          <iframe id='if'></iframe>
+        </div>
+        <div id='clueideas' class='tab'>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Dialogs -->
+  <div class='hide'>
+    <div id='dCrosswordSettings'>
+      <div class='form'>
+        <div>
+          <label for='dcs_name'>Title</label><input id='dcs_title' class='w400' />
+        </div>
+        <div>
+          <label for='dcs_desc'>Description</label><textarea id='dcs_desc'></textarea>
+        </div>
+        <div>
+          <label for='dcs_symmetry'>Symmetry</label><select id='dcs_symmetry'></select><label for='dcs_minWordLen'>Min word length</label><input id='dcs_minWordLen' class='w50 rj' />
+        </div>
+        <div>
+          <label for='dcs_targetDay'>Target day</label><select id='dcs_targetDay'></select><label for='dcs_height'>Size (h x w)</label><input id='dcs_height' class='w50 rj' /><span>&nbsp;</span><input id='dcs_width' class='w50 rj' />
+        </div>
       </div>
     </div>
   </div>

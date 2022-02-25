@@ -7,41 +7,56 @@ class Theme extends Obj {
    * i width, height
    * i symmetry
    * i minWordLen
-   * i targetDay (0=Sun,..6=Sat)
+   * i targetDay (1=Sun,..7=Sat)
    * i cids[]
    * i cid (when finalized)
    * Crossword crossword (currently editing)
    */
-  constructor(id, title, desc, width, height, symmetry, minWordLen, targetDay, cids, cid, crossword) {
+  constructor(id, title, desc, width, height, symmetry, minWordLen, targetDay, cids, cix, crossword) {
     super();
     this.id = id;
     this.uid = MyUser.id;
-    this.title = title || 'New Theme';
+    this.setTitle(title);
     this.desc = desc || '';
     this.width = width || 15;
     this.height = height || 15;
     this.symmetry = symmetry || Board.SYMMETRY.ROTATIONAL;
     this.minWordLen = minWordLen = 3;
-    this.targetDay = targetDay;
+    this.targetDay = targetDay || 0;
     this.cids = cids || [];
-    this.cid = cid;
+    this.cix = cix;
     crossword && this.setCrossword(crossword);
     MyClient
       .on('error', (msg) => alert(msg))
       .on('expired', () => alert('expired'));
   }
-  async save() {
-    var cid = this.crossword.id;
-    await this.crossword.save();
-    if (! cid) {
-      this.cids.unshift(this.crossword.id);
+  async save(o = null) {
+    if (o) {
+      Object.assign(this, o);
+      this.crossword.board.minWordLen = o.minWordLen;
+      this.crossword.board.symmetry = o.symmetry;
+    } else {
+      var cid = this.crossword.id;
+      await this.crossword.save();
+      if (! cid) {
+        this.cids.unshift(this.crossword.id);
+      }
     }
     this.id = (await MyClient.saveTheme(this.toPojo())).id;
     Editing.save(this.id);
   }
+  setTitle(title) {
+    this.title = title || 'Untitled';
+  }
   setCrossword(crossword) {
     this.crossword = crossword
       .on('update', () => this.save());
+  }
+  async setVersion(cix) {
+    var crossword = await MyClient.getCrossword(this.cids[cix]);
+    this.cix = cix;
+    this.setCrossword(Crossword.fromPojo(crossword, this.symmetry, this.minWordLen));
+    await this.save({});
   }
   newCrossword() {
     this.setCrossword(Crossword.asNew(this.width, this.height, this.symmetry, this.minWordLen));
@@ -54,12 +69,13 @@ class Theme extends Obj {
   //
   static async fetch(id) {
     var o = await MyClient.getTheme(id);
-    o.crossword = await MyClient.getCrossword(o.cid || o.cids[0]);
+    var cix = o.cix || 0;
+    o.crossword = await MyClient.getCrossword(o.cids[cix]);
     return this.fromPojo(o);
   }
   static fromPojo(o) {
-    return new this(o.id, o.title, o.desc, o.width, o.height, o.symmetry, o.minWordLen, o.targetDay, o.cids, o.cid, 
-      Crossword.fromPojo(o.crossword));
+    return new this(o.id, o.title, o.desc, o.width, o.height, o.symmetry, o.minWordLen, o.targetDay, o.cids, o.cix, 
+      Crossword.fromPojo(o.crossword, o.symmetry, o.minWordLen));
   }
   static asNew(title, desc, width, height, symmetry, minWordLen, targetDay) {
     return (new this(null, title, desc, width, height, symmetry, minWordLen, targetDay)).newCrossword();
@@ -97,7 +113,9 @@ class Crossword extends Obj {
   static asNew(width, height, symmetry, minWordLen) {
     return new this(null, Board.asNew(width, height, symmetry, minWordLen));
   }
-  static fromPojo(o) {
+  static fromPojo(o, symmetry, minWordLen) {
+    o.board.symmetry = symmetry;
+    o.board.minWordLen = minWordLen;
     return new this(o.id, Board.fromPojo(o.board));
   }
 }
@@ -206,8 +224,11 @@ class Board extends Obj {
   selWord() {
     var line = this.cells.line(this.cursor.x, this.cursor.y, this.cursor.dir);
     var word = line.getWord(this.cursor.x, this.cursor.y);
-    this.cursor.selCells(word);
-    this.refresh();
+    if (word) {
+      this.cursor.selCells(word);
+      this.refresh();
+      return word;
+    }
   }
   moveTo(x, y) {
     this.cursor.moveTo(x, y);
@@ -328,6 +349,8 @@ class Board extends Obj {
     'MIRROR_SW_TO_NE':5,
     'NONE':-1
   }
+  static SYMMETRY_OPTIONS = ['', 'Rotational', 'Vertical', 'Horizontal', 'NW-to-SE', 'SW-to-NE', 'None'];
+  static DAY_OPTIONS = ['', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 }
 Board.Cells = class extends Array {
   //

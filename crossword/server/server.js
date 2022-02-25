@@ -85,7 +85,7 @@ var CrosswordServer = {
             o = this.fetchMine('THEMES');
             break;
           case 'getTheme':
-            o = this.fetchByPk('THEMES', data);
+            o = this.fetchByPk('THEMES', data.id);
             break;
           case 'saveTheme':
             o = this.save('THEMES', data);
@@ -103,7 +103,11 @@ var CrosswordServer = {
             o = this.fetchMine('CROSSWORDS').pop();
             break;
           case 'getCrossword':
-            o = this.fetchByPk('CROSSWORDS', data);
+            o = this.fetchByPk('CROSSWORDS', data.id);
+            break;
+          case 'getCrosswords':
+            o = [];
+            data.cids.forEach(cid => o.push(this.fetchByPk('CROSSWORDS', cid)));
             break;
           case 'saveCrossword':
             o = this.save('CROSSWORDS', data);
@@ -119,8 +123,8 @@ var CrosswordServer = {
   fetchMine(table) {
     return MyDb.select(table).where(row => row.uid == MyUser.id);
   },
-  fetchByPk(table, data) {
-    return MyDb.select(table).where(row => row.uid == MyUser.id && row.id == data.id).pop();
+  fetchByPk(table, pk) {
+    return MyDb.select(table).where(row => row.uid == MyUser.id && row.id == pk).pop();
   },
   save(table, data) {
     var o;
