@@ -100,8 +100,16 @@ class Yordle {
         if (! tile.isGreen()) {
           var i = yellows.findIndex(s => s == tile.guess);
           if (i > -1) {
-            tile.setColor(2);
-            yellows[i] = ' ';
+            let ambig = 0;
+            tray.tiles.forEach((other, o) => {
+              if (other.ix != tile.ix && ! other.isGreen() && other.guess == tile.guess) {
+                ambig = 1;
+              }
+            })
+            if (! ambig) {
+              tile.setColor(2);
+              yellows[i] = ' ';
+            }
           }
         }
       })
