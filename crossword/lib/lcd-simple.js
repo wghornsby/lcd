@@ -22,6 +22,7 @@ NodeList.prototype.on = function(name, fn, options) {
   return this;
 }
 HTMLElement.prototype.$ = HTMLElement.prototype.querySelector;
+HTMLElement.prototype.$$ = HTMLElement.prototype.querySelectorAll;
 
 /** Extensions */
 Object.assign(Object, {

@@ -13,15 +13,10 @@ body {
   background-color:#256170;
   padding:10px;
   display:inline-block;
-  border:1px solid #256170;
-}
-#page {
-  height:100%;
 }
 .body {
-  padding:1em;
   display:flex;
-  height:90%;
+  height:100vh;
 }
 .body .tile1 {
   flex:1;
@@ -29,22 +24,67 @@ body {
 .body .tile2 {
   flex-grow:2;
   padding-left:1em;
+  display:flex;
+  flex-direction:column;
 }
 .flex {
+  flex:1;
   display:flex;
-  height:100%;
+  align-items:stretch;
+  flex-grow:1;
+}
+#cluelist {
+  display:flex;
+  align-items:stretch;
+  flex-grow:1;
 }
 #cluelist .cluetile {
-  height:100%;
-  flex:1;
   margin:11px 5px 0 0;
   background-color:#112e35;
+  flex-grow:1;
 }
 #cluelist .head {
   background-color:black;
 }
+.cluetile .list {
+  padding:5px 2px;
+}
+.cluetile .list .h {
+  display:none;
+}
+.cluetile .list div {
+  margin:1px 4px;
+  display:flex;
+}
+.cluetile .head {
+  user-select:none;
+}
+.cluetile span {
+  font-family:'Roboto', sans-serif;
+  font-size:7pt;
+  background-color:#666;
+  color:white;
+  padding:5px;
+  width:10px;
+  height:10px;
+  text-align:center;
+  display:inline-block;
+  user-select:none;
+  border-radius:15px;
+}
+.cluetile input {
+  flex:auto;
+  font-family:'Roboto', sans-serif;
+  font-size:10pt;
+  font-weight:normal;
+  margin-left:5px;
+  height:19px;
+  background-color:#256170;
+  color:white;
+  border:1px solid #256170;
+}
 #t1h {
-  margin-top:45px;
+  margin-top:55px;
 }
 .head {
   height:34px;
@@ -66,8 +106,8 @@ body {
   font-size:14pt;
 }
 #t2a {
-  margin-top:0;
-  margin-bottom:10px;
+  margin-top:15px;
+  margin-bottom:5px;
 }
 .foot span {
   width:40px;
@@ -107,12 +147,12 @@ body {
   background-color:#111;
   color:#eee;
   padding:8px 0 0 0;
-  height:36px;
-  width:36px;
-  min-width:36px;
+  height:30px;
+  width:34px;
+  min-width:34px;
   font-family:'Roboto', sans-serif;
-  font-size:26px;
-  line-height:26px;
+  font-size:24px;
+  line-height:24px;
   text-align:center;
   cursor:pointer;
 }
@@ -126,9 +166,9 @@ body {
   z-index:999;
 }
 #grid td.f1 {
-  background-color:#bbb;
-  color:#bbb;
-  border-color:#bbb;
+  background-color:#256170;
+  color:#256170;
+  border-color:#256170;
 }
 #grid td.f2 {
   background-image: radial-gradient(35px circle, #666 50%, transparent 55%);
@@ -167,14 +207,10 @@ body {
   transition:transform 0.1s linear;
 }
 #cursor.h {
-  height:36px;
-  width:44px;
   border-top:3px solid green;
   border-bottom:3px solid green;
 }
 #cursor.v {
-  height:42px;
-  width:38px;
   border-left:3px solid green;
   border-right:3px solid green;
 }
@@ -298,15 +334,12 @@ dialog::backdrop {
   width:5px;
 }
 .tile2 .tab {
-  width:100%;
-  height:100%;
   display:none;
 }
 .tile2 #if {
   border:0;
-  width:100%;
-  height:100%;
 }
 .tile2 .tsel {
   display:block;
+  animation:fadein 0.2s;
 }

@@ -5,6 +5,7 @@ class UiCrossword extends Obj {
     this.uitabs = new UiTabs();
     this.uieditor = new UiEditor()
       .on('lookup', (text) => this.uitabs.nav(text));
+    this.uicluelist = new UiCluelist();
     this.setup();
   }
   async setup() {
@@ -12,6 +13,7 @@ class UiCrossword extends Obj {
     var tid = await Editing.fetchTid();
     this.theme = tid ? await Theme.fetch(tid) : Theme.asNew();
     this.uieditor.load(this.theme);
+    this.uicluelist.load(this.theme.crossword);
   }
 }
 class UiTabs extends Obj {
@@ -47,6 +49,26 @@ class UiTabs extends Obj {
   //
   static CAPTIONS = ['Clue List', 'OneLook', 'Clever Clues'];
 }
+class UiCluelist extends Obj {
+  //
+  constructor() {
+    super();
+    this.$$lists = $$('#cluelist .list');
+    this.$$clues = [this.$$lists[0].$$('div'), this.$$lists[1].$$('div')];
+  }
+  load(crossword) {
+    this.cluelist = crossword.cluelist;
+    this.draw();
+  }
+  draw() {
+    this.cluelist.all((clue, ad, i) => {
+      let $clue = this.$$clues[ad][i];
+      $clue.classList.remove('h');
+      $clue.$('span').innerText = clue.num;
+      $clue.$('input').value = clue.text;
+    })
+  }
+}
 class UiEditor extends Obj {
   onlookup(text) {}
   onversion(i) {}
@@ -70,9 +92,9 @@ class UiEditor extends Obj {
     this._sel = null;
     this.drawTheme();
     window
-      .on('keydown', e => this.onkeydown(e))
       .on('blur', () => this.blur())
-      .on('focus', () => this.focus());
+      .on('focus', () => this.focus())
+      .on('keydown', e => this.onkeydown(e));
   }
   loadCrossword(crossword) {
     this.crossword = crossword;
@@ -82,6 +104,12 @@ class UiEditor extends Obj {
   }
   drawTheme() {
     this.$title.innerText = this.theme.title;
+  }
+  uiboard_onclick(cell) {
+    this.board.moveTo(cell.x, cell.y);
+    this.drawBoard();
+    document.activeElement.blur();
+    this.focus();
   }
   $title_onclick() {
     UiSettingsPop.show(this.theme.toPojo())
@@ -186,10 +214,6 @@ class UiEditor extends Obj {
     this.uicursor.refresh();
     this.uiboard.refresh();
   }
-  uiboard_onclick(cell) {
-    this.board.moveTo(cell.x, cell.y);
-    this.drawBoard();
-  }
 }
 UiEditor.Versions = class extends Obj {
   onchange(cix) {}
@@ -235,9 +259,9 @@ UiEditor.Cursor = class extends Obj {
   load(cursor) {
     this.cursor = cursor;
     this.$cursor = $('#cursor');
-    var r = $('#c0x0').getBoundingClientRect();
-    this.$cursor.style.top = r.top - 3;
-    this.$cursor.style.left = r.left - 3;
+    this.r = $('#c0x0').getBoundingClientRect();
+    this.$cursor.style.top = this.r.top - 3;
+    this.$cursor.style.left = this.r.left - 3;
     this.refresh();
   }
   show(b) {
@@ -245,13 +269,21 @@ UiEditor.Cursor = class extends Obj {
     log('cursor=' + this.$cursor.style.display);
   }
   refresh() {
-    this.$cursor.className = 
-      (this.cursor.dir == 1 ? 'h' : 'v') + (this.cursor.tran ? ' tran' : '');
+    var tran = this.cursor.tran ? ' tran' : '';
+    if (this.cursor.dir == 1) {
+      this.$cursor.className = 'h' + tran;
+      this.$cursor.style.height = this.r.height;
+      this.$cursor.style.width = this.r.width + 6;
+    } else {
+      this.$cursor.className = 'v' + tran;
+      this.$cursor.style.height = this.r.height + 6;
+      this.$cursor.style.width = this.r.width;
+    }
     this.moveTo(this.cursor.x, this.cursor.y);
   }
   moveTo(x, y) {
-    var px = x * 38;
-    var py = y * 36;
+    var px = x * this.r.width;
+    var py = y * this.r.height;
     this.$cursor.style.transform = 'translate3d(' + px + 'px,' + py + 'px,0px)';
   }
 }

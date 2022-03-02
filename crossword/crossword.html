@@ -11,6 +11,25 @@
   <link href='crossword.css' rel='stylesheet'>
 </head>
 <body>
+  <!-- Dialogs -->
+  <div class='hide'>
+    <div id='dCrosswordSettings'>
+      <div class='form'>
+        <div>
+          <label for='dcs_name'>Title</label><input id='dcs_title' class='w400' />
+        </div>
+        <div>
+          <label for='dcs_desc'>Description</label><textarea id='dcs_desc'></textarea>
+        </div>
+        <div>
+          <label for='dcs_symmetry'>Symmetry</label><select id='dcs_symmetry'></select><label for='dcs_minWordLen'>Min word length</label><input id='dcs_minWordLen' class='w50 rj' />
+        </div>
+        <div>
+          <label for='dcs_targetDay'>Target day</label><select id='dcs_targetDay'></select><label for='dcs_height'>Size (h x w)</label><input id='dcs_height' class='w50 rj' /><span>&nbsp;</span><input id='dcs_width' class='w50 rj' />
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Design page -->
   <div id='page'>
     <div id='cursor' class='v'></div>
@@ -30,13 +49,15 @@
       </div>
       <div class='tile2'>
         <div id='t2a' class='foot'><span>Clue List</span><span>OneLook</span><span>Clever Clues</span></div>
-        <div id='cluelist' class='tab'>
-          <div class='flex'>
+        <div class='flex'>
+          <div id='cluelist' class='tab'>
             <div class='cluetile'>
               <div class='head'>Across</div>
+              <div class='list'><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div></div>
             </div>
             <div class='cluetile'>
               <div class='head'>Down</div>
+              <div class='list'><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div><div class='h'><span></span><input></div></div>
             </div>
           </div>
         </div>
@@ -44,25 +65,6 @@
           <iframe id='if'></iframe>
         </div>
         <div id='clueideas' class='tab'>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Dialogs -->
-  <div class='hide'>
-    <div id='dCrosswordSettings'>
-      <div class='form'>
-        <div>
-          <label for='dcs_name'>Title</label><input id='dcs_title' class='w400' />
-        </div>
-        <div>
-          <label for='dcs_desc'>Description</label><textarea id='dcs_desc'></textarea>
-        </div>
-        <div>
-          <label for='dcs_symmetry'>Symmetry</label><select id='dcs_symmetry'></select><label for='dcs_minWordLen'>Min word length</label><input id='dcs_minWordLen' class='w50 rj' />
-        </div>
-        <div>
-          <label for='dcs_targetDay'>Target day</label><select id='dcs_targetDay'></select><label for='dcs_height'>Size (h x w)</label><input id='dcs_height' class='w50 rj' /><span>&nbsp;</span><input id='dcs_width' class='w50 rj' />
         </div>
       </div>
     </div>
