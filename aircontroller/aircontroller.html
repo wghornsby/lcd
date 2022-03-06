@@ -1,0 +1,134 @@
+<html>
+<head>
+  <script type='text/javascript' src='lib/lcd-simple.js'></script>
+  <script type='text/javascript' src='aircontroller.js'></script>
+  <style>
+body {
+  margin:0;
+  padding:0;
+  display:flex;
+  overflow:hidden;
+}
+#radar {
+  background-color:rgb(65, 112, 65);
+  flex:1;
+  background-image:linear-gradient(
+      45deg,
+      rgb(67, 116, 67) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgb(67, 116, 67) 75%,
+      rgb(67, 116, 67)
+    ),
+    linear-gradient(
+      -45deg,
+      rgb(67, 116, 67) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgb(67, 116, 67) 75%,
+      rgb(67, 116, 67)
+    );
+  background-size:50px 50px;
+  background-repeat:repeat;
+}
+.blueprint {
+  display:none;
+}
+.jet {
+  position:absolute;
+}
+.dead {
+  display:none;
+}
+.kapow {
+  position:absolute;
+}
+.kapow svg {
+  animation:expander 0.6s 1;
+  transform-origin:70px 70px;
+  transform:scale(0);
+}
+@keyframes expander {
+  0% {
+    transform:scale(0.25)
+  }
+  20% {
+    transform:scale(1)
+  }
+  40% {
+    transform:scale(0.5)
+  }
+  60% {
+    transform:scale(1.5) rotate(-10deg)
+  }
+  100% {
+    transform:scale(0)
+  }
+}
+  </style>
+</head>
+<body>
+  <div class='pow blueprint'>
+    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="1.1" width="720" height="720" id="svg2">
+      <defs id="defs4">
+        <inkscape:path-effect effect="spiro" id="path-effect3201"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3197"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3193"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3189"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3185"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3181"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3177"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3173"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3169"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3165"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3161"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3157"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3153"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3149"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3149-6"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3153-1"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3157-8"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3161-4"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3165-8"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3169-4"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3173-0"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3177-7"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3181-6"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3185-8"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3189-9"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3193-7"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3197-3"/>
+        <inkscape:path-effect effect="spiro" id="path-effect3201-3"/>
+      </defs>
+      <g transform="scale(0.2 0.2)">
+        <path d="m 329.6885371631169,144.9454094414912 c 0,0 -9.3691648630806,-18.5615530306314 -37.6534361478519,-6.3639610390736" id="path2983" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:none"/>
+        <path d="m 326.8905349710195,144.9454094414912 c 0,0 -9.3691648630806,-18.5615530306314 -37.6534361478519,-6.3639610390736" id="path2983-8" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:none"/>
+        <path d="M 94.6324614631855,36.00250586938022 300.1705854663462,193.5309023590188 342.0166705927379,44.6173400524073 401.0934966535268,195.9922835541695 564.785535530295,54.46286483300981 476.1702964391128,237.8357638717294 616.4777583334849,232.9130014814282 525.4009848231031,347.3672270559314 647.2469385734796,426.1314253007506 502.0164078407082,428.5928064959011 630.0161976390828,582.4291311928135 446.6318834087184,497.5114799601184 426.9396080551219,662.4240200352077 337.0936017543393,529.5094354970756 211.5553463751634,700.5754285600419 223.863018471161,486.4352645819405 52.7863763367938,520.8946013140482 159.8631235719732,380.5958731904649 72.47865169038992,237.8357638717299 194.3246054407665,261.2188852256607 94.6324614631855,36.00250586938069 z" id="path3508" style="fill:#ff0000;stroke:none"/>
+        <path d="m 160.1985233083172,118.7982717399246 154.3242216264676,118.2770704473064 31.419302606586,-111.8087931572194 44.3566625034159,113.6568723829586 122.9049190198811,-106.2645554800019 -66.5349937551232,137.6819023175674 105.347073445612,-3.6961584514783 -68.3831880260988,85.9356839968712 91.4856164132948,59.1385352236531 -109.0434619875631,1.8480792257391 96.1061020907337,115.5049516086972 -137.6904731876862,-63.7587332880004 -14.7855541678056,123.8213081245232 -67.4590908906114,-99.7962781899145 -94.2579078197586,128.4415061888714 9.2409713548783,-160.7828926393062 -128.4495018328083,25.8731091603477 80.3964507874411,-105.3405158671315 -65.6108966196359,-107.1885950928715 91.4856164132951,17.5567526445221 -74.8518679745143,-169.0992491551333 z" id="path3512" style="fill:#ff8000;stroke:none"/>
+        <path d="m 226.2365903979516,204.2096633100054 99.1022747159463,75.9539014973134 20.1765110200129,-71.8001725091792 28.4844861459008,72.9869522200746 78.9257636959331,-68.2398333764925 -42.7267292188508,88.4150884617163 67.6506545965139,-2.373559421791 -43.9135828082631,55.1852565566419 58.7492526759201,37.9769507486567 -70.0243617753388,1.1867797108955 61.7163866494512,74.17373193097 -88.4205924112332,-40.9439000258953 -9.4948287153004,79.5142406299997 -43.3201560135574,-64.0861043883581 -60.529533060039,82.4811899072385 5.9342679470626,-103.2498348479099 -82.4863244641708,16.614915952537 51.6281311394449,-67.6464435210443 -42.1333024241446,-68.8332232319403 58.7492526759201,11.2744072535075 -48.0675703712075,-108.5903435469403 z" id="path3514" style="fill:#ffff00;stroke:none"/>
+        <path d="m -57.96064186096192,305.2593994140625 a 30.91234397888183,30.91234397888183 0 1 1 -61.82468795776368,0 30.91234397888183,30.91234397888183 0 1 1 61.82468795776368,0 z" transform="translate(435.3488372093023,54.09660107334526)" id="path3516" style="fill:#000000;fill-opacity:1;stroke:none"/>
+      </g>
+    </svg>
+  </div>
+  <div class='jet blueprint'>
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="50" height="50" viewBox="0 0 256 256" xml:space="preserve">
+      <g transform="translate(128 128) scale(0.72 0.72)">
+        <g style="stroke: none; stroke-width: 4; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
+          <path d="M 47.022 11.983 l 2.42 -2.42 c 0.79 -0.79 0.79 -2.07 0 -2.86 l -3.521 -3.521 c -0.79 -0.79 -2.07 -0.79 -2.86 0 l -5.096 5.096 C 39.971 11.813 42.917 13.215 47.022 11.983 z" style="stroke: black; stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(173,196,229); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+          <path d="M 81.722 52.035 l 5.096 -5.096 c 0.79 -0.79 0.79 -2.07 0 -2.86 l -3.521 -3.521 c -0.79 -0.79 -2.07 -0.79 -2.86 0 l -2.42 2.42 C 76.813 46.837 78.538 49.687 81.722 52.035 z" style="stroke: black; stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(173,196,229); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+          <path d="M 56.371 15.83 L 21.504 1.544 c -2.352 -0.962 -5.042 -0.561 -7.011 1.045 L 8.668 7.341 C 7.571 8.236 7.599 9.922 8.726 10.78 l 30.82 23.769 C 49.091 30.74 54.539 24.402 56.371 15.83 z" style="stroke: black; stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(199,210,227); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+          <path d="M 15.749 70.165 L 0.632 58.34 c -0.865 -0.679 -0.837 -1.997 0.056 -2.639 l 3.736 -2.683 c 1.343 -0.964 3.098 -1.139 4.604 -0.457 l 13.228 5.942 C 23.037 63.623 20.605 67.4 15.749 70.165 z" style="stroke: black; stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(199,210,227); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+          <path d="M 55.451 50.454 l 23.769 30.82 c 0.858 1.127 2.544 1.155 3.439 0.058 l 4.752 -5.825 c 1.606 -1.969 2.007 -4.659 1.045 -7.011 L 74.17 33.629 C 66.047 37.702 59.483 43.045 55.451 50.454 z" style="stroke: black; stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(199,210,227); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+          <path d="M 31.497 67.744 l 5.942 13.228 c 0.681 1.506 0.507 3.261 -0.457 4.604 l -2.683 3.736 c -0.641 0.893 -1.96 0.921 -2.639 0.056 L 19.835 74.251 C 23.332 70.226 27.217 68.047 31.497 67.744 z" style="stroke: black; stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(199,210,227); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+          <path d="M 14.748 75.252 c 4.748 4.748 90.334 -55.5 72.917 -72.917 S 10 70.504 14.748 75.252 z" style="stroke: black; stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(124, 168, 235); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+          <path d="M 75.91 7.864 c 0.553 -1.402 1.842 -2.408 3.284 -2.953 c 0.735 -0.269 1.547 -0.423 2.434 -0.358 c 0.874 0.062 1.883 0.401 2.657 1.163 c 0.763 0.773 1.102 1.782 1.166 2.657 c 0.064 0.888 -0.087 1.7 -0.358 2.436 c -0.544 1.443 -1.553 2.732 -2.957 3.283 c 0.458 -1.381 0.623 -2.615 0.65 -3.774 c 0.038 -1.153 -0.246 -2.147 -0.622 -2.481 c -0.331 -0.379 -1.329 -0.664 -2.481 -0.626 C 78.522 7.237 77.288 7.404 75.91 7.864 z" style="stroke: black; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(199,210,227); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+        </g>
+      </g>  
+    </svg>
+  </div>
+  <div id='radar'>
+  </div>
+</body>
+<script>
+window.on('DOMContentLoaded', () => new Page());
+</script>
