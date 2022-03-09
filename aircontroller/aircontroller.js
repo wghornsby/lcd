@@ -10,7 +10,7 @@ class Radar extends Obj {
       .on('mouseup', e => this.tracer.mouseup(e));
     this.jets = new Jets(this.clockspeed)
       .on('mousedown', (jet, e) => this.tracer.init(jet, e))
-      .on('dot', jet => this.jet_ondot(jet));
+      .on('dot', (jet, $dot) => this.jet_ondot(jet, $dot));
     
     // --- temp code
     for (let i = 0; i < 20; i++) {
@@ -33,8 +33,9 @@ class Radar extends Obj {
       //this.pause();
     }
   }
-  jet_ondot(jet) {
-    let $dot = this.tracer.shift(jet);
+  jet_ondot(jet, $dot) {
+    $dot && $dot.remove();
+    $dot = this.tracer.shift(jet);
     if ($dot) {
       jet.headToDot($dot);
     }
@@ -48,6 +49,7 @@ class Tracer extends Obj {
     this.$dots = [];
   }
   init(jet, e) {
+    e.preventDefault();
     if (this.$dots.length) {
       this.clear();
     }
@@ -117,7 +119,7 @@ class Tracer extends Obj {
 }
 class Jets extends ObjArray {
   onmousedown(jet, e) {}
-  ondot(jet) {}
+  ondot(jet, $dot) {}
   //
   constructor(clockspeed) {
     super();
@@ -126,7 +128,7 @@ class Jets extends ObjArray {
   newJet(x, y, heading, speed) {
     let jet = new Jet(this.length, x, y, heading, speed, this.clockspeed)
       .on('mousedown', (jet, e) => this.onmousedown(jet, e))
-      .on('dot', jet => this.ondot(jet));
+      .on('dot', (jet, $dot) => this.ondot(jet, $dot));
     this.push(jet);
   }
   step() {
@@ -145,7 +147,7 @@ class Jets extends ObjArray {
 class Jet extends Obj {
   ondead(jet) {}
   onmousedown(jet, e) {}
-  ondot() {}
+  ondot(jet, $dot) {}
   //
   constructor(i, x, y, heading, speed, clockspeed) {
     super();
@@ -173,7 +175,7 @@ class Jet extends Obj {
       if (this.dot) {
         if (Math.abs((me.x + 25) - (this.dot.x + 3)) <= 1 && Math.abs((me.y + 25) - (this.dot.y + 3)) <= 1) {
           this.dot = null;
-          this.ondot(this);
+          this.ondot(this, this.$dot);
         }
       }
       let h = window.innerHeight - me.height, w = window.innerWidth - me.width;
@@ -224,6 +226,7 @@ class Jet extends Obj {
     });
   }
   headToDot($dot) {
+    this.$dot = $dot;
     this.dot = $dot.getBoundingClientRect();
     let me = this.getBounds();
     let rad = Math.atan2((me.y + 25) - (this.dot.y + 3), (this.dot.x + 3) - (me.x + 25));
