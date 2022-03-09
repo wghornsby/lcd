@@ -2,6 +2,9 @@
 <head>
   <script type='text/javascript' src='lib/lcd-simple.js'></script>
   <script type='text/javascript' src='aircontroller.js'></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
   <style>
 body {
   margin:0;
@@ -36,9 +39,14 @@ body {
 }
 .jet {
   position:absolute;
+  cursor:pointer;
+  z-index:10;
 }
-.dead {
-  display:none;
+.hide {
+  display:none; 
+}
+.dead svg {
+  animation:dive 4s normal 1;
 }
 .kapow {
   position:absolute;
@@ -47,6 +55,23 @@ body {
   animation:expander 0.6s 1;
   transform-origin:70px 70px;
   transform:scale(0);
+}
+@keyframes dive {
+  0% {
+    transform:scale(1) rotate(1turn);
+  }
+  1% {
+    transform:scale(1) rotate(1turn);
+  }
+  2% {
+    transform:scale(1) rotate(1turn);
+  }
+  20% {
+    transform:scale(1) rotate(0turn);
+  }
+  100% {
+    transform:scale(0) rotate(1turn);
+  }
 }
 @keyframes expander {
   0% {
@@ -65,41 +90,50 @@ body {
     transform:scale(0)
   }
 }
+.glow {
+  border-radius:50%;
+  background-color:#bbb;
+  animation:glowing 1s ease-in-out infinite alternate;
+}
+@keyframes glowing {
+  from {
+    box-shadow: 0 0 0px hsl(0, 0%, 73%), 0 0 5px hsl(0, 0%, 76%), 0 0 10px hsl(0, 0%, 79%), 0 0 15px hsl(0, 0%, 82%), 0 0 20px hsl(0, 0%, 85%);
+  }
+  to {
+    box-shadow: 0 0 10px #bbb, 0 0 20px #ccc, 0 0 30px #ddd, 0 0 40px #eee, 0 0 50px #fff;
+  }
+}
+.dot {
+  height:7px;
+  width:7px;
+  background-color:red;
+  border-radius:50%;
+  display:inline-block;  
+  position:absolute;
+  z-index:1;
+}
+#score {
+  margin:5px 0 0 15px;
+  display:inline-block;
+  font-family:'Bangers';
+  font-size:50pt;
+  color:white;
+}
+#score span {
+  display:inline-block;
+  padding-left:10px;
+}
   </style>
 </head>
 <body>
+  <!-- radar -->
+  <div id='radar'>
+    <div id='score'>SCORE:<span>0</span></div>
+  </div>
+  <!-- blueprints -->
   <div class='pow blueprint'>
     <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="1.1" width="720" height="720" id="svg2">
-      <defs id="defs4">
-        <inkscape:path-effect effect="spiro" id="path-effect3201"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3197"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3193"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3189"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3185"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3181"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3177"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3173"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3169"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3165"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3161"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3157"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3153"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3149"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3149-6"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3153-1"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3157-8"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3161-4"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3165-8"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3169-4"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3173-0"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3177-7"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3181-6"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3185-8"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3189-9"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3193-7"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3197-3"/>
-        <inkscape:path-effect effect="spiro" id="path-effect3201-3"/>
-      </defs>
+      <defs id="defs4"><inkscape:path-effect effect="spiro" id="path-effect3201"/><inkscape:path-effect effect="spiro" id="path-effect3197"/><inkscape:path-effect effect="spiro" id="path-effect3193"/><inkscape:path-effect effect="spiro" id="path-effect3189"/><inkscape:path-effect effect="spiro" id="path-effect3185"/><inkscape:path-effect effect="spiro" id="path-effect3181"/><inkscape:path-effect effect="spiro" id="path-effect3177"/><inkscape:path-effect effect="spiro" id="path-effect3173"/><inkscape:path-effect effect="spiro" id="path-effect3169"/><inkscape:path-effect effect="spiro" id="path-effect3165"/><inkscape:path-effect effect="spiro" id="path-effect3161"/><inkscape:path-effect effect="spiro" id="path-effect3157"/><inkscape:path-effect effect="spiro" id="path-effect3153"/><inkscape:path-effect effect="spiro" id="path-effect3149"/><inkscape:path-effect effect="spiro" id="path-effect3149-6"/><inkscape:path-effect effect="spiro" id="path-effect3153-1"/><inkscape:path-effect effect="spiro" id="path-effect3157-8"/><inkscape:path-effect effect="spiro" id="path-effect3161-4"/><inkscape:path-effect effect="spiro" id="path-effect3165-8"/><inkscape:path-effect effect="spiro" id="path-effect3169-4"/><inkscape:path-effect effect="spiro" id="path-effect3173-0"/><inkscape:path-effect effect="spiro" id="path-effect3177-7"/><inkscape:path-effect effect="spiro" id="path-effect3181-6"/><inkscape:path-effect effect="spiro" id="path-effect3185-8"/><inkscape:path-effect effect="spiro" id="path-effect3189-9"/><inkscape:path-effect effect="spiro" id="path-effect3193-7"/><inkscape:path-effect effect="spiro" id="path-effect3197-3"/><inkscape:path-effect effect="spiro" id="path-effect3201-3"/></defs>
       <g transform="scale(0.2 0.2)">
         <path d="m 329.6885371631169,144.9454094414912 c 0,0 -9.3691648630806,-18.5615530306314 -37.6534361478519,-6.3639610390736" id="path2983" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:none"/>
         <path d="m 326.8905349710195,144.9454094414912 c 0,0 -9.3691648630806,-18.5615530306314 -37.6534361478519,-6.3639610390736" id="path2983-8" style="fill:none;stroke:#ff0000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:none"/>
@@ -126,9 +160,7 @@ body {
       </g>  
     </svg>
   </div>
-  <div id='radar'>
-  </div>
 </body>
 <script>
-window.on('DOMContentLoaded', () => new Page());
+window.on('DOMContentLoaded', () => new Radar());
 </script>

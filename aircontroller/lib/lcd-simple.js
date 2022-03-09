@@ -154,6 +154,13 @@ class Obj {
     fids.forEach(fid => Object.defineProperty(this, fid, {enumerable:false}));
   }
 }
+class ObjArray extends Array {
+  //
+  on(event, fn) {
+    this['on' + event] = fn;
+    return this;
+  }
+}
 
 /** Dialog */
 class Dialog extends Obj {
