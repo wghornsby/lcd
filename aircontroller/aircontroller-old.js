@@ -13,7 +13,7 @@ class Radar extends Obj {
       .on('dot', (jet, $dot) => this.jet_ondot(jet, $dot));
     
     // --- temp code
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 20; i++) {
       this.jets.newJet(50 + rnd(window.innerWidth - 50 ), 50 + rnd(window.innerHeight - 50), rnd(361), 200);
     }
     
