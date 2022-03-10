@@ -142,7 +142,7 @@ class Yordle {
       lose:r == 3,
       retry:r == 1
     }
-    if (r.lose) {
+    if (result.lose) {
       result.word = this.word;
     }
     return result;
