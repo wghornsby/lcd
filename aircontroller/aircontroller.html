@@ -13,25 +13,25 @@ body {
   overflow:hidden;
 }
 #radar {
-  background-color:rgb(71, 122, 71);
+  background-color:rgb(104, 155, 92);
   flex:1;
   background-image:linear-gradient(
       45deg,
-      rgb(67, 116, 67) 25%,
+      rgb(110, 163, 98) 25%,
       transparent 25%,
       transparent 75%,
-      rgb(67, 116, 67) 75%,
-      rgb(67, 116, 67)
+      rgb(110, 163, 98) 75%,
+      rgb(110, 163, 98)
     ),
     linear-gradient(
       -45deg,
-      rgb(67, 116, 67) 25%,
+      rgb(110, 163, 98) 25%,
       transparent 25%,
       transparent 75%,
-      rgb(67, 116, 67) 75%,
-      rgb(67, 116, 67)
+      rgb(110, 163, 98) 75%,
+      rgb(110, 163, 98)
     );
-  background-size:50px 50px;
+  background-size:60px 60px;
   background-repeat:repeat;
 }
 .blueprint {
@@ -43,7 +43,7 @@ body {
   z-index:10;
 }
 .hide {
-  display:none; 
+  display:none !important; 
 }
 .dead svg {
   animation:dive 4s normal 1;
@@ -100,7 +100,7 @@ body {
     box-shadow: 0 0 0px hsl(0, 0%, 73%), 0 0 5px hsl(0, 0%, 76%), 0 0 10px hsl(0, 0%, 79%), 0 0 15px hsl(0, 0%, 82%), 0 0 20px hsl(0, 0%, 85%);
   }
   to {
-    box-shadow: 0 0 10px #bbb, 0 0 20px #ccc, 0 0 30px #ddd, 0 0 40px #eee, 0 0 50px #fff;
+    box-shadow: 0 0 10px #bbb, 0 0 20px #ccc, 0 0 30px #ddd, 0 0 50px #eee, 0 0 60px #fff;
   }
 }
 .dot {
@@ -111,6 +111,9 @@ body {
   display:inline-block;  
   position:absolute;
   z-index:1;
+}
+.dot.docked {
+  background-color:white;
 }
 #score {
   margin:5px 0 0 15px;
@@ -134,7 +137,7 @@ body {
   justify-content:end;
 }
 #jetrunb {
-  height:723px;
+  height:673px;
   top:20px;
   left:800px;
   transform:rotate(46deg);
@@ -144,6 +147,29 @@ body {
   top:0px;
   left:1050px;
   transform:rotate(-68deg);
+}
+.run {
+  background-color:rgb(151, 151, 151);
+  position:absolute;
+  border-radius:13px;
+  box-shadow:0 0 2px 4px rgb(151, 151, 151);
+  padding-bottom:15px;
+  margin:12px 12px 110px 12px;
+  width:92px;
+}
+#jetrun {
+  height:548px;
+  top:20px;
+  left:800px;
+  transform:rotate(46deg);
+  transform-origin:47px 326px;
+}
+#planerun {
+  height:433px;
+  top:0px;
+  left:1050px;
+  transform:rotate(-68deg);
+  transform-origin:50% 59.5%;
 }
 .chevs {
   height:110px;
@@ -157,12 +183,29 @@ body {
   position:relative;
 }
 #jetrunb .chev .before {
-  background:rgb(255, 125, 0) !important;
-  box-shadow:0 0 2px 5px rgb(255, 125, 0) !important;
+  background:rgb(255, 125, 0);
+  box-shadow:0 0 2px 5px rgb(255, 125, 0);
 }
 #jetrunb .chev .after {
   background:rgb(255, 125, 0);
   box-shadow:0 0 2px 5px rgb(255, 125, 0);
+}
+#jetpad.flash .chev div {
+  animation:jdockglow .5s ease-in-out infinite;
+}
+@keyframes jdockglow {
+  0% {
+    background:hsl(29, 100%, 50%);
+    box-shadow:0 0 2px 5px hsl(29, 100%, 50%);
+  }
+  50% {
+    background:hsl(29, 100%, 90%);
+    box-shadow:0 0 2px 5px hsl(29, 100%, 90%);
+  }
+  100% {
+    background:hsl(29, 100%, 50%);
+    box-shadow:0 0 2px 5px hsl(29, 100%, 50%);
+  }
 }
 .chev .before {
   position:absolute;
@@ -184,28 +227,22 @@ body {
   box-shadow:0 0 2px 5px rgb(255, 186, 0);
   transform:skew(0deg, 23deg);
 }
-.run {
-  background-color:rgb(151, 151, 151);
-  position:absolute;
-  border-radius:13px;
-  box-shadow:0 0 2px 4px rgb(151, 151, 151);
-  padding-bottom:15px;
-  margin:12px 12px 110px 12px;
-  width:92px;
+#planepad.flash .chev div {
+  animation:pdockglow .5s ease-in-out infinite;
 }
-#jetrun {
-  height:598px;
-  top:20px;
-  left:800px;
-  transform:rotate(46deg);
-  transform-origin:47px 351px;
-}
-#planerun {
-  height:433px;
-  top:0px;
-  left:1050px;
-  transform:rotate(-68deg);
-  transform-origin:50% 59.5%;
+@keyframes pdockglow {
+  0% {
+    background:hsl(44, 100%, 50%);
+    box-shadow:0 0 2px 5px hsl(44, 100%, 50%);
+  }
+  50% {
+    background:hsl(44, 100%, 100%);
+    box-shadow:0 0 2px 5px hsl(44, 100%, 100%);
+  }
+  100% {
+    background:hsl(44, 100%, 50%);
+    box-shadow:0 0 2px 5px hsl(44, 100%, 50%);
+  }
 }
 .lines {
   margin:5px;
@@ -246,7 +283,7 @@ body {
     </svg>
   </div>
   <div class='jet blueprint'>
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="50" height="50" viewBox="0 0 256 256" xml:space="preserve">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="60" height="60" viewBox="0 0 256 256" xml:space="preserve">
       <g transform="translate(128 128) scale(0.72 0.72)">
         <g style="stroke: none; stroke-width: 4; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
           <path d="M 47.022 11.983 l 2.42 -2.42 c 0.79 -0.79 0.79 -2.07 0 -2.86 l -3.521 -3.521 c -0.79 -0.79 -2.07 -0.79 -2.86 0 l -5.096 5.096 C 39.971 11.813 42.917 13.215 47.022 11.983 z" style="stroke: black; stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(173,196,229); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
@@ -263,5 +300,5 @@ body {
   </div>
 </body>
 <script>
-window.on('DOMContentLoaded', () => new Radar());
+window.on('DOMContentLoaded', () => radar = new Radar());
 </script>
