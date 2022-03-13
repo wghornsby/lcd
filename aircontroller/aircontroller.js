@@ -4,15 +4,16 @@ class Radar extends Obj {
     super();
     this.clockspeed = 10;
     this.tracers = new Tracers()
-      .on('start', jet => this.tracer_onstart(jet))
-      .on('donedraw', () => this.tracer_ondonedraw());
+    .on('start', jet => this.tracer_onstart(jet))
+    .on('dock', jet => this.tracer_ondock(jet))
+    .on('donedraw', () => this.tracer_ondonedraw());
     $('#radar')
       .on('mousemove', e => this.tracers.mousemove(e))
       .on('mouseup', e => this.tracers.mouseup(e));
     this.jets = new Jets()
       .on('mousedown', (jet, e) => this.tracers.jet_onclick(jet, e))
       .on('dot', (jet, dot) => this.jet_ondot(jet, dot));
-    $$('.chevs')
+    $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
     
     // --- temp code
@@ -32,6 +33,7 @@ class Radar extends Obj {
   step() {
     let dead = this.jets.step();
     if (dead) {
+      $$('.dot').forEach($d => $d.remove());
       //this.pause();
     }
   }
@@ -44,14 +46,17 @@ class Radar extends Obj {
   }
   tracer_onstart(jet) {
     this.resetDocks();
-    $('#' + jet.dock).className = 'chevs flash';
+    $('#' + jet.pad).className = 'chevs flash';
     this.jet_ondot(jet);
+  }
+  tracer_ondock(jet) {
+    jet.land();
   }
   tracer_ondonedraw() {
     this.resetDocks();
   }
   resetDocks() {
-    $$('chevs').forEach($pad => $pad.className = 'chevs');
+    $$('.chevs').forEach($pad => $pad.className = 'chevs');
   }
   jet_ondot(jet, dot) {
     dot = this.tracers.ondot(jet, dot);
@@ -62,6 +67,7 @@ class Radar extends Obj {
 }
 class Tracers extends Obj {
   onstart(jet) {}
+  ondock(jet) {}
   ondonedraw() {}
   //
   constructor() {
@@ -79,6 +85,7 @@ class Tracers extends Obj {
     }
     this.tracer = new Tracer(jet, e)
       .on('start', jet => this.onstart(jet))
+      .on('docked', jet => this.ondock(jet))
       .on('donedraw', () => this.ondonedraw());
     this.tracers[jet.id] = this.tracer;
   }
@@ -88,7 +95,7 @@ class Tracers extends Obj {
     }
     let tracer = this.tracers[jet.id];
     if (tracer) {
-      dot = tracer.next();
+      dot = tracer.next(dot);
       return dot;
     }
   }
@@ -121,12 +128,6 @@ class Dot extends Obj {
     this.cx = bcr.x + 3;
     this.cy = bcr.y + 3;
   }
-  heading() {
-    let j = this.jet.getBounds();
-    let rad = Math.atan2(j.cy - this.cy, this.cx - j.cx);
-    let heading = Math.round(rad * (180 / Math.PI));
-    return heading;
-  }
   under() {
     let j = this.jet.getBounds();
     return Math.abs(j.cx - this.cx) <= 1 && Math.abs(j.cy - this.cy) <= 1;
@@ -153,19 +154,19 @@ class Dot extends Obj {
 }
 class Tracer extends Obj {
   onstart(jet) {}
-  onclear(jet) {}
+  ondocked(jet) {}
   ondonedraw() {}
   //
   constructor(jet, e) {
     super();
     this.dots = [];
     this.di = 0;
-    this.primed = 0;
     this.jet = jet;
     this.sx = e.clientX;
     this.sy = e.clientY;
     this.drawing = 1;
     this.docked = 0;
+    this.onstarted = 0;
     this.mousemove(e);
   }
   mouseup(docked) {
@@ -178,39 +179,35 @@ class Tracer extends Obj {
   }
   clear() {
     this.dots.forEach(dot => dot.remove());
-    this.onclear(this.jet);
   }
-  next() {
-    let dot = this.dots[this.di++];
-    if (this.di >= this.length) {
+  next(dot) {
+    if (! this.onstarted && dot) {
+      return;
+    }
+    dot = this.dots[this.di++];
+    if (this.di == this.dots.length) {
       this.clear();
+      if (this.docked) {
+        this.ondocked(this.jet);
+      }
     }
     return dot; // && dot.hide();
   }
   mousemove(e) {
-    if (! this.primed) {
-      let b = this.jet.getBounds();
-      if (e.clientX >= b.x && e.clientX <= (b.x + b.width) && e.clientY >= b.y && e.clientY <= (b.y + b.height)) {
-        this.primed = 1;
-      } else {
-        this.clear();
+    if (Math.abs(e.clientX - this.sx) > 7 || Math.abs(e.clientY - this.sy) > 7) {
+      if (this.dots.length == 0) {
+        let b = this.jet.getBounds();
+        if (e.clientX >= b.x && e.clientX <= b.x2 && e.clientY >= b.y && e.clientY <= b.y2) {
+          return;
+        }
       }
-    } else {
-      if (Math.abs(e.clientX - this.sx) > 10 || Math.abs(e.clientY - this.sy) > 10) {
-        if (this.dots.length == 0) {
-          let b = this.jet.getBounds();
-          if (e.clientX >= b.x && e.clientX <= b.x2 && e.clientY >= b.y && e.clientY <= b.y2) {
-            // log('ignore, still in bounds');
-            return;
-          }
-        }
-        let dot = new Dot(this.jet, e, this.dots.length);
-        this.dots.push(dot);
-        this.sx = dot.cx;
-        this.sy = dot.cy;
-        if (this.dots.length == 1) {
-          this.onstart(this.jet);
-        }
+      let dot = new Dot(this.jet, e, this.dots.length);
+      this.dots.push(dot);
+      this.sx = dot.cx;
+      this.sy = dot.cy;
+      if (! this.onstarted) {
+        this.onstart(this.jet);
+        this.onstarted = 1;
       }
     }
   }
@@ -246,7 +243,8 @@ class Jet extends Obj {
   constructor(i, x, y, heading, speed) {
     super();
     this.id = 'jet' + i;
-    this.dock = 'jetpad';
+    this.pad = 'jetpad';
+    this.dock = 'jetdock';
     this.x = x;
     this.y = y;
     this.ix = 0;
@@ -254,6 +252,9 @@ class Jet extends Obj {
     this.setHeading(heading);
     this.cycle = 1000 / speed;
     this.is = 0;
+    this.landed = 0;
+    this.lx = 1101;
+    this.ly = 121;
     this.$createJet(i);
   }
   step(jets) {
@@ -325,8 +326,21 @@ class Jet extends Obj {
     });
   }
   headToDot(dot) {
-    this.dot = dot;
-    this.setHeading(dot.heading());
+    if (! this.landed) {
+      this.dot = dot;
+      this.headTo(dot.cx, dot.cy);
+    }
+  }
+  land() {
+    this.landed = 1;
+    this.cycle = 1;
+    this.headTo(this.lx, this.ly);
+  }
+  headTo(x, y) {
+    let me = this.getBounds();
+    let rad = Math.atan2(me.cy - y, x - me.cx);
+    let heading = Math.round(rad * (180 / Math.PI));
+    this.setHeading(heading);
   }
   bounce(vert) {
     this.bouncing = 1;

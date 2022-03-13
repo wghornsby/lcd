@@ -256,15 +256,23 @@ body {
   border-left:10px solid rgb(255, 125, 0);
   border-right:10px solid rgb(255, 125, 0);
 }
+.land {
+  position:absolute;
+  left:1100px;
+  top:120px;
+  height:3px;
+  width:3px;
+  background:red;
+  z-index:999;
+}
 </style>
 </head>
 <body>
-  <!--  -->
   <!-- radar -->
   <div id='radar'>
     <div id='score'>Score:<span>0</span></div>
-    <div id='planerunb' class='runb'><div id='planepad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div class='chev'><div class='before'></div><div class='after'></div></div></div></div>
-    <div id='jetrunb' class='runb'><div id='jetpad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div class='chev'><div class='before'></div><div class='after'></div></div></div></div>
+    <div id='planerunb' class='runb'><div id='planepad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div id='planedock' class='chev dock'><div class='before'></div><div class='after'></div></div></div></div>
+    <div id='jetrunb' class='runb'><div id='jetpad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div id='jetdock' class='chev dock'><div class='before'></div><div class='after'></div></div></div></div>
     <div id='planerun' class='run'><div class='lines'></div></div>
     <div id='jetrun' class='run'><div class='lines'></div></div>
   </div>
@@ -283,7 +291,7 @@ body {
     </svg>
   </div>
   <div class='jet blueprint'>
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="60" height="60" viewBox="0 0 256 256" xml:space="preserve">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="64" height="64" viewBox="0 0 256 256" xml:space="preserve">
       <g transform="translate(128 128) scale(0.72 0.72)">
         <g style="stroke: none; stroke-width: 4; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-175.05 -175.05000000000004) scale(3.89 3.89)" >
           <path d="M 47.022 11.983 l 2.42 -2.42 c 0.79 -0.79 0.79 -2.07 0 -2.86 l -3.521 -3.521 c -0.79 -0.79 -2.07 -0.79 -2.86 0 l -5.096 5.096 C 39.971 11.813 42.917 13.215 47.022 11.983 z" style="stroke: black; stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(173,196,229); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
