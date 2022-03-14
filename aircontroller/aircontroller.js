@@ -2,23 +2,26 @@ class Radar extends Obj {
   //
   constructor() {
     super();
-    this.clockspeed = 10;
+    this.clockspeed = 5;
     this.tracers = new Tracers()
-    .on('start', jet => this.tracer_onstart(jet))
-    .on('dock', jet => this.tracer_ondock(jet))
-    .on('donedraw', () => this.tracer_ondonedraw());
+      .on('start', jet => this.tracer_onstart(jet))
+      .on('dock', jet => this.tracer_ondock(jet))
+      .on('donedraw', () => this.tracer_ondonedraw());
     $('#radar')
       .on('mousemove', e => this.tracers.mousemove(e))
       .on('mouseup', e => this.tracers.mouseup(e));
     this.jets = new Jets()
       .on('mousedown', (jet, e) => this.tracers.jet_onclick(jet, e))
-      .on('dot', (jet, dot) => this.jet_ondot(jet, dot));
+      .on('dot', (jet, dot) => this.jet_ondot(jet, dot))
+      .on('landing', jet => this.jet_onlanding(jet))
+      .on('land', jet => this.jet_onland(jet));
+    this.scoreboard = new Scoreboard();
     $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
     
     // --- temp code
-    for (let i = 0; i < 2; i++) {
-      this.jets.newJet(50 + rnd(window.innerWidth - 50), 50 + rnd(window.innerHeight - 50), rnd(361), 250);
+    for (let i = 0; i < 5; i++) {
+      this.jets.newJet(50 + rnd(window.innerWidth - 50), 50 + rnd(window.innerHeight - 50), rnd(361), 200);
     }
     // --- temp code
     
@@ -34,10 +37,11 @@ class Radar extends Obj {
     let dead = this.jets.step();
     if (dead) {
       $$('.dot').forEach($d => $d.remove());
-      //this.pause();
+      this.pause();
     }
   }
   pad_onmouseover(e) {
+    log(e.clientX + ',' + e.clientY);
     e = e.srcElement;
     while (! e.id) {
       e = e.parentElement;
@@ -63,6 +67,28 @@ class Radar extends Obj {
     if (dot) {
       jet.headToDot(dot);
     }
+  }
+  jet_onlanding(jet) {
+    this.scoreboard.onlanding();
+  }
+  jet_onland(jet) {
+    this.scoreboard.onland();
+  }
+}
+class Scoreboard extends Obj {
+  //
+  constructor() {
+    super();
+    this.$score = $('#score span');
+    this.score = 0;
+  }
+  onlanding() {
+    this.score++;
+    this.$score.innerText = this.score;
+    this.$score.className = 'bulge';
+  }
+  onland() {
+    this.$score.className = '';
   }
 }
 class Tracers extends Obj {
@@ -127,10 +153,6 @@ class Dot extends Obj {
     var bcr = this.$dot.getBoundingClientRect();
     this.cx = bcr.x + 3;
     this.cy = bcr.y + 3;
-  }
-  under() {
-    let j = this.jet.getBounds();
-    return Math.abs(j.cx - this.cx) <= 1 && Math.abs(j.cy - this.cy) <= 1;
   }
   dock() {
     this.$dot.className = 'dot docked';
@@ -215,11 +237,15 @@ class Tracer extends Obj {
 class Jets extends ObjArray {
   onmousedown(jet, e) {}
   ondot(jet, $dot) {}
+  onlanding(jet) {}
+  onland(jet) {}
   //
   newJet(x, y, heading, speed) {
     let jet = new Jet(this.length, x, y, heading, speed)
       .on('mousedown', (jet, e) => this.onmousedown(jet, e))
-      .on('dot', (jet, dot) => this.ondot(jet, dot));
+      .on('dot', (jet, dot) => this.ondot(jet, dot))
+      .on('landing', jet => this.onlanding(jet))
+      .on('land', jet => this.onland(jet));
     this.push(jet);
   }
   step() {
@@ -239,6 +265,8 @@ class Jet extends Obj {
   ondead(jet) {}
   onmousedown(jet, e) {}
   ondot(jet, dot) {}
+  onlanding(jet) {}
+  onland(jet) {}
   //
   constructor(i, x, y, heading, speed) {
     super();
@@ -252,13 +280,19 @@ class Jet extends Obj {
     this.setHeading(heading);
     this.cycle = 1000 / speed;
     this.is = 0;
+    this.landing = 0;
     this.landed = 0;
-    this.lx = 1101;
-    this.ly = 121;
+    this.lx = 725;
+    this.ly = 483;
+    this.lx2 = 1101;
+    this.ly2 = 121;
     this.$createJet(i);
   }
   step(jets) {
-    if (this.deadCheck(jets)) {
+    if (this.landed) {
+      return;
+    }
+    if (! this.landing && this.deadCheck(jets)) {
       return 1;
     }
     this.is++;
@@ -267,24 +301,41 @@ class Jet extends Obj {
       this.ix += Math.cos(this.rad);
       this.iy -= Math.sin(this.rad);
       this.$jet.style.transform = this.getTranslate();
-      if (this.dot && this.dot.under()) {
+      let me = this.getBounds();
+      if (this.dot && this.over(this.dot.cx, this.dot.cy, me)) {
         let dot = this.dot;
         this.dot = null;
         this.ondot(this, dot);
       }
-      let me = this.getBounds();
-      let h = window.innerHeight - me.height, w = window.innerWidth - me.width;
-      if (me.y > 0 && me.y < h && me.x > 0 && me.x < w) {
-        this.bouncing = 0;
+      if (this.landing == 1 && (me.cx > this.lx || me.cy < this.ly)) {
+        this.landing = 2;
+        this.$svg.style.animation = 'landing 4s 1';
+        this.headTo(this.lx2, this.ly2, me);
+        this.onlanding(this);
       }
-      if (! this.bouncing) {
-        if (me.y <= 0 || me.y >= h) {
-          this.bounce(0);
-        } else if (me.x <= 0 || me.x >= w) {
-          this.bounce(1);
+      if (this.landing == 2 && (me.cx > this.lx2 || me.cy < this.ly2)) {
+        this.$jet.remove();
+        this.landed = 1;
+        this.onland(this);
+      }
+      if (! this.dot) {
+        let h = window.innerHeight - me.height, w = window.innerWidth - me.width;
+        if (me.y > 0 && me.y < h && me.x > 0 && me.x < w) {
+          this.bouncing = 0;
+        }
+        if (! this.bouncing) {
+          if (me.y <= 0 || me.y >= h) {
+            this.bounce(0);
+          } else if (me.x <= 0 || me.x >= w) {
+            this.bounce(1);
+          }
         }
       }
     }
+  }
+  over(x, y, me) {
+    me = me || this.getBounds();
+    return Math.abs(me.cx - x) <= 1 && Math.abs(me.cy - y) <= 1;
   }
   getBounds() {
     var b = this.$jet.getBoundingClientRect();
@@ -300,7 +351,7 @@ class Jet extends Obj {
     }
     let me = this.getBounds();
     jets.forEach(jet => {
-      if (jet.id != this.id && ! jet.hidden) {
+      if (jet.id != this.id && ! jet.hidden && ! jet.landing) {
         let you = jet.getBounds();
         if (Math.abs(me.x - you.x) < me.width && Math.abs(me.y - you.y) < me.height) {
           this.dead = 1;
@@ -326,18 +377,18 @@ class Jet extends Obj {
     });
   }
   headToDot(dot) {
-    if (! this.landed) {
+    if (! this.landing) {
       this.dot = dot;
       this.headTo(dot.cx, dot.cy);
     }
   }
   land() {
-    this.landed = 1;
+    this.landing = 1;
     this.cycle = 1;
     this.headTo(this.lx, this.ly);
   }
-  headTo(x, y) {
-    let me = this.getBounds();
+  headTo(x, y, me) {
+    me = me || this.getBounds();
     let rad = Math.atan2(me.cy - y, x - me.cx);
     let heading = Math.round(rad * (180 / Math.PI));
     this.setHeading(heading);
