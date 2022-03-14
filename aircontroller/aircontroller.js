@@ -20,8 +20,8 @@ class Radar extends Obj {
       .on('mouseover', e => this.pad_onmouseover(e));
     
     // --- temp code
-    for (let i = 0; i < 5; i++) {
-      this.jets.newJet(50 + rnd(window.innerWidth - 50), 50 + rnd(window.innerHeight - 50), rnd(361), 200);
+    for (let i = 0; i < 6; i++) {
+      this.jets.newJet(50 + rnd(window.innerWidth - 50), 50 + rnd(window.innerHeight - 50), rnd(361), 1);
     }
     // --- temp code
     
@@ -41,7 +41,6 @@ class Radar extends Obj {
     }
   }
   pad_onmouseover(e) {
-    log(e.clientX + ',' + e.clientY);
     e = e.srcElement;
     while (! e.id) {
       e = e.parentElement;
@@ -73,22 +72,6 @@ class Radar extends Obj {
   }
   jet_onland(jet) {
     this.scoreboard.onland();
-  }
-}
-class Scoreboard extends Obj {
-  //
-  constructor() {
-    super();
-    this.$score = $('#score span');
-    this.score = 0;
-  }
-  onlanding() {
-    this.score++;
-    this.$score.innerText = this.score;
-    this.$score.className = 'bulge';
-  }
-  onland() {
-    this.$score.className = '';
   }
 }
 class Tracers extends Obj {
@@ -143,37 +126,6 @@ class Tracers extends Obj {
     }
   }
 }
-class Dot extends Obj {
-  //
-  constructor(jet, e, ix) {
-    super();
-    this.jet = jet;
-    this.ix = ix;
-    this.$dot = this.$createDot(e);
-    var bcr = this.$dot.getBoundingClientRect();
-    this.cx = bcr.x + 3;
-    this.cy = bcr.y + 3;
-  }
-  dock() {
-    this.$dot.className = 'dot docked';
-    return this;
-  }
-  hide() {
-    this.$dot.className = 'dot hide';
-    return this;
-  }
-  remove() {
-    this.$dot.remove();
-  }
-  $createDot(e) {
-    let $dot = document.createElement('div');
-    $dot.className = 'dot';
-    $('#radar').appendChild($dot);
-    $dot.style.left = e.clientX;
-    $dot.style.top = e.clientY;
-    return $dot;
-  }
-}
 class Tracer extends Obj {
   onstart(jet) {}
   ondocked(jet) {}
@@ -212,8 +164,12 @@ class Tracer extends Obj {
       if (this.docked) {
         this.ondocked(this.jet);
       }
+    } else if (this.di < this.dots.length) {
+      for (let i = 0; i < this.di; i++) {
+        this.dots[i].hide();
+      }
     }
-    return dot; // && dot.hide();
+    return dot;
   }
   mousemove(e) {
     if (Math.abs(e.clientX - this.sx) > 7 || Math.abs(e.clientY - this.sy) > 7) {
@@ -234,14 +190,45 @@ class Tracer extends Obj {
     }
   }
 }
+class Dot extends Obj {
+  //
+  constructor(jet, e, ix) {
+    super();
+    this.jet = jet;
+    this.ix = ix;
+    this.$dot = this.$createDot(e);
+    var bcr = this.$dot.getBoundingClientRect();
+    this.cx = bcr.x + 3;
+    this.cy = bcr.y + 3;
+  }
+  dock() {
+    this.$dot.className = 'dot docked';
+    return this;
+  }
+  hide() {
+    this.$dot.className = 'dot hide';
+    return this;
+  }
+  remove() {
+    this.$dot.remove();
+  }
+  $createDot(e) {
+    let $dot = document.createElement('div');
+    $dot.className = 'dot';
+    $('#radar').appendChild($dot);
+    $dot.style.left = e.clientX;
+    $dot.style.top = e.clientY;
+    return $dot;
+  }
+}
 class Jets extends ObjArray {
   onmousedown(jet, e) {}
   ondot(jet, $dot) {}
   onlanding(jet) {}
   onland(jet) {}
   //
-  newJet(x, y, heading, speed) {
-    let jet = new Jet(this.length, x, y, heading, speed)
+  newJet(x, y, heading, sfactor) {
+    let jet = new Jet(this.length, x, y, heading, sfactor)
       .on('mousedown', (jet, e) => this.onmousedown(jet, e))
       .on('dot', (jet, dot) => this.ondot(jet, dot))
       .on('landing', jet => this.onlanding(jet))
@@ -268,7 +255,7 @@ class Jet extends Obj {
   onlanding(jet) {}
   onland(jet) {}
   //
-  constructor(i, x, y, heading, speed) {
+  constructor(i, x, y, heading, sfactor) {
     super();
     this.id = 'jet' + i;
     this.pad = 'jetpad';
@@ -278,7 +265,8 @@ class Jet extends Obj {
     this.ix = 0;
     this.iy = 0;
     this.setHeading(heading);
-    this.cycle = 1000 / speed;
+    this.speed = 350 * sfactor;
+    this.cycle = 1000 / this.speed;
     this.is = 0;
     this.landing = 0;
     this.landed = 0;
@@ -350,16 +338,25 @@ class Jet extends Obj {
       return 1;
     }
     let me = this.getBounds();
+    let blinkw = me.width * 2.5, blinking = 0;
     jets.forEach(jet => {
       if (jet.id != this.id && ! jet.hidden && ! jet.landing) {
         let you = jet.getBounds();
-        if (Math.abs(me.x - you.x) < me.width && Math.abs(me.y - you.y) < me.height) {
+        var d = Math.sqrt(Math.pow(you.cx - me.cx, 2) + Math.pow(you.cy - me.cy, 2));
+        if (d < me.width) {
           this.dead = 1;
+        } else if (d < blinkw) {
+          this.$jet.classList.add('blink');
+          jet.$jet.classList.add('blink');
+          blinking = 1;
         }
       }
     })
     if (this.dead) {
+      this.$jet.classList.remove('blink');
       this.pow();
+    } else if (! blinking) {
+      this.$jet.classList.remove('blink');
     }
   }
   pow() {
@@ -386,6 +383,7 @@ class Jet extends Obj {
     this.landing = 1;
     this.cycle = 1;
     this.headTo(this.lx, this.ly);
+    this.$jet.classList.remove('blink');
   }
   headTo(x, y, me) {
     me = me || this.getBounds();
@@ -453,5 +451,20 @@ class Jet extends Obj {
     rot += (nr - ar);
     this.prevRot = rot;
     return 'rotate(' + (rot) + 'deg) ';
+  }
+}class Scoreboard extends Obj {
+  //
+  constructor() {
+    super();
+    this.$score = $('#score span');
+    this.score = 0;
+  }
+  onlanding() {
+    this.score++;
+    this.$score.innerText = this.score;
+    this.$score.className = 'bulge';
+  }
+  onland() {
+    this.$score.className = '';
   }
 }

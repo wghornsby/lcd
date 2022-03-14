@@ -100,6 +100,20 @@ body {
     transform:scale(0)
   }
 }
+.blink {
+  animation:blinking 0.2s ease-in-out infinite;
+}
+@keyframes blinking {
+  0% {
+    opacity:1;
+  }
+  50% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
 .glow {
   border-radius:50%;
   background-color:#bbb;
@@ -123,7 +137,7 @@ body {
   z-index:1;
 }
 .dot.docked {
-  background-color:white;
+  background-color:#ccc;
 }
 #score {
   margin:5px 0 0 15px;
@@ -201,7 +215,7 @@ body {
   box-shadow:0 0 2px 5px rgb(255, 125, 0);
 }
 #jetpad.flash .chev div {
-  animation:jdockglow .5s ease-in-out infinite;
+  animation:jdockglow .3s ease-in-out infinite;
 }
 @keyframes jdockglow {
   0% {
@@ -252,7 +266,7 @@ body {
   transform:skew(0deg, 23deg);
 }
 #planepad.flash .chev div {
-  animation:pdockglow .5s ease-in-out infinite;
+  animation:pdockglow .3s ease-in-out infinite;
 }
 @keyframes pdockglow {
   0% {
