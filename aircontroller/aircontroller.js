@@ -2,7 +2,7 @@ class Radar extends Obj {
   //
   constructor() {
     super();
-    this.clockspeed = 1;
+    this.clockspeed = 2;
     this.tracers = new Tracers()
       .on('start', jet => this.tracer_onstart(jet))
       .on('dock', jet => this.tracer_ondock(jet))
@@ -16,28 +16,36 @@ class Radar extends Obj {
       .on('landing', jet => this.jet_onlanding(jet))
       .on('land', jet => this.jet_onland(jet));
     this.scoreboard = new Scoreboard();
+    this.oort = new Oort(this.jets);
     $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
     
     // --- temp code
-    for (let i = 0; i < 7; i++) {
-      this.jets.newJet(50 + rnd(window.innerWidth - 50), 50 + rnd(window.innerHeight - 50), rnd(361), 1, rnd(2));
-    }
+    //for (let i = 0; i < 3; i++) {
+    //  this.jets.newJet(50 + rnd(window.innerWidth - 50), 50 + rnd(window.innerHeight - 50), rnd(361), 1, rnd(2));
+    //}
     // --- temp code
     
     this.start();
   }
   start(ms) {
+    this.dirty = 0;
     this.clock = setInterval(() => this.step(), this.clockspeed);
   }
   pause() {
+    this.jets.freeze();
     clearInterval(this.clock);
   }
   step() {
+    this.oort.step();
     let dead = this.jets.step();
     if (dead) {
       $$('.dot').forEach($d => $d.remove());
       this.pause();
+    }
+    if (this.dirty) {
+      //this.jets = Jets.clean(this.jets);
+      this.dirty = 0;
     }
   }
   pad_onmouseover(e) {
@@ -72,6 +80,204 @@ class Radar extends Obj {
   }
   jet_onland(jet) {
     this.scoreboard.onland();
+    this.dirty = 1;
+  }
+}
+class Oort extends Obj {
+  onspawn(jet) {}
+  //
+  constructor(jets) {
+    super();
+    this.is = 0;
+    this.elapsed = 0;
+    this.freq = 125;  // 0.5 seconds
+    this.jets = jets;
+    this.alerts = [];
+    this.script = new Script();
+  }
+  step() {
+    this.is++;
+    if (this.is >= this.freq) {
+      this.elapsed += 0.5;
+      //$('#test').innerText = 'Elapsed: ' + Math.floor(this.elapsed);
+      this.is = 0;
+      let line = this.script.next();
+      if (line.map) {
+        //$('#test2').innerText += "\n" + line.mi + ': ' + js(line.map);
+      }
+      line.types.forEach(type => {
+        this.spawn(type, line.sf);
+      })
+    }
+  }
+  spawn(type, sf) {
+    //$('#test2').innerText += "*";
+    let pos = this.getPos();
+    let jet = this.jets.newJet(pos.x, pos.y, pos.heading, sf, type)
+      .on('spawning', jet => jet.alert.refresh())
+      .on('visible', jet => jet.alert.erase());
+    jet.alert = new Alert(jet, pos.wall);
+    this.alerts.push(jet.alert);
+  }
+  getPos() {
+    let pos = {};
+    pos.wall = rnd(4);
+    switch (pos.wall) {
+      case 0:
+        pos.x = 200 + rnd(window.innerWidth - 400);
+        pos.y = -300;
+        pos.ax = pos.x;
+        pos.ay = -10;
+        pos.heading = rnd(100) + 220;
+        break;
+      case 1:
+        pos.x = window.innerWidth + 250;
+        pos.y = 100 + rnd(window.innerHeight - 200);
+        pos.ax = window.innerWidth - 22;
+        pos.ay = pos.y;
+        pos.heading = rnd(60) + 150;
+        break;
+      case 2:
+        pos.x = 200 + rnd(window.innerWidth - 400);
+        pos.y = window.innerHeight + 250;
+        pos.ax = pos.x;
+        pos.ay = window.innerHeight - 22;
+        pos.heading = rnd(100) + 40;
+        break;
+      case 3:
+        pos.x = -300;
+        pos.y = 100 + rnd(window.innerHeight - 200);
+        pos.ax = -10;
+        pos.ay = pos.y;
+        pos.heading = rnd(60) + 330;  // TODO be smarter
+        break;
+    }
+    pos.heading = fixHeading(pos.heading);
+    let collides;
+    this.alerts.forEach(alert => {
+      let d = Math.sqrt(Math.pow(alert.x - pos.x, 2) + Math.pow(alert.y - pos.y, 2));
+      if (d < 100) {
+        collides = 1;
+      }
+    })
+    //if (collides) {
+    //  return this.getPos();
+    //}
+    return pos;
+  }
+}
+class Script extends Obj {
+  /**
+   * Line lines[]
+   */
+  constructor() {
+    super();
+    this.lines = this.build();
+  }
+  next() {
+    return this.lines.shift();
+  }
+  //
+  build() {
+    var lines = [];
+    Script.MAP.forEach((map, i) => {
+      var a = Script.Line.from(map, i);
+      lines = lines.concat(a);
+    })
+    return lines;
+  }
+  static MAP = [
+    [1,1,1,0],
+    [50,5,1,0],
+    [10,0,0,0],
+    [60,12,1,0],
+    [15,0,0,0],
+    [30,9,1,0],
+    [15,0,0,0],
+    [60,12,1,0],
+    [15,0,0,0],
+    [60,18,1,0],
+    [20,0,0,0],
+    [60,18,1,0],
+    [20,0,0,0],
+    [30,6,1,0],
+    [60,20,1,0],
+    [20,0,0,0],
+    [60,15,1,0],
+    [60,20,1,0]
+  ];
+}
+Script.Line = class extends Obj {
+  /**
+   * i types[]
+   * i sf
+   */
+  constructor() {
+    super();
+    this.types = [];
+  }
+  static from(map, i) {
+    var len = map[0] * 2, total = map[1], sf = map[2], type = map[3];
+    var lines = this.asArray(len);
+    lines[0].map = map;
+    lines[0].mi = i;
+    for (let i = 0; i < total; i++) {
+      let li = rnd(len);
+      lines[li].types.push(type ? type : rnd(Jet.TYPES.length));
+      lines[li].sf = sf;
+    }
+    return lines;
+  }
+  static asArray(len) {
+    var us = [];
+    for (let i = 0; i < len; i++) {
+      us.push(new Script.Line());
+    }
+    return us;
+  }
+}
+class Alert extends Obj {
+  //
+  constructor(jet, wall) {
+    super();
+    this.jet = jet;
+    this.wall = wall;
+    this.$createAlert();
+    this.x = 0;
+    this.y = 0;
+  }
+  erase() {
+    this.$alert.remove();
+  }
+  refresh() {
+    var jb = this.jet.getBounds();
+    switch (this.wall) {
+      case 0:
+        this.x = jb.x;
+        this.y = 0;
+        break;
+      case 1:
+        this.x = window.innerWidth - 32;
+        this.y = jb.y;
+        break;
+      case 2:
+        this.x = jb.x;
+        this.y = window.innerHeight - 32;
+        break;
+      case 3:
+        this.x = 0;
+        this.y = jb.y;
+        break;
+    }
+    this.$alert.style.left = this.x;
+    this.$alert.style.top = this.y;
+  }
+  $createAlert() {
+    this.$alert = document.createElement('div');
+    this.$alert.className = 'alert';
+    this.$alert.innerHTML = $('.alert.blueprint').innerHTML;
+    $('#radar').appendChild(this.$alert);
+    this.refresh();
   }
 }
 class Tracers extends Obj {
@@ -119,7 +325,7 @@ class Tracers extends Obj {
   }
   mouseoverdock(id) {
     if (this.tracer) {
-      if (this.tracer.jet.dock == id) {
+      if (this.tracer.jet.dock == id || (this.tracer.jet.type.id == 'chopper' && id == 'chopperpad')) {
         this.tracer.mouseup(1);
         this.tracer = null;
       }
@@ -234,6 +440,7 @@ class Jets extends ObjArray {
       .on('landing', jet => this.onlanding(jet))
       .on('land', jet => this.onland(jet));
     this.push(jet);
+    return jet;
   }
   step() {
     let dead = 0;
@@ -244,8 +451,17 @@ class Jets extends ObjArray {
     })
     return dead;
   }
+  freeze() {
+    this.forEach(jet => {
+      jet.$jet.classList.remove('blink');
+      jet.$jet.classList.remove('glow');
+    })
+  }
   get(id) {
     return this.find(jet => jet.id == id);
+  }
+  static clean(jets) {
+    return new Jets(...jets.filter(jet => ! jet.landing));
   }
 }
 class Jet extends Obj {
@@ -254,6 +470,8 @@ class Jet extends Obj {
   ondot(jet, dot) {}
   onlanding(jet) {}
   onland(jet) {}
+  onspawning(jet) {}
+  onvisible(jet) {}
   //
   constructor(i, x, y, heading, sfactor, type = 0) {
     super();
@@ -267,8 +485,9 @@ class Jet extends Obj {
     this.ix = 0;
     this.iy = 0;
     this.setHeading(heading);
+    this.sf = sfactor;
     this.speed = me.speed * sfactor;
-    this.cycle = 1000 / this.speed;
+    this.freq = 1000 / this.speed;
     this.is = 0;
     this.landing = 0;
     this.landed = 0;
@@ -276,6 +495,8 @@ class Jet extends Obj {
     this.ly = me.ly;
     this.lx2 = me.lx2;
     this.ly2 = me.ly2;
+    this.spawned = 0;
+    this.visible = 0;
     this.$createJet(i);
   }
   step(jets) {
@@ -286,26 +507,42 @@ class Jet extends Obj {
       return 1;
     }
     this.is++;
-    if (this.is >= this.cycle) {
+    if (this.is >= this.freq) {
       this.is = 0;
       this.ix += Math.cos(this.rad);
       this.iy -= Math.sin(this.rad);
       this.$jet.style.transform = this.getTranslate();
       let me = this.getBounds();
+      if (! this.spawned) {
+        if (me.x > 10 && me.x < window.innerWidth - me.width - 10 && me.y > 10 && me.y < window.innerHeight - me.height - 10) {
+          this.spawned = 1;
+        }
+        if (! this.visible && me.x > -me.width && me.x < window.innerWidth && me.y >= -me.height && me.y < window.innerHeight) {
+          this.visible = 1; 
+          this.onvisible(this);
+        }
+        if (! this.visible) {
+          this.onspawning(this);
+        }
+      }
       if (this.dot && this.over(this.dot.cx, this.dot.cy, me)) {
         let dot = this.dot;
         this.dot = null;
         this.ondot(this, dot);
       }
-      if (this.landing == 1 && (me.cx * this.type.compx > this.lx * this.type.compx)) {
+      if (! this.spawned) {
+        return;
+      }
+      if (this.landing == 1 && (! this.lx || (me.cx * this.type.compx > this.lx * this.type.compx))) {
         this.landing = 2;
-        this.cycle = 1;
+        this.freq = 1;
         this.$svg.style.animation = this.type.lanim;
         this.$svg.style.transform = this.getRotate();
         this.headTo(this.lx2, this.ly2, me);
         this.onlanding(this);
       }
-      if (this.landing == 2 && (me.cx * this.type.compx > this.lx2 * this.type.compx)) {
+      if (this.landing == 2 && ((this.lx && me.cx * this.type.compx > this.lx2 * this.type.compx) || (! this.lx && (Math.abs(me.cx - this.lx2) < 10 || Math.abs(me.cy - this.ly2) < 10)))) {
+        log('removing ' + this.id);
         this.$jet.remove();
         this.landed = 1;
         this.onland(this);
@@ -344,7 +581,7 @@ class Jet extends Obj {
     let me = this.getBounds();
     let blinking = 0;
     jets.forEach(jet => {
-      if (jet.id != this.id && ! jet.hidden && ! jet.landing) {
+      if (jet.id != this.id && jet.spawned && ! jet.hidden && ! jet.landing) {
         let you = jet.getBounds();
         let minw = me.width <= you.width ? me.width : you.width;
         let blinkw = minw * 2.5;
@@ -387,8 +624,10 @@ class Jet extends Obj {
   }
   land() {
     this.landing = 1;
-    this.cycle = 2;
-    this.headTo(this.lx, this.ly);
+    this.freq = 2;
+    if (this.lx) {
+      this.headTo(this.lx, this.ly);
+    }
     this.$jet.classList.remove('blink');
   }
   headTo(x, y, me) {
@@ -402,16 +641,11 @@ class Jet extends Obj {
     this.setHeading(this.heading + (vert ? 180 : 360) - 2 * this.heading);
   }
   setHeading(heading) {    
-    this.heading = this.fixHeading(heading);
+    this.heading = fixHeading(heading);
     this.rad = this.heading * (Math.PI / 180);
     if (this.$svg) {
       this.$svg.style.transform = this.getRotate();
     }
-  }
-  fixHeading(heading) {
-    heading = heading > 359 ? heading - 360 : heading;
-    heading = heading < 0 ? heading + 360 : heading;
-    return heading;
   }
   glowing() {
     return this.$jet.classList.contains('glow');
@@ -429,7 +663,8 @@ class Jet extends Obj {
     this.$jet.style.transition = 'transform ease-in-out';
     this.$jet.style.transform = this.getTranslate();
     this.$svg.style.transform = this.getRotate();
-    this.$svg.style.transition = 'all 1s ease';
+    let s = 1 / this.sf;
+    this.$svg.style.transition = 'all ' + s + 's ease';
     this.$jet
       .on('mousedown', e => this.onmousedown(this, e))
       .on('mouseover', () => this.$jet.classList.add('glow'))
@@ -439,6 +674,9 @@ class Jet extends Obj {
     return 'translate(' + this.ix + 'px,' + this.iy + 'px)';
   }
   getRotate() {
+    if (this.type.id == 'chopper') {
+      return this.heading > 90 && this.heading < 270 ? '' : 'scaleX(-1)';
+    }
     let nr = this.type.irot - this.heading;
     if (nr < 360) {
       nr += 360;
@@ -459,8 +697,9 @@ class Jet extends Obj {
     return 'rotate(' + (rot) + 'deg) ';
   }
   static TYPES = [
-    {id:'jet', speed:280, irot:45, lx:725, ly:483, lx2:1101, ly2:121, compx:1, lanim:'jetlanding 4s'},
-    {id:'plane', speed:200, irot:90, lx:1230, ly:327, lx2:871, ly2:183, compx:-1, lanim:'planelanding 3s'}
+    {id:'jet', speed:280, irot:45, lx:725, ly:483, lx2:1101, ly2:121, compx:1, lanim:'jetlanding 3.5s'},
+    {id:'plane', speed:200, irot:90, lx:1230, ly:327, lx2:871, ly2:183, compx:-1, lanim:'planelanding 3s'},
+    {id:'chopper', speed:140, irot:0, lx2:1243, ly2:894, lanim:'chopperlanding 1s'},
   ];
 }
 class Scoreboard extends Obj {
@@ -478,4 +717,9 @@ class Scoreboard extends Obj {
   onland() {
     this.$score.className = '';
   }
+}
+function fixHeading(heading) {
+  heading = heading > 359 ? heading - 360 : heading;
+  heading = heading < 0 ? heading + 360 : heading;
+  return heading;
 }

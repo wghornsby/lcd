@@ -83,6 +83,16 @@ body {
     padding-right:50px;
   }
 }
+@keyframes chopperlanding {
+  from {
+    opacity:1;
+  }
+  to {
+    height:0;
+    width:0;
+    opacity:0;
+  }
+}
 @keyframes dive {
   0% {
     transform:scale(1.5) rotate(1turn);
@@ -163,6 +173,12 @@ body {
   font-size:40pt;
   color:white;
 }
+#test, #test2 {
+  margin:5px 0 0 15px;
+  font-family:'Fredoka One';
+  font-size:20pt;
+  color:white;
+}
 #score span {
   display:inline-block;
   padding-left:20px;
@@ -212,7 +228,7 @@ body {
   transform:rotate(-68deg);
   transform-origin:50% 59.5%;
 }
-.chevs {
+#jetrun.chevs, #planerun.chevs {
   height:110px;
   display:flex;
   flex-direction:column;
@@ -249,9 +265,9 @@ body {
   }
 }
 .bulge {
-  animation:scorebulge 0.7s ease-in-out 1;
+  animation:bulge 0.7s ease-in-out 1;
 }
-@keyframes scorebulge {
+@keyframes bulge {
   0% {
     transform:scale(1);
   }
@@ -311,19 +327,53 @@ body {
   border-left:10px solid rgb(255, 125, 0);
   border-right:10px solid rgb(255, 125, 0);
 }
+.alert {
+  position:absolute;
+  animation:bulge 1.5s ease-in-out infinite;
+}
+.uns {
+  user-select:none;
+}
+.chopper {
+  position:absolute;
+  left:100px;
+  top:100px;
+  z-index:10;
+}
+#chopperdock {
+  background-color:rgb(94, 76, 48);
+  width:190px;
+  height:190px;
+  position:absolute;
+  left:1150px;
+  top:800px;
+  border-radius:20px;
+  box-shadow:0 0 2px 4px rgb(94, 76, 48);
+  display:flex;
+}
+#chopperpad {
+  background-color:rgb(151, 151, 151);
+  border-radius:50%;
+  box-shadow:0 0 2px 4px rgb(151, 151, 151);
+  margin:12px;
+  flex-grow:1;
+  display:flex;
+}
+#chopperpad div {
+  border-radius:50%;
+  border:10px dashed #f6800e;
+  flex-grow:1;
+  margin:10px;
+  text-align:center;
+  line-height:125px;
+  font-family:'Fredoka One';
+  font-size:110px;
+  color:white;
+}
 .land {
   position:absolute;
-  left:725;
-  top:483;
-  height:3px;
-  width:3px;
-  background:red;
-  z-index:999;
-}
-.land2 {
-  position:absolute;
-  left:871;
-  top:183;
+  left:1243;
+  top:894;
   height:3px;
   width:3px;
   background:red;
@@ -334,13 +384,74 @@ body {
 <body>
   <!-- radar -->
   <div id='radar'>
-    <div id='score'>Score:<span>0</span></div>
+    <div id='score' class='uns'>Score:<span>0</span></div>
+    <div id='test' class='uns'></div><div id='test2' class='uns'></div>
     <div id='planerunb' class='runb'><div id='planepad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div id='planedock' class='chev dock'><div class='before'></div><div class='after'></div></div></div></div>
     <div id='jetrunb' class='runb'><div id='jetpad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div id='jetdock' class='chev dock'><div class='before'></div><div class='after'></div></div></div></div>
     <div id='planerun' class='run'><div class='lines'></div></div>
     <div id='jetrun' class='run'><div class='lines'></div></div>
+    <div id='chopperdock' class='dock'><div id='chopperpad'><div class='uns'>H</div></div></div>
   </div>
   <!-- blueprints -->
+    <div class='chopper blueprint'>
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50px" height="50px" x="0px" y="0px"
+      viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+        <path style="fill:#FBA026;" d="M501.337,185.758l-40.583,86.487c-7.443,15.866-23.395,26.007-40.924,26.007H329.13l-11.036,33.492
+        c-6.558,19.94-25.186,33.418-46.181,33.418H126.534c-26.508,0-50.5-10.738-67.859-28.108
+        c-14.214-14.214-23.981-32.853-27.063-53.677h160.222l54.744-110.148h31.776c28.044,0,50.777,22.733,50.777,50.788v13.457h91.424
+        l24.269-51.715L501.337,185.758L501.337,185.758z"/>
+        <path style="fill:#EFEFEF;" d="M246.578,173.229l-54.744,110.148H31.612c-0.693-4.628-1.045-9.362-1.045-14.182
+        c0-53.006,42.961-95.967,95.967-95.967H246.578z"/>
+        <g>
+          <rect x="204.014" y="130.579" style="fill:#747D8C;" width="47.983" height="42.652"/>
+          <path style="fill:#747D8C;" d="M412.301,87.925H43.718c-11.778,0-21.326,9.548-21.326,21.326l0,0
+          c0,11.778,9.548,21.326,21.326,21.326h368.583c11.778,0,21.326-9.548,21.326-21.326l0,0
+          C433.627,97.474,424.08,87.925,412.301,87.925z"/>
+    
+          <rect x="415.423" y="185.225" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 921.7896 116.5869)" style="fill:#747D8C;" width="42.651" height="127.954"/>
+        </g>
+        <g>
+          <path style="fill:#231F20;" d="M225.7,311.287h-1.066c-5.888,0-10.663,4.775-10.663,10.663s4.775,10.663,10.663,10.663h1.066
+          c5.888,0,10.663-4.775,10.663-10.663S231.588,311.287,225.7,311.287z"/>
+          <path style="fill:#231F20;" d="M510.337,180.039c-1.957-3.079-5.352-4.944-9-4.944h-56.514c-4.135,0-7.896,2.39-9.653,6.133
+          l-6.756,14.396l-14.281-14.281c-4.165-4.163-10.915-4.163-15.081,0l-30.159,30.159c-4.164,4.164-4.164,10.916,0,15.081l0.227,0.227
+          h-29.328v-2.794c0-33.884-27.563-61.451-61.44-61.451h-15.688V141.24H412.3c17.639,0,31.989-14.35,31.989-31.989
+          s-14.35-31.989-31.989-31.989H43.718c-17.639,0-31.989,14.35-31.989,31.989s14.35,31.989,31.989,31.989h149.638v21.326h-66.822
+          c-58.797,0-106.63,47.833-106.63,106.63c0,5.297,0.39,10.588,1.159,15.728c0.001,0.005,0,0.01,0.001,0.015
+          c0.001,0.005,0.002,0.01,0.002,0.014c0,0.002,0,0.003,0.001,0.005c0,0.002,0.001,0.004,0.001,0.007
+          c3.365,22.706,13.762,43.325,30.064,59.628c18.784,18.795,43.359,29.705,69.714,31.08v37.738H44.784
+          c-12.935,0-23.459-10.523-23.459-23.458v-0.711c0-5.888-4.775-10.663-10.663-10.663S0,383.354,0,389.242v0.711
+          c0,24.694,20.09,44.784,44.784,44.784h303.539c5.888,0,10.663-4.775,10.663-10.663s-4.775-10.663-10.663-10.663h-69.309v-38.009
+          c22.663-2.706,41.942-18.229,49.207-40.321l3.239-9.83c0.021-0.066,0.045-0.131,0.065-0.197l5.318-16.139h82.986
+          c8.94,0,17.579-2.177,25.289-6.108l14.253,14.253c2.082,2.081,4.811,3.123,7.54,3.123c2.729,0,5.457-1.042,7.54-3.123
+          l30.159-30.159c4.164-4.164,4.164-10.916,0-15.081l-21.699-21.699l28.078-59.835C512.54,186.985,512.293,183.12,510.337,180.039z
+          M205.291,183.892h24.08l-44.145,88.822h-24.074L205.291,183.892z M33.055,109.251c0-5.88,4.783-10.663,10.663-10.663h368.583
+          c5.88,0,10.663,4.783,10.663,10.663s-4.783,10.663-10.663,10.663H43.718C37.839,119.914,33.055,115.13,33.055,109.251z
+          M214.682,141.24h26.657v21.326h-26.657V141.24z M41.23,269.195c0-47.036,38.267-85.304,85.304-85.304h54.943l-44.138,88.822
+          H41.301C41.254,271.544,41.23,270.37,41.23,269.195z M142.173,413.412v-37.587h115.515v37.587H142.173z M419.83,287.589h-90.7
+          c-4.603,0-8.686,2.955-10.128,7.325l-5.394,16.372h-53.254c-5.888,0-10.663,4.775-10.663,10.663s4.775,10.663,10.663,10.663h45.95
+          c-6.173,13.255-19.481,21.886-34.391,21.886H126.534c-22.796,0-44.217-8.872-60.318-24.984
+          c-10.053-10.053-17.299-22.15-21.324-35.476h146.943c4.049,0,7.748-2.291,9.549-5.918l51.803-104.23h25.168
+          c22.119,0,40.114,18,40.114,40.125v13.457c0,5.888,4.775,10.663,10.663,10.663h61.317l38.251,38.251
+          C425.84,287.159,422.867,287.589,419.83,287.589z M466.913,294.441l-75.398-75.398l15.08-15.08l75.398,75.398L466.913,294.441z
+          M466.88,234.09l-22.432-22.432l7.151-15.237h32.957L466.88,234.09z"/>
+        </g>
+      </svg>
+    </div>
+    <div class='alert blueprint'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
+      <defs>
+        <style>.cls-1{fill:#ba1d08;}.cls-2{fill:#ff2400;}.cls-3{fill:#fff;}</style>
+      </defs>
+      <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_1-2" data-name="Layer 1">
+          <circle class="cls-1" cx="32" cy="32" r="32"/>
+          <circle class="cls-2" cx="32" cy="32" r="24"/>
+          <path class="cls-3" d="M32,40.41A3.8,3.8,0,1,1,32,48a3.8,3.8,0,1,1,0-7.59ZM31,16h2.27A2.77,2.77,0,0,1,36,18.77v5.16a2.77,2.77,0,0,1,0,.31l-1.13,10a2.77,2.77,0,0,1-2.75,2.46h0a2.77,2.77,0,0,1-2.75-2.46l-1.13-10a2.77,2.77,0,0,1,0-.31V18.77A2.77,2.77,0,0,1,31,16Z"/>
+        </g>
+      </g>
+    </svg>
+  </div>
   <div class='pow blueprint'>
     <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="1.1" width="720" height="720" id="svg2">
       <defs id="defs4"><inkscape:path-effect effect="spiro" id="path-effect3201"/><inkscape:path-effect effect="spiro" id="path-effect3197"/><inkscape:path-effect effect="spiro" id="path-effect3193"/><inkscape:path-effect effect="spiro" id="path-effect3189"/><inkscape:path-effect effect="spiro" id="path-effect3185"/><inkscape:path-effect effect="spiro" id="path-effect3181"/><inkscape:path-effect effect="spiro" id="path-effect3177"/><inkscape:path-effect effect="spiro" id="path-effect3173"/><inkscape:path-effect effect="spiro" id="path-effect3169"/><inkscape:path-effect effect="spiro" id="path-effect3165"/><inkscape:path-effect effect="spiro" id="path-effect3161"/><inkscape:path-effect effect="spiro" id="path-effect3157"/><inkscape:path-effect effect="spiro" id="path-effect3153"/><inkscape:path-effect effect="spiro" id="path-effect3149"/><inkscape:path-effect effect="spiro" id="path-effect3149-6"/><inkscape:path-effect effect="spiro" id="path-effect3153-1"/><inkscape:path-effect effect="spiro" id="path-effect3157-8"/><inkscape:path-effect effect="spiro" id="path-effect3161-4"/><inkscape:path-effect effect="spiro" id="path-effect3165-8"/><inkscape:path-effect effect="spiro" id="path-effect3169-4"/><inkscape:path-effect effect="spiro" id="path-effect3173-0"/><inkscape:path-effect effect="spiro" id="path-effect3177-7"/><inkscape:path-effect effect="spiro" id="path-effect3181-6"/><inkscape:path-effect effect="spiro" id="path-effect3185-8"/><inkscape:path-effect effect="spiro" id="path-effect3189-9"/><inkscape:path-effect effect="spiro" id="path-effect3193-7"/><inkscape:path-effect effect="spiro" id="path-effect3197-3"/><inkscape:path-effect effect="spiro" id="path-effect3201-3"/></defs>
@@ -381,7 +492,7 @@ body {
           </g>
           <g>
             <polygon class="flatshadows_twee" points="9,28 9,31 16,31 16,25    " style="fill: rgb(199,210,227);"/>
-            <polygon class="flatshadows_twee" points="16,10 0,13 0,19 16,19    " style="stroke: black; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill:  rgb(92, 176, 255);"/>
+            <polygon class="flatshadows_twee" points="16,10 0,13 0,19 16,19    " style="stroke: black; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(92, 176, 255);"/>
           </g>
         </g>
         <path class="flatshadows_twee" d="M21,7V6c0-2.209-1.791-4-4-4h-2c-2.209,0-4,1.791-4,4v1H21z" style="stroke: black; stroke-width: 0.5; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(199,210,227);"/>
@@ -398,11 +509,11 @@ body {
           </g>
         </g>
         <path class="flatshadows_vijf" d="M24,0c-0.379,0-4.466,0.675-7,1.278V0.99C17,0.443,16.557,0,16.01,0H16v2h1V1.992   C19.534,1.995,23.621,2,24,2c0.552,0,1-0.448,1-1C25,0.448,24.552,0,24,0z" style="fill: #8D9999;"/>
-        <polygon class="flatshadows_een" points="11,7 13,26 15,32 17,32 19,26 21,7  " style="stroke: black; stroke-width: 0.5; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: black;"/>
-        <polygon class="flatshadows_twee" points="16,32 17,32 19,26 21,7 16,7  " style="stroke: black; stroke-width: 0.5; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill:black;"/>
+        <polygon class="flatshadows_een" points="11,7 13,26 15,32 17,32 19,26 21,7  " style="stroke: black; stroke-width: 0.5; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(14, 75, 133);"/>
+        <polygon class="flatshadows_twee" points="16,32 17,32 19,26 21,7 16,7  " style="stroke: black; stroke-width: 0.5; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill:rgb(14, 75, 133);"/>
       </g>
     </svg>      
-  </div>  
+  </div>
 </body>
 <script>
 window.on('DOMContentLoaded', () => radar = new Radar());
