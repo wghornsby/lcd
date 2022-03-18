@@ -17,6 +17,8 @@ class Radar extends Obj {
       .on('land', jet => this.jet_onland(jet));
     this.scoreboard = new Scoreboard();
     this.oort = new Oort(this.jets);
+    $('#test')
+      .on('click', () => this.ontest());
     $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
     
@@ -27,6 +29,17 @@ class Radar extends Obj {
     // --- temp code
     
     this.start();
+  }
+  ontest() {
+    if (! this.testx) {
+      this.testx = 1;
+      $('#test').innerText = 'x2';
+      
+    } else {
+      this.testx = 0;
+      $('#test').innerText = 'x1';
+    }
+    this.oort.speed(this.testx);
   }
   start(ms) {
     this.dirty = 0;
@@ -110,6 +123,11 @@ class Oort extends Obj {
       })
     }
   }
+  speed(b) {
+    this.ff = b;
+    this.freq = b ? this.freq / 2 : this.freq * 2;
+    this.jets.forEach(jet => jet.setSpeed(b ? jet.speed * 2 : jet.speed / 2));
+  } 
   spawn(type, sf) {
     //$('#test2').innerText += "*";
     let pos = this.getPos();
@@ -117,6 +135,9 @@ class Oort extends Obj {
       .on('spawning', jet => jet.alert.refresh())
       .on('visible', jet => jet.alert.erase());
     jet.alert = new Alert(jet, pos.wall);
+    if (this.ff) {
+      jet.setSpeed(jet.speed * 2);
+    }
     this.alerts.push(jet.alert);
   }
   getPos() {
@@ -486,8 +507,7 @@ class Jet extends Obj {
     this.iy = 0;
     this.setHeading(heading);
     this.sf = sfactor;
-    this.speed = me.speed * sfactor;
-    this.freq = 1000 / this.speed;
+    this.setSpeed(me.speed * sfactor);
     this.is = 0;
     this.landing = 0;
     this.landed = 0;
@@ -498,6 +518,10 @@ class Jet extends Obj {
     this.spawned = 0;
     this.visible = 0;
     this.$createJet(i);
+  }
+  setSpeed(s) {
+    this.speed = s;
+    this.freq = 1000 / this.speed;
   }
   step(jets) {
     if (this.landed) {
@@ -538,10 +562,13 @@ class Jet extends Obj {
         this.freq = 1;
         this.$svg.style.animation = this.type.lanim;
         this.$svg.style.transform = this.getRotate();
+        if (this.type.id == 'chopper') {
+          this.$svg.style.transition = '';
+        }
         this.headTo(this.lx2, this.ly2, me);
         this.onlanding(this);
       }
-      if (this.landing == 2 && ((this.lx && me.cx * this.type.compx > this.lx2 * this.type.compx) || (! this.lx && (Math.abs(me.cx - this.lx2) < 10 || Math.abs(me.cy - this.ly2) < 10)))) {
+      if (this.landing == 2 && ((this.lx && me.cx * this.type.compx > this.lx2 * this.type.compx) || (! this.lx && (Math.abs(me.cx - this.lx2) < 45 && Math.abs(me.cy - this.ly2) < 45)))) {
         log('removing ' + this.id);
         this.$jet.remove();
         this.landed = 1;
