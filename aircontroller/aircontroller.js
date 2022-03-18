@@ -605,6 +605,9 @@ class Jet extends Obj {
     if (this.dead) {
       return 1;
     }
+    if (! this.spawned) {
+      return 0;
+    }
     let me = this.getBounds();
     let blinking = 0;
     jets.forEach(jet => {
