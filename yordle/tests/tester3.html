@@ -1,0 +1,86 @@
+<html>
+<head>
+  <script type='text/javascript' src='../words.js?1'></script>
+</head>
+<body>
+</body>
+<script>
+function log(o) {
+  if (typeof o === 'object') { 
+    console.log(JSON.stringify(o));
+  } else {
+    console.log(o);
+  }
+}
+const FREQ = ['R','T','N','S','L','C','D','P','M','H','G','B','F','Y','W','K','V','X','Z','J','Q'];
+const VOWELS = ['A','E','I','O','U'];
+function count(word, letter) {
+  return word.split(letter).length - 1;
+}
+function uniq(word) {
+  for (var i = 0; i < word.length; i++) {
+    let ic = count(word, word[i]);
+    if (ic > 1) {
+      return false;
+    }
+  }
+  return true;
+}
+function fct(word) {
+  var f = 0;
+  for (var i = 0; i < word.length; i++) {
+    f += FREQ.indexOf(word[i]);
+  }
+  return f;
+}
+cands = wordles.filter(word => {
+  var vc = 0;
+  VOWELS.forEach(v => vc += count(word, v));
+  if (vc > 1) {
+    return;
+  }
+  return uniq(word);
+})
+cands = wordles;
+var tray, index, ix, word, tword, found, best, bf = 9999;
+for (var six = 0; six < cands.length - 5; six++) {
+  for (var iz = six + 1; iz < cands.length; iz++) {
+    ix = six;
+    index = [six];
+    tray = [cands[ix]];
+    word = cands[ix];
+    found = 1;
+    while (found && tray.length < 5) {
+      found = 0;
+      for (var i = iz; i < cands.length; i++) {
+        tword = word + cands[i];
+        if (uniq(tword)) {
+          index.push(i);
+          tray.push(cands[i]);
+          ix = i;
+          word = tword;
+          found = 1;
+          break;
+        }
+      }
+    }
+    if (tray.length == 5) {
+      log('FOUND IT!');
+      log(tray);
+      breakit();
+    }
+    if (tray.length >= 4) {
+      let f = fct(word);
+      if (f <= bf) {
+        bf = f;
+        best = tray;
+        log(bf);
+        log(tray);
+      }
+    }  
+  }
+}
+log('** BEST **');
+log(best);
+
+</script>

@@ -60,17 +60,15 @@ body {
   user-select:none;
 }
 .cluetile span {
-  font-family:'Roboto', sans-serif;
-  font-size:7pt;
-  background-color:#666;
-  color:white;
-  padding:5px;
+  font-family:'Calibri';
+  font-size:11px;
+  color:#aaa;
+  padding:5px 0 5px 5px;
   width:10px;
   height:10px;
-  text-align:center;
+  text-align:right;
   display:inline-block;
   user-select:none;
-  border-radius:15px;
 }
 .cluetile input {
   flex:auto;

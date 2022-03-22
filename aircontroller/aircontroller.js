@@ -21,13 +21,6 @@ class Radar extends Obj {
       .on('click', () => this.ontest());
     $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
-    
-    // --- temp code
-    //for (let i = 0; i < 3; i++) {
-    //  this.jets.newJet(50 + rnd(window.innerWidth - 50), 50 + rnd(window.innerHeight - 50), rnd(361), 1, rnd(2));
-    //}
-    // --- temp code
-    
     this.start();
   }
   ontest() {
@@ -116,7 +109,7 @@ class Oort extends Obj {
       this.is = 0;
       let line = this.script.next();
       if (line.map) {
-        //$('#test2').innerText += "\n" + line.mi + ': ' + js(line.map);
+        //$('#test2').innerText += line.mi + ': ' + js(line.map) + "\n";
       }
       line.types.forEach(type => {
         this.spawn(type, line.sf);
@@ -219,13 +212,34 @@ class Script extends Obj {
     [15,0,0,0],
     [60,18,1,0],
     [20,0,0,0],
-    [60,18,1,0],
+    [60,10,1,0],
     [20,0,0,0],
-    [30,6,1,0],
-    [60,20,1,0],
+    [30,9,1,0],
+    [30,0,0,0],
+    [30,8,1.3,0],
     [20,0,0,0],
-    [60,15,1,0],
-    [60,20,1,0]
+    [60,12,1.3,0],
+    [20,0,0,0],
+    [60,15,1.3,0],
+    [60,8,1.5,0],
+    [20,0,0,0],
+    [60,10,1.5,0],
+    [60,10,2,0],
+    [15,0,0,0],
+    [30,9,2,0],
+    [30,0,0,0],
+    [60,14,2,0],
+    [15,0,0,0],
+    [30,10,2,0],
+    [15,0,0,0],
+    [60,14,2,0],
+    [60,16,2,0],
+    [60,20,2,0],
+    [60,22,2,0],
+    [60,24,2,0],
+    [60,26,2,0],
+    [60,28,2,0],
+    [60,30,2,0]
   ];
 }
 Script.Line = class extends Obj {
