@@ -1,4 +1,5 @@
-. recalibrate script, need more density before increasing speed
+. recalibrate script, need more density before increasing speed (done, but test)
+. slow heli land anim
 . switch to distance calculation for determining over dot (to see if this fixes zooming issue)
 . make zorder < active when landing
 . pulse helipad when tracing
