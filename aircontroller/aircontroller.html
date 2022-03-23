@@ -50,6 +50,9 @@ body {
 .hide {
   display:none !important; 
 }
+.paused {
+  display:none !important;
+}
 .dead svg {
   animation:dive 4s normal 1;
 }
@@ -173,11 +176,27 @@ body {
   font-size:40pt;
   color:white;
 }
-#test, #test2 {
+.tb, #test2 {
   margin:5px 0 0 15px;
   font-family:'Fredoka One';
   font-size:20pt;
   color:white;
+  display:flex;
+  align-items:flex-start;
+}
+.tb span {
+  display:inline-block;
+  padding:0 10px;
+  height:32px;
+  width:32px;
+  text-align:center;
+  cursor:pointer;
+  user-select:none;
+}
+#pause {
+  font-weight:bold;
+  font-size:16pt;
+  line-height:32px;
 }
 #score span {
   display:inline-block;
@@ -385,7 +404,11 @@ body {
   <!-- radar -->
   <div id='radar'>
     <div id='score' class='uns'>Score:<span>0</span></div>
-    <div id='test' class='uns' style='cursor:pointer'>x1</div><div id='test2' class='uns'></div>
+    <div class='tb'>
+      <span id='speed'>x1</span>
+      <span id='pause'>| |</span>
+    </div>
+    <div id='test2' class='uns'></div>
     <div id='planerunb' class='runb'><div id='planepad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div id='planedock' class='chev dock'><div class='before'></div><div class='after'></div></div></div></div>
     <div id='jetrunb' class='runb'><div id='jetpad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div id='jetdock' class='chev dock'><div class='before'></div><div class='after'></div></div></div></div>
     <div id='planerun' class='run'><div class='lines'></div></div>

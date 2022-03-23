@@ -17,29 +17,44 @@ class Radar extends Obj {
       .on('land', jet => this.jet_onland(jet));
     this.scoreboard = new Scoreboard();
     this.oort = new Oort(this.jets);
-    $('#test')
-      .on('click', () => this.ontest());
+    this.$speed = $('#speed')
+      .on('click', () => this.$speed_onclick());
+    this.$pause = $('#pause')
+      .on('click', () => this.$pause_onclick());
     $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
     this.start();
   }
-  ontest() {
-    if (! this.testx) {
-      this.testx = 1;
-      $('#test').innerText = 'x2';
-      
+  $speed_onclick() {
+    if (! this.speed) {
+      this.speed = 1;
     } else {
-      this.testx = 0;
-      $('#test').innerText = 'x1';
+      this.speed = 0;
     }
-    this.oort.speed(this.testx);
+    this.oort.speed(this.speed);
+    this.$speed.innerText = 'x' + (this.speed + 1);
   }
-  start(ms) {
-    this.dirty = 0;
+  $pause_onclick() {
+    let s = this.$pause.innerText;
+    if (s == '| |') {
+      this.pause(1);
+      s = '>';
+    } else {
+      this.start(1);
+      s = '| |';
+    }
+    this.$pause.innerText = s;
+  }
+  start(unhide) {
+    if (unhide) {
+      this.jets.unhide();
+      this.tracers.show(1);
+    }
     this.clock = setInterval(() => this.step(), this.clockspeed);
   }
-  pause() {
-    this.jets.freeze();
+  pause(hide) {
+    this.jets.freeze(hide);
+    this.tracers.show(0);
     clearInterval(this.clock);
   }
   step() {
@@ -48,10 +63,6 @@ class Radar extends Obj {
     if (dead) {
       $$('.dot').forEach($d => $d.remove());
       this.pause();
-    }
-    if (this.dirty) {
-      //this.jets = Jets.clean(this.jets);
-      this.dirty = 0;
     }
   }
   pad_onmouseover(e) {
@@ -86,7 +97,6 @@ class Radar extends Obj {
   }
   jet_onland(jet) {
     this.scoreboard.onland();
-    this.dirty = 1;
   }
 }
 class Oort extends Obj {
@@ -126,7 +136,7 @@ class Oort extends Obj {
     let pos = this.getPos();
     let jet = this.jets.newJet(pos.x, pos.y, pos.heading, sf, type)
       .on('spawning', jet => jet.alert.refresh())
-      .on('visible', jet => jet.alert.erase());
+      .on('visible', jet => jet.alert = jet.alert.erase());
     jet.alert = new Alert(jet, pos.wall);
     if (this.ff) {
       jet.setSpeed(jet.speed * 2);
@@ -284,6 +294,12 @@ class Alert extends Obj {
   erase() {
     this.$alert.remove();
   }
+  show() {
+    this.$alert.classList.remove('paused');
+  }
+  hide() {
+    this.$alert.classList.add('paused');
+  }
   refresh() {
     var jb = this.jet.getBounds();
     switch (this.wall) {
@@ -328,14 +344,21 @@ class Tracers extends Obj {
     this.tracers = {};
     this.tracer = null;
   }
+  show(b) {
+    for (let id in this.tracers) {
+      if (this.tracers[id]) {
+        this.tracers[id].show(b);
+      }
+    }
+  }
   jet_onclick(jet, e) {
     e.preventDefault();
     if (this.tracers[jet.id]) {
-      this.tracers[jet.id].clear();
+      this.tracers[jet.id] = this.tracers[jet.id].clear();
     }
     this.tracer = new Tracer(jet, e)
       .on('start', jet => this.onstart(jet))
-      .on('docked', jet => this.ondock(jet))
+      .on('docked', jet => this.tracer_ondock(jet))
       .on('donedraw', () => this.ondonedraw());
     this.tracers[jet.id] = this.tracer;
   }
@@ -366,6 +389,10 @@ class Tracers extends Obj {
       }
     }
   }
+  tracer_ondock(jet) {
+    this.tracers[jet.id] = null;
+    this.ondock(jet);
+  }
 }
 class Tracer extends Obj {
   onstart(jet) {}
@@ -394,6 +421,15 @@ class Tracer extends Obj {
   }
   clear() {
     this.dots.forEach(dot => dot.remove());
+  }
+  show(b) {
+    this.dots.forEach(dot => {
+      if (b) {
+        dot.$dot.classList.remove('paused');
+      } else {
+        dot.$dot.classList.add('paused');
+      }
+    })
   }
   next(dot) {
     if (! this.onstarted && dot) {
@@ -486,10 +522,18 @@ class Jets extends ObjArray {
     })
     return dead;
   }
-  freeze() {
+  freeze(hide) {
     this.forEach(jet => {
       jet.$jet.classList.remove('blink');
       jet.$jet.classList.remove('glow');
+      hide && jet.$jet.classList.add('paused');
+      jet.alert && jet.alert.hide();
+    })
+  }
+  unhide() {
+    this.forEach(jet => {
+      jet.$jet.classList.remove('paused');
+      jet.alert && jet.alert.show();
     })
   }
   get(id) {

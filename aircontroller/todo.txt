@@ -1,0 +1,7 @@
+. recalibrate script, need more density before increasing speed
+. switch to distance calculation for determining over dot (to see if this fixes zooming issue)
+. make zorder < active when landing
+. pulse helipad when tracing
+. improve spawn algo to keep within airspace and no insta-crash
+. move helipad slightly north
+. add lanscape scenery
