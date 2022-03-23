@@ -115,11 +115,10 @@ class Oort extends Obj {
     this.is++;
     if (this.is >= this.freq) {
       this.elapsed += 0.5;
-      //$('#test').innerText = 'Elapsed: ' + Math.floor(this.elapsed);
       this.is = 0;
       let line = this.script.next();
       if (line.map) {
-        //$('#test2').innerText += line.mi + ': ' + js(line.map) + "\n";
+        $('#test2').innerText += "\n" + line.mi + ': ' + js(line.map);
       }
       line.types.forEach(type => {
         this.spawn(type, line.sf);
@@ -222,18 +221,25 @@ class Script extends Obj {
     [15,0,0,0],
     [60,18,1,0],
     [20,0,0,0],
-    [60,10,1,0],
+    [60,18,1,0],
     [20,0,0,0],
+    [30,9,1,0],
+    [60,14,1,0],
+    [20,0,0,0],
+    [60,20,1,0],
+    [30,9,1,0],
     [30,9,1,0],
     [30,0,0,0],
     [30,8,1.3,0],
+    [60,16,1.3,0],
     [20,0,0,0],
-    [60,12,1.3,0],
+    [60,16,1.3,0],
+    [30,10,1.5,0],
     [20,0,0,0],
-    [60,15,1.3,0],
-    [60,8,1.5,0],
+    [60,20,1.5,0],
+    [30,10,1.5,0],
+    [30,7,1.5,0],
     [20,0,0,0],
-    [60,10,1.5,0],
     [60,10,2,0],
     [15,0,0,0],
     [30,9,2,0],
@@ -627,7 +633,6 @@ class Jet extends Obj {
         this.onlanding(this);
       }
       if (this.landing == 2 && ((this.lx && me.cx * this.type.compx > this.lx2 * this.type.compx) || (! this.lx && (Math.abs(me.cx - this.lx2) < 45 && Math.abs(me.cy - this.ly2) < 45)))) {
-        log('removing ' + this.id);
         this.$jet.remove();
         this.landed = 1;
         this.onland(this);
