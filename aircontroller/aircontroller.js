@@ -795,7 +795,7 @@ class Jet extends Obj {
   static TYPES = [
     {id:'jet', speed:280, irot:45, lx:725, ly:483, lx2:1101, ly2:121, compx:1, lanim:'jetlanding 3.5s'},
     {id:'plane', speed:200, irot:90, lx:1230, ly:327, lx2:871, ly2:183, compx:-1, lanim:'planelanding 3s'},
-    {id:'chopper', speed:140, irot:0, lx2:1243, ly2:894, lanim:'chopperlanding 1s'},
+    {id:'chopper', speed:140, irot:0, lx2:1243, ly2:894, lanim:'chopperlanding 2.5s'},
   ];
 }
 class Scoreboard extends Obj {
