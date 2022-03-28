@@ -246,19 +246,30 @@ class Script extends Obj {
     [60,10,2,0],
     [15,0,0,0],
     [30,9,2,0],
-    [30,0,0,0],
-    [60,14,2,0],
+    [20,0,0,0],
+    [30,9,2,0],
     [15,0,0,0],
     [30,10,2,0],
     [15,0,0,0],
-    [60,14,2,0],
-    [60,16,2,0],
-    [60,20,2,0],
-    [60,22,2,0],
-    [60,24,2,0],
-    [60,26,2,0],
-    [60,28,2,0],
-    [60,30,2,0]
+    [30,9,2,0],
+    [15,0,0,0],
+    [30,10,2,0],
+    [10,0,0,0],
+    [30,10,2,0],
+    [10,0,0,0],
+    [30,11,2,0],
+    [10,0,0,0],
+    [30,11,2,0],
+    [20,0,0,0],
+    [30,12,2,0],
+    [10,0,0,0],
+    [30,10,2,0],
+    [10,0,0,0],
+    [30,12,2,0],
+    [30,13,2,0],
+    [30,14,2,0],
+    [30,15,2,0],
+    [30,16,2,0]
   ];
 }
 Script.Line = class extends Obj {
@@ -657,7 +668,7 @@ class Jet extends Obj {
   }
   over(x, y, me) {
     me = me || this.getBounds();
-    return Math.abs(me.cx - x) <= 1 && Math.abs(me.cy - y) <= 1;
+    return Math.abs(me.cx - x) <= 2 && Math.abs(me.cy - y) <= 2;
   }
   getBounds() {
     var b = this.$jet.getBoundingClientRect();
@@ -703,8 +714,8 @@ class Jet extends Obj {
     $e.className = 'kapow';
     $e.innerHTML = $('.pow.blueprint').innerHTML;
     $('#radar').appendChild($e);
-    $e.style.left = this.x + this.ix - 45;
-    $e.style.top = this.y + this.iy - 45;
+    $e.style.left = this.x + this.ix - 40;
+    $e.style.top = this.y + this.iy - 40;
     this.$jet.className = 'jet dead';
     this.$svg.on('animationend', () => {
       this.$jet.className = 'hide';
@@ -795,7 +806,7 @@ class Jet extends Obj {
   static TYPES = [
     {id:'jet', speed:280, irot:45, lx:725, ly:483, lx2:1101, ly2:121, compx:1, lanim:'jetlanding 3.5s'},
     {id:'plane', speed:200, irot:90, lx:1230, ly:327, lx2:871, ly2:183, compx:-1, lanim:'planelanding 3s'},
-    {id:'chopper', speed:140, irot:0, lx2:1243, ly2:894, lanim:'chopperlanding 2.5s'},
+    {id:'chopper', speed:140, irot:0, lx2:1243, ly2:794, lanim:'chopperlanding 2.5s'},
   ];
 }
 class Scoreboard extends Obj {
