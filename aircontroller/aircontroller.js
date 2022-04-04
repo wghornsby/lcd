@@ -118,7 +118,7 @@ class Oort extends Obj {
       this.is = 0;
       let line = this.script.next();
       if (line.map) {
-        $('#test2').innerText += "\n" + line.mi + ': ' + js(line.map);
+        $('#test2').innerText = line.mi + ': ' + js(line.map);
       }
       line.types.forEach(type => {
         this.spawn(type, line.sf);
@@ -236,10 +236,11 @@ class Script extends Obj {
     [30,8,1.3,0],
     [60,16,1.3,0],
     [20,0,0,0],
-    [60,16,1.3,0],
-    [30,10,1.5,0],
+    [30,9,1.3,0],
+    [30,10,1.3,0],
+    [30,8,1.3,0],
     [20,0,0,0],
-    [60,20,1.5,0],
+    [30,9,1.5,0],
     [30,10,1.5,0],
     [30,7,1.5,0],
     [20,0,0,0],
