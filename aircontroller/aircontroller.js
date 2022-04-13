@@ -23,7 +23,12 @@ class Radar extends Obj {
       .on('click', () => this.$pause_onclick());
     $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
+    this.advance(23);
     this.start();
+  }
+  advance(to) {
+    let score = this.oort.advance(to);
+    this.scoreboard.set(score);
   }
   $speed_onclick() {
     if (! this.speed) {
@@ -110,6 +115,13 @@ class Oort extends Obj {
     this.jets = jets;
     this.alerts = [];
     this.script = new Script();
+    $('#test2').innerText = '';
+    this.test2 = [];
+    this.test2ix = 0;
+  }
+  advance(to) {
+    this.test2ix = to;
+    return this.script.advance(to);    
   }
   step() {
     this.is++;
@@ -118,7 +130,11 @@ class Oort extends Obj {
       this.is = 0;
       let line = this.script.next();
       if (line.map) {
-        $('#test2').innerText = line.mi + ': ' + js(line.map);
+        if (this.test2.length == 3) {
+          this.test2.shift();
+        }
+        this.test2.push((line.mi + this.test2ix) + ': ' + js(line.map));
+        $('#test2').innerText = this.test2.join("\n");
       }
       line.types.forEach(type => {
         this.spawn(type, line.sf);
@@ -131,7 +147,6 @@ class Oort extends Obj {
     this.jets.forEach(jet => jet.setSpeed(b ? jet.speed * 2 : jet.speed / 2));
   } 
   spawn(type, sf) {
-    //$('#test2').innerText += "*";
     let pos = this.getPos();
     let jet = this.jets.newJet(pos.x, pos.y, pos.heading, sf, type)
       .on('spawning', jet => jet.alert.refresh())
@@ -147,7 +162,7 @@ class Oort extends Obj {
     pos.wall = rnd(4);
     switch (pos.wall) {
       case 0:
-        pos.x = 200 + rnd(window.innerWidth - 400);
+        pos.x = 200 + rnd(window.innerWidth - 400);        
         pos.y = -300;
         pos.ax = pos.x;
         pos.ay = -10;
@@ -195,19 +210,26 @@ class Script extends Obj {
    */
   constructor() {
     super();
-    this.lines = this.build();
+    this.build();
   }
   next() {
     return this.lines.shift();
   }
   //
   build() {
-    var lines = [];
+    this.lines = [];
     Script.MAP.forEach((map, i) => {
       var a = Script.Line.from(map, i);
-      lines = lines.concat(a);
+      this.lines = this.lines.concat(a);
     })
-    return lines;
+  }
+  advance(to) {
+    let score = 0;
+    for (let i = 0; i < to; i++) {
+      score += Script.MAP.shift()[1];
+    }
+    this.build();
+    return score;
   }
   static MAP = [
     [1,1,1,0],
@@ -244,18 +266,26 @@ class Script extends Obj {
     [30,10,1.5,0],
     [30,7,1.5,0],
     [20,0,0,0],
+    [30,9,1.5,0],
+    [30,10,1.5,0],
+    [20,0,0,0],
+    [30,10,1.5,0],
+    [30,10,1.5,0],
+    [30,11,1.5,0],
     [60,10,2,0],
     [15,0,0,0],
     [30,9,2,0],
     [20,0,0,0],
     [30,9,2,0],
+    [30,7,2,0],
     [15,0,0,0],
-    [30,10,2,0],
+    [30,9,2,0],
+    [30,8,2,0],
     [15,0,0,0],
+    [30,9,2,0],
     [30,9,2,0],
     [15,0,0,0],
     [30,10,2,0],
-    [10,0,0,0],
     [30,10,2,0],
     [10,0,0,0],
     [30,11,2,0],
@@ -263,6 +293,7 @@ class Script extends Obj {
     [30,11,2,0],
     [20,0,0,0],
     [30,12,2,0],
+    [30,19,2,0],
     [10,0,0,0],
     [30,10,2,0],
     [10,0,0,0],
@@ -606,7 +637,7 @@ class Jet extends Obj {
     if (this.landed) {
       return;
     }
-    if (! this.landing && this.deadCheck(jets)) {
+    if (! this.landing && this.spawned == 2 && this.deadCheck(jets)) {
       return 1;
     }
     this.is++;
@@ -626,6 +657,10 @@ class Jet extends Obj {
         }
         if (! this.visible) {
           this.onspawning(this);
+        }
+      } else if (this.spawned == 1) {
+        if (me.x > 160 && me.x < window.innerWidth - me.width - 160 && me.y > 160 && me.y < window.innerHeight - me.height - 160) {
+          this.spawned = 2;
         }
       }
       if (this.dot && this.over(this.dot.cx, this.dot.cy, me)) {
@@ -817,9 +852,12 @@ class Scoreboard extends Obj {
     this.$score = $('#score span');
     this.score = 0;
   }
-  onlanding() {
-    this.score++;
+  set(score) {
+    this.score = score;
     this.$score.innerText = this.score;
+  }
+  onlanding() {
+    this.set(this.score + 1);
     this.$score.className = 'bulge';
   }
   onland() {

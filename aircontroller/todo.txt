@@ -1,8 +1,11 @@
-. recalibrate script, need more density before increasing speed (so far so good, maybe a little more tweaking)
-. slow heli land anim - makes score bounce weird
-. switch to distance calculation for determining over dot (to see if this fixes zooming issue)
+TODO 
+. recalibrate script, need more density before increasing speed - more density!!!
 . make zorder < active when landing
 . pulse helipad when tracing
-. improve spawn algo to keep within airspace and no insta-crash
-. move helipad slightly north
 . add lanscape scenery
+. slow heli land anim - makes score bounce weird
+
+DONE
+x switch to distance calculation for determining over dot (to see if this fixes zooming issue)
+x move helipad slightly north
+x improve spawn algo so no insta-crash

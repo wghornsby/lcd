@@ -163,7 +163,7 @@ body {
   border-radius:50%;
   display:inline-block;  
   position:absolute;
-  z-index:1;
+  z-index:5;
 }
 .dot.docked {
   background-color:#ccc;
@@ -174,17 +174,25 @@ body {
   font-family:'Fredoka One';
   font-size:40pt;
   color:white;
+  z-index:1;
+  position:absolute;
 }
-.tb, #test2 {
+.tb {
   margin:5px 0 0 15px;
   font-family:'Fredoka One';
   font-size:20pt;
   color:white;
   display:flex;
   align-items:flex-start;
+  border:1px solid red;
 }
 #test2 {
+  position:absolute;
+  margin:70px 0 0 15px;
+  font-family:'Fredoka One';
   font-size:15pt;
+  color:#ddd;
+  z-index:1;
 }
 .tb span {
   display:inline-block;
@@ -398,17 +406,139 @@ body {
   background:red;
   z-index:999;
 }
+.circle {
+  border-radius:50%;
+  display:inline-block;  
+  position:absolute;
+  z-index:0;
+}
+.tree {
+  position:relative;
+}
+.tdg {
+  background-color:rgb(86, 133, 75);
+  box-shadow:0 0 2px 2px rgb(86, 133, 75);
+}
+.tg {
+  background-color:rgb(100, 151, 90);
+  box-shadow:0 0 2px 2px rgb(100, 151, 90);
+}
+.tlg {
+  background-color:rgb(110, 163, 98);
+  box-shadow:0 0 2px 2px rgb(110, 163, 98);
+}
+.ts {
+  box-shadow:0 0 20px 4px rgb(38, 58, 34);
+}
+.tree {
+  position:absolute;
+}
 </style>
 </head>
 <body>
   <!-- radar -->
   <div id='radar'>
+    <!-- forest nw -->
+    <div class='circle tdg ts' style='top:320;left:-40;width:100;height:100;'></div>
+    <div class='circle tdg ts' style='top:345;left:35;width:100;height:100;'></div>
+    <div class='circle tdg ts' style='top:270;left:110;width:150;height:150;'></div>
+    <div class='circle tdg ts' style='top:270;left:250;width:120;height:120;'></div>
+    <div class='circle tdg ts' style='top:130;left:230;width:200;height:200;'></div>
+    <div class='circle tdg ts' style='top:180;left:390;width:100;height:100;'></div>
+    <div class='circle tdg ts' style='top:-10;left:340;width:220;height:220;'></div>
+    <div class='circle tdg ts' style='top:90;left:540;width:100;height:100;'></div>
+    <div class='circle tdg ts' style='top:50;left:620;width:100;height:100;'></div>
+    <div class='circle tdg ts' style='top:-60;left:660;width:130;height:130;'></div>
+    <div class='circle tdg' style='top:320;left:-40;width:100;height:100;'></div>
+    <div class='circle tdg' style='top:345;left:35;width:100;height:100;'></div>
+    <div class='circle tdg' style='top:270;left:110;width:150;height:150;'></div>
+    <div class='circle tdg' style='top:270;left:250;width:120;height:120;'></div>
+    <div class='circle tdg' style='top:130;left:230;width:200;height:200;'></div>
+    <div class='circle tdg' style='top:180;left:390;width:100;height:100;'></div>
+    <div class='circle tdg' style='top:-10;left:340;width:220;height:220;'></div>
+    <div class='circle tdg' style='top:90;left:540;width:100;height:100;'></div>
+    <div class='circle tdg' style='top:50;left:620;width:100;height:100;'></div>
+    <div class='circle tdg' style='top:-60;left:660;width:130;height:130;'></div>
+    <div class='circle tg' style='top:290;left:-40;width:100;height:100;'></div>
+    <div class='circle tg' style='top:315;left:40;width:90;height:90;'></div>
+    <div class='circle tg' style='top:244;left:109;width:140;height:140;'></div>
+    <div class='circle tg' style='top:240;left:244;width:110;height:110;'></div>
+    <div class='circle tg' style='top:120;left:230;width:180;height:180;'></div>
+    <div class='circle tg' style='top:160;left:370;width:100;height:100;'></div>
+    <div class='circle tg' style='top:-30;left:330;width:210;height:210;'></div>
+    <div class='circle tg' style='top:50;left:535;width:100;height:100;'></div>
+    <div class='circle tg' style='top:30;left:600;width:90;height:90;'></div>
+    <div class='circle tg' style='top:-70;left:640;width:120;height:120;'></div>
+    <div class='circle tg' style='top:-250;left:-230;width:600;height:600'></div>
+    <div class='circle tg' style='top:-300;left:320;width:400;height:400'></div>
+    <div class='tree' style='top:180;left:0'>
+      <div class='circle tlg' style='top:70;left:-30;width:100;height:100;'></div>
+      <div class='circle tlg' style='top:90;left:50;width:80;height:80;'></div>
+      <div class='circle tlg' style='top:0;left:0;width:100;height:100;'></div>
+    </div>
+    <div class='tree' style='top:30;left:50'>
+      <div class='circle tlg' style='top:0;left:0;width:50;height:50;'></div>
+      <div class='circle tlg' style='top:40;left:0;width:60;height:60;'></div>
+      <div class='circle tlg' style='top:75;left:40;width:40;height:40;'></div>
+      <div class='circle tlg' style='top:26;left:35;width:60;height:60;'></div>
+    </div>
+    <div class='tree' style='top:170;left:150'>
+      <div class='circle tlg' style='top:36;left:70;width:60;height:60;'></div>
+      <div class='circle tlg' style='top:0;left:5;width:80;height:80;'></div>
+      <div class='circle tlg' style='top:64;left:0;width:40;height:40;'></div>
+      <div class='circle tlg' style='top:59;left:30;width:60;height:60;'></div>  
+    </div>
+    <div class='tree' style='top:40;left:265'>
+      <div class='circle tlg' style='top:40;left:0;width:100;height:100;'></div>
+      <div class='circle tlg' style='top:60;left:80;width:80;height:80;'></div>
+      <div class='circle tlg' style='top:-30;left:30;width:100;height:100;'></div>  
+    </div>
+    <!-- forest ne 1 -->
+    <div class='circle tdg ts' style='top:-80;left:1200;width:100;height:100;'></div>
+    <div class='circle tdg ts' style='top:-80;left:1270;width:140;height:140;'></div>
+    <div class='circle tdg ts' style='top:-50;left:1400;width:100;height:100;'></div>
+    <div class='circle tdg ts' style='top:-20;left:1480;width:140;height:140;'></div>
+    <div class='circle tdg ts' style='top:60;left:1600;width:70;height:70;'></div>
+    <div class='circle tdg ts' style='top:-30;left:1620;width:120;height:120;'></div>
+    <div class='circle tdg ts' style='top:-110;left:1690;width:170;height:170;'></div> 
+    <div class='circle tdg' style='top:-80;left:1200;width:100;height:100;'></div>
+    <div class='circle tdg' style='top:-80;left:1270;width:140;height:140;'></div>
+    <div class='circle tdg' style='top:-50;left:1400;width:100;height:100;'></div>   
+    <div class='circle tdg' style='top:-20;left:1480;width:140;height:140;'></div>
+    <div class='circle tdg' style='top:60;left:1600;width:70;height:70;'></div>
+    <div class='circle tdg' style='top:-30;left:1620;width:120;height:120;'></div>
+    <div class='circle tdg' style='top:-110;left:1690;width:170;height:170;'></div>
+    <div class='circle tg' style='top:-92;left:1285;width:120;height:120;'></div>
+    <div class='circle tg' style='top:-70;left:1414;width:95;height:95;'></div>   
+    <div class='circle tg' style='top:-50;left:1500;width:135;height:135;'></div>
+    <div class='circle tg' style='top:34;left:1605;width:60;height:60;'></div>
+    <div class='circle tg' style='top:-50;left:1620;width:110;height:110;'></div>
+    <div class='circle tg' style='top:-120;left:1690;width:150;height:150;'></div>
+    <div class='circle tlg' style='top:-60;left:1530;width:110;height:110;'></div>
+    <div class='circle tlg' style='top:20;left:1613;width:40;height:40;'></div>
+    <div class='circle tlg' style='top:-60;left:1620;width:90;height:90;'></div>
+    <!-- forest ne 2 -->
+    <div class='circle tdg ts' style='top:160;left:1700;width:80;height:80;'></div>
+    <div class='circle tdg ts' style='top:140;left:1740;width:50;height:50;'></div>
+    <div class='circle tdg ts' style='top:180;left:1740;width:70;height:70;'></div>
+    <div class='circle tdg ts' style='top:225;left:1715;width:40;height:40;'></div>
+    <div class='circle tdg' style='top:160;left:1700;width:80;height:80;'></div>
+    <div class='circle tdg' style='top:140;left:1740;width:50;height:50;'></div>
+    <div class='circle tdg' style='top:180;left:1740;width:70;height:70;'></div>
+    <div class='circle tdg' style='top:225;left:1715;width:40;height:40;'></div>
+    <div class='circle tg' style='top:178;left:1715;width:50;height:45;'></div>
+    <div class='circle tg' style='top:188;left:1740;width:50;height:45;'></div>
+    <div class='circle tg' style='top:165;left:1745;width:30;height:30;'></div>
+    <div class='circle tg' style='top:210;left:1728;width:30;height:30;'></div>
+    <div class='circle tlg' style='top:195;left:1740;width:22;height:22;'></div>
+    <!-- scoreboard and toolbar -->
     <div id='score' class='uns'>Score:<span>0</span></div>
-    <div class='tb'>
+    <div class='tb hide'>
       <span id='speed'>x1</span>
       <span id='pause'>| |</span>
     </div>
     <div id='test2' class='uns'></div>
+    <!-- runways -->
     <div id='planerunb' class='runb'><div id='planepad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div id='planedock' class='chev dock'><div class='before'></div><div class='after'></div></div></div></div>
     <div id='jetrunb' class='runb'><div id='jetpad' class='chevs'><div class='chev'><div class='before'></div><div class='after'></div></div><div id='jetdock' class='chev dock'><div class='before'></div><div class='after'></div></div></div></div>
     <div id='planerun' class='run'><div class='lines'></div></div>
@@ -419,45 +549,17 @@ body {
     <div class='chopper blueprint'>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50px" height="50px" x="0px" y="0px"
       viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-        <path style="fill:rgb(134, 231, 255);" d="M501.337,185.758l-40.583,86.487c-7.443,15.866-23.395,26.007-40.924,26.007H329.13l-11.036,33.492
-        c-6.558,19.94-25.186,33.418-46.181,33.418H126.534c-26.508,0-50.5-10.738-67.859-28.108
-        c-14.214-14.214-23.981-32.853-27.063-53.677h160.222l54.744-110.148h31.776c28.044,0,50.777,22.733,50.777,50.788v13.457h91.424
-        l24.269-51.715L501.337,185.758L501.337,185.758z"/>
-        <path style="fill:#EFEFEF;" d="M246.578,173.229l-54.744,110.148H31.612c-0.693-4.628-1.045-9.362-1.045-14.182
-        c0-53.006,42.961-95.967,95.967-95.967H246.578z"/>
+        <path style="fill:rgb(134, 231, 255);  " d="M501.337,185.758l-40.583,86.487c-7.443,15.866-23.395,26.007-40.924,26.007H329.13l-11.036,33.492c-6.558,19.94-25.186,33.418-46.181,33.418H126.534c-26.508,0-50.5-10.738-67.859-28.108c-14.214-14.214-23.981-32.853-27.063-53.677h160.222l54.744-110.148h31.776c28.044,0,50.777,22.733,50.777,50.788v13.457h91.424l24.269-51.715L501.337,185.758L501.337,185.758z"/>
+        <path style="fill:#EFEFEF;" d="M246.578,173.229l-54.744,110.148H31.612c-0.693-4.628-1.045-9.362-1.045-14.182c0-53.006,42.961-95.967,95.967-95.967H246.578z"/>
         <g>
           <rect x="204.014" y="130.579" style="fill:#747D8C;" width="47.983" height="42.652"/>
-          <path style="fill:#747D8C;" d="M412.301,87.925H43.718c-11.778,0-21.326,9.548-21.326,21.326l0,0
-          c0,11.778,9.548,21.326,21.326,21.326h368.583c11.778,0,21.326-9.548,21.326-21.326l0,0
-          C433.627,97.474,424.08,87.925,412.301,87.925z"/>
-    
+          <path style="fill:#747D8C;" d="M412.301,87.925H43.718c-11.778,0-21.326,9.548-21.326,21.326l0,0c0,11.778,9.548,21.326,21.326,21.326h368.583c11.778,0,21.326-9.548,21.326-21.326l0,0C433.627,97.474,424.08,87.925,412.301,87.925z"/>
           <rect x="415.423" y="185.225" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 921.7896 116.5869)" style="fill:#747D8C;" width="42.651" height="127.954"/>
         </g>
         <g>
           <path style="fill:#231F20;" d="M225.7,311.287h-1.066c-5.888,0-10.663,4.775-10.663,10.663s4.775,10.663,10.663,10.663h1.066
           c5.888,0,10.663-4.775,10.663-10.663S231.588,311.287,225.7,311.287z"/>
-          <path style="fill:#231F20;" d="M510.337,180.039c-1.957-3.079-5.352-4.944-9-4.944h-56.514c-4.135,0-7.896,2.39-9.653,6.133
-          l-6.756,14.396l-14.281-14.281c-4.165-4.163-10.915-4.163-15.081,0l-30.159,30.159c-4.164,4.164-4.164,10.916,0,15.081l0.227,0.227
-          h-29.328v-2.794c0-33.884-27.563-61.451-61.44-61.451h-15.688V141.24H412.3c17.639,0,31.989-14.35,31.989-31.989
-          s-14.35-31.989-31.989-31.989H43.718c-17.639,0-31.989,14.35-31.989,31.989s14.35,31.989,31.989,31.989h149.638v21.326h-66.822
-          c-58.797,0-106.63,47.833-106.63,106.63c0,5.297,0.39,10.588,1.159,15.728c0.001,0.005,0,0.01,0.001,0.015
-          c0.001,0.005,0.002,0.01,0.002,0.014c0,0.002,0,0.003,0.001,0.005c0,0.002,0.001,0.004,0.001,0.007
-          c3.365,22.706,13.762,43.325,30.064,59.628c18.784,18.795,43.359,29.705,69.714,31.08v37.738H44.784
-          c-12.935,0-23.459-10.523-23.459-23.458v-0.711c0-5.888-4.775-10.663-10.663-10.663S0,383.354,0,389.242v0.711
-          c0,24.694,20.09,44.784,44.784,44.784h303.539c5.888,0,10.663-4.775,10.663-10.663s-4.775-10.663-10.663-10.663h-69.309v-38.009
-          c22.663-2.706,41.942-18.229,49.207-40.321l3.239-9.83c0.021-0.066,0.045-0.131,0.065-0.197l5.318-16.139h82.986
-          c8.94,0,17.579-2.177,25.289-6.108l14.253,14.253c2.082,2.081,4.811,3.123,7.54,3.123c2.729,0,5.457-1.042,7.54-3.123
-          l30.159-30.159c4.164-4.164,4.164-10.916,0-15.081l-21.699-21.699l28.078-59.835C512.54,186.985,512.293,183.12,510.337,180.039z
-          M205.291,183.892h24.08l-44.145,88.822h-24.074L205.291,183.892z M33.055,109.251c0-5.88,4.783-10.663,10.663-10.663h368.583
-          c5.88,0,10.663,4.783,10.663,10.663s-4.783,10.663-10.663,10.663H43.718C37.839,119.914,33.055,115.13,33.055,109.251z
-          M214.682,141.24h26.657v21.326h-26.657V141.24z M41.23,269.195c0-47.036,38.267-85.304,85.304-85.304h54.943l-44.138,88.822
-          H41.301C41.254,271.544,41.23,270.37,41.23,269.195z M142.173,413.412v-37.587h115.515v37.587H142.173z M419.83,287.589h-90.7
-          c-4.603,0-8.686,2.955-10.128,7.325l-5.394,16.372h-53.254c-5.888,0-10.663,4.775-10.663,10.663s4.775,10.663,10.663,10.663h45.95
-          c-6.173,13.255-19.481,21.886-34.391,21.886H126.534c-22.796,0-44.217-8.872-60.318-24.984
-          c-10.053-10.053-17.299-22.15-21.324-35.476h146.943c4.049,0,7.748-2.291,9.549-5.918l51.803-104.23h25.168
-          c22.119,0,40.114,18,40.114,40.125v13.457c0,5.888,4.775,10.663,10.663,10.663h61.317l38.251,38.251
-          C425.84,287.159,422.867,287.589,419.83,287.589z M466.913,294.441l-75.398-75.398l15.08-15.08l75.398,75.398L466.913,294.441z
-          M466.88,234.09l-22.432-22.432l7.151-15.237h32.957L466.88,234.09z"/>
+          <path style="fill:#231F20;" d="M510.337,180.039c-1.957-3.079-5.352-4.944-9-4.944h-56.514c-4.135,0-7.896,2.39-9.653,6.133l-6.756,14.396l-14.281-14.281c-4.165-4.163-10.915-4.163-15.081,0l-30.159,30.159c-4.164,4.164-4.164,10.916,0,15.081l0.227,0.227h-29.328v-2.794c0-33.884-27.563-61.451-61.44-61.451h-15.688V141.24H412.3c17.639,0,31.989-14.35,31.989-31.989s-14.35-31.989-31.989-31.989H43.718c-17.639,0-31.989,14.35-31.989,31.989s14.35,31.989,31.989,31.989h149.638v21.326h-66.822c-58.797,0-106.63,47.833-106.63,106.63c0,5.297,0.39,10.588,1.159,15.728c0.001,0.005,0,0.01,0.001,0.015c0.001,0.005,0.002,0.01,0.002,0.014c0,0.002,0,0.003,0.001,0.005c0,0.002,0.001,0.004,0.001,0.007c3.365,22.706,13.762,43.325,30.064,59.628c18.784,18.795,43.359,29.705,69.714,31.08v37.738H44.784c-12.935,0-23.459-10.523-23.459-23.458v-0.711c0-5.888-4.775-10.663-10.663-10.663S0,383.354,0,389.242v0.711c0,24.694,20.09,44.784,44.784,44.784h303.539c5.888,0,10.663-4.775,10.663-10.663s-4.775-10.663-10.663-10.663h-69.309v-38.009c22.663-2.706,41.942-18.229,49.207-40.321l3.239-9.83c0.021-0.066,0.045-0.131,0.065-0.197l5.318-16.139h82.986c8.94,0,17.579-2.177,25.289-6.108l14.253,14.253c2.082,2.081,4.811,3.123,7.54,3.123c2.729,0,5.457-1.042,7.54-3.123l30.159-30.159c4.164-4.164,4.164-10.916,0-15.081l-21.699-21.699l28.078-59.835C512.54,186.985,512.293,183.12,510.337,180.039zM205.291,183.892h24.08l-44.145,88.822h-24.074L205.291,183.892z M33.055,109.251c0-5.88,4.783-10.663,10.663-10.663h368.583c5.88,0,10.663,4.783,10.663,10.663s-4.783,10.663-10.663,10.663H43.718C37.839,119.914,33.055,115.13,33.055,109.251zM214.682,141.24h26.657v21.326h-26.657V141.24z M41.23,269.195c0-47.036,38.267-85.304,85.304-85.304h54.943l-44.138,88.822H41.301C41.254,271.544,41.23,270.37,41.23,269.195z M142.173,413.412v-37.587h115.515v37.587H142.173z M419.83,287.589h-90.7c-4.603,0-8.686,2.955-10.128,7.325l-5.394,16.372h-53.254c-5.888,0-10.663,4.775-10.663,10.663s4.775,10.663,10.663,10.663h45.95c-6.173,13.255-19.481,21.886-34.391,21.886H126.534c-22.796,0-44.217-8.872-60.318-24.984c-10.053-10.053-17.299-22.15-21.324-35.476h146.943c4.049,0,7.748-2.291,9.549-5.918l51.803-104.23h25.168c22.119,0,40.114,18,40.114,40.125v13.457c0,5.888,4.775,10.663,10.663,10.663h61.317l38.251,38.251C425.84,287.159,422.867,287.589,419.83,287.589z M466.913,294.441l-75.398-75.398l15.08-15.08l75.398,75.398L466.913,294.441zM466.88,234.09l-22.432-22.432l7.151-15.237h32.957L466.88,234.09z"/>
         </g>
       </svg>
     </div>
