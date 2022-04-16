@@ -26,6 +26,13 @@ class Radar extends Obj {
     this.advance(34);
     this.start();
   }
+  start(unhide) {
+    if (unhide) {
+      this.jets.unhide();
+      this.tracers.show(1);
+    }
+    this.clock = setInterval(() => this.step(), this.clockspeed);
+  }
   advance(to) {
     let score = this.oort.advance(to);
     this.scoreboard.set(score);
@@ -50,19 +57,15 @@ class Radar extends Obj {
     }
     this.$pause.innerText = s;
   }
-  start(unhide) {
-    if (unhide) {
-      this.jets.unhide();
-      this.tracers.show(1);
-    }
-    this.clock = setInterval(() => this.step(), this.clockspeed);
-  }
   pause(hide) {
     this.jets.freeze(hide);
     this.tracers.show(0);
     clearInterval(this.clock);
   }
   step() {
+    var d = new Date();
+    var ms = '00' + d.getMilliseconds();
+    log(d.getMinutes() + ':' + d.getSeconds() + '.' + ms.substring(ms.length - 3));
     this.oort.step();
     let dead = this.jets.step();
     if (dead) {
@@ -635,7 +638,7 @@ class Jet extends Obj {
     this.ly2 = me.ly2;
     this.spawned = 0;
     this.visible = 0;
-    this.$createJet(i);
+    this.$createJet();
   }
   setSpeed(s) {
     this.speed = s;
@@ -802,7 +805,7 @@ class Jet extends Obj {
     return this.$jet.classList.contains('glow');
   }
   //
-  $createJet(i) {
+  $createJet() {
     this.$jet = document.createElement('div');
     this.$jet.id = this.id;
     this.$jet.className = this.type.id;
