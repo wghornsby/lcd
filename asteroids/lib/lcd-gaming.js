@@ -14,14 +14,11 @@ LG.Controller = class extends Obj {
     this.period = 1 / this.frequency();
     this.periodms = this.period * 1000;
     this.sprites = [];
-    this.reset();
+    this.elapsed = 0;
+    this.ms = -this.periodms;
   }
   frequency() {
     return 100;
-  }
-  reset() {
-    this.elapsed = 0;
-    this.ms = -this.periodms;
   }
   start() {
     this.clock = setInterval(() => this.step(), this.periodms);
@@ -29,19 +26,25 @@ LG.Controller = class extends Obj {
   pause() {
     clearInterval(this.clock);
   }
-  add(sprite) {
-    this.sprites.push(sprite);
-    return sprite;
-  }
   step() {
     this.elapsed += this.period;
     this.ms = (this.ms + this.periodms) % 1000;
     this.sprites.forEach(sprite => sprite.step(this.ms));
+    this.sprites = this.sprites.filter(sprite => sprite.active);
+  }
+  sprite(sprite) {
+    if (sprite.length) {
+      this.sprites = this.sprites.concat(sprite);
+    } else {
+      this.sprites.push(sprite);
+    }
+    return sprite;
   }
 }
-LG.RotatingSprite = class extends Obj {
+LG.Sprite = class extends Obj {
   /**
-   * i x, y, ihead
+   * i x, y, iheading
+   * b active
    * Compass compass
    * $e <div>
    * $svg
@@ -50,12 +53,16 @@ LG.RotatingSprite = class extends Obj {
   constructor($screen, $svg, className, x, y, iheading = 0, heading = 0) {
     super();
     this.iheading = iheading || 0;
+    this.active = 1;
     this.compass = new LG.Compass();
     this.$create($svg, $screen, className);
     this.moveTo(x, y).heading(heading);
   }
   step(ms) {
-    // TODO
+    // called from controller
+  }
+  dead() {
+    this.active = 0;
   }
   moveTo(x, y) {
     this.x = x;
@@ -64,6 +71,12 @@ LG.RotatingSprite = class extends Obj {
     this.iy = 0;
     this.$e.style.left = this.x;
     this.$e.style.top = this.y;
+    this.setTranslateCss();
+    return this;
+  }
+  moveByVector(v) {
+    this.ix += v.x;
+    this.iy += v.y;
     this.setTranslateCss();
     return this;
   }
@@ -77,9 +90,9 @@ LG.RotatingSprite = class extends Obj {
     this.setRotateCss();
     return this;
   }
-  advance(steps = 1) {
-    this.ix = this.compass.advanceX(this.ix, steps); 
-    this.iy = this.compass.advanceY(this.iy, steps);
+  advance(speed = 1) {
+    this.ix = this.compass.advanceX(this.ix, speed); 
+    this.iy = this.compass.advanceY(this.iy, speed);
     this.setTranslateCss();
   }
   bounds() {
@@ -94,19 +107,26 @@ LG.RotatingSprite = class extends Obj {
   $create($svg, $screen, className) {
     this.$e = document.createElement('div');
     this.$e.className = className;
-    this.$e.innerHTML = $svg.innerHTML;
-    this.$svg = this.$e.$('svg');
+    if ($svg) {
+      this.$e.innerHTML = $svg.innerHTML;
+      this.$svg = this.$e.$('svg');  
+    }
     this.setTransitionCss();
     $screen.appendChild(this.$e);
   }
   setTransitionCss() {
     this.$e.style.transition = 'transform 0s ease-in-out';
-    this.$svg.style.transition = 'all 0.1s ease';
+    if (this.$svg) {
+      this.$svg.style.transition = 'all ease';
+    }
   }
   setTranslateCss() {
     this.$e.style.transform = 'translate(' + this.ix + 'px,' + this.iy + 'px)';
   }
   setRotateCss() {
+    if (! this.$svg) {
+      return;
+    }
     let nr = this.iheading - this.compass.heading;
     if (nr < 360) {
       nr += 360;
@@ -156,5 +176,35 @@ LG.Compass = class {
     heading = heading > 359 ? heading - 360 : heading;
     heading = heading < 0 ? heading + 360 : heading;
     return heading;    
+  }
+}
+class Vector {
+  //
+  constructor(x = 0, y = 0) {
+    this.x = x;
+    this.y = y;
+  }
+  nonzero() {
+    return this.x || this.y;
+  }
+  reset() {
+    this.x = 0;
+    this.y = 0;
+  }
+  add(that, max) {
+    this.x += that.x;
+    this.y += that.y;
+    if (max) {
+      if (Math.abs(this.x) > max) {
+        this.x = Math.sign(this.x) * max;
+      }
+      if (Math.abs(this.y) > max) {
+        this.y = Math.sign(this.y) * max;
+      }  
+    }
+  }
+  //
+  static byRadians(rad, mag = 1) {
+    return new Vector(mag * Math.cos(rad), mag * -Math.sin(rad));
   }
 }
