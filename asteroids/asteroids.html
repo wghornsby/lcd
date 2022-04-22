@@ -3,6 +3,9 @@
   <script type='text/javascript' src='lib/lcd-simple.js'></script>
   <script type='text/javascript' src='lib/lcd-gaming.js'></script>
   <script type='text/javascript' src='asteroids.js'></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
   <link href='stars.css' rel='stylesheet'>
 <style>
 body {
@@ -10,6 +13,27 @@ body {
   padding:0;
   display:flex;
   overflow:hidden;
+}
+#score {
+  font-family: 'Orbitron';
+  font-size:24pt;
+  color:white;
+  position:absolute;
+  z-index:1;
+  left:0;
+  top:20px;
+  width:200px;
+  text-align:right;
+}
+#copy {
+  font-family: 'Orbitron';
+  font-size:16pt;
+  color:#c0c0c0;
+  position:absolute;
+  z-index:1;
+  bottom:20px;
+  width:100%;
+  text-align:center;
 }
 .blueprint {
   display:none;
@@ -19,64 +43,31 @@ body {
   flex:1;
   z-index:0;
 }
+.sprite {
+  transition:transform 0s ease-in-out;
+  position:absolute;
+}
+.rot {
+  transition:all ease;
+}
+.frame {
+  position:absolute;
+  top:0;
+  left:0;
+}
 .hide {
   display:none !important;
 }
-.ship {
-  position:absolute;
-  width:50px;
+.ship .frame {
   z-index:10;
-}
-.ufo {
-  position:absolute;
-  z-index:10;
-  top:400;
-  left:400;
-}
-.us div {
-  width:30px;
-  animation:aflip 0.5s linear infinite;
-}
-.ub div {
-  width:60px;
-  animation:aflip 1s linear infinite;
-}
-@keyframes aflip {
-  0% {
-    transform:scaleX(1)
-  }
-  25% {
-    transform:scaleX(-1)
-  }
-  50% {
-    transform:scaleX(1)
-  }
-  75% {
-    transform:scaleX(1)
-  }
-}
-.rock {
-  position:absolute;
-  z-index:5;
-}
-.rb div {
-  width:120px;
-  animation:arotate 10s linear infinite;
-}
-.rm div {
-  width:60px;
-  animation:arotate 3s linear infinite;
-}
-.rs div {
-  width:30px;
-  animation:arotate 1s linear infinite;
-}
-.thrust {
-  position:absolute;
   width:50px;
+}
+.ship .frame.thrust {
+  display:none;
   z-index:9;
 }
-.thrusting div {
+.ship .frame.thrusting {
+  display:block;
   animation:athrusting 0.4s ease infinite;
 }
 @keyframes athrusting {
@@ -96,6 +87,49 @@ body {
     transform:scale(0.3)
   }
 }
+.ufo {
+  z-index:10;
+  top:400;
+  left:400;
+}
+.us .frame {
+  width:30px;
+  animation:aflip 0.5s linear infinite;
+}
+.ub .frame {
+  width:60px;
+  animation:aflip 1s linear infinite;
+}
+@keyframes aflip {
+  0% {
+    transform:scaleX(1)
+  }
+  25% {
+    transform:scaleX(1.2)
+  }
+  50% {
+    transform:scaleX(1)
+  }
+  75% {
+    transform:scaleX(1)
+  }
+}
+.rock {
+  position:absolute;
+  z-index:5;
+}
+.rb .frame {
+  width:120px;
+  animation:arotate 10s linear infinite;
+}
+.rm .frame {
+  width:60px;
+  animation:arotate 3s linear infinite;
+}
+.rs .frame {
+  width:30px;
+  animation:arotate 1s linear infinite;
+}
 @keyframes arotate {
   from {
     transform:rotate(0deg);
@@ -107,11 +141,66 @@ body {
 .shot {
   height:4px;
   width:4px;
+  border-radius:50%;
+  display:inline-block;  
+  position:absolute;
+  z-index:8;
+}
+.sshot {
+  background-color:rgb(148, 176, 255);
+}
+.ushot {
+  background-color:rgb(255, 113, 224);
+}
+.xrock {
+  position:absolute;
+  animation:agrow 0.4s linear 1;
+  opacity:0;
+  z-index:20;
+}
+.xrock div {
   background-color:white;
   border-radius:50%;
   display:inline-block;  
   position:absolute;
-  z-index:9;
+}
+.xrb {
+  width:120px;
+  height:120px;
+}
+.xrb div {
+  height:6px;
+  width:6px;
+}
+.xrm {
+  width:60px;
+  height:60px;
+}
+.xrm div {
+  height:4px;
+  width:4px;
+}
+.xrs {
+  width:50px;
+  height:50px;
+}
+.xrs div {
+  height:3px;
+  width:3px;
+}
+@keyframes agrow {
+  0% {
+    transform:rotate(-4deg) scale(0.5);
+    opacity:1;
+  }
+  50% {
+    transform:rotate(0deg) scale(1);
+    opacity:0.7;
+  }
+  100% {
+    transform:rotate(4deg) scale(1.5);
+    opacity:0;
+  }
 }
 </style>
 </head>
@@ -119,9 +208,34 @@ body {
   <div id='screen'>
     <div id='stars2'></div>
     <div id='stars3'></div>
+    <div id='score'></div>
+    <div id='copy'>&copy;2022 by Warren</div>
+  </div>
+  <div id='xrockbp' class='blueprint'>
+    <div style='top:10%; left:44%'></div>
+    <div style='top:20%; left:82%'></div>
+    <div style='top:30%; left:66%'></div>
+    <div style='top:40%; left:23%'></div>
+    <div style='top:50%; left:45%'></div>
+    <div style='top:60%; left:62%'></div>
+    <div style='top:70%; left:12%'></div>
+    <div style='top:80%; left:2%'></div>
+    <div style='top:90%; left:99%'></div>
+    <div style='top:100%; left:56%'></div>
+    <div style='top:52%; left:10%'></div>
+    <div style='top:22%; left:20%'></div>
+    <div style='top:56%; left:30%'></div>
+    <div style='top:77%; left:40%'></div>
+    <div style='top:2%; left:50%'></div>
+    <div style='top:83%; left:60%'></div>
+    <div style='top:52%; left:70%'></div>
+    <div style='top:72%; left:80%'></div>
+    <div style='top:11%; left:90%'></div>
+    <div style='top:29%; left:100%'></div>
+    <div style='top:10%; left:10%'></div>
   </div>
   <div id='ufobp' class='blueprint'>
-    <div>
+    <div class='frame'>
       <svg viewBox="0 0 512 512">
         <path style="fill:#FF5023;" d="M298.667,85.333c0-23.565-19.102-42.667-42.667-42.667c-23.565,0-42.667,19.102-42.667,42.667c0,15.791,8.583,29.567,21.333,36.945v34.166h42.667v-34.166C290.082,114.9,298.667,101.124,298.667,85.333z"/>
         <path style="fill:#BF3C1A;" d="M256,42.667v113.778h21.333v-34.166c12.749-7.378,21.333-21.154,21.333-36.945C298.667,61.769,279.565,42.667,256,42.667z"/>
@@ -145,39 +259,45 @@ body {
     </div>
   </div>
   <div id='shipbp' class='blueprint'>
-    <svg viewBox="0 0 460 460">
-      <g>
-        <path d="m391.78,356.97l0,-51.543c0,-22.857 -11.084,-37.559 -14.882,-41.925l-76.866,-83.428l0,152.156l80.955,37.293c3.02,1.172 10.793,2.713 10.793,-12.553z" fill="#3A5D74" id="svg_5"/>
-        <path d="m62.219,356.97l0,-51.543c0,-22.857 11.084,-37.559 14.882,-41.925l76.866,-83.428l0,152.156l-80.953,37.293c-3.022,1.172 -10.795,2.713 -10.795,-12.553z" fill="#3A5D74" id="svg_6"/>
-      </g>
-      <path stroke="null" d="m227.999,118.143c-4.599,0 -8.328,-2.93362 -8.328,-6.55167l0,-68.03966c0,-3.61805 3.729,-6.55167 8.328,-6.55167s8.328,2.93362 8.328,6.55167l0,68.03966c0,3.61805 -3.729,6.55167 -8.328,6.55167z" fill="#90C8EC" id="svg_7"/>
-      <path d="m234.525,65.363l-15.052,0c-37.406,0 -67.728,25.34943 -67.728,56.61843l0,213.29197c0,8.56629 8.306,15.51161 18.557,15.51161l113.395,0c10.248,0 18.557,-6.94532 18.557,-15.51161l0,-168.44331l0,-22.74284l0,-22.10666c-0.001,-31.269 -30.323,-56.61759 -67.729,-56.61759z" fill="#CAE9F7" id="svg_8" stroke="null"/>
-      <path d="m151.746,305.426l0,26.803c0,10.247 8.306,18.555 18.557,18.555l113.395,0c10.248,0 18.557,-8.308 18.557,-18.555l0,-26.803l-150.509,0z" fill="red" id="svg_9"/>
-      <circle cx="227" cy="229.137" r="32.988" fill="#00aeff" id="svg_10"/>
-      <g stroke="null">
-        <path d="m81.726,364.405l0,-51.543c0,-22.857 11.084,-37.559 14.882,-41.925l58.358,-63.341l0,-28.523l-76.866,83.428c-3.798,4.365 -14.882,19.067 -14.882,41.925l0,51.543c0,15.265 7.773,13.725 10.795,12.552l7.722,-3.558c-0.002,-0.186 -0.009,-0.365 -0.009,-0.558z" opacity="0.1" fill="#231F20" id="svg_12"/>
-        <path d="m171.253,336.33464l0,-214.13126c0,-30.90527 29.397,-56.03216 66,-56.80345c-0.576,-0.01175 -1.147,-0.03693 -1.728,-0.03693l-15.052,0c-37.406,0 -67.728,25.44917 -67.728,56.84121l0,214.13126c0,8.6 8.306,15.57265 18.557,15.57265l18.508,0c-10.251,-0.00084 -18.557,-6.97265 -18.557,-15.57349l0,0.00001z" opacity="0.1" fill="#231F20" id="svg_13" stroke="null"/>
-        <path d="m213.519,228.141c0,-15.005 10.021,-27.662 23.733,-31.664c-2.937,-0.856 -6.04,-1.325 -9.253,-1.325c-18.22,0 -32.988,14.769 -32.988,32.989c0,18.219 14.768,32.988 32.988,32.988c3.214,0 6.316,-0.467 9.253,-1.325c-13.713,-4.002 -23.733,-16.658 -23.733,-31.663z" opacity="0.1" fill="#231F20" id="svg_14"/>
-      </g>
-    </svg>
-  </div>
-  <div id='thrustbp' class='blueprint'>
-    <div>
-      <svg viewbox="0 0 460 460">
-        <g>
-          <path fill="#FF9737" d="m283.641,334.709c-0.816,-2.159 -2.885,-3.587 -5.192,-3.587l-98.899,0c-2.309,0 -4.375,1.428 -5.194,3.587c-4.157,10.99 -6.266,22.565 -6.266,34.405c0,38.873 23.042,73.976 58.701,89.428c0.705,0.305 1.457,0.457 2.208,0.457c0.752,0 1.504,-0.152 2.208,-0.457c35.66,-15.452 58.701,-50.554 58.701,-89.428c0.001,-11.844 -2.108,-23.419 -6.267,-34.405z"/>
-          <path fill="#FFD960" d="m265.446,328.352c-1.052,-1.136 -2.528,-1.782 -4.076,-1.782l-64.742,0c-1.548,0 -3.025,0.645 -4.076,1.782c-1.049,1.135 -1.579,2.659 -1.459,4.202c1.681,21.554 15.743,40.738 35.824,48.871c0.668,0.271 1.376,0.406 2.084,0.406c0.708,0 1.416,-0.135 2.084,-0.406c20.08,-8.133 34.14,-27.316 35.822,-48.871c0.117,-1.544 -0.412,-3.067 -1.461,-4.202z"/>
-        </g>
-      </svg>   
+    <div class='frame'>
+      <div class='rot'>
+        <svg viewBox="0 0 460 460">
+          <g>
+            <path d="m391.78,356.97l0,-51.543c0,-22.857 -11.084,-37.559 -14.882,-41.925l-76.866,-83.428l0,152.156l80.955,37.293c3.02,1.172 10.793,2.713 10.793,-12.553z" fill="#3A5D74" id="svg_5"/>
+            <path d="m62.219,356.97l0,-51.543c0,-22.857 11.084,-37.559 14.882,-41.925l76.866,-83.428l0,152.156l-80.953,37.293c-3.022,1.172 -10.795,2.713 -10.795,-12.553z" fill="#3A5D74" id="svg_6"/>
+          </g>
+          <path stroke="null" d="m227.999,118.143c-4.599,0 -8.328,-2.93362 -8.328,-6.55167l0,-68.03966c0,-3.61805 3.729,-6.55167 8.328,-6.55167s8.328,2.93362 8.328,6.55167l0,68.03966c0,3.61805 -3.729,6.55167 -8.328,6.55167z" fill="#90C8EC" id="svg_7"/>
+          <path d="m234.525,65.363l-15.052,0c-37.406,0 -67.728,25.34943 -67.728,56.61843l0,213.29197c0,8.56629 8.306,15.51161 18.557,15.51161l113.395,0c10.248,0 18.557,-6.94532 18.557,-15.51161l0,-168.44331l0,-22.74284l0,-22.10666c-0.001,-31.269 -30.323,-56.61759 -67.729,-56.61759z" fill="#CAE9F7" id="svg_8" stroke="null"/>
+          <path d="m151.746,305.426l0,26.803c0,10.247 8.306,18.555 18.557,18.555l113.395,0c10.248,0 18.557,-8.308 18.557,-18.555l0,-26.803l-150.509,0z" fill="red" id="svg_9"/>
+          <circle cx="227" cy="229.137" r="32.988" fill="#00aeff" id="svg_10"/>
+          <g stroke="null">
+            <path d="m81.726,364.405l0,-51.543c0,-22.857 11.084,-37.559 14.882,-41.925l58.358,-63.341l0,-28.523l-76.866,83.428c-3.798,4.365 -14.882,19.067 -14.882,41.925l0,51.543c0,15.265 7.773,13.725 10.795,12.552l7.722,-3.558c-0.002,-0.186 -0.009,-0.365 -0.009,-0.558z" opacity="0.1" fill="#231F20" id="svg_12"/>
+            <path d="m171.253,336.33464l0,-214.13126c0,-30.90527 29.397,-56.03216 66,-56.80345c-0.576,-0.01175 -1.147,-0.03693 -1.728,-0.03693l-15.052,0c-37.406,0 -67.728,25.44917 -67.728,56.84121l0,214.13126c0,8.6 8.306,15.57265 18.557,15.57265l18.508,0c-10.251,-0.00084 -18.557,-6.97265 -18.557,-15.57349l0,0.00001z" opacity="0.1" fill="#231F20" id="svg_13" stroke="null"/>
+            <path d="m213.519,228.141c0,-15.005 10.021,-27.662 23.733,-31.664c-2.937,-0.856 -6.04,-1.325 -9.253,-1.325c-18.22,0 -32.988,14.769 -32.988,32.989c0,18.219 14.768,32.988 32.988,32.988c3.214,0 6.316,-0.467 9.253,-1.325c-13.713,-4.002 -23.733,-16.658 -23.733,-31.663z" opacity="0.1" fill="#231F20" id="svg_14"/>
+          </g>
+        </svg>    
+      </div>
+    </div>
+    <div class='frame thrust'>
+      <div class='rot'>
+        <svg viewbox="0 0 460 460">
+          <g>
+            <path fill="#FF9737" d="m283.641,334.709c-0.816,-2.159 -2.885,-3.587 -5.192,-3.587l-98.899,0c-2.309,0 -4.375,1.428 -5.194,3.587c-4.157,10.99 -6.266,22.565 -6.266,34.405c0,38.873 23.042,73.976 58.701,89.428c0.705,0.305 1.457,0.457 2.208,0.457c0.752,0 1.504,-0.152 2.208,-0.457c35.66,-15.452 58.701,-50.554 58.701,-89.428c0.001,-11.844 -2.108,-23.419 -6.267,-34.405z"/>
+            <path fill="#FFD960" d="m265.446,328.352c-1.052,-1.136 -2.528,-1.782 -4.076,-1.782l-64.742,0c-1.548,0 -3.025,0.645 -4.076,1.782c-1.049,1.135 -1.579,2.659 -1.459,4.202c1.681,21.554 15.743,40.738 35.824,48.871c0.668,0.271 1.376,0.406 2.084,0.406c0.708,0 1.416,-0.135 2.084,-0.406c20.08,-8.133 34.14,-27.316 35.822,-48.871c0.117,-1.544 -0.412,-3.067 -1.461,-4.202z"/>
+          </g>
+        </svg>     
+      </div>
     </div>
   </div>
   <div id='rockbp1' class='blueprint'>
-    <div>
-      <svg viewbox="0 0 200 200">
-        <g style="stroke:white; stroke-width:12; stroke-linejoin:round; stroke-opacity:0.8; fill-opacity:0.4; fill:rgb(44, 173, 224);">
-          <path d="m7,109.9369l0,-64.37379l71.46798,0.86408l-21.07389,-35.42719l84.29556,0.86408l51.31034,32.83496l0,26.78641l-54.97537,27.65049l53.14286,31.1068l-43.06404,58.75729l-30.23645,-19.87379l-65.05419,19.87379l-45.81281,-79.06312z"/>
-        </g>
-      </svg>
+    <div class='frame'>
+      <div class='rot'>
+        <svg viewbox="0 0 200 200">
+          <g style="stroke:white; stroke-width:12; stroke-linejoin:round; stroke-opacity:0.8; fill-opacity:0.4; fill:rgb(240, 223, 192);">
+            <path d="m7,109.9369l0,-64.37379l71.46798,0.86408l-21.07389,-35.42719l84.29556,0.86408l51.31034,32.83496l0,26.78641l-54.97537,27.65049l53.14286,31.1068l-43.06404,58.75729l-30.23645,-19.87379l-65.05419,19.87379l-45.81281,-79.06312z"/>
+          </g>
+        </svg>
+      </div>
     </div>
   </div>
 </body>

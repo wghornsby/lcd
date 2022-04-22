@@ -8,19 +8,22 @@ class Controller extends LG.Controller {
     this.mx = window.innerWidth;
     this.my = window.innerHeight;
     this.ship = new Ship(this.mx / 2 - 20, this.my / 2 - 20);
+    this.score = 0;
+    this.showScore();
     this.reset();
     this.start();
   }
   reset() {
-    this.sprites = [this.ship];
-    for (let i = 0; i < 3; i++) {
-      this.sprite(Rock.asBig(rnd(window.innerWidth), rnd(window.innerHeight)));
+    let sf = 1.5;
+    this.sprites = new LG.Sprites(this.ship);
+    for (let i = 0; i < 6; i++) {
+      this.sprite(Rock.asBig(rnd(window.innerWidth), rnd(window.innerHeight), sf));
     }
-    for (let i = 0; i < 2; i++) {
-      this.sprite(Rock.asMedium(rnd(window.innerWidth), rnd(window.innerHeight)));
+    for (let i = 0; i < 0; i++) {
+      this.sprite(Rock.asMedium(rnd(window.innerWidth), rnd(window.innerHeight), sf));
     }
-    for (let i = 0; i < 4; i++) {
-      this.sprite(Rock.asSmall(rnd(window.innerWidth), rnd(window.innerHeight)));
+    for (let i = 0; i < 0; i++) {
+      this.sprite(Rock.asSmall(rnd(window.innerWidth), rnd(window.innerHeight), sf));
     }
   }
   onkeydown(e) {
@@ -42,10 +45,12 @@ class Controller extends LG.Controller {
         break;
       case 'L':
       case 'l':
-      case 'SpaceBar':
-        this.ship.shoot();
-        break;
+        let shot = this.ship.shoot();
+        if (shot) {
+          this.sprites.push(shot);
         }
+        break;
+      }
   }
   onkeyup(e) {
     switch (e.key) {
@@ -55,7 +60,7 @@ class Controller extends LG.Controller {
       case 'd':
       case 'ArrowLeft':
       case 'ArrowRight':
-            this.ship.turn(0);
+        this.ship.turn(0);
         break;
       case 'K':
       case 'k':
@@ -66,41 +71,109 @@ class Controller extends LG.Controller {
   }
   step() {
     super.step();
-    this.sprites.forEach(sprite => {
-      let b = sprite.bounds();
-      if (b.x < 0) {
-        sprite.moveTo(this.mx - b.width, b.y);
-      } else if (b.x2 > this.mx) {
-        sprite.moveTo(0, b.y);
-      }
-      if (b.y < 0) {
-        sprite.moveTo(b.x, this.my - b.height);
-      } else if (b.y2 > this.my) {
-        sprite.moveTo(b.x, 0);
+    let newRocks = [];
+    this.sprites.of(Shot).forEach(shot => this.checkShot(shot, newRocks));
+    if (newRocks.length) {
+      this.sprites = this.sprites.concat(newRocks);
+    }
+    this.sprites.forEach(sprite => this.wrap(sprite));
+  }
+  //
+  checkShot(shot, newRocks) {
+    let b = shot.bounds(), victim;
+    this.sprites.forEach(s => {
+      if (s.contains(b.cx, b.cy)) {
+        if (Rock.is(s) || (Ship.is(s) && shot.type == 2) || (Ufo.is(s) && shot.type == 1)) {
+          victim = s;
+        }
       }
     })
+    if (victim) {
+      this.showScore(victim.worth());
+      shot.kill(1);
+      if (Rock.is(victim)) {
+        victim.shot(newRocks);
+      }
+    }
+  }
+  wrap(sprite) {
+    let b = sprite.bounds();
+    if (b.x < 0) {
+      sprite.moveTo(this.mx - b.width, b.y);
+    } else if (b.x2 > this.mx) {
+      sprite.moveTo(0, b.y);
+    }
+    if (b.y < 0) {
+      sprite.moveTo(b.x, this.my - b.height);
+    } else if (b.y2 > this.my) {
+      sprite.moveTo(b.x, 0);
+    }
+  }
+  showScore(inc) {
+    if (inc) {
+      this.score += inc;
+    }
+    $('#score').innerText = this.score == 0 ? '00' : this.score;
   }
 }
+class Ufo extends LG.Sprite {
+  // TODO
+}
 class Rock extends LG.Sprite {
-  //
-  constructor(x, y, cls, speed, vmin, vmax) {
-    super($('#screen'), $('#rockbp1'), cls, x, y, rnd(360));
+  /**
+   * sf speed factor
+   * type 'rb', 'rm', or 'rs'
+   */
+  constructor(x, y, cls, sf, speed, vmin, vmax) {
+    super($('#screen'), $('#rockbp1'), 'rock ' + cls, x, y, rnd(360));
+    this.type = cls;
+    this.sf = sf;
     this.rotate(rnd(360));
-    let sf = 1 + ((rnd(vmin + vmax) - vmin) / 100);
-    this.speed = speed * sf;
+    let r = 1 + ((rnd(vmin + vmax) - vmin) / 100);
+    this.speed = speed * r * sf;
   }
   step(ms) {
     this.advance(this.speed);
   }
+  shot(newRocks) {
+    let b = this.bounds();
+    if (this.type == 'rb') {
+      newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
+      newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
+    } else if (this.type == 'rm') {
+      newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
+      newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
+    }
+    this.explode(b).kill(1);
+  }
+  explode(b) {
+    let $e = document.createElement('div');
+    $e.style.left = b.x;
+    $e.style.top = b.y;
+    $e.className = 'xrock x' + this.type;
+    $e.innerHTML = $('#xrockbp').innerHTML;
+    $('#screen').appendChild($e);
+    return this;
+  }
+  worth() {
+    switch (this.type) {
+      case 'rb':
+        return 20;
+      case 'rm':
+        return 50;
+      case 'rs':
+        return 100;
+    }
+  }
   //
   static asBig(x, y, sf = 1) {
-    return new Rock(x, y, 'rock rb', sf * 0.7, 30, 50);
+    return new Rock(x, y, 'rb', sf, 0.7, 30, 50);
   }
   static asMedium(x, y, sf = 1) {
-    return new Rock(x, y, 'rock rm', sf * 1, 60, 80);
+    return new Rock(x, y, 'rm', sf, 1, 50, 70);
   }
   static asSmall(x, y, sf = 1) {
-    return new Rock(x, y, 'rock rs', sf * 1.5, 80, 100);
+    return new Rock(x, y, 'rs', sf, 1.5, 60, 80);
   }
 }
 class Ship extends LG.Sprite {
@@ -110,7 +183,6 @@ class Ship extends LG.Sprite {
     this.rot = 0;
     this.accel = new Ship.Acceleration();
     this.speed = new Ship.Velocity();
-    this.thruster = new Thruster(x, y);
     this.shots = [];
   }
   turn(dir/*-1=left, +1=right, 0=off*/) {
@@ -118,18 +190,23 @@ class Ship extends LG.Sprite {
   }
   thrust(on/*1=on, 0=off*/) {
     this.thrusting = on;
-    this.thruster.thrust(on);
+    if (on) {
+      this.$$frames[1].classList.add('thrusting');
+    } else {
+      this.$$frames[1].classList.remove('thrusting');
+    }
   }
   shoot() {
     if (this.shots.length < 4) {
-      this.shots.push(new Shot(this.bounds(), this.speed, this.compass.rad));
+      let shot = Shot.fromShip(this);
+      this.shots.push(shot);
+      return shot;
     }
   }
   step(ms) {
     if (this.rot) {
       let deg = this.rot * Ship.ROTC;
       this.rotate(deg);
-      this.thruster.rotate(deg);
     }
     this.forward();
     if (ms % 100 == 0) {
@@ -144,16 +221,14 @@ class Ship extends LG.Sprite {
       }
     }
     this.shots.forEach(shot => shot.step());
-    this.shots = this.shots.filter(shot => shot.active);
+    this.shots = this.shots.filter(shot => ! shot.dead);
   }
   forward() {
     if (this.speed.nonzero()) {
       this.moveByVector(this.speed);
-      this.thruster.moveByVector(this.speed);
     }
   }
   moveTo(x, y) {
-    this.thruster && this.thruster.moveTo(x, y);
     return super.moveTo(x, y);
   }
   //
@@ -202,55 +277,49 @@ Ship.Acceleration = class extends Vector {
   static AC = 0.1;
 }
 class Shot extends LG.Sprite {
-  //
-  constructor(bounds, speed, rad) {
-    super($('#screen'), null, 'shot', bounds.cx, bounds.cy);
+  /**
+   * i type 1=ship 2=ufo
+   */
+  constructor(bounds, speed, rad, type) {
+    super($('#screen'), null, 'shot ' + (type == 1 ? 'sshot' : 'ushot'), bounds.cx, bounds.cy);
     this.velocity = new Shot.Velocity(rad, speed);
-    this.x0 = this.x;
-    this.y0 = this.y;
+    this.type = type;
     this.steps = 0;
   }
-  dead() {
-    super.dead();
-    this.$e.classList.add('hide');
-  }
   step() {
-    if (this.active) {
-      this.moveByVector(this.velocity).wrap();
-      this.steps++;
-      if (this.steps > Shot.STEPS) {
-        this.dead();
-        return 1;
-      }
+    this.moveByVector(this.velocity);
+    this.steps++;
+    if (this.steps > Shot.STEPS) {
+      this.kill(1);
     }
   }
-  wrap() {
-    let b = this.bounds();
-    if (b.x < 0) {
-      this.moveTo(window.innerWidth - b.width, b.y);
-    } else if (b.x2 > window.innerWidth) {
-      this.moveTo(0, b.y);
-    }
-    if (b.y < 0) {
-      this.moveTo(b.x, window.innerHeight - b.height);
-    } else if (b.y2 > window.innerHeight) {
-      this.moveTo(b.x, 0);
-    }
+  hits(sprites) {
+    let b = this.bounds(), hit;
+    return hit;
   }
-  static STEPS = 70;
+  //
+  static fromShip(ship) {
+    return new Shot(ship.bounds(), ship.speed, ship.compass.rad, 1);
+  }
+  static fromUfo(ufo, rad) {
+    return new Shot(ufo.bounds(), null, rad, 2);
+  }
+  static STEPS = 180;
 }
 Shot.Velocity = class extends Vector {
   //
   constructor(rad, shipv) {
     super();
     let v = Vector.byRadians(rad, Shot.Velocity.MAX);
-    this.x = this.merge(v.x, shipv.x * 1.2);
-    this.y = this.merge(v.y, shipv.y * 1.2);
+    if (shipv) {
+      this.x = this.merge(v.x, shipv.x * .8);
+      this.y = this.merge(v.y, shipv.y * .8);
+    }
   }
   merge(m, s) {
     return (Math.abs(m + s) < Math.abs(m)) ? m + s : m;
   }
-  static MAX = 12;
+  static MAX = 6;
 }
 class Thruster extends LG.Sprite {
   //

@@ -2,7 +2,7 @@
  * LCD gaming
  * JavaScript library (c)2022 Warren Hornsby 
  **/
-LG = {};
+var LG = {};
 //
 LG.Controller = class extends Obj {
   /**
@@ -30,7 +30,7 @@ LG.Controller = class extends Obj {
     this.elapsed += this.period;
     this.ms = (this.ms + this.periodms) % 1000;
     this.sprites.forEach(sprite => sprite.step(this.ms));
-    this.sprites = this.sprites.filter(sprite => sprite.active);
+    this.sprites = this.sprites.filter(sprite => ! sprite.dead);
   }
   sprite(sprite) {
     if (sprite.length) {
@@ -41,28 +41,42 @@ LG.Controller = class extends Obj {
     return sprite;
   }
 }
+LG.Sprites = class extends Array {
+  //
+  of(classname) {
+    return this.filter(s => s.name() == classname.name);
+  }
+}
 LG.Sprite = class extends Obj {
   /**
    * i x, y, iheading
-   * b active
+   * b dead
    * Compass compass
-   * $e <div>
-   * $svg
+   * $e outermost <div>
+   * $$frames children of <$e>
+   * $$rot rotatable elements (child of a frame)
    */
   //
-  constructor($screen, $svg, className, x, y, iheading = 0, heading = 0) {
+  constructor($screen, $bp, className, x, y, iheading = 0, heading = 0) {
     super();
     this.iheading = iheading || 0;
-    this.active = 1;
+    this.dead = 0;
     this.compass = new LG.Compass();
-    this.$create($svg, $screen, className);
+    this.$create($bp, $screen, className);
     this.moveTo(x, y).heading(heading);
+  }
+  static is(sprite) {
+    return this.name == sprite.name();
   }
   step(ms) {
     // called from controller
   }
-  dead() {
-    this.active = 0;
+  kill(remove) {
+    this.dead = 1;
+    remove && this.$e.remove();
+  }
+  name() {
+    return this.constructor.name;
   }
   moveTo(x, y) {
     this.x = x;
@@ -96,35 +110,43 @@ LG.Sprite = class extends Obj {
     this.setTranslateCss();
   }
   bounds() {
-    var b = this.$e.getBoundingClientRect();
+    let b = this.$e.getBoundingClientRect();
+    b.height = this.bf.height;
+    b.width = this.bf.width;
     b.cx = Math.floor(b.x + (b.width / 2));
     b.cy = Math.floor(b.y + (b.height / 2));
     b.x2 = b.x + b.width;
     b.y2 = b.y + b.height;
     return b;
   }
-  //
-  $create($svg, $screen, className) {
-    this.$e = document.createElement('div');
-    this.$e.className = className;
-    if ($svg) {
-      this.$e.innerHTML = $svg.innerHTML;
-      this.$svg = this.$e.$('svg');  
-    }
-    this.setTransitionCss();
-    $screen.appendChild(this.$e);
+  contains(x, y, b) {
+    b = b || this.bounds();
+    return x >= b.x && x <= b.x2 && y >= b.y && y <= b.y2;
   }
-  setTransitionCss() {
-    this.$e.style.transition = 'transform 0s ease-in-out';
-    if (this.$svg) {
-      this.$svg.style.transition = 'all ease';
+  distanceFrom(x, y, b) {
+    b = b || this.bounds();
+    return Math.sqrt(Math.pow(x - b.cx, 2) + Math.pow(y - b.cy, 2));
+  }
+  //
+  $create($bp, $screen, className) {
+    this.$e = document.createElement('div');
+    this.$e.className = 'sprite ' + className;
+    if ($bp) {
+      this.$e.innerHTML = $bp.innerHTML;
+      this.$$frames = this.$e.$$('.frame');
+      this.$frame = this.$$frames ? this.$$frames[0] : this.$e;
+      this.$$rots = this.$e.$$('.rot');
+    } else {
+      this.$frame = this.$e;
     }
+    $screen.appendChild(this.$e);
+    this.bf = this.$frame.getBoundingClientRect();
   }
   setTranslateCss() {
     this.$e.style.transform = 'translate(' + this.ix + 'px,' + this.iy + 'px)';
   }
   setRotateCss() {
-    if (! this.$svg) {
+    if (! this.$$rots) {
       return;
     }
     let nr = this.iheading - this.compass.heading;
@@ -144,7 +166,7 @@ LG.Sprite = class extends Obj {
     }
     rot += (nr - ar);
     this.prevRot = rot;
-    this.$svg.style.transform = 'rotate(' + rot + 'deg) ';
+    this.$$rots.forEach($e => $e.style.transform = 'rotate(' + rot + 'deg)');
   }
 }
 LG.Compass = class {
