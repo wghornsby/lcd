@@ -16,7 +16,7 @@ class Controller extends LG.Controller {
   reset() {
     let sf = 1.5;
     this.sprites = new LG.Sprites(this.ship);
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
       this.sprite(Rock.asBig(rnd(window.innerWidth), rnd(window.innerHeight), sf));
     }
     for (let i = 0; i < 0; i++) {
@@ -73,12 +73,41 @@ class Controller extends LG.Controller {
     super.step();
     let newRocks = [];
     this.sprites.of(Shot).forEach(shot => this.checkShot(shot, newRocks));
+    let ship = this.ship.bounds();
+    if (this.ufo) {
+      if (this.ufo.withinCircle(ship.cx, ship.cy)) {
+        this.ufo.kill();
+        this.ship.kill();
+      } else {
+        let b = this.ufo.bounds();
+        if (this.checkRocks(b, newRocks)) {
+          this.ufo.kill();
+        }
+      }
+    }
+    if (! this.ship.dead) {
+      let b = this.ship.bounds();
+      if (this.checkRocks(b, newRocks)) {
+        this.ship.kill();
+      }
+    }
     if (newRocks.length) {
       this.sprites = this.sprites.concat(newRocks);
     }
+    this.sprites = this.sprites.filter(sprite => ! sprite.dead);
     this.sprites.forEach(sprite => this.wrap(sprite));
   }
   //
+  checkRocks(b, newRocks) {
+    let hit = 0;
+    this.sprites.live(Rock).forEach(rock => {
+      if (! hit && rock.withinCircle(b.cx, b.cy)) {
+        rock.kill(newRocks);
+        hit = 1;
+      }
+    })
+    return hit;
+  }
   checkShot(shot, newRocks) {
     let b = shot.bounds(), victim;
     this.sprites.forEach(s => {
@@ -92,7 +121,7 @@ class Controller extends LG.Controller {
       this.showScore(victim.worth());
       shot.kill(1);
       if (Rock.is(victim)) {
-        victim.shot(newRocks);
+        victim.kill(newRocks);
       }
     }
   }
@@ -110,10 +139,16 @@ class Controller extends LG.Controller {
     }
   }
   showScore(inc) {
-    if (inc) {
+    let $s = $('#score');
+    if (! inc) {
+      this.score = 0;
+      $s.innerText = '00';
+    } else {
       this.score += inc;
+      $s.innerText = this.score;
+      $s.style.animation = 'bulge 0.3s ease-in-out 1';
+      $s.on_once('animationend', e => $s.style.animation = '');
     }
-    $('#score').innerText = this.score == 0 ? '00' : this.score;
   }
 }
 class Ufo extends LG.Sprite {
@@ -135,8 +170,16 @@ class Rock extends LG.Sprite {
   step(ms) {
     this.advance(this.speed);
   }
-  shot(newRocks) {
+  kill(newRocks) {
     let b = this.bounds();
+    this.shot(b, newRocks);
+    this.explode(b);
+    super.kill(1);
+  }
+  withinCircle(x, y) {
+    return super.withinCircle(x, y, 1.5);
+  }
+  shot(b, newRocks) {
     if (this.type == 'rb') {
       newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
       newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
@@ -144,7 +187,6 @@ class Rock extends LG.Sprite {
       newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
       newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
     }
-    this.explode(b).kill(1);
   }
   explode(b) {
     let $e = document.createElement('div');
@@ -203,6 +245,20 @@ class Ship extends LG.Sprite {
       return shot;
     }
   }
+  kill() {
+    this.explode();
+    super.kill();
+  }
+  explode() {
+    let b = this.bounds();
+    let $e = document.createElement('div');
+    $e.className = 'pow xship';
+    $e.innerHTML = $('#powbp').innerHTML;
+    $('#screen').appendChild($e);
+    $e.style.left = b.x - 25;
+    $e.style.top = b.y - 25;
+    return this;
+  }
   step(ms) {
     if (this.rot) {
       let deg = this.rot * Ship.ROTC;
@@ -220,8 +276,10 @@ class Ship extends LG.Sprite {
         this.speed.friction();
       }
     }
-    this.shots.forEach(shot => shot.step());
     this.shots = this.shots.filter(shot => ! shot.dead);
+  }
+  worth() {
+    return 0;
   }
   forward() {
     if (this.speed.nonzero()) {
@@ -304,7 +362,7 @@ class Shot extends LG.Sprite {
   static fromUfo(ufo, rad) {
     return new Shot(ufo.bounds(), null, rad, 2);
   }
-  static STEPS = 180;
+  static STEPS = 90;
 }
 Shot.Velocity = class extends Vector {
   //
@@ -312,14 +370,14 @@ Shot.Velocity = class extends Vector {
     super();
     let v = Vector.byRadians(rad, Shot.Velocity.MAX);
     if (shipv) {
-      this.x = this.merge(v.x, shipv.x * .8);
-      this.y = this.merge(v.y, shipv.y * .8);
+      this.x = this.merge(v.x, shipv.x * 1.2);
+      this.y = this.merge(v.y, shipv.y * 1.2);
     }
   }
   merge(m, s) {
     return (Math.abs(m + s) < Math.abs(m)) ? m + s : m;
   }
-  static MAX = 6;
+  static MAX = 12;
 }
 class Thruster extends LG.Sprite {
   //

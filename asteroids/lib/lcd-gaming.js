@@ -30,7 +30,6 @@ LG.Controller = class extends Obj {
     this.elapsed += this.period;
     this.ms = (this.ms + this.periodms) % 1000;
     this.sprites.forEach(sprite => sprite.step(this.ms));
-    this.sprites = this.sprites.filter(sprite => ! sprite.dead);
   }
   sprite(sprite) {
     if (sprite.length) {
@@ -43,6 +42,9 @@ LG.Controller = class extends Obj {
 }
 LG.Sprites = class extends Array {
   //
+  live(classname) {
+    return this.filter(s => ! s.dead && s.name() == classname.name);
+  }
   of(classname) {
     return this.filter(s => s.name() == classname.name);
   }
@@ -122,6 +124,10 @@ LG.Sprite = class extends Obj {
   contains(x, y, b) {
     b = b || this.bounds();
     return x >= b.x && x <= b.x2 && y >= b.y && y <= b.y2;
+  }
+  withinCircle(x, y, fudge) {
+    let b = this.bounds();
+    return this.distanceFrom(x, y, b) * fudge <= b.width;
   }
   distanceFrom(x, y, b) {
     b = b || this.bounds();
