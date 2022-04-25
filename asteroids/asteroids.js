@@ -2,15 +2,16 @@ class Controller extends LG.Controller {
   //
   constructor() {
     super();
-    window
-      .on('keydown', e => this.onkeydown(e))
-      .on('keyup', e => this.onkeyup(e));
     this.mx = window.innerWidth;
     this.my = window.innerHeight;
+    this.zone = new Zone(this.mx, this.my);
     this.ship = new Ship(this.mx / 2 - 20, this.my / 2 - 20)
       .on('explode', () => this.ship_onexplode())
       .on('dead', () => this.ship_ondead());
     this.scoreboard = new Scoreboard(3);
+    window
+      .on('keydown', e => this.onkeydown(e))
+      .on('keyup', e => this.onkeyup(e));
     this.reset();
     this.start();
   }
@@ -24,8 +25,28 @@ class Controller extends LG.Controller {
     //let sf = 1.65;
     //let rocks = 12;
     this.sprites = new LG.Sprites(this.ship);
+    let x, y, min, max, edge;
     for (let i = 0; i < rocks; i++) {
-      this.sprite(Rock.asBig(rnd(window.innerWidth), rnd(window.innerHeight), sf));
+      edge = (rnd(this.mx + this.my) < this.mx) ? rnd(2) * 2 : rnd(2) * 2 + 1;
+      switch (edge) {
+        case 0:
+          x = rnd(this.mx - 120), y = 0;
+          min = 210, max = 330;
+          break;
+        case 1:
+          x = this.mx - 120, y = rnd(this.my - 120);
+          min = 120, max = 240;
+          break;
+        case 2:
+          x = rnd(this.mx - 120), y = this.my - 120;
+          min = 30, max = 150;
+          break;
+        case 3:
+          x = 0, y = rnd(this.my - 120);
+          min = 300, max = 60;
+          break;
+      }
+      this.sprite(Rock.asBig(x, y, sf, min, max));
     }
   }
   onkeydown(e) {
@@ -55,8 +76,13 @@ class Controller extends LG.Controller {
       case ' ':
         this.ship.hyperspace();
         break;
+      case 'P':
+      case 'p':
+        this.paused ? this.start() : this.pause();
+        break;
       case 'u':
         this.ufo();
+        break;
       }
   }
   onkeyup(e) {
@@ -103,6 +129,18 @@ class Controller extends LG.Controller {
     }
     this.sprites = this.sprites.filter(sprite => ! sprite.dead);
     this.sprites.forEach(sprite => this.wrap(sprite));
+    if (this.checkZone) {
+      let safe = true;
+      this.sprites.of(Rock).forEach(rock => {
+        if (this.zone.contains(rock)) {
+          safe = false;
+        }
+      })
+      if (safe) {
+        this.checkZone = 0;
+        this.zone_onsafe();
+      }
+    } 
   }
   //
   ship_onexplode() {
@@ -111,7 +149,12 @@ class Controller extends LG.Controller {
   ship_ondead() {
     if (this.scoreboard.gameover) {
       alert('gameover');
+    } else {
+      this.checkZone = 1;
     }
+  }
+  zone_onsafe() {
+    this.sprite(this.ship.reset());
   }
   checkRocks(b, newRocks) {
     let hit = 0;
@@ -154,6 +197,17 @@ class Controller extends LG.Controller {
     }
   }
 }
+class Zone {
+  //
+  constructor(mx, my) {
+    this.x = mx / 2;
+    this.y = my / 2;
+    this.r = 125;
+  }
+  contains(rock) {
+    return rock.distanceFrom(this.x, this.y) <= this.r;
+  }
+}
 class Scoreboard extends LG.Obj {
   /**
    * i lives
@@ -194,7 +248,7 @@ class Scoreboard extends LG.Obj {
     var s = this.ships.length;
     var d = this.lives - s;
     if (d == -1) {
-      this.ships[s - 1].kill(1);
+      this.ships.pop().kill(1);
     } else {
       for (var i = 0; i < d; i++) {
         let x = 220 + s * 25 + i * 25;
@@ -217,10 +271,50 @@ class Ship extends LG.Sprite {
     super($('#screen'), $('#shipbp'), 'ship', x, y, 90);
     this.x0 = x;
     this.y0 = y;
-    this.rot = 0;
+    this.shots = [];
+    this.reset();
+  }
+  reset() {
+    this.moveTo(this.x0, this.y0).heading(0);
+    this.dead = 0;
+    this.thrusting = 0;
+    this.exploding = 0;
+    this.hypering = 0;
+    this.hypers = 0;
     this.accel = new Ship.Acceleration();
     this.speed = new Ship.Velocity();
-    this.shots = [];
+    this.rot = 0;
+    this.show(1);
+    return this;
+  }
+  step(ms) {
+    if (this.exploding) {
+      this.forward();
+      if (this.thrusting) {
+        this.accel.off();
+      }
+      if (this.speed.nonzero()) {
+        this.speed.friction();
+      }
+      return;
+    }
+    if (this.rot) {
+      let deg = this.rot * Ship.ROTC;
+      this.rotate(deg);
+    }
+    this.forward();
+    if (ms % 100 == 0) {
+      if (this.thrusting) {
+        this.accel.thrust(this.compass);
+        this.speed.accelerate(this.accel);
+      } else {
+        this.accel.off();
+      }
+      if (this.speed.nonzero()) {
+        this.speed.friction();
+      }
+    }
+    this.shots = this.shots.filter(shot => ! shot.dead);
   }
   alive() {
     return ! this.dead && ! this.exploding && ! this.hypering;
@@ -254,6 +348,12 @@ class Ship extends LG.Sprite {
       this.show(1);
       animate(this.$frame, 'hyperin 0.4s normal 1', () => {
         this.hypering = 0;
+        this.hypers++;
+        if (this.hypers > 2) {
+          if (rnd(12 - this.hypers) == 0) {
+            this.kill();
+          }
+        }    
       });
     });
   }
@@ -283,35 +383,6 @@ class Ship extends LG.Sprite {
       $e.remove();
       ondone();
     })
-  }
-  step(ms) {
-    if (this.exploding) {
-      this.forward();
-      if (this.thrusting) {
-        this.accel.off();
-      }
-      if (this.speed.nonzero()) {
-        this.speed.friction();
-      }
-      return;
-    }
-    if (this.rot) {
-      let deg = this.rot * Ship.ROTC;
-      this.rotate(deg);
-    }
-    this.forward();
-    if (ms % 100 == 0) {
-      if (this.thrusting) {
-        this.accel.thrust(this.compass);
-        this.speed.accelerate(this.accel);
-      } else {
-        this.accel.off();
-      }
-      if (this.speed.nonzero()) {
-        this.speed.friction();
-      }
-    }
-    this.shots = this.shots.filter(shot => ! shot.dead);
   }
   worth() {
     return 0;
@@ -432,13 +503,18 @@ class Rock extends LG.Sprite {
    * sf speed factor
    * type 'rb', 'rm', or 'rs'
    */
-  constructor(x, y, cls, sf, speed, vmin, vmax) {
-    let fcls = rnd(2) == 0 ? 'rock ccw ' + cls : 'rock ' + cls;
-    super($('#screen'), $('#rockbp1'), fcls, x, y, rnd(360));
+  constructor(x, y, cls, sf, speed, vmin, vmax, minHead = 0, maxHead = 359) {
+    let r = rnd(2);
+    let fcls = r == 0 ? 'rock ccw ' + cls : 'rock ' + cls;
+    if (minHead > maxHead) {
+      minHead = r ? minHead : 0;
+      maxHead = r ? 359 : maxHead;
+    }
+    super($('#screen'), $('#rockbp1'), fcls, x, y, minHead + rnd(maxHead - minHead + 1));
     this.type = cls;
     this.sf = sf;
     this.rotate(rnd(360));
-    let r = 1 + ((rnd(vmin + vmax) - vmin) / 100);
+    r = 1 + ((rnd(vmin + vmax) - vmin) / 100);
     this.speed = speed * r * sf;
   }
   step(ms) {
@@ -483,13 +559,13 @@ class Rock extends LG.Sprite {
     }
   }
   //
-  static asBig(x, y, sf = 1) {
-    return new Rock(x, y, 'rb', sf, 0.7, 30, 50);
+  static asBig(x, y, sf, minHead, maxHead) {
+    return new Rock(x, y, 'rb', sf, 0.7, 30, 50, minHead, maxHead);
   }
-  static asMedium(x, y, sf = 1) {
+  static asMedium(x, y, sf) {
     return new Rock(x, y, 'rm', sf, 1, 50, 70);
   }
-  static asSmall(x, y, sf = 1) {
+  static asSmall(x, y, sf) {
     return new Rock(x, y, 'rs', sf, 1.5, 60, 80);
   }
 }

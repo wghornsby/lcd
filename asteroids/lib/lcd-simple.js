@@ -112,7 +112,7 @@ const each = (items, fn) => {
   return r;
 }
 const guid = () => crypto.randomUUID();
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+const wait = (ms, fn) => setTimeout(fn, ms);
 const priv = (target, ...fids) => {
   fids.forEach(fid => Object.defineProperty(target, fid, {enumerable:false}));
 }

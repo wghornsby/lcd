@@ -23,9 +23,11 @@ LG.Controller = class extends LG.Obj {
     return 100;
   }
   start() {
+    this.paused = 0;
     this.clock = setInterval(() => this.step(), this.periodms);
   }
   pause() {
+    this.paused = 1;
     clearInterval(this.clock);
   }
   step() {
