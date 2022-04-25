@@ -17,8 +17,10 @@ class Controller extends LG.Controller {
   reset() {
     //let sf = 1;
     //let rocks = 4;
-    let sf = 1.5;
+    let sf = 1;
     let rocks = 12;
+    //let sf = 1.5;
+    //let rocks = 12;
     //let sf = 1.65;
     //let rocks = 12;
     this.sprites = new LG.Sprites(this.ship);
