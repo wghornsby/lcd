@@ -7,23 +7,23 @@ class Controller extends LG.Controller {
       .on('keyup', e => this.onkeyup(e));
     this.mx = window.innerWidth;
     this.my = window.innerHeight;
-    this.ship = new Ship(this.mx / 2 - 20, this.my / 2 - 20);
-    this.score = 0;
-    this.showScore();
+    this.ship = new Ship(this.mx / 2 - 20, this.my / 2 - 20)
+      .on('explode', () => this.ship_onexplode())
+      .on('dead', () => this.ship_ondead());
+    this.scoreboard = new Scoreboard(3);
     this.reset();
     this.start();
   }
   reset() {
+    //let sf = 1;
+    //let rocks = 4;
     let sf = 1.5;
+    let rocks = 12;
+    //let sf = 1.65;
+    //let rocks = 12;
     this.sprites = new LG.Sprites(this.ship);
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < rocks; i++) {
       this.sprite(Rock.asBig(rnd(window.innerWidth), rnd(window.innerHeight), sf));
-    }
-    for (let i = 0; i < 0; i++) {
-      this.sprite(Rock.asMedium(rnd(window.innerWidth), rnd(window.innerHeight), sf));
-    }
-    for (let i = 0; i < 0; i++) {
-      this.sprite(Rock.asSmall(rnd(window.innerWidth), rnd(window.innerHeight), sf));
     }
   }
   onkeydown(e) {
@@ -50,6 +50,11 @@ class Controller extends LG.Controller {
           this.sprites.push(shot);
         }
         break;
+      case ' ':
+        this.ship.hyperspace();
+        break;
+      case 'u':
+        this.ufo();
       }
   }
   onkeyup(e) {
@@ -75,7 +80,7 @@ class Controller extends LG.Controller {
     this.sprites.of(Shot).forEach(shot => this.checkShot(shot, newRocks));
     let ship = this.ship.bounds();
     if (this.ufo) {
-      if (this.ufo.withinCircle(ship.cx, ship.cy)) {
+      if (this.ship.alive() && this.ufo.withinCircle(ship.cx, ship.cy)) {
         this.ufo.kill();
         this.ship.kill();
       } else {
@@ -85,10 +90,10 @@ class Controller extends LG.Controller {
         }
       }
     }
-    if (! this.ship.dead) {
-      let b = this.ship.bounds();
-      if (this.checkRocks(b, newRocks)) {
-        this.ship.kill();
+    if (this.ship.alive()) {
+      let rock = this.checkRocks(ship, newRocks);
+      if (rock) {
+        this.ship.kill(rock);
       }
     }
     if (newRocks.length) {
@@ -98,19 +103,27 @@ class Controller extends LG.Controller {
     this.sprites.forEach(sprite => this.wrap(sprite));
   }
   //
+  ship_onexplode() {
+    this.scoreboard.die();
+  }
+  ship_ondead() {
+    if (this.scoreboard.gameover) {
+      alert('gameover');
+    }
+  }
   checkRocks(b, newRocks) {
     let hit = 0;
-    this.sprites.live(Rock).forEach(rock => {
+    this.sprites.alive(Rock).forEach(rock => {
       if (! hit && rock.withinCircle(b.cx, b.cy)) {
         rock.kill(newRocks);
-        hit = 1;
+        hit = rock;
       }
     })
     return hit;
   }
   checkShot(shot, newRocks) {
     let b = shot.bounds(), victim;
-    this.sprites.forEach(s => {
+    this.sprites.alive().forEach(s => {
       if (s.contains(b.cx, b.cy)) {
         if (Rock.is(s) || (Ship.is(s) && shot.type == 2) || (Ufo.is(s) && shot.type == 1)) {
           victim = s;
@@ -118,7 +131,7 @@ class Controller extends LG.Controller {
       }
     })
     if (victim) {
-      this.showScore(victim.worth());
+      this.scoreboard.add(victim.worth());
       shot.kill(1);
       if (Rock.is(victim)) {
         victim.kill(newRocks);
@@ -138,118 +151,125 @@ class Controller extends LG.Controller {
       sprite.moveTo(b.x, 0);
     }
   }
-  showScore(inc) {
-    let $s = $('#score');
-    if (! inc) {
-      this.score = 0;
-      $s.innerText = '00';
-    } else {
-      this.score += inc;
-      $s.innerText = this.score;
-      $s.style.animation = 'bulge 0.3s ease-in-out 1';
-      $s.on_once('animationend', e => $s.style.animation = '');
-    }
-  }
 }
-class Ufo extends LG.Sprite {
-  // TODO
-}
-class Rock extends LG.Sprite {
+class Scoreboard extends LG.Obj {
   /**
-   * sf speed factor
-   * type 'rb', 'rm', or 'rs'
+   * i lives
+   * i score
+   * b gameover
    */
-  constructor(x, y, cls, sf, speed, vmin, vmax) {
-    super($('#screen'), $('#rockbp1'), 'rock ' + cls, x, y, rnd(360));
-    this.type = cls;
-    this.sf = sf;
-    this.rotate(rnd(360));
-    let r = 1 + ((rnd(vmin + vmax) - vmin) / 100);
-    this.speed = speed * r * sf;
+  constructor(lives) {
+    super();
+    this.$score = $('#score');
+    this.lives = lives;
+    this.ships = [];
+    this.reset();
   }
-  step(ms) {
-    this.advance(this.speed);
+  reset() {
+    this.gameover = 0;
+    this.score = 0;
+    this.$score.innerText = '00';
+    this.draw();
   }
-  kill(newRocks) {
-    let b = this.bounds();
-    this.shot(b, newRocks);
-    this.explode(b);
-    super.kill(1);
-  }
-  withinCircle(x, y) {
-    return super.withinCircle(x, y, 1.5);
-  }
-  shot(b, newRocks) {
-    if (this.type == 'rb') {
-      newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
-      newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
-    } else if (this.type == 'rm') {
-      newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
-      newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
+  add(i) {
+    this.score += i;
+    this.$score.innerText = this.score;
+    if (this.score % 10000 == 0) {
+      this.bonus();
     }
   }
-  explode(b) {
-    let $e = document.createElement('div');
-    $e.style.left = b.x;
-    $e.style.top = b.y;
-    $e.className = 'xrock x' + this.type;
-    $e.innerHTML = $('#xrockbp').innerHTML;
-    $('#screen').appendChild($e);
-    return this;
+  bonus() {
+    this.lives++;
+    this.draw();
   }
-  worth() {
-    switch (this.type) {
-      case 'rb':
-        return 20;
-      case 'rm':
-        return 50;
-      case 'rs':
-        return 100;
-    }
+  die() {
+    this.lives--;
+    this.draw();
+    this.gameover = this.lives == 0;
   }
   //
-  static asBig(x, y, sf = 1) {
-    return new Rock(x, y, 'rb', sf, 0.7, 30, 50);
+  draw() {
+    var s = this.ships.length;
+    var d = this.lives - s;
+    if (d == -1) {
+      this.ships[s - 1].kill(1);
+    } else {
+      for (var i = 0; i < d; i++) {
+        let x = 220 + s * 25 + i * 25;
+        this.ships.push(new Life(x, 25));
+      }
+    }
   }
-  static asMedium(x, y, sf = 1) {
-    return new Rock(x, y, 'rm', sf, 1, 50, 70);
-  }
-  static asSmall(x, y, sf = 1) {
-    return new Rock(x, y, 'rs', sf, 1.5, 60, 80);
+}
+class Life extends LG.Sprite {
+  //
+  constructor(x, y) {
+    super($('#screen'), $('#shipbp'), 'life', x, y, 90, 90);
   }
 }
 class Ship extends LG.Sprite {
+  onexplode() {}
+  ondead() {}
   //
   constructor(x, y) {
     super($('#screen'), $('#shipbp'), 'ship', x, y, 90);
+    this.x0 = x;
+    this.y0 = y;
     this.rot = 0;
     this.accel = new Ship.Acceleration();
     this.speed = new Ship.Velocity();
     this.shots = [];
   }
+  alive() {
+    return ! this.dead && ! this.exploding && ! this.hypering;
+  }
   turn(dir/*-1=left, +1=right, 0=off*/) {
     this.rot = -dir;
   }
   thrust(on/*1=on, 0=off*/) {
-    this.thrusting = on;
-    if (on) {
-      this.$$frames[1].classList.add('thrusting');
-    } else {
-      this.$$frames[1].classList.remove('thrusting');
+    if (on && ! this.alive()) {
+      return;
     }
+    this.thrusting = on;
+    this.$$frames[1].classList.toggle('thrusting', on);
   }
   shoot() {
-    if (this.shots.length < 4) {
-      let shot = Shot.fromShip(this);
-      this.shots.push(shot);
-      return shot;
+    if (! this.alive() || this.shots.length >= 4) {
+      return;
     }
+    let shot = Shot.fromShip(this);
+    this.shots.push(shot);
+    return shot;
   }
-  kill() {
-    this.explode();
-    super.kill();
+  hyperspace() {
+    if (! this.alive()) {
+      return;
+    }
+    this.hypering = 1;
+    animate(this.$frame, 'hyperout 0.4s normal 1', () => {
+      this.show(0);
+      this.moveTo(rnd(window.innerWidth), rnd(window.innerHeight));
+      this.show(1);
+      animate(this.$frame, 'hyperin 0.4s normal 1', () => {
+        this.hypering = 0;
+      });
+    });
   }
-  explode() {
+  kill(rock) {
+    if (rock) {
+      let sf = rock.type == 'rb' ? 4 : rock.type == 'rm' ? 2 : 1;
+      this.speed.add(Vector.byRadians(rock.compass.rad, rock.speed * sf));
+    }
+    this.onexplode();
+    this.explode(() => {
+      super.kill();
+      this.show(0);
+      this.ondead();
+    });
+  }
+  explode(ondone) {
+    this.exploding = 1;
+    this.thrust(0);
     let b = this.bounds();
     let $e = document.createElement('div');
     $e.className = 'pow xship';
@@ -257,9 +277,22 @@ class Ship extends LG.Sprite {
     $('#screen').appendChild($e);
     $e.style.left = b.x - 25;
     $e.style.top = b.y - 25;
-    return this;
+    animate(this.$frame, 'dive 4s normal 1', () => {
+      $e.remove();
+      ondone();
+    })
   }
   step(ms) {
+    if (this.exploding) {
+      this.forward();
+      if (this.thrusting) {
+        this.accel.off();
+      }
+      if (this.speed.nonzero()) {
+        this.speed.friction();
+      }
+      return;
+    }
     if (this.rot) {
       let deg = this.rot * Ship.ROTC;
       this.rotate(deg);
@@ -387,5 +420,74 @@ class Thruster extends LG.Sprite {
   }
   thrust(on) {
     this.$e.className = on ? 'thrust thrusting' : 'thrust hide';
+  }
+}
+class Ufo extends LG.Sprite {
+  // TODO
+}
+class Rock extends LG.Sprite {
+  /**
+   * sf speed factor
+   * type 'rb', 'rm', or 'rs'
+   */
+  constructor(x, y, cls, sf, speed, vmin, vmax) {
+    let fcls = rnd(2) == 0 ? 'rock ccw ' + cls : 'rock ' + cls;
+    super($('#screen'), $('#rockbp1'), fcls, x, y, rnd(360));
+    this.type = cls;
+    this.sf = sf;
+    this.rotate(rnd(360));
+    let r = 1 + ((rnd(vmin + vmax) - vmin) / 100);
+    this.speed = speed * r * sf;
+  }
+  step(ms) {
+    this.advance(this.speed);
+  }
+  kill(newRocks) {
+    let b = this.bounds();
+    this.shot(b, newRocks);
+    this.explode(b);
+    super.kill(1);
+  }
+  withinCircle(x, y) {
+    return super.withinCircle(x, y, 1.5);
+  }
+  shot(b, newRocks) {
+    if (this.type == 'rb') {
+      newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
+      newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
+    } else if (this.type == 'rm') {
+      newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
+      newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
+    }
+  }
+  explode(b) {
+    let $e = document.createElement('div');
+    $e.style.left = b.x;
+    $e.style.top = b.y;
+    $e.className = 'xrock x' + this.type;
+    $e.innerHTML = $('#xrockbp').innerHTML;
+    $('#screen').appendChild($e);
+    animate($e, 'agrow 0.4s linear 1', () => $e.remove());
+    return this;
+  }
+  worth() {
+    switch (this.type) {
+      case 'rb':
+        return 20;
+      case 'rm':
+        return 50;
+      case 'rs':
+        return 100;
+    }
+  }
+  //
+  static asBig(x, y, sf = 1) {
+    return new Rock(x, y, 'rb', sf, 0.7, 30, 50);
+  }
+  static asMedium(x, y, sf = 1) {
+    return new Rock(x, y, 'rm', sf, 1, 50, 70);
+  }
+  static asSmall(x, y, sf = 1) {
+    return new Rock(x, y, 'rs', sf, 1.5, 60, 80);
   }
 }

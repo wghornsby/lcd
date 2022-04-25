@@ -4,7 +4,9 @@
  **/
 var LG = {};
 //
-LG.Controller = class extends Obj {
+LG.Obj = class extends Obj {}
+LG.Array = class extends ObjArray {}
+LG.Controller = class extends LG.Obj {
   /**
    * i elapsed - total elapsed seconds
    * i ms - elapsed ms within sec (0 <= ms <= 999)
@@ -40,22 +42,23 @@ LG.Controller = class extends Obj {
     return sprite;
   }
 }
-LG.Sprites = class extends Array {
+LG.Sprites = class extends LG.Array {
   //
-  live(classname) {
-    return this.filter(s => ! s.dead && s.name() == classname.name);
+  alive(classname) {
+    return this.filter(s => s.alive() && (! classname || s.name() == classname.name));
   }
   of(classname) {
     return this.filter(s => s.name() == classname.name);
   }
 }
-LG.Sprite = class extends Obj {
+LG.Sprite = class extends LG.Obj {
   /**
    * i x, y, iheading
    * b dead
    * Compass compass
    * $e outermost <div>
    * $$frames children of <$e>
+   * $frame first frame (or $e if no frames)
    * $$rot rotatable elements (child of a frame)
    */
   //
@@ -70,8 +73,15 @@ LG.Sprite = class extends Obj {
   static is(sprite) {
     return this.name == sprite.name();
   }
+  //
+  alive() {
+    return ! this.dead;
+  }
   step(ms) {
     // called from controller
+  }
+  show(b) {
+    this.$e.classList.toggle('hide', ! b);
   }
   kill(remove) {
     this.dead = 1;
@@ -235,4 +245,14 @@ class Vector {
   static byRadians(rad, mag = 1) {
     return new Vector(mag * Math.cos(rad), mag * -Math.sin(rad));
   }
+}
+/**
+ * ex. animate($e, 'dive 4s normal 1', () => this.ondone())
+ */
+function animate($e, css, onend) {
+  $e.style.animation = css;
+  $e.on_once('animationend', e => {
+    $e.style.animation = '';
+    onend && onend(e);
+  })
 }

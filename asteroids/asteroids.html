@@ -15,20 +15,20 @@ body {
   overflow:hidden;
 }
 #score {
-  font-family: 'Orbitron';
-  font-size:24pt;
-  color:white;
   position:absolute;
   z-index:1;
   left:0;
   top:20px;
   width:200px;
-  text-align:center;
+  font-family:'Orbitron';
+  font-size:24pt;
+  color:white;
+  text-align:right;
 }
 #copy {
   font-family: 'Orbitron';
   font-size:16pt;
-  color:#c0c0c0;
+  color:#909090;
   position:absolute;
   z-index:1;
   bottom:20px;
@@ -57,6 +57,13 @@ body {
 .hide {
   display:none !important;
 }
+.life {
+  z-index:1;
+}
+.life .frame {
+  z-index:1;
+  width:30px;
+}
 .ship {
   z-index:10;
 }
@@ -67,6 +74,74 @@ body {
 .ship .frame.thrust {
   display:none;
   z-index:9;
+}
+@keyframes dive {
+  0% {
+    transform:scale(1.5) rotate(1turn);
+  }
+  1% {
+    transform:scale(1.5) rotate(1turn);
+  }
+  2% {
+    transform:scale(1.5) rotate(1turn);
+  }
+  20% {
+    transform:scale(1) rotate(0turn);
+  }
+  100% {
+    transform:scale(0) rotate(1turn);
+  }
+}
+.pow {
+  position:absolute;
+}
+.pow svg {
+  animation:expander 0.6s 1;
+  opacity:0;
+}
+.xship {
+  height:100px;
+  width:100px;
+  z-index:12;
+}
+@keyframes hyperout {
+  from {
+    transform:scale(1);
+    opacity:1;
+  }
+  to {
+    transform:scale(10);
+    opacity:0;
+  }
+}
+@keyframes hyperin {
+  from {
+    transform:scale(10);
+    opacity:0;
+  }
+  to {
+    transform:scale(1);
+    opacity:1;
+  }
+}
+@keyframes expander {
+  0% {
+    transform:scale(0.5);
+    opacity:1;
+  }
+  20% {
+    transform:scale(2.5) rotate(25deg);
+  }
+  40% {
+    transform:scale(1.5);
+  }
+  60% {
+    transform:scale(1) rotate(-25deg);
+  }
+  100% {
+    transform:scale(0);
+    opacity:0;
+  }
 }
 .ship .frame.thrusting {
   display:block;
@@ -122,22 +197,33 @@ body {
 }
 .rb .frame {
   width:120px;
-  animation:arotate 10s linear infinite;
+  animation:rotatecw 10s linear infinite;
+}
+.ccw .frame {
+  animation-name:rotateccw;
 }
 .rm .frame {
   width:60px;
-  animation:arotate 3s linear infinite;
+  animation:rotatecw 3s linear infinite;
 }
 .rs .frame {
   width:30px;
-  animation:arotate 1s linear infinite;
+  animation:rotatecw 1s linear infinite;
 }
-@keyframes arotate {
+@keyframes rotatecw {
   from {
     transform:rotate(0deg);
   }
   to {
-    transform:rotate(360deg);
+    transform:rotate(1turn);
+  }
+}
+@keyframes rotateccw {
+  from {
+    transform:rotate(0deg);
+  }
+  to {
+    transform:rotate(-1turn);
   }
 }
 .shot {
@@ -154,36 +240,8 @@ body {
 .ushot {
   background-color:rgb(255, 113, 224);
 }
-.pow {
-  position:absolute;
-}
-.pow svg {
-  animation:expander 0.6s 1;
-}
-.xship {
-  height:100px;
-  width:100px;
-}
-@keyframes expander {
-  0% {
-    transform:scale(0.5)
-  }
-  20% {
-    transform:scale(1.5) rotate(25deg)
-  }
-  40% {
-    transform:scale(1)
-  }
-  60% {
-    transform:scale(2) rotate(-25deg)
-  }
-  100% {
-    transform:scale(0.5)
-  }
-}
 .xrock {
   position:absolute;
-  animation:agrow 0.4s linear 1;
   opacity:0;
   z-index:20;
 }
