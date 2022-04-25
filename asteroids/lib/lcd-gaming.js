@@ -7,20 +7,19 @@ var LG = {};
 LG.Obj = class extends Obj {}
 LG.Array = class extends ObjArray {}
 LG.Controller = class extends LG.Obj {
-  /**
-   * i elapsed - total elapsed seconds
-   * i ms - elapsed ms within sec (0 <= ms <= 999)
-   */
+  //
   constructor() {
     super();
     this.period = 1 / this.frequency();
     this.periodms = this.period * 1000;
-    this.sprites = [];
-    this.elapsed = 0;
-    this.ms = -this.periodms;
+    this.sprites = new LG.Sprites();
+    this.reset();
   }
   frequency() {
     return 100;
+  }
+  reset() {
+    this.is = 0;
   }
   start() {
     this.paused = 0;
@@ -31,9 +30,8 @@ LG.Controller = class extends LG.Obj {
     clearInterval(this.clock);
   }
   step() {
-    this.elapsed += this.period;
-    this.ms = (this.ms + this.periodms) % 1000;
-    this.sprites.forEach(sprite => sprite.step(this.ms));
+    this.sprites.forEach(sprite => sprite.step(this.is));
+    this.is++;
   }
   sprite(sprite) {
     if (sprite.length) {

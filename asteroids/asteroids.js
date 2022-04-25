@@ -9,21 +9,18 @@ class Controller extends LG.Controller {
       .on('explode', () => this.ship_onexplode())
       .on('dead', () => this.ship_ondead());
     this.scoreboard = new Scoreboard(3);
+    this.script = new Script();
     window
       .on('keydown', e => this.onkeydown(e))
       .on('keyup', e => this.onkeyup(e));
-    this.reset();
+    this.nextBoard();
     this.start();
   }
-  reset() {
-    //let sf = 1;
-    //let rocks = 4;
-    let sf = 1;
-    let rocks = 12;
-    //let sf = 1.5;
-    //let rocks = 12;
-    //let sf = 1.65;
-    //let rocks = 12;
+  nextBoard() {
+    this.finishing = 0;
+    this.script.next();
+    let sf = this.script.sf;
+    let rocks = this.script.rocks;
     this.sprites = new LG.Sprites(this.ship);
     let x, y, min, max, edge;
     for (let i = 0; i < rocks; i++) {
@@ -48,6 +45,58 @@ class Controller extends LG.Controller {
       }
       this.sprite(Rock.asBig(x, y, sf, min, max));
     }
+  }
+  step() {
+    super.step();
+    if (this.finishing) {
+      this.finishing++;
+      if (this.finishing > 300) {
+        this.nextBoard();
+      }
+      this.wrap(this.ship);
+      return;
+    }
+    let newRocks = [];
+    this.sprites.of(Shot).forEach(shot => this.checkShot(shot, newRocks));
+    let ship = this.ship.bounds();
+    if (this.ufo) {
+      if (this.ship.alive() && this.ufo.withinCircle(ship.cx, ship.cy)) {
+        this.ufo.kill();
+        this.ship.kill();
+      } else {
+        let b = this.ufo.bounds();
+        if (this.checkRocks(b, newRocks)) {
+          this.ufo.kill();
+        }
+      }
+    }
+    if (this.ship.alive()) {
+      let rock = this.checkRocks(ship, newRocks);
+      if (rock) {
+        this.ship.kill(rock);
+      }
+    }
+    if (newRocks.length) {
+      this.sprites = this.sprites.concat(newRocks);
+    }
+    this.sprites = this.sprites.filter(sprite => ! sprite.dead);
+    this.sprites.forEach(sprite => this.wrap(sprite));
+    let rocks = this.sprites.of(Rock);
+    if (rocks.length == 0 && ! this.ufo) {
+      this.board_onfinish();
+    }
+    if (this.checkZone) {
+      let safe = true;
+      this.sprites.of(Rock).forEach(rock => {
+        if (this.zone.contains(rock)) {
+          safe = false;
+        }
+      })
+      if (safe) {
+        this.checkZone = 0;
+        this.zone_onsafe();
+      }
+    } 
   }
   onkeydown(e) {
     switch (e.key) {
@@ -102,46 +151,6 @@ class Controller extends LG.Controller {
         break;
       }
   }
-  step() {
-    super.step();
-    let newRocks = [];
-    this.sprites.of(Shot).forEach(shot => this.checkShot(shot, newRocks));
-    let ship = this.ship.bounds();
-    if (this.ufo) {
-      if (this.ship.alive() && this.ufo.withinCircle(ship.cx, ship.cy)) {
-        this.ufo.kill();
-        this.ship.kill();
-      } else {
-        let b = this.ufo.bounds();
-        if (this.checkRocks(b, newRocks)) {
-          this.ufo.kill();
-        }
-      }
-    }
-    if (this.ship.alive()) {
-      let rock = this.checkRocks(ship, newRocks);
-      if (rock) {
-        this.ship.kill(rock);
-      }
-    }
-    if (newRocks.length) {
-      this.sprites = this.sprites.concat(newRocks);
-    }
-    this.sprites = this.sprites.filter(sprite => ! sprite.dead);
-    this.sprites.forEach(sprite => this.wrap(sprite));
-    if (this.checkZone) {
-      let safe = true;
-      this.sprites.of(Rock).forEach(rock => {
-        if (this.zone.contains(rock)) {
-          safe = false;
-        }
-      })
-      if (safe) {
-        this.checkZone = 0;
-        this.zone_onsafe();
-      }
-    } 
-  }
   //
   ship_onexplode() {
     this.scoreboard.die();
@@ -155,6 +164,9 @@ class Controller extends LG.Controller {
   }
   zone_onsafe() {
     this.sprite(this.ship.reset());
+  }
+  board_onfinish() {
+    this.finishing = 1;
   }
   checkRocks(b, newRocks) {
     let hit = 0;
@@ -197,6 +209,28 @@ class Controller extends LG.Controller {
     }
   }
 }
+class Script {
+  /**
+   * i board
+   * d sf (speed factor, initially 1.0)
+   * i rocks (initially 4)
+   */
+  constructor() {
+    this.board = 0;
+    this.rocks = 2;
+    this.sf = 1;
+  }
+  next() {
+    this.board++;
+    if (this.rocks < 12) {
+      this.rocks += 2;
+    } else {
+      if (this.sf < 2) {
+        this.sf += 0.2;
+      }
+    }
+  }
+}
 class Zone {
   //
   constructor(mx, my) {
@@ -225,13 +259,15 @@ class Scoreboard extends LG.Obj {
     this.gameover = 0;
     this.score = 0;
     this.$score.innerText = '00';
+    this.lb = 0;
     this.draw();
   }
   add(i) {
     this.score += i;
     this.$score.innerText = this.score;
-    if (this.score % 10000 == 0) {
+    if ((this.score + this.lb) > 10000) {
       this.bonus();
+      this.lb += 10000;
     }
   }
   bonus() {
@@ -287,7 +323,7 @@ class Ship extends LG.Sprite {
     this.show(1);
     return this;
   }
-  step(ms) {
+  step(is) {
     if (this.exploding) {
       this.forward();
       if (this.thrusting) {
@@ -303,7 +339,7 @@ class Ship extends LG.Sprite {
       this.rotate(deg);
     }
     this.forward();
-    if (ms % 100 == 0) {
+    if (is % 10 == 0) {
       if (this.thrusting) {
         this.accel.thrust(this.compass);
         this.speed.accelerate(this.accel);
@@ -517,7 +553,7 @@ class Rock extends LG.Sprite {
     r = 1 + ((rnd(vmin + vmax) - vmin) / 100);
     this.speed = speed * r * sf;
   }
-  step(ms) {
+  step(is) {
     this.advance(this.speed);
   }
   kill(newRocks) {
