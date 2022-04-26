@@ -265,7 +265,7 @@ class Scoreboard extends LG.Obj {
   add(i) {
     this.score += i;
     this.$score.innerText = this.score;
-    if ((this.score + this.lb) > 10000) {
+    if ((this.score - this.lb) >= 10000) {
       this.bonus();
       this.lb += 10000;
     }
