@@ -224,10 +224,10 @@ class Script {
     this.board++;
     if (this.rocks < 12) {
       this.rocks += 2;
-    } else {
-      if (this.sf < 2) {
-        this.sf += 0.2;
-      }
+    } else if (this.sf < 1.5) {
+      this.sf += 0.1;
+    } else if (this.sf < 2) {
+      this.sf += 0.05;
     }
   }
 }
