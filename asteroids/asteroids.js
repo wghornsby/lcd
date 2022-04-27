@@ -41,6 +41,9 @@ class Controller extends LG.Controller {
     if (rocks.length == 0 && ! this.ufo) {
       this.board_onfinish();
     }
+    if (this.ufo && this.is % 100 == 0) {
+      this.ufo.loadRocks(rocks);
+    }
     this.checkZone();
   }
   ship_onexplode() {
@@ -235,9 +238,9 @@ class Ufo extends LG.Sprite {
     let n = (x == 0) ? 1 + r * 10 : 5 + r * 2, rad = (n * Math.PI) / 6;
     this.v0 = new Vector(speed * this.xdir, 0);
     this.v1 = Vector.byRadians(rad, speed);
-    log(this.v1);
-    this.mode = 0/*heading horizontally to x1*/;
     this.v = this.v0;
+    this.mode = 0/*heading horizontally to x1*/;
+    this.rocks = [];
   }
   step(is) {
     if (this.is0 == null) {
@@ -272,18 +275,31 @@ class Ufo extends LG.Sprite {
       }
     }
   }
+  loadRocks(rocks) {
+    this.rocks = rocks;
+  }
   shoot() {
     if (! this.alive() || this.shooting) {
       return;
     }
+    if (! this.ship.alive()) {
+      this.rockmode = 1;
+    }
     let rad;
-    if (this.type == 1 || ! this.ship.alive()) {
+    if (this.type == 1) {
       rad = rnd(628) / 100;
     } else {
       let ub = this.bounds();
-      let sb = this.ship.bounds();
       let fudge = (rnd(30) - 15) / 50;
-      rad = LG.Compass.radTo(ub.cx, ub.cy, sb.cx, sb.cy) + fudge;
+      if (this.rockmode && this.rocks.length == 0) {
+        rad = rnd(628) / 100;
+      } else {
+        let sb = this.ship.bounds();
+        if (this.rocks.length && (this.rockmode || rnd(4) == 1)) {
+          sb = this.rocks[rnd(this.rocks.length)].bounds();
+        }
+        rad = LG.Compass.radTo(ub.cx, ub.cy, sb.cx, sb.cy) + fudge;
+      }
     }
     this.shooting = Shot.fromUfo(this, rad);
     animate(this.$frame, 'aflip 0.5s linear 1');
