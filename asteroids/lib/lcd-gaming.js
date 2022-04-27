@@ -74,12 +74,12 @@ LG.Sprite = class extends LG.Obj {
    * $$rot rotatable elements (child of a frame)
    */
   //
-  constructor($screen, $bp, className, x, y, iheading = 0, heading = 0) {
+  constructor($screen, html, className, x, y, iheading = 0, heading = 0) {
     super();
     this.iheading = iheading || 0;
     this.dead = 0;
     this.compass = new LG.Compass();
-    this.$create($bp, $screen, className);
+    this.$create(html, $screen, className);
     this.moveTo(x, y).heading(heading);
   }
   static is(sprite) {
@@ -89,7 +89,7 @@ LG.Sprite = class extends LG.Obj {
   alive() {
     return ! this.dead;
   }
-  step(ms) {
+  step(is) {
     // called from controller
   }
   show(b) {
@@ -147,7 +147,7 @@ LG.Sprite = class extends LG.Obj {
     b = b || this.bounds();
     return x >= b.x && x <= b.x2 && y >= b.y && y <= b.y2;
   }
-  withinCircle(x, y, fudge) {
+  withinCircle(x, y, fudge = 1.5) {
     let b = this.bounds();
     return this.distanceFrom(x, y, b) * fudge <= b.width;
   }
@@ -156,11 +156,11 @@ LG.Sprite = class extends LG.Obj {
     return Math.sqrt(Math.pow(x - b.cx, 2) + Math.pow(y - b.cy, 2));
   }
   //
-  $create($bp, $screen, className) {
+  $create(html, $screen, className) {
     this.$e = document.createElement('div');
     this.$e.className = 'sprite ' + className;
-    if ($bp) {
-      this.$e.innerHTML = $bp.innerHTML;
+    if (html) {
+      this.$e.innerHTML = html;
       this.$$frames = this.$e.$$('.frame');
       this.$frame = this.$$frames ? this.$$frames[0] : this.$e;
       this.$$rots = this.$e.$$('.rot');
@@ -202,7 +202,6 @@ LG.Compass = class {
    * i heading (degrees)
    * i rad
    */
-  //
   constructor(heading = 0) {
     this.set(heading);
   }
@@ -219,8 +218,8 @@ LG.Compass = class {
   advanceY(y, steps) {
     return y - Math.sin(this.rad) * steps;
   }
-  headTo(fx, fy, tx, ty) {
-    this.setHeading(Math.round(Math.atan2(fy - y, x - fx) * (180 / Math.PI)));
+  static radTo(fx, fy, tx, ty) {
+    return Math.atan2(fy - ty, tx - fx);
   }
   static fix(heading) {
     heading = heading > 359 ? heading - 360 : heading;
