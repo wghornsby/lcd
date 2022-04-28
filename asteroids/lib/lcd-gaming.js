@@ -20,11 +20,11 @@ LG.Controller = class extends LG.Obj {
   }
   reset() {
     this.time0 = new Date().getTime();
-    this.is = 0;
+    this.fix/*frame index*/ = 0;
   }
   start() {
     this.paused = 0;
-    this.clock = setInterval(() => this.step(), this.periodms);
+    this.clock = setInterval(() => this.step(this.fix++), this.periodms);
   }
   pause() {
     this.paused = ! this.paused;
@@ -37,9 +37,8 @@ LG.Controller = class extends LG.Obj {
       this.start();
     }
   }
-  step() {
-    this.sprites.forEach(sprite => sprite.step(this.is));
-    this.is++;
+  step(fix) {
+    this.sprites.forEach(sprite => sprite.step(fix));
   }
   elapsed() {
     let ms = this.paused ? (this.timep0 - this.time0) : (new Date().getTime() - this.time0);
@@ -89,7 +88,7 @@ LG.Sprite = class extends LG.Obj {
   alive() {
     return ! this.dead;
   }
-  step(is) {
+  step(fix) {
     // called from controller
   }
   show(b) {
