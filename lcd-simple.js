@@ -112,7 +112,7 @@ const each = (items, fn) => {
   return r;
 }
 const guid = () => crypto.randomUUID();
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+const wait = (ms, fn) => setTimeout(fn, ms);
 const priv = (target, ...fids) => {
   fids.forEach(fid => Object.defineProperty(target, fid, {enumerable:false}));
 }
@@ -154,13 +154,43 @@ class Obj {
     fids.forEach(fid => Object.defineProperty(this, fid, {enumerable:false}));
   }
 }
+class ObjArray extends Array {
+  //
+  on(event, fn) {
+    this['on' + event] = fn;
+    return this;
+  }
+}
+
+/** Storage */
+class Storable {
+  //
+  constructor(key, o) {
+    this.key = key;
+    this.o = o;
+  }
+  save() {
+    localStorage.setItem(this.key, pojo(o));
+  }
+  fetch() {
+    return localStorage.getItem(this.key);
+  }
+  merge() {
+    let o = this.fetch();
+    if (o) {
+      Object.assign(this.o, o);
+    }
+  }
+  erase() {
+    localStorage.removeItem(this.key);
+  }
+}
 
 /** Dialog */
 class Dialog extends Obj {
   /**
    * click events: 'on' + clicked button caption, e.g. onok(), oncancel()
    */
-  //
   constructor(buttoncaps, title) {
     super();
     this.$dialog = document.createElement('dialog')

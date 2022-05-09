@@ -1,41 +1,179 @@
-
-class Controller extends LG.Controller {
+class ScoreEntry extends Obj {
   //
+  constructor() {
+    super();
+    this.$congrats = $('#congrats');
+    this.$$inits = $$('#inits span');
+  }
+  reset() {
+    this.ic = 0;
+    this.$$inits.forEach($span => this.clear($span));
+    this.cursor();
+  }
+  show(onenter) {
+    this.reset();
+    this.$congrats.style.display = 'block';
+    animate(this.$congrats, 'textgrow 2s 1');
+    this.onenter = onenter;
+  }
+  close() {
+    this.$congrats.style.display = '';
+  }
+  onkeyup(e) {
+    let s = e.key.toUpperCase();
+    if (s == 'ENTER') {
+      let inits = this.value();
+      if (inits.length) {
+        this.close();
+        this.onenter(inits);
+      }
+      return;
+    }
+    if (s == 'BACKSPACE') {
+      this.back();
+      return;
+    }
+    if (this.ic > 3) {
+      return;
+    }
+    if (s == ' ') {
+      if (this.ic > 0) {
+        this.set(s);
+      }
+      return;
+    }
+    let c = s.charCodeAt(0);
+    if (c >= 65 && c <= 90) {
+      this.set(s);
+      return;
+    }
+  }
+  set(s) {
+    if (this.ic < 3) {
+      this.$$inits[this.ic].innerText = s;
+      this.ic++;
+      this.cursor();
+    }
+  }
+  back() {
+    if (this.ic > 0) {
+      this.ic--;
+      this.clear(this.$$inits[this.ic]);
+      this.cursor();
+    }
+  }
+  value() {
+    let v = '';
+    this.$$inits.forEach($span => {
+      if ($span.innerText.length == 1) {
+        v += $span.innerText;
+      }
+    })
+    return v.trim();
+  }
+  clear($span) {
+    $span.innerHTML = '&nbsp;';
+  }
+  cursor() {
+    this.$$inits.forEach(($span, i) => $span.classList.toggle('curs', this.ic == i));
+  }
+}
+class Controller extends LG.Controller {
+  /**
+   * i mx, my
+   * Sprites sprites (ship, rocks, ship shots, ufo, ufo shot)
+   * Mode mode 
+   * Ship ship
+   * Rocks rocks
+   * Ufo ufo (while active)
+   * Zone zone (ship spawning zone, to be clear of rocks)
+   * Scoreboard scoreboard
+   * Script script
+   * Scores highscores 
+   * i rocksleft
+   * i halfrocks (to identify when half the rocks are cleared)
+   * i ufos (number of ufos spawned on this board)
+   * i lastufo (fix of last ufo shot)
+   * i lastrock (fix of last rock shot)
+   */
   constructor() {
     super();
     this.mx = window.innerWidth;
     this.my = window.innerHeight;
     this.zone = new Zone(this.mx, this.my);
+    this.highscores = new Scores();
+    this.scoreboard = new Scoreboard(1, this.highscores.topScore());
+    this.entry = new ScoreEntry();
+    this.script = new Script();
     this.ship = new Ship(this.mx / 2 - 20, this.my / 2 - 20)
       .on('explode', () => this.ship_onexplode())
       .on('dead', () => this.ship_ondead());
-    this.scoreboard = new Scoreboard(1);
-    this.script = new Script();
-    this.audio = new Audio();
+    this.mode = new Mode()
+      .on('nextboard', () => this.nextBoard());
     window
       .on('keydown', e => this.onkeydown(e))
       .on('keyup', e => this.onkeyup(e));
+    //this.demo();
+    this.newGame();
+  }
+  newGame() {
+    this.mode.start();
+    this.ship.reset();
+    this.script.reset();
+    this.scoreboard.reset();
+    this.sprites.forEach(sprite => {
+      if (Rock.is(sprite)) {
+        sprite.kill();
+      } else if (Ufo.is(sprite)) {
+        sprite.kill(1);
+      }
+    })
+    this.sprites = new LG.Sprites(this.ship);
+    this.start(1);
+    $('#start').style.display = 'block';
+    animate($('#start'), 'textgrow 3s 1', () => {
+      $('#start').style.display = '';
+    })
+  }
+  demo() {
+    this.mode.set(Mode.DEMO);
+    this.ship.dead = 1;
+    this.sprites = new LG.Sprites();
+    this.start(1);
     this.nextBoard();
-    this.start();
   }
   nextBoard() {
-    this.finishing = 0;
+    if (! this.mode.is(Mode.DEMO)) {
+      this.mode.set(Mode.GAME_IN_PROGRESS);
+    }
     this.lastufo = this.fix;
     this.lastrock = this.fix;
     this.ufos = 0;
+    this.ufo = null;
     this.script.next();
-    this.rocks = Rock.asBigs(this.script, this.mx, this.my, this.script.sf);
+    this.rocks = Rock.asBigs(this.script, this.mx, this.my);
     this.rocksleft = this.totalRocksLeft();
     this.halfrocks = this.rocksleft / 2;
-    this.sprites = new LG.Sprites(this.ship, ...this.rocks);
+    this.sprites.append(this.rocks);
+  }
+  enterScore() {
+    this.mode.set(Mode.ENTER_SCORE);
+    this.entry.show((inits) => {
+      this.highscores.record(this.scoreboard.score, inits);
+      this.scoreboard.highscore(this.highscores.topScore());
+      this.demo();
+    })
   }
   step(fix) {
-    super.step(fix);
-    if (this.finishing) {
-      this.finishing++;
-      if (this.finishing > 300) {
-        this.nextBoard();
+    if (this.rocksleft && fix > 100) {
+      let b = Math.floor(this.rocksleft / this.halfrocks * 25) + 50;
+      if (fix % b == 0) {
+        Sounds.beat();
       }
+    }
+    super.step(fix);
+    this.mode.step();
+    if (this.mode.is(Mode.GAME_STARTING) || this.mode.is(Mode.BOARD_FINISHING)) {
       this.wrap(this.ship);
       return;
     }
@@ -48,21 +186,26 @@ class Controller extends LG.Controller {
     }
     this.checkZone();
   }
-  ship_onexplode() {
-    this.scoreboard.die();
-  }
   ship_ondead() {
     if (this.scoreboard.gameover()) {
-      // TODO
-    } else {
+      Sounds.mute();
+      $('#gameover').style.display = 'block';
+      animate($('#gameover'), 'textgrow 3s 1');
+      if (this.highscores.qualifies(this.scoreboard.score)) {
+        this.enterScore();
+      }
+  } else {
       this.checkZoneClear = 1;
     }
+  }
+  ship_onexplode() {
+    this.scoreboard.die();
   }
   zone_onsafe() {
     this.sprite(this.ship.reset());
   }
   board_onfinish() {
-    this.finishing = 1;
+    this.mode.finish();
   }
   totalRocksLeft() {    
     let left = 0;
@@ -73,7 +216,7 @@ class Controller extends LG.Controller {
     if (this.ufo) {
       return;
     }
-    if (! this.scoreboard.gameover() && ! this.ship.alive()) {
+    if (! this.mode.is(Mode.DEMO) && ! this.ship.alive()) {
       return;
     }
     let mar = this.script.board < 5 ? 500 : this.script.board < 7 ? 400 : 300;
@@ -81,7 +224,7 @@ class Controller extends LG.Controller {
       return;
     }
     let cls;
-    if ((this.fix - this.lastrock > mar) || (this.ufos == 0 && this.rocksleft <= this.halfrocks)) {
+    if ((this.fix - this.lastrock > mar) || (this.ufos == 0 && this.rocksleft <= this.halfrocks) || (this.script.board >= 5 && this.rocksleft <= 4)) {
       cls = 'ub';
       if (this.rocksleft <= 6 || this.scoreboard.score > 40000) {
         cls = 'us';
@@ -217,6 +360,9 @@ class Controller extends LG.Controller {
     }
   }
   onkeydown(e) {
+    if (this.mode.is(Mode.DEMO) || this.mode.is(Mode.ENTER_SCORE)) {
+      return;
+    }
     switch (e.key) {
       case 'S':
       case 's':
@@ -235,6 +381,7 @@ class Controller extends LG.Controller {
         break;
       case 'L':
       case 'l':
+      case 'ArrowDown':
         let shot = this.ship.shoot();
         if (shot) {
           this.sprites.push(shot);
@@ -245,12 +392,23 @@ class Controller extends LG.Controller {
         break;
       case 'P':
       case 'p':
-        //this.pause();
-        Sounds.ufoBig();
+        this.pause();
         break;
-      }
     }
+  }
   onkeyup(e) {
+    if (this.mode.is(Mode.DEMO)) {
+      switch (e.key) {
+        case '1':
+          Sounds.start();
+          this.newGame();
+      }
+      return;
+    }
+    if (this.mode.is(Mode.ENTER_SCORE)) {
+      this.entry.onkeyup(e);
+      return;
+    }
     switch (e.key) {
       case 'S':
       case 's':
@@ -268,6 +426,93 @@ class Controller extends LG.Controller {
       }
   }
 }
+class Mode extends Obj {
+  onnextboard() {}
+  //
+  constructor() {
+    super();
+    this.reset();
+  }
+  reset() {
+    this.mode = 0;
+    this.starting = 0;
+    this.finishing = 0;
+  }
+  set(mode) {
+    this.mode = mode;
+  }
+  is(mode) {
+    return this.mode == mode;
+  }
+  start() {
+    this.mode = Mode.GAME_STARTING;
+    this.starting = 1;
+  }
+  finish() {
+    this.mode = Mode.BOARD_FINISHING;
+    this.finishing = 1;
+  }
+  step() {
+    if (this.starting) {
+      this.starting++;
+      if (this.starting > 300) {
+        this.starting = 0;
+        this.onnextboard();
+      }
+      return;
+    }
+    if (this.finishing) {
+      this.finishing++;
+      if (this.finishing > 300) {
+        this.finishing = 0;
+        this.onnextboard();
+      }
+      return;
+    }
+  }
+  //
+  static DEMO = 1;
+  static GAME_STARTING = 2;
+  static GAME_IN_PROGRESS = 3;
+  static BOARD_FINISHING = 4;
+  static ENTER_SCORE = 5;
+}
+class Scores extends StorableObj {
+  /**
+   * scores[] [{score:100,inits:'WGH'},..]
+   */
+  constructor() {
+    super('Asteroids.Scores');
+    this.scores = this.scores || [];
+  }
+  topScore() {
+    return this.scores[0]?.score;
+  }
+  bottomScore() {
+    return this.scores.length ? this.scores[this.scores.length - 1].score : 0;
+  }
+  qualifies(score) {
+    let bs = this.bottomScore();
+    return this.length == Scores.MAX ? score > bs : score >= bs;
+  }
+  record(score, inits) {
+    if (! this.qualifies(score)) {
+      return;
+    }
+    let ins = 0;
+    for (let i = this.scores.length - 1; i >= 0; i--) {
+      if (score <= this.scores[i]) {
+        ins = i + 1;
+        break;
+      } 
+    }
+    if (ins < Scores.MAX) {
+      this.scores[ins] = {'score':score, 'inits':inits};
+    }
+    this.save();
+  }
+  static MAX = 10;
+}
 class Script {
   /**
    * i board
@@ -276,6 +521,9 @@ class Script {
    * i color (of rocks)
    */
   constructor() {
+    this.reset();
+  }
+  reset() {
     this.board = 0;
     this.rocks = 2;
     this.sf = 1;
@@ -329,18 +577,30 @@ class Scoreboard extends LG.Obj {
    * i lives
    * i score
    */
-  constructor(lives) {
+  constructor(lives, highscore) {
     super();
     this.$score = $('#score');
-    this.lives = lives;
+    this.$highscore = $('#highscore');
+    this.$highscore.innerText = '00';
+    this._lives = lives;
     this.ships = [];
     this.reset();
+    this.highscore(highscore);
   }
   reset() {
     this.score = 0;
     this.$score.innerText = '00';
     this.lb = 0;
+    while (this.ships.length) {
+      this.ships.pop().kill(1);
+    }
+    this.lives = this._lives;
     this.draw();
+  }
+  highscore(i) {
+    if (i) {
+      this.$highscore.innerText = i;
+    }
   }
   add(i) {
     this.score += i;
@@ -390,7 +650,7 @@ class Ship extends LG.Sprite {
     this.x0 = x;
     this.y0 = y;
     this.shots = [];
-    this.reset();
+    this.show(0);
   }
   reset() {
     this.moveTo(this.x0, this.y0).heading(0);
@@ -645,9 +905,11 @@ class Rock extends LG.Sprite {
     this.advance(this.speed);
   }
   kill(newRocks) {
-    let b = this.bounds();
-    this.shot(b, newRocks);
-    this.explode(b);
+    if (newRocks) {
+      let b = this.bounds();
+      this.shot(b, newRocks);
+      this.explode(b);
+    }
     super.kill(1);
   }
   withinCircle(x, y) {
@@ -798,7 +1060,6 @@ class Ufo extends LG.Sprite {
         if (this.rocks.length && (this.rockmode || rnd(4) == 1)) {
           let md = 2000, d, rb, rs;
           this.rocks.forEach(rock => {
-            log(rock.speed);
             rb = rock.bounds();
             d = this.distanceFrom(rb.cx, rb.cy, ub);
             if (d < md) {
@@ -817,7 +1078,7 @@ class Ufo extends LG.Sprite {
       }
     }
     this.shooting = Shot.fromUfo(this, rad);
-    animate(this.$frame, 'aflip 0.5s linear 1');
+    animate(this.$frame, 'ufobulge 0.5s linear 1');
     Sounds.fireUfo();
     this.onshoot(this.shooting);
   }
@@ -843,6 +1104,7 @@ class Ufo extends LG.Sprite {
     $e.style.left = b.x - (this.type == 1 ? 20 : 10);
     $e.style.top = b.y - (this.type == 1 ? 20 : 10);
     this.show(0);
+    Sounds.explodeMedium();
     wait(1000, () => {
       $e.remove();
       ondone();
@@ -875,6 +1137,8 @@ class Ufo extends LG.Sprite {
   }
 }
 Sounds = {
+  BEAT1:new Audio('audio/BEAT11.wav'),
+  BEAT2:new Audio('audio/BEAT21.wav'),
   YOURFIRE:new Audio('audio/YOURFIRE1.wav'),
   UFOFIRE:new Audio('audio/UFOFIRE1.wav'),
   LARGEXPL:new Audio('audio/LARGEXPL1.wav'),
@@ -882,6 +1146,21 @@ Sounds = {
   SMALLXPL:new Audio('audio/SMALLXPL1.wav'),
   LSAUCER:new Audio('audio/LSAUCER.wav'),
   //
+  start:function() {
+    if (! this._muted) {
+      this._started = 1;
+    }
+  },
+  mute:function(b) {
+    this._muted = 1;
+  },
+  unmute:function() {
+    this._muted = 0;
+  },
+  beat:function() {
+    this._b = ! this._b;
+    this.play(this._b ? Sounds.BEAT2 : Sounds.BEAT1);
+  },
   fireShip:function() {
     this.play(Sounds.YOURFIRE);
   },
@@ -899,7 +1178,7 @@ Sounds = {
   },
   ufoBig() {
     Sounds.LSAUCER.loop = true;
-    Sounds.LSAUCER.play();
+    //Sounds.LSAUCER.play();
   },
   explode:function(type) {
     switch (type) {
@@ -913,6 +1192,9 @@ Sounds = {
   },
   //
   play:function(a) {
+    if (! this._started || this._muted) {
+      return;
+    }
     a.pause();
     a.currentTime=0;
     a.play();

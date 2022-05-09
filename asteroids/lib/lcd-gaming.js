@@ -22,14 +22,21 @@ LG.Controller = class extends LG.Obj {
     this.time0 = new Date().getTime();
     this.fix/*frame index*/ = 0;
   }
-  start() {
+  start(reset) {
+    if (reset) {
+      this.reset();
+    }
     this.paused = 0;
+    this.timep0 = 0;
+    if (this.clock) {
+      clearInterval(this.clock);
+    }
     this.clock = setInterval(() => this.step(this.fix++), this.periodms);
   }
   pause() {
     this.paused = ! this.paused;
     if (this.paused) {
-      clearInterval(this.clock);
+      this.clock = clearInterval(this.clock);
       this.timep0 = new Date().getTime();
     } else {
       this.time0 += (new Date().getTime() - this.timep0);
@@ -60,6 +67,9 @@ LG.Sprites = class extends LG.Array {
   }
   of(classname) {
     return this.filter(s => s.name() == classname.name);
+  }
+  append(sprites) {
+    this.splice(this.length, 0, ...sprites);
   }
 }
 LG.Sprite = class extends LG.Obj {
@@ -93,6 +103,7 @@ LG.Sprite = class extends LG.Obj {
   }
   show(b) {
     this.$e.classList.toggle('hide', ! b);
+    return this;
   }
   kill(remove) {
     this.dead = 1;

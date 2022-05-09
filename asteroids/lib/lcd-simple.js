@@ -143,6 +143,24 @@ const qs = () => {
   return o;
 }
 
+/** Storage */
+class Storage {
+  //
+  constructor(key) {
+    this.key = key;
+  }
+  save(o) {
+    localStorage.setItem(this.key, js(o));
+  }
+  fetch() {
+    let s = localStorage.getItem(this.key);
+    return s && JSON.parse(s);
+  }
+  erase() {
+    localStorage.removeItem(this.key);
+  }
+}
+
 /** Custom object */
 class Obj {
   //
@@ -161,13 +179,31 @@ class ObjArray extends Array {
     return this;
   }
 }
+class StorableObj extends Obj {
+  //
+  constructor(key) {
+    super();
+    this._storage = new Storage(key);
+    this.priv('_storage');
+    this.fetch();
+  }
+  fetch() {
+    let o = this._storage.fetch();
+    this.mixPojo(o);
+  }
+  mixPojo(o) {
+    Object.assign(this, o);
+  }
+  save() {
+    this._storage.save(pojo(this));
+  }
+}
 
 /** Dialog */
 class Dialog extends Obj {
   /**
    * click events: 'on' + clicked button caption, e.g. onok(), oncancel()
    */
-  //
   constructor(buttoncaps, title) {
     super();
     this.$dialog = document.createElement('dialog')
