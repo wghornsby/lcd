@@ -16,7 +16,7 @@ LG.Controller = class extends LG.Obj {
     this.reset();
   }
   frequency() {
-    return 50;
+    return 100;
   }
   reset() {
     this.time0 = new Date().getTime();

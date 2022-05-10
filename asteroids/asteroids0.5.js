@@ -1,83 +1,3 @@
-class ScoreEntry extends Obj {
-  //
-  constructor() {
-    super();
-    this.$congrats = $('#congrats');
-    this.$$inits = $$('#inits span');
-  }
-  reset() {
-    this.ic = 0;
-    this.$$inits.forEach($span => this.clear($span));
-    this.cursor();
-  }
-  show(onenter) {
-    this.reset();
-    this.$congrats.style.display = 'block';
-    animate(this.$congrats, 'textgrow 2s 1');
-    this.onenter = onenter;
-  }
-  close() {
-    this.$congrats.style.display = '';
-  }
-  onkeyup(e) {
-    let s = e.key.toUpperCase();
-    if (s == 'ENTER') {
-      let inits = this.value();
-      if (inits.length) {
-        this.close();
-        this.onenter(inits);
-      }
-      return;
-    }
-    if (s == 'BACKSPACE') {
-      this.back();
-      return;
-    }
-    if (this.ic > 3) {
-      return;
-    }
-    if (s == ' ') {
-      if (this.ic > 0) {
-        this.set(s);
-      }
-      return;
-    }
-    let c = s.charCodeAt(0);
-    if (c >= 65 && c <= 90) {
-      this.set(s);
-      return;
-    }
-  }
-  set(s) {
-    if (this.ic < 3) {
-      this.$$inits[this.ic].innerText = s;
-      this.ic++;
-      this.cursor();
-    }
-  }
-  back() {
-    if (this.ic > 0) {
-      this.ic--;
-      this.clear(this.$$inits[this.ic]);
-      this.cursor();
-    }
-  }
-  value() {
-    let v = '';
-    this.$$inits.forEach($span => {
-      if ($span.innerText.length == 1) {
-        v += $span.innerText;
-      }
-    })
-    return v.trim();
-  }
-  clear($span) {
-    $span.innerHTML = '&nbsp;';
-  }
-  cursor() {
-    this.$$inits.forEach(($span, i) => $span.classList.toggle('curs', this.ic == i));
-  }
-}
 class Controller extends LG.Controller {
   /**
    * i mx, my
@@ -102,7 +22,7 @@ class Controller extends LG.Controller {
     this.my = window.innerHeight;
     this.zone = new Zone(this.mx, this.my);
     this.highscores = new Scores();
-    this.scoreboard = new Scoreboard(1, this.highscores.topScore());
+    this.scoreboard = new Scoreboard(5, this.highscores.topScore());
     this.entry = new ScoreEntry();
     this.script = new Script();
     this.ship = new Ship(this.mx / 2 - 20, this.my / 2 - 20)
@@ -219,7 +139,7 @@ class Controller extends LG.Controller {
     if (! this.mode.is(Mode.DEMO) && ! this.ship.alive()) {
       return;
     }
-    let mar = this.script.board < 5 ? 500 : this.script.board < 7 ? 200 : 150;
+    let mar = this.script.board < 5 ? 250 : this.script.board < 7 ? 200 : 150;
     if (this.lastufo && this.fix - this.lastufo < mar) {
       return;
     }
@@ -679,6 +599,7 @@ class Ship extends LG.Sprite {
     if (this.rot) {
       let deg = this.rot * Ship.ROTC;
       this.rotate(deg);
+      log(this._rot);
     }
     this.forward();
     if (fix % 5 == 0) {
@@ -807,7 +728,7 @@ Ship.Acceleration = class extends Vector {
   }
   reset() {
     super.reset();
-    this.ac = 0.36;
+    this.ac = 0.72;
   }
   thrust(compass) {
     let v = Vector.byRadians(compass.rad, this.ac);
@@ -899,7 +820,7 @@ class Rock extends LG.Sprite {
     this.sf = sf;
     this.rotate(deg);
     r = 1 + ((rnd(vmin + vmax) - vmin) / 100);
-    this.speed = speed * r * sf;
+    this.speed = speed * r * sf * 1.5;
   }
   step(fix) {
     this.advance(this.speed);
@@ -1198,5 +1119,87 @@ Sounds = {
     a.pause();
     a.currentTime=0;
     a.play();
+  }
+}
+class ScoreEntry extends Obj {
+  //
+  constructor() {
+    super();
+    this.$congrats = $('#congrats');
+    this.$$inits = $$('#inits span');
+  }
+  reset() {
+    this.ic = 0;
+    this.$$inits.forEach($span => this.clear($span));
+    this.cursor();
+  }
+  show(onenter) {
+    this.reset();
+    this.$congrats.style.display = 'block';
+    animate(this.$congrats, 'textgrow 2s 1');
+    this.onenter = onenter;
+  }
+  close() {
+    this.$congrats.style.display = '';
+  }
+  onkeyup(e) {
+    let s = e.key.toUpperCase();
+    if (s == 'ENTER') {
+      let inits = this.value();
+      if (inits.length) {
+        this.close();
+        this.onenter(inits);
+      }
+      return;
+    }
+    if (s == 'BACKSPACE') {
+      this.back();
+      return;
+    }
+    if (this.ic > 3) {
+      return;
+    }
+    if (s == ' ') {
+      if (this.ic > 0) {
+        this.set(s);
+      }
+      return;
+    }
+    if (s.length == 1) {
+      let c = s.charCodeAt(0);
+      if (c >= 65 && c <= 90) {
+        this.set(s);
+        return;
+      }
+    }
+  }
+  set(s) {
+    if (this.ic < 3) {
+      this.$$inits[this.ic].innerText = s;
+      this.ic++;
+      this.cursor();
+    }
+  }
+  back() {
+    if (this.ic > 0) {
+      this.ic--;
+      this.clear(this.$$inits[this.ic]);
+      this.cursor();
+    }
+  }
+  value() {
+    let v = '';
+    this.$$inits.forEach($span => {
+      if ($span.innerText.length == 1) {
+        v += $span.innerText;
+      }
+    })
+    return v.trim();
+  }
+  clear($span) {
+    $span.innerHTML = '&nbsp;';
+  }
+  cursor() {
+    this.$$inits.forEach(($span, i) => $span.classList.toggle('curs', this.ic == i));
   }
 }

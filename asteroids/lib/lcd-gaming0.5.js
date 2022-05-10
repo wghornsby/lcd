@@ -203,6 +203,7 @@ LG.Sprite = class extends LG.Obj {
       rot += 360; 
     }
     rot += (nr - ar);
+    this._rot = rot;
     this.prevRot = rot;
     this.$$rots.forEach($e => $e.style.transform = 'rotate(' + rot + 'deg)');
   }

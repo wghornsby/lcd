@@ -85,7 +85,7 @@ class Controller extends LG.Controller {
     })
   }
   step(fix) {
-    if (this.rocksleft && fix > 50) {
+    if (this.rocksleft && fix > 100) {
       let b = Math.floor(this.rocksleft / this.halfrocks * 25) + 50;
       if (fix % b == 0) {
         Sounds.beat();
@@ -139,7 +139,7 @@ class Controller extends LG.Controller {
     if (! this.mode.is(Mode.DEMO) && ! this.ship.alive()) {
       return;
     }
-    let mar = this.script.board < 5 ? 250 : this.script.board < 7 ? 200 : 150;
+    let mar = this.script.board < 5 ? 500 : this.script.board < 7 ? 400 : 300;
     if (this.lastufo && this.fix - this.lastufo < mar) {
       return;
     }
@@ -375,7 +375,7 @@ class Mode extends Obj {
   step() {
     if (this.starting) {
       this.starting++;
-      if (this.starting > 150) {
+      if (this.starting > 300) {
         this.starting = 0;
         this.onnextboard();
       }
@@ -383,7 +383,7 @@ class Mode extends Obj {
     }
     if (this.finishing) {
       this.finishing++;
-      if (this.finishing > 150) {
+      if (this.finishing > 300) {
         this.finishing = 0;
         this.onnextboard();
       }
@@ -409,11 +409,13 @@ class Scores extends StorableObj {
     return this.scores[0]?.score;
   }
   bottomScore() {
-    return this.scores.length ? this.scores[this.scores.length - 1].score : 0;
+    return this.scores.length < Scores.MAX ? 0 : this.scores[this.scores.length - 1];
   }
   qualifies(score) {
-    let bs = this.bottomScore();
-    return this.length == Scores.MAX ? score > bs : score >= bs;
+    if (score > 0) {
+      let bs = this.bottomScore();
+      return this.length == Scores.MAX ? score > bs : score >= bs;
+    }
   }
   record(score, inits) {
     if (! this.qualifies(score)) {
@@ -421,13 +423,13 @@ class Scores extends StorableObj {
     }
     let ins = 0;
     for (let i = this.scores.length - 1; i >= 0; i--) {
-      if (score <= this.scores[i]) {
+      if (score <= this.scores[i].score) {
         ins = i + 1;
         break;
       } 
     }
     if (ins < Scores.MAX) {
-      this.scores[ins] = {'score':score, 'inits':inits};
+      this.scores.splice(ins, 0, {'score':score, 'inits':inits});
     }
     this.save();
   }
@@ -599,10 +601,10 @@ class Ship extends LG.Sprite {
     if (this.rot) {
       let deg = this.rot * Ship.ROTC;
       this.rotate(deg);
-      log(this._rot);
+      log(this._rot);      
     }
     this.forward();
-    if (fix % 5 == 0) {
+    if (fix % 10 == 0) {
       if (this.thrusting) {
         this.accel.thrust(this.compass);
         this.speed.accelerate(this.accel);
@@ -697,7 +699,7 @@ class Ship extends LG.Sprite {
     return super.moveTo(x, y);
   }
   //
-  static ROTC = 5.6;
+  static ROTC = 2.8;
 }
 Ship.Velocity = class extends Vector {
   //
@@ -718,7 +720,7 @@ Ship.Velocity = class extends Vector {
     return e * Ship.Velocity.FC;
   }
   static FC = 0.95;
-  static MAX = 20;
+  static MAX = 10;
 }
 Ship.Acceleration = class extends Vector {
   //
@@ -728,7 +730,7 @@ Ship.Acceleration = class extends Vector {
   }
   reset() {
     super.reset();
-    this.ac = 0.72;
+    this.ac = 0.36;
   }
   thrust(compass) {
     let v = Vector.byRadians(compass.rad, this.ac);
@@ -738,8 +740,8 @@ Ship.Acceleration = class extends Vector {
   off() {
     this.reset();
   }
-  static MAX = 20;
-  static AC = 0.2;
+  static MAX = 10;
+  static AC = 0.1;
 }
 class Shot extends LG.Sprite {
   /**
@@ -768,10 +770,10 @@ class Shot extends LG.Sprite {
     return new Shot(ship.bounds(), ship.speed, ship.compass.rad, 1);
   }
   static fromUfo(ufo, rad) {
-    let max = ufo.type == 1 ? 38 : 45;
+    let max = ufo.type == 1 ? 75 : 90;
     return new Shot(ufo.bounds(), null, rad, 2, max);
   }
-  static STEPS = 45;
+  static STEPS = 90;
 }
 Shot.Velocity = class extends Vector {
   //
@@ -789,7 +791,7 @@ Shot.Velocity = class extends Vector {
   merge(m, s) {
     return (Math.abs(m + s) < Math.abs(m)) ? m + s : m;
   }
-  static MAX = 24;
+  static MAX = 12;
 }
 class Thruster extends LG.Sprite {
   //
@@ -820,7 +822,7 @@ class Rock extends LG.Sprite {
     this.sf = sf;
     this.rotate(deg);
     r = 1 + ((rnd(vmin + vmax) - vmin) / 100);
-    this.speed = speed * r * sf * 1.5;
+    this.speed = speed * r * sf;
   }
   step(fix) {
     this.advance(this.speed);
@@ -913,7 +915,7 @@ class Ufo extends LG.Sprite {
     this.ship = ship;
     this.shooting = 0;
     this.type = cls == 'ub' ? 1/*big*/ : 2/*small*/;
-    this.shootmod = this.type == 1 ? 50 : 5;
+    this.shootmod = this.type == 1 ? 100 : 10;
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -951,7 +953,7 @@ class Ufo extends LG.Sprite {
       this.kill(1);
     }
     if (! this.shooting) {
-      if (fix % this.shootmod == 0 && fix - this.fix0 > 50) {
+      if (fix % this.shootmod == 0 && fix - this.fix0 > 100) {
         this.shoot();
       }
     } else {
@@ -1020,7 +1022,7 @@ class Ufo extends LG.Sprite {
     let b = this.bounds();
     let $e = document.createElement('div');
     $e.className = 'pow ' + (this.type == 1 ? 'xufob' : 'xufos');
-    $e.innerHTML = $('#ufopowbp').innerHTML;
+    $e.innerHTML = $('#powbp').innerHTML;
     $('#screen').appendChild($e);
     $e.style.left = b.x - (this.type == 1 ? 20 : 10);
     $e.style.top = b.y - (this.type == 1 ? 20 : 10);
@@ -1053,7 +1055,7 @@ class Ufo extends LG.Sprite {
         break;
     }    
     y1 = rnd(my - 120);
-    let speed = (cls == 'ub' ? 3 : 4) * sf;
+    let speed = (cls == 'ub' ? 1.5 : 2) * sf;
     return new Ufo(ship, rocks, x, y, cls, speed, x1, y1, x2);
   }
 }
