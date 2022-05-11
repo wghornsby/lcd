@@ -48,9 +48,6 @@ class Controller extends LG.Controller {
     this.nextBoard();
   }
   newGame() {
-    if (this.mode.demo && this.script.rocks == 12) {
-      return this.demo();
-    }
     this.mode.start();
     this.ship.reset();
     this.script.reset();
@@ -70,6 +67,9 @@ class Controller extends LG.Controller {
     this.lastrock = this.fix;
     this.ufos = 0;
     this.ufo = null;
+    if (this.mode.demo && this.script.rocks == 12) {
+      this.script.reset();
+    }
     this.script.next();
     this.rocks = Rock.asBigs(this.script, this.mx, this.my);
     this.rocksleft = this.totalRocksLeft();
