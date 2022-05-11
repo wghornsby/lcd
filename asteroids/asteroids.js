@@ -48,6 +48,9 @@ class Controller extends LG.Controller {
     this.nextBoard();
   }
   newGame() {
+    if (this.mode.demo && this.script.rocks == 12) {
+      return this.demo();
+    }
     this.mode.start();
     this.ship.reset();
     this.script.reset();
