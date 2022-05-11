@@ -38,6 +38,7 @@ class Controller extends LG.Controller {
   }
   demo() {
     this.mode.setDemo();
+    this.ship.dead = 1;
     this.script.reset();
     this.killSprites();
     this.sprites = new LG.Sprites();
@@ -174,7 +175,7 @@ class Controller extends LG.Controller {
       if (this.script.board == 1 && this.ufos < 3) {
         cls = 'ub';
       }
-      if (this.scoreboard.gameover()) {
+      if (this.scoreboard.gameover() || this.mode.demo) {
         cls = 'us';
       }
     }
