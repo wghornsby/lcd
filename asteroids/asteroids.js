@@ -37,8 +37,7 @@ class Controller extends LG.Controller {
     this.demo();
   }
   demo() {
-    this.mode.demo = 1;
-    this.ship.dead = 1;
+    this.mode.setDemo();
     this.script.reset();
     this.killSprites();
     this.sprites = new LG.Sprites();
@@ -77,7 +76,7 @@ class Controller extends LG.Controller {
     this.sprites.append(this.rocks);
   }
   enterScore(fn) {
-    this.mode.set(Mode.ENTER_SCORE);
+    this.mode.entering = 1;
     this.entry.show((inits) => fn(inits));
   }
   step(fix) {
@@ -86,7 +85,7 @@ class Controller extends LG.Controller {
       if (fix % b == 0) {
         Sounds.beat();
       }
-    }
+    }``
     super.step(fix);
     this.mode.step();
     if (this.mode.is(Mode.GAME_STARTING) || this.mode.is(Mode.BOARD_FINISHING)) {
@@ -297,7 +296,7 @@ class Controller extends LG.Controller {
     }
   }
   onkeydown(e) {
-    if (this.mode.demo || this.mode.is(Mode.ENTER_SCORE)) {
+    if (this.mode.demo || this.mode.entering) {
       return;
     }
     switch (e.key) {
@@ -342,7 +341,7 @@ class Controller extends LG.Controller {
       }
       return;
     }
-    if (this.mode.is(Mode.ENTER_SCORE)) {
+    if (this.mode.entering) {
       this.entry.onkeyup(e);
       return;
     }
@@ -373,11 +372,16 @@ class Mode extends Obj {
   reset() {
     this.mode = 0;
     this.demo = 0;
+    this.entering = 0;
     this.starting = 0;
     this.finishing = 0;
   }
   set(mode) {
     this.mode = mode;
+  }
+  setDemo() {
+    this.demo = 1;
+    this.entering = 0;
   }
   is(mode) {
     return this.mode == mode;
@@ -386,6 +390,7 @@ class Mode extends Obj {
     this.mode = Mode.GAME_STARTING;
     this.starting = 1;
     this.demo = 0;
+    this.entering = 0;
   }
   finish() {
     this.mode = Mode.BOARD_FINISHING;
@@ -413,7 +418,6 @@ class Mode extends Obj {
   static GAME_STARTING = 1;
   static GAME_IN_PROGRESS = 2;
   static BOARD_FINISHING = 3;
-  static ENTER_SCORE = 4;
 }
 class Scores extends StorableObj {
   /**
