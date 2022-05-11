@@ -37,6 +37,29 @@ body {
   text-align:center;
   user-select:none;
 }
+#press1 {
+  font-family:'Orbitron';
+  font-size:26pt;
+  color:white;
+  position:absolute;
+  z-index:10;
+  bottom:100px;
+  width:100%;
+  text-align:center;
+  user-select:none;
+  animation:pulse 1s infinite;
+}
+@keyframes pulse {
+  0% {
+    opacity:1;
+  }
+  50% {
+    opacity:0.1;
+  }
+  100% {
+    opacity:1;
+  }
+}
 .blueprint {
   display:none;
 }
@@ -391,6 +414,52 @@ body {
     background-color:white;
   }
 }
+#highscores {
+  font-family:'Orbitron';
+  color:white;
+  position:absolute;
+  z-index:20;  
+  width:100%;
+  text-align:center;
+  user-select:none;
+  top:12%;
+  user-select:none;
+  text-shadow: 
+        -1px -1px 0px #000,
+         0px -1px 0px #000,
+         1px -1px 0px #000,
+        -1px  0px 0px #000,
+         1px  0px 0px #000,
+        -1px  1px 0px #000,
+         0px  1px 0px #000,
+         1px  1px 0px #000;
+}
+#highscores h1 {
+  font-size:46pt;
+}
+#highscores div {
+  font-size:30pt;
+  width:430px;
+  text-align:left;
+  margin:0 auto;
+}
+#highscores .rank {
+  display:inline-block;
+  width:50px;
+  text-align:center;
+  padding-right:15px;
+  color:#a0a0a0;
+}
+#highscores .score {
+  display:inline-block;
+  width:210px;
+  text-align:right;
+}
+#highscores .inits {
+  display:inline-block;
+  width:150px;
+  text-align:right;
+}
 </style>
 </head>
 <body>
@@ -494,6 +563,10 @@ body {
     <div id='highscore'>00</div>
     <div id='gameover'>GAME OVER</div>
     <div id='start'>START PLAYER 1</div>
+    <div id='highscores'>
+      <h1>HIGH SCORES</h1>
+      <div id='list'></div>
+    </div>
     <div id='congrats'>
       <div>Your score is one of the ten best!</div>
       <div>Please enter your initials:</div>
@@ -501,6 +574,7 @@ body {
         <span class='curs'>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span>
       </div>
     </div>
+    <div id='press1'>PRESS 1 TO START</div>
     <div id='copy'>&copy;2022 by Warren</div>
   </div>
 </body>

@@ -23,6 +23,7 @@ class Controller extends LG.Controller {
     this.zone = new Zone(this.mx, this.my);
     this.highscores = new Scores();
     this.scoreboard = new Scoreboard(5, this.highscores.topScore());
+    this.highscorelist = new HighScoreList(this.highscores);
     this.entry = new ScoreEntry();
     this.script = new Script();
     this.ship = new Ship(this.mx / 2 - 20, this.my / 2 - 20)
@@ -33,21 +34,26 @@ class Controller extends LG.Controller {
     window
       .on('keydown', e => this.onkeydown(e))
       .on('keyup', e => this.onkeyup(e));
-    //this.demo();
-    this.newGame();
+    this.demo();
+  }
+  demo() {
+    this.mode.demo = 1;
+    this.ship.dead = 1;
+    this.script.reset();
+    this.killSprites();
+    this.sprites = new LG.Sprites();
+    this.scoreboard.show(0);
+    this.highscorelist.show(1);
+    this.start(1);
+    this.nextBoard();
   }
   newGame() {
     this.mode.start();
     this.ship.reset();
     this.script.reset();
-    this.scoreboard.reset();
-    this.sprites.forEach(sprite => {
-      if (Rock.is(sprite)) {
-        sprite.kill();
-      } else if (Ufo.is(sprite)) {
-        sprite.kill(1);
-      }
-    })
+    this.scoreboard.show(1).reset();
+    this.highscorelist.show(0);
+    this.killSprites();
     this.sprites = new LG.Sprites(this.ship);
     this.start(1);
     $('#start').style.display = 'block';
@@ -55,17 +61,8 @@ class Controller extends LG.Controller {
       $('#start').style.display = '';
     })
   }
-  demo() {
-    this.mode.set(Mode.DEMO);
-    this.ship.dead = 1;
-    this.sprites = new LG.Sprites();
-    this.start(1);
-    this.nextBoard();
-  }
   nextBoard() {
-    if (! this.mode.is(Mode.DEMO)) {
-      this.mode.set(Mode.GAME_IN_PROGRESS);
-    }
+    this.mode.set(Mode.GAME_IN_PROGRESS);
     this.lastufo = this.fix;
     this.lastrock = this.fix;
     this.ufos = 0;
@@ -76,13 +73,9 @@ class Controller extends LG.Controller {
     this.halfrocks = this.rocksleft / 2;
     this.sprites.append(this.rocks);
   }
-  enterScore() {
+  enterScore(fn) {
     this.mode.set(Mode.ENTER_SCORE);
-    this.entry.show((inits) => {
-      this.highscores.record(this.scoreboard.score, inits);
-      this.scoreboard.highscore(this.highscores.topScore());
-      this.demo();
-    })
+    this.entry.show((inits) => fn(inits));
   }
   step(fix) {
     if (this.rocksleft && fix > 50) {
@@ -106,15 +99,36 @@ class Controller extends LG.Controller {
     }
     this.checkZone();
   }
+  killSprites() {
+    this.sprites.forEach(sprite => {
+      if (Rock.is(sprite)) {
+        sprite.kill();
+      } else if (Ufo.is(sprite) || Shot.is(sprite)) {
+        sprite.kill(1);
+      }
+    })
+  }
   ship_ondead() {
     if (this.scoreboard.gameover()) {
       Sounds.mute();
       $('#gameover').style.display = 'block';
-      animate($('#gameover'), 'textgrow 3s 1');
-      if (this.highscores.qualifies(this.scoreboard.score)) {
-        this.enterScore();
+      let nhs = this.highscores.qualifies(this.scoreboard.score);
+      animate($('#gameover'), 'textgrow 3s 1', () => {
+        if (! nhs) {
+          $('#gameover').style.display = '';
+          this.demo();
+        }
+      })
+      if (nhs) {
+        this.enterScore(inits => {
+          $('#gameover').style.display = '';
+          this.highscores.record(this.scoreboard.score, inits);
+          this.scoreboard.highscore(this.highscores.topScore());
+          this.highscorelist.draw();
+          this.demo();    
+        })
       }
-  } else {
+    } else {
       this.checkZoneClear = 1;
     }
   }
@@ -136,7 +150,7 @@ class Controller extends LG.Controller {
     if (this.ufo) {
       return;
     }
-    if (! this.mode.is(Mode.DEMO) && ! this.ship.alive()) {
+    if (! this.mode.demo && ! this.ship.alive()) {
       return;
     }
     let mar = this.script.board < 5 ? 250 : this.script.board < 7 ? 200 : 150;
@@ -280,7 +294,7 @@ class Controller extends LG.Controller {
     }
   }
   onkeydown(e) {
-    if (this.mode.is(Mode.DEMO) || this.mode.is(Mode.ENTER_SCORE)) {
+    if (this.mode.demo || this.mode.is(Mode.ENTER_SCORE)) {
       return;
     }
     switch (e.key) {
@@ -317,7 +331,7 @@ class Controller extends LG.Controller {
     }
   }
   onkeyup(e) {
-    if (this.mode.is(Mode.DEMO)) {
+    if (this.mode.demo) {
       switch (e.key) {
         case '1':
           Sounds.start();
@@ -355,6 +369,7 @@ class Mode extends Obj {
   }
   reset() {
     this.mode = 0;
+    this.demo = 0;
     this.starting = 0;
     this.finishing = 0;
   }
@@ -367,6 +382,7 @@ class Mode extends Obj {
   start() {
     this.mode = Mode.GAME_STARTING;
     this.starting = 1;
+    this.demo = 0;
   }
   finish() {
     this.mode = Mode.BOARD_FINISHING;
@@ -391,11 +407,10 @@ class Mode extends Obj {
     }
   }
   //
-  static DEMO = 1;
-  static GAME_STARTING = 2;
-  static GAME_IN_PROGRESS = 3;
-  static BOARD_FINISHING = 4;
-  static ENTER_SCORE = 5;
+  static GAME_STARTING = 1;
+  static GAME_IN_PROGRESS = 2;
+  static BOARD_FINISHING = 3;
+  static ENTER_SCORE = 4;
 }
 class Scores extends StorableObj {
   /**
@@ -409,11 +424,17 @@ class Scores extends StorableObj {
     return this.scores[0]?.score;
   }
   bottomScore() {
-    return this.scores.length ? this.scores[this.scores.length - 1].score : 0;
+    return this.scores.length < Scores.MAX ? 0 : this.scores[this.scores.length - 1].score;
+  }
+  forEach(fn) {
+    this.scores.forEach((item, i) => fn(item, i));
   }
   qualifies(score) {
+    if (score == 0) {
+      return false;
+    }
     let bs = this.bottomScore();
-    return this.length == Scores.MAX ? score > bs : score >= bs;
+    return this.scores.length == Scores.MAX ? score > bs : score >= bs;
   }
   record(score, inits) {
     if (! this.qualifies(score)) {
@@ -421,13 +442,16 @@ class Scores extends StorableObj {
     }
     let ins = 0;
     for (let i = this.scores.length - 1; i >= 0; i--) {
-      if (score <= this.scores[i]) {
+      if (score <= this.scores[i].score) {
         ins = i + 1;
         break;
       } 
     }
     if (ins < Scores.MAX) {
-      this.scores[ins] = {'score':score, 'inits':inits};
+      this.scores.splice(ins, 0, {'score':score, 'inits':inits});
+    }
+    if (this.scores.length > Scores.MAX) {
+      this.scores.length = Scores.MAX;
     }
     this.save();
   }
@@ -492,6 +516,34 @@ class Zone {
     return rock.distanceFrom(this.x, this.y) <= this.r;
   }
 }
+class HighScoreList extends LG.Obj {
+  //
+  constructor(scores) {
+    super();
+    this.scores = scores;
+    this.$highscores = $('#highscores');
+    this.$list = $('#list');
+    this.draw();
+  }
+  show(b) {
+    this.$highscores.classList.toggle('hide', ! b);
+    $('#press1').classList.toggle('hide', ! b);
+  }
+  draw() {
+    var h = [];
+    this.scores.forEach((e, i) => {
+      h.push('<div><span class="rank">');
+      h.push(i + 1);
+      h.push('.</span><span class="score">');
+      h.push(e.score);
+      h.push('</span><span class="inits">');
+      h.push(e.inits);
+      h.push('</span>');
+      h.push('</div>');
+    })
+    this.$list.innerHTML = h.join('');
+  }
+}
 class Scoreboard extends LG.Obj {
   /**
    * i lives
@@ -506,6 +558,11 @@ class Scoreboard extends LG.Obj {
     this.ships = [];
     this.reset();
     this.highscore(highscore);
+  }
+  show(b) {
+    this.$score.classList.toggle('hide', ! b);
+    this.ships.forEach(life => life.show(b));
+    return this;
   }
   reset() {
     this.score = 0;
@@ -599,7 +656,6 @@ class Ship extends LG.Sprite {
     if (this.rot) {
       let deg = this.rot * Ship.ROTC;
       this.rotate(deg);
-      log(this._rot);
     }
     this.forward();
     if (fix % 5 == 0) {
@@ -745,9 +801,9 @@ class Shot extends LG.Sprite {
   /**
    * i type 1=ship 2=ufo
    */
-  constructor(bounds, speed, rad, type, max) {
+  constructor(bounds, speed, rad, type, max, ufo) {
     super($('#screen'), null, 'shot ' + (type == 1 ? 'sshot' : 'ushot'), bounds.cx - 2, bounds.cy - 2);
-    this.velocity = new Shot.Velocity(rad, speed);
+    this.velocity = new Shot.Velocity(rad, speed, ufo);
     this.type = type;
     this.steps = 0;
     this.max = max || Shot.STEPS;
@@ -768,20 +824,21 @@ class Shot extends LG.Sprite {
     return new Shot(ship.bounds(), ship.speed, ship.compass.rad, 1);
   }
   static fromUfo(ufo, rad) {
-    let max = ufo.type == 1 ? 38 : 45;
-    return new Shot(ufo.bounds(), null, rad, 2, max);
+    let max = ufo.type == 1 ? 48 : 54;
+    return new Shot(ufo.bounds(), null, rad, 2, max, ufo);
   }
   static STEPS = 45;
 }
 Shot.Velocity = class extends Vector {
   //
-  constructor(rad, shipv) {
+  constructor(rad, shipv, ufo) {
     super();
-    let v = Vector.byRadians(rad, Shot.Velocity.MAX);
     if (shipv) {
+      let v = Vector.byRadians(rad, Shot.Velocity.FROM_SHIP);
       this.x = this.merge(v.x, shipv.x * 1.2);
       this.y = this.merge(v.y, shipv.y * 1.2);
     } else {
+      let v = Vector.byRadians(rad, ufo.type == 1 ? 16 : 20);
       this.x = v.x;
       this.y = v.y;
     }
@@ -789,7 +846,7 @@ Shot.Velocity = class extends Vector {
   merge(m, s) {
     return (Math.abs(m + s) < Math.abs(m)) ? m + s : m;
   }
-  static MAX = 24;
+  static FROM_SHIP = 24;
 }
 class Thruster extends LG.Sprite {
   //
