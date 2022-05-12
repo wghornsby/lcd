@@ -118,8 +118,10 @@ class Controller extends LG.Controller {
       let nhs = this.highscores.qualifies(this.scoreboard.score);
       animate($('#gameover'), 'textgrow 3s 1', () => {
         if (! nhs) {
-          $('#gameover').style.display = '';
-          this.demo();
+          wait(3000, () => {
+            $('#gameover').style.display = '';
+            this.demo();  
+          })
         }
       })
       if (nhs) {
@@ -347,10 +349,10 @@ class Controller extends LG.Controller {
       return;
     }
     switch (e.key) {
+      case 'A':
+      case 'a':
       case 'S':
       case 's':
-      case 'D':
-      case 'd':
       case 'ArrowLeft':
       case 'ArrowRight':
         this.ship.turn(0);
@@ -384,6 +386,7 @@ class Mode extends Obj {
     this.demo = 1;
     this.entering = 0;
     $('#welcome').style.display = 'block';
+    //animate($('#welcome'), 'fadein 1s normal 1');
     this.demob = true;
   }
   is(mode) {
@@ -394,7 +397,9 @@ class Mode extends Obj {
     this.starting = 1;
     this.demo = 0;
     this.entering = 0;
-  }
+    $('#welcome').style.display = '';
+    $('#highscores').style.display = '';
+}
   finish() {
     this.mode = Mode.BOARD_FINISHING;
     this.finishing = 1;
