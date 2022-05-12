@@ -37,18 +37,6 @@ body {
   text-align:center;
   user-select:none;
 }
-#press1 {
-  font-family:'Orbitron';
-  font-size:26pt;
-  color:white;
-  position:absolute;
-  z-index:10;
-  bottom:90px;
-  width:100%;
-  text-align:center;
-  user-select:none;
-  animation:pulse 1s infinite;
-}
 @keyframes pulse {
   0% {
     opacity:1;
@@ -414,7 +402,7 @@ body {
     background-color:white;
   }
 }
-#highscores {
+#welcome, #highscores {
   font-family:'Orbitron';
   color:white;
   position:absolute;
@@ -422,27 +410,57 @@ body {
   width:100%;
   text-align:center;
   user-select:none;
-  top:5%;
+  top:6%;
   user-select:none;
-  text-shadow: 
-        -1px -1px 0px #000,
-         0px -1px 0px #000,
-         1px -1px 0px #000,
-        -1px  0px 0px #000,
-         1px  0px 0px #000,
-        -1px  1px 0px #000,
-         0px  1px 0px #000,
-         1px  1px 0px #000;
+  text-shadow:-1px -1px 0px #000,0px -1px 0px #000,1px -1px 0px #000,-1px  0px 0px #000,1px  0px 0px #000,-1px  1px 0px #000,0px  1px 0px #000,1px  1px 0px #000;
+  display:none;
 }
-#highscores h1 {
+#welcome h1, #highscores h1 {
   font-size:46pt;
   line-height:46pt;
+  margin-bottom:0.4em;
+}
+#welcome h1 {
+  color:rgb(0, 255, 21);
+  font-size:60pt;
+}
+#welcome h2 {
+  margin-top:1.5em;
+  font-size:30pt;
+}
+#welcome div {
+  font-size:22pt;
+  width:600px;
+  margin:0 auto;
+  padding-bottom:0.3em;
+  text-align:left;
 }
 #highscores div {
-  font-size:30pt;
+  font-size:28pt;
   width:430px;
   text-align:left;
   margin:0 auto;
+}
+#welcome .keys {
+  display:inline-block;
+  width:250px;
+  text-align:center;
+}
+#welcome .keys span {
+  background-color:#e0e0e0;
+  color:black;
+  display:inline-block;
+  width:90px;
+  font-size:30pt;
+}
+#welcome .keys span.sb {
+  background-color:#e0e0e0;
+  color:black;
+  display:inline-block;
+  width:250px;
+  font-size:24pt;
+  height:50px;
+  line-height:50px;
 }
 #highscores .rank {
   display:inline-block;
@@ -460,6 +478,19 @@ body {
   display:inline-block;
   width:150px;
   text-align:right;
+}
+#press1 {
+  font-family:'Orbitron';
+  font-size:26pt;
+  color:white;
+  position:absolute;
+  z-index:20;
+  bottom:50px;
+  width:100%;
+  text-align:center;
+  user-select:none;
+  animation:pulse 1s infinite;
+  text-shadow:-1px -1px 0px #000,0px -1px 0px #000,1px -1px 0px #000,-1px  0px 0px #000,1px  0px 0px #000,-1px  1px 0px #000,0px  1px 0px #000,1px  1px 0px #000;
 }
 </style>
 </head>
@@ -564,6 +595,35 @@ body {
     <div id='highscore'>00</div>
     <div id='gameover'>GAME OVER</div>
     <div id='start'>START PLAYER 1</div>
+    <div id='welcome'>
+      <h1>ASTEROIDS.js</h1>
+      <h2>CONTROLS</h2>
+      <div>
+        <span class='keys'>
+          <span>A</span>
+          <span>S</span>
+        </span>
+        Rotate left and right
+      </div>
+      <div>
+        <span class='keys'>
+          <span>K</span>
+        </span>
+        Thrusters on
+      </div>
+      <div>
+        <span class='keys'>
+          <span>L</span>
+        </span>
+        Fire phaser
+      </div>
+      <div>
+        <span class='keys'>
+          <span class='sb'>SPACEBAR</span>
+        </span>
+        Jump to hyperspace
+      </div>
+    </div>
     <div id='highscores'>
       <h1>HIGH SCORES</h1>
       <div id='list'></div>

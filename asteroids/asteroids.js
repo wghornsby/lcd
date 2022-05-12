@@ -301,13 +301,13 @@ class Controller extends LG.Controller {
       return;
     }
     switch (e.key) {
-      case 'S':
-      case 's':
+      case 'A':
+      case 'a':
       case 'ArrowLeft':
         this.ship.turn(-1);
         break;
-      case 'D':
-      case 'd':
+      case 'S':
+      case 's':
       case 'ArrowRight':
         this.ship.turn(1);
         break;
@@ -383,6 +383,8 @@ class Mode extends Obj {
   setDemo() {
     this.demo = 1;
     this.entering = 0;
+    $('#welcome').style.display = 'block';
+    this.demob = true;
   }
   is(mode) {
     return this.mode == mode;
@@ -398,6 +400,19 @@ class Mode extends Obj {
     this.finishing = 1;
   }
   step() {
+    if (this.demo) {
+      this.demo++;
+      if (this.demo % 1000 == 0) {
+        this.demob = ! this.demob;
+        if (this.demob) {
+          $('#welcome').style.display = 'block';
+          $('#highscores').style.display = '';
+        } else {
+          $('#welcome').style.display = '';
+          $('#highscores').style.display = 'block';
+        }
+      }
+    }
     if (this.starting) {
       this.starting++;
       if (this.starting > 150) {
@@ -568,7 +583,7 @@ class Scoreboard extends LG.Obj {
     this.highscore(highscore);
   }
   show(b) {
-    this.$score.classList.toggle('hide', ! b);
+    //this.$score.classList.toggle('hide', ! b);
     this.ships.forEach(life => life.show(b));
     return this;
   }
