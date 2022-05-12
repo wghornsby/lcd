@@ -177,8 +177,11 @@ class Controller extends LG.Controller {
       if (this.script.board == 1 && this.ufos < 3) {
         cls = 'ub';
       }
-      if (this.scoreboard.gameover() || this.mode.demo) {
+      if (this.scoreboard.gameover()) {
         cls = 'us';
+      }
+      if (this.demo) {
+        cls = rnd(4) == 0 ? 'ub' : 'us';
       }
     }
     if (cls) {
