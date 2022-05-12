@@ -417,7 +417,15 @@ body {
   animation:fadein 3s normal 1;
 }
 @keyframes fadein {
-  from {opacity:0} to {opacity:1}
+  0% {
+    opacity:0;
+  }
+  50% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
 }
 #welcome h1, #highscores h1 {
   font-size:46pt;
@@ -434,7 +442,7 @@ body {
 }
 #welcome div {
   font-size:22pt;
-  width:600px;
+  width:610px;
   margin:0 auto;
   padding-bottom:0.3em;
   text-align:left;
@@ -449,6 +457,7 @@ body {
   display:inline-block;
   width:250px;
   text-align:center;
+  padding-right:10px;
 }
 #welcome .keys span {
   background-color:#e0e0e0;
@@ -456,6 +465,7 @@ body {
   display:inline-block;
   width:90px;
   font-size:30pt;
+  border-radius:10px;
 }
 #welcome .keys span.sb {
   background-color:#e0e0e0;

@@ -36,8 +36,8 @@ class Controller extends LG.Controller {
       .on('keyup', e => this.onkeyup(e));
     this.demo();
   }
-  demo() {
-    this.mode.setDemo();
+  demo(showHighScores = false) {
+    this.mode.setDemo(showHighScores);
     this.ship.dead = 1;
     this.script.reset();
     this.killSprites();
@@ -120,7 +120,7 @@ class Controller extends LG.Controller {
         if (! nhs) {
           wait(3000, () => {
             $('#gameover').style.display = '';
-            this.demo();  
+            this.demo(1);  
           })
         }
       })
@@ -130,7 +130,7 @@ class Controller extends LG.Controller {
           this.highscores.record(this.scoreboard.score, inits);
           this.scoreboard.highscore(this.highscores.topScore());
           this.highscorelist.draw();
-          this.demo();    
+          this.demo(1);    
         })
       }
     } else {
@@ -180,7 +180,7 @@ class Controller extends LG.Controller {
       if (this.scoreboard.gameover()) {
         cls = 'us';
       }
-      if (this.demo) {
+      if (this.mode.demo) {
         cls = rnd(4) == 0 ? 'ub' : 'us';
       }
     }
@@ -385,21 +385,23 @@ class Mode extends Obj {
   set(mode) {
     this.mode = mode;
   }
-  setDemo() {
+  setDemo(showHighScores = false) {
     this.demo = 1;
     this.entering = 0;
-    $('#welcome').style.display = 'block';
-    //animate($('#welcome'), 'fadein 1s normal 1');
-    this.demob = true;
+    if (showHighScores) {
+      $('#highscores').style.display = 'block';
+    } else {
+      $('#welcome').style.display = 'block';
+    }
+    this.demob = ! showHighScores;
   }
   is(mode) {
     return this.mode == mode;
   }
   start() {
+    this.reset();
     this.mode = Mode.GAME_STARTING;
     this.starting = 1;
-    this.demo = 0;
-    this.entering = 0;
     $('#welcome').style.display = '';
     $('#highscores').style.display = '';
 }
