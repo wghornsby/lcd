@@ -451,7 +451,7 @@ class Scores extends StorableObj {
    */
   constructor() {
     super('Asteroids.Scores');
-    this.scores = this.scores || [];
+    this.scores = this.scores || Scores.CANNED;
   }
   topScore() {
     return this.scores[0]?.score;
@@ -489,6 +489,7 @@ class Scores extends StorableObj {
     this.save();
   }
   static MAX = 10;
+  static CANNED = [{score:990,inits:'UFO'},{score:520,inits:'ET'},{score:330,inits:'ALF'},{score:100,inits:'MTM'}]
 }
 class Script {
   /**
@@ -524,10 +525,12 @@ class Script {
       this.sf += 0.1;
       this.color += 50;
       this.sat += 30;
-    } else if (this.sf < 2) {
-      this.sf += 0.05;
-      this.color += 70;
+      this.inc = 30;
+    } else if (this.sf < 1.9) {
+      this.sf += 0.1;
+      this.color += this.inc;
       this.sat = 100;
+      this.inc -= 40;
     } else {
       this.color = '#000';
       this.sat = 0;
@@ -1147,70 +1150,6 @@ class Ufo extends LG.Sprite {
     return new Ufo(ship, rocks, x, y, cls, speed, x1, y1, x2);
   }
 }
-Sounds = {
-  BEAT1:new Audio('audio/BEAT11.wav'),
-  BEAT2:new Audio('audio/BEAT21.wav'),
-  YOURFIRE:new Audio('audio/YOURFIRE1.wav'),
-  UFOFIRE:new Audio('audio/UFOFIRE1.wav'),
-  LARGEXPL:new Audio('audio/LARGEXPL1.wav'),
-  MEDUMXPL:new Audio('audio/MEDUMXPL1.wav'),
-  SMALLXPL:new Audio('audio/SMALLXPL1.wav'),
-  LSAUCER:new Audio('audio/LSAUCER.wav'),
-  //
-  start:function() {
-    if (! this._muted) {
-      this._started = 1;
-    }
-  },
-  mute:function(b) {
-    this._muted = 1;
-  },
-  unmute:function() {
-    this._muted = 0;
-  },
-  beat:function() {
-    this._b = ! this._b;
-    this.play(this._b ? Sounds.BEAT2 : Sounds.BEAT1);
-  },
-  fireShip:function() {
-    this.play(Sounds.YOURFIRE);
-  },
-  fireUfo:function() {
-    this.play(Sounds.UFOFIRE);
-  },
-  explodeBig:function() {
-    this.play(Sounds.LARGEXPL);
-  },
-  explodeMedium:function() {
-    this.play(Sounds.MEDUMXPL);
-  },
-  explodeSmall:function() {
-    this.play(Sounds.SMALLXPL);
-  },
-  ufoBig() {
-    Sounds.LSAUCER.loop = true;
-    //Sounds.LSAUCER.play();
-  },
-  explode:function(type) {
-    switch (type) {
-      case 'rb':
-        return this.explodeBig();
-      case 'rm':
-        return this.explodeMedium();
-      case 'rs':
-        return this.explodeSmall();
-    }
-  },
-  //
-  play:function(a) {
-    if (! this._started || this._muted) {
-      return;
-    }
-    a.pause();
-    a.currentTime=0;
-    a.play();
-  }
-}
 class ScoreEntry extends Obj {
   //
   constructor() {
@@ -1291,5 +1230,70 @@ class ScoreEntry extends Obj {
   }
   cursor() {
     this.$$inits.forEach(($span, i) => $span.classList.toggle('curs', this.ic == i));
+  }
+}
+Sounds = {
+  BEAT1:new Audio('audio/BEAT11.wav'),
+  BEAT2:new Audio('audio/BEAT21.wav'),
+  YOURFIRE:new Audio('audio/YOURFIRE1.wav'),
+  UFOFIRE:new Audio('audio/UFOFIRE1.wav'),
+  LARGEXPL:new Audio('audio/LARGEXPL1.wav'),
+  MEDUMXPL:new Audio('audio/MEDUMXPL1.wav'),
+  SMALLXPL:new Audio('audio/SMALLXPL1.wav'),
+  LSAUCER:new Audio('audio/LSAUCER.wav'),
+  //
+  start:function() {
+    if (! this._muted) {
+      this._started = 1;
+    }
+  },
+  mute:function(b) {
+    this._muted = 1;
+  },
+  unmute:function() {
+    this._muted = 0;
+  },
+  beat:function() {
+    this._b = ! this._b;
+    this.play(this._b ? Sounds.BEAT2 : Sounds.BEAT1);
+  },
+  fireShip:function() {
+    this.play(Sounds.YOURFIRE);
+  },
+  fireUfo:function() {
+    this.play(Sounds.UFOFIRE);
+  },
+  explodeBig:function() {
+    this.play(Sounds.LARGEXPL);
+  },
+  explodeMedium:function() {
+    this.play(Sounds.MEDUMXPL);
+  },
+  explodeSmall:function() {
+    this.play(Sounds.SMALLXPL);
+  },
+  ufoBig() {
+    Sounds.LSAUCER.loop = true;
+    //Sounds.LSAUCER.play();
+  },
+  explode:function(type) {
+    switch (type) {
+      case 'rb':
+        return this.explodeBig();
+      case 'rm':
+        return this.explodeMedium();
+      case 'rs':
+        return this.explodeSmall();
+    }
+  },
+  //
+  play:function(a) {
+    return; // temp until figure out ufo noises
+    if (! this._started || this._muted) {
+      return;
+    }
+    a.pause();
+    a.currentTime=0;
+    a.play();
   }
 }

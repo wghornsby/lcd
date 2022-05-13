@@ -1,6 +1,6 @@
 /** 
- * LCD gaming
- * JavaScript library (c)2022 Warren Hornsby 
+ * LCD gaming 
+ * 1.0 (c)2022 Warren Hornsby 
  **/
 var LG = {};
 //
