@@ -82,11 +82,11 @@ class Controller extends LG.Controller {
   }
   step(fix) {
     if (this.rocksleft && fix > 50) {
-      let b = Math.floor(this.rocksleft / this.halfrocks * 25) + 50;
+      let b = Math.floor(this.rocksleft / this.halfrocks * 25) + 10;
       if (fix % b == 0) {
         Sounds.beat();
       }
-    }``
+    }
     super.step(fix);
     this.mode.step();
     if (this.mode.is(Mode.GAME_STARTING) || this.mode.is(Mode.BOARD_FINISHING)) {
@@ -272,7 +272,7 @@ class Controller extends LG.Controller {
     return target;
   }
   checkZone() {
-    if (! this.checkZoneClear || this.ufo) {
+    if (! this.checkZoneClear || (this.ufo && this.ufo.type == 2)) {
       return;
     }
     let safe = true;
@@ -546,7 +546,7 @@ class Zone {
   constructor(mx, my) {
     this.x = mx / 2;
     this.y = my / 2;
-    this.r = 125;
+    this.r = 130;
   }
   contains(rock) {
     return rock.distanceFrom(this.x, this.y) <= this.r;
@@ -1061,6 +1061,9 @@ class Ufo extends LG.Sprite {
       return;
     }
     if (! this.ship.alive()) {
+      if (this.type == 1) {
+        return;
+      }
       this.rockmode = 1;
     }
     let rad;
@@ -1241,6 +1244,7 @@ Sounds = {
   MEDUMXPL:new Audio('audio/MEDUMXPL1.wav'),
   SMALLXPL:new Audio('audio/SMALLXPL1.wav'),
   LSAUCER:new Audio('audio/LSAUCER.wav'),
+  SSAUCER:new Audio('audio/SSAUCER.wav'),
   //
   start:function() {
     if (! this._muted) {
@@ -1273,8 +1277,8 @@ Sounds = {
     this.play(Sounds.SMALLXPL);
   },
   ufoBig() {
-    Sounds.LSAUCER.loop = true;
-    //Sounds.LSAUCER.play();
+    Sounds.SSAUCER.loop = true;
+    Sounds.SSAUCER.play();
   },
   explode:function(type) {
     switch (type) {
@@ -1288,7 +1292,7 @@ Sounds = {
   },
   //
   play:function(a) {
-    return; // temp until figure out ufo noises
+    return;
     if (! this._started || this._muted) {
       return;
     }
