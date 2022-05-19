@@ -33,7 +33,11 @@ class Controller extends LG.Controller {
       .on('nextboard', () => this.nextBoard());
     window
       .on('keydown', e => this.onkeydown(e))
-      .on('keyup', e => this.onkeyup(e));
+      .on('keyup', e => this.onkeyup(e))
+      .on('resize', e => {
+        this.mx = window.innerWidth;
+        this.my = window.innerHeight;
+      })
     this.demo();
   }
   demo(showHighScores = false) {
@@ -186,7 +190,7 @@ class Controller extends LG.Controller {
     }
     if (cls) {
       this.ufos++;
-      this.ufo = this.sprite(Ufo.create(this.ship, this.rocks, cls, this.mx, this.my, this.script.sf)
+      this.ufo = this.sprite(Ufo.create(this.ship, this.rocks, cls, this.mx, this.my, this.script.sf, this.mode.demo)
         .on('shoot', shot => this.sprite(shot)));
     }
   }
@@ -1001,9 +1005,10 @@ class Rock extends LG.Sprite {
 class Ufo extends LG.Sprite {
   onshoot(shot) {}
   //
-  constructor(ship, rocks, x, y, cls, speed, x1, y1, x2) {
+  constructor(ship, rocks, x, y, cls, speed, x1, y1, x2, demo) {
     super($('#screen'), $('#ufobp').innerHTML, 'ufo ' + cls, x, y);
     this.ship = ship;
+    this.demo = demo;
     this.shooting = 0;
     this.type = cls == 'ub' ? 1/*big*/ : 2/*small*/;
     this.shootmod = this.type == 1 ? 50 : 5;
@@ -1061,7 +1066,7 @@ class Ufo extends LG.Sprite {
       return;
     }
     if (! this.ship.alive()) {
-      if (this.type == 1) {
+      if (this.type == 1 && ! this.demo) {
         return;
       }
       this.rockmode = 1;
@@ -1134,7 +1139,7 @@ class Ufo extends LG.Sprite {
     return dir == 1 ? bval >= val : bval <= val;
   }
   //
-  static create(ship, rocks, cls, mx, my, sf) {
+  static create(ship, rocks, cls, mx, my, sf, demo) {
     let w = cls == 'ub' ? 60 : 30;
     let edge = rnd(2) * 2 + 1;
     let x, y, x1, y1, x2;
@@ -1150,7 +1155,7 @@ class Ufo extends LG.Sprite {
     }    
     y1 = rnd(my - 120);
     let speed = (cls == 'ub' ? 3 : 4) * sf;
-    return new Ufo(ship, rocks, x, y, cls, speed, x1, y1, x2);
+    return new Ufo(ship, rocks, x, y, cls, speed, x1, y1, x2, demo);
   }
 }
 class ScoreEntry extends Obj {
