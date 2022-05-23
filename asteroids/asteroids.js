@@ -538,6 +538,7 @@ class Script {
     } else {
       this.color = '#000';
       this.sat = 0;
+      this.rocks += 2;
       return;
     }
     if (this.color > 360) {
@@ -753,7 +754,7 @@ class Ship extends LG.Sprite {
       });
     });
   }
-  kill(rock) {
+  kill(rock) {    
     if (rock) {
       let sf = rock.type == 'rb' ? 4 : rock.type == 'rm' ? 2 : 1;
       this.speed.add(Vector.byRadians(rock.compass.rad, rock.speed * sf));
@@ -1070,6 +1071,8 @@ class Ufo extends LG.Sprite {
         return;
       }
       this.rockmode = 1;
+    } else {
+      this.rockmode = 0;
     }
     let rad;
     if (this.type == 1) {
@@ -1077,7 +1080,7 @@ class Ufo extends LG.Sprite {
     } else {
       let ub = this.bounds(), sb, fudge;
       if (this.rockmode && this.rocks.length == 0) {
-        rad = rnd(628) / 100;
+        return; 
       } else {
         if (this.rocks.length && (this.rockmode || rnd(4) == 1)) {
           let md = 2000, d, rb, rs;
