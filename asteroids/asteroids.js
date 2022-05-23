@@ -26,7 +26,7 @@ class Controller extends LG.Controller {
     this.highscorelist = new HighScoreList(this.highscores);
     this.entry = new ScoreEntry();
     this.script = new Script();
-    this.ship = new Ship(this.mx / 2 - 20, this.my / 2 - 20)
+    this.ship = new Ship()
       .on('explode', () => this.ship_onexplode())
       .on('dead', () => this.ship_ondead());
     this.mode = new Mode()
@@ -53,7 +53,7 @@ class Controller extends LG.Controller {
   }
   newGame() {
     this.mode.start();
-    this.ship.reset();
+    this.ship.reset(this.mx, this.my);
     this.script.reset();
     this.scoreboard.show(1).reset();
     this.highscorelist.show(0);
@@ -145,7 +145,7 @@ class Controller extends LG.Controller {
     this.scoreboard.die();
   }
   zone_onsafe() {
-    this.sprite(this.ship.reset());
+    this.sprite(this.ship.reset(this.mx, this.my));
   }
   board_onfinish() {
     this.mode.finish();
@@ -663,15 +663,13 @@ class Ship extends LG.Sprite {
   onexplode() {}
   ondead() {}
   //
-  constructor(x, y) {
-    super($('#screen'), $('#shipbp').innerHTML, 'ship', x, y, 90);
-    this.x0 = x;
-    this.y0 = y;
+  constructor() {
+    super($('#screen'), $('#shipbp').innerHTML, 'ship', 0, 0, 90);
     this.shots = [];
     this.show(0);
   }
-  reset() {
-    this.moveTo(this.x0, this.y0).heading(0);
+  reset(mx, my) {
+    this.moveTo(mx / 2 - 20, my / 2 - 20).heading(0);
     this.dead = 0;
     this.thrusting = 0;
     this.exploding = 0;
