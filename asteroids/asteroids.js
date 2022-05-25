@@ -22,7 +22,7 @@ class Controller extends LG.Controller {
     this.my = window.innerHeight;
     this.zone = new Zone(this.mx, this.my);
     this.highscores = new Scores();
-    this.scoreboard = new Scoreboard(1, this.highscores.topScore());
+    this.scoreboard = new Scoreboard(5, this.highscores.topScore());
     this.highscorelist = new HighScoreList(this.highscores);
     this.entry = new ScoreEntry();
     this.script = new Script();
