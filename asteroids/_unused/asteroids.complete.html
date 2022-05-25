@@ -1078,11 +1078,7 @@ function animate($e, css, onend) {
     onend && onend(e);
   })
 }
-/**
- * Asteroids.js 
- * (c)2022 Warren Hornsby
- **/
- class Controller extends LG.Controller {
+class Controller extends LG.Controller {
   /**
    * i mx, my
    * Sprites sprites (ship, rocks, ship shots, ufo, ufo shot)
@@ -1110,7 +1106,7 @@ function animate($e, css, onend) {
     this.highscorelist = new HighScoreList(this.highscores);
     this.entry = new ScoreEntry();
     this.script = new Script();
-    this.ship = new Ship(this.mx / 2 - 20, this.my / 2 - 20)
+    this.ship = new Ship()
       .on('explode', () => this.ship_onexplode())
       .on('dead', () => this.ship_ondead());
     this.mode = new Mode()
@@ -1137,7 +1133,7 @@ function animate($e, css, onend) {
   }
   newGame() {
     this.mode.start();
-    this.ship.reset();
+    this.ship.reset(this.mx, this.my);
     this.script.reset();
     this.scoreboard.show(1).reset();
     this.highscorelist.show(0);
@@ -1229,7 +1225,7 @@ function animate($e, css, onend) {
     this.scoreboard.die();
   }
   zone_onsafe() {
-    this.sprite(this.ship.reset());
+    this.sprite(this.ship.reset(this.mx, this.my));
   }
   board_onfinish() {
     this.mode.finish();
@@ -1538,7 +1534,7 @@ class Scores extends StorableObj {
    * scores[] [{score:100,inits:'WGH'},..]
    */
   constructor() {
-    super();
+    super('Asteroids.Scores');
     this.scores = this.scores || Scores.CANNED;
   }
   topScore() {
@@ -1622,6 +1618,7 @@ class Script {
     } else {
       this.color = '#000';
       this.sat = 0;
+      this.rocks += 2;
       return;
     }
     if (this.color > 360) {
@@ -1746,15 +1743,13 @@ class Ship extends LG.Sprite {
   onexplode() {}
   ondead() {}
   //
-  constructor(x, y) {
-    super($('#screen'), $('#shipbp').innerHTML, 'ship', x, y, 90);
-    this.x0 = x;
-    this.y0 = y;
+  constructor() {
+    super($('#screen'), $('#shipbp').innerHTML, 'ship', 0, 0, 90);
     this.shots = [];
     this.show(0);
   }
-  reset() {
-    this.moveTo(this.x0, this.y0).heading(0);
+  reset(mx, my) {
+    this.moveTo(mx / 2 - 20, my / 2 - 20).heading(0);
     this.dead = 0;
     this.thrusting = 0;
     this.exploding = 0;
@@ -1837,7 +1832,7 @@ class Ship extends LG.Sprite {
       });
     });
   }
-  kill(rock) {
+  kill(rock) {    
     if (rock) {
       let sf = rock.type == 'rb' ? 4 : rock.type == 'rm' ? 2 : 1;
       this.speed.add(Vector.byRadians(rock.compass.rad, rock.speed * sf));
@@ -2154,6 +2149,8 @@ class Ufo extends LG.Sprite {
         return;
       }
       this.rockmode = 1;
+    } else {
+      this.rockmode = 0;
     }
     let rad;
     if (this.type == 1) {
@@ -2161,7 +2158,7 @@ class Ufo extends LG.Sprite {
     } else {
       let ub = this.bounds(), sb, fudge;
       if (this.rockmode && this.rocks.length == 0) {
-        rad = rnd(628) / 100;
+        return; 
       } else {
         if (this.rocks.length && (this.rockmode || rnd(4) == 1)) {
           let md = 2000, d, rb, rs;
@@ -2325,7 +2322,6 @@ class ScoreEntry extends Obj {
   }
 }
 Sounds = {
-  /**
   BEAT1:new Audio('audio/BEAT11.wav'),
   BEAT2:new Audio('audio/BEAT21.wav'),
   YOURFIRE:new Audio('audio/YOURFIRE1.wav'),
@@ -2335,7 +2331,6 @@ Sounds = {
   SMALLXPL:new Audio('audio/SMALLXPL1.wav'),
   LSAUCER:new Audio('audio/LSAUCER.wav'),
   SSAUCER:new Audio('audio/SSAUCER.wav'),
-  */
   //
   start:function() {
     if (! this._muted) {

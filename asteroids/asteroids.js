@@ -22,7 +22,7 @@ class Controller extends LG.Controller {
     this.my = window.innerHeight;
     this.zone = new Zone(this.mx, this.my);
     this.highscores = new Scores();
-    this.scoreboard = new Scoreboard(5, this.highscores.topScore());
+    this.scoreboard = new Scoreboard(1, this.highscores.topScore());
     this.highscorelist = new HighScoreList(this.highscores);
     this.entry = new ScoreEntry();
     this.script = new Script();
@@ -454,7 +454,7 @@ class Scores extends StorableObj {
    * scores[] [{score:100,inits:'WGH'},..]
    */
   constructor() {
-    super('Asteroids.Scores');
+    super();
     this.scores = this.scores || Scores.CANNED;
   }
   topScore() {
@@ -1078,6 +1078,7 @@ class Ufo extends LG.Sprite {
     } else {
       let ub = this.bounds(), sb, fudge;
       if (this.rockmode && this.rocks.length == 0) {
+        animate(this.$frame, 'ufobulge 0.5s linear 1');  // flex :)
         return; 
       } else {
         if (this.rocks.length && (this.rockmode || rnd(4) == 1)) {
@@ -1305,5 +1306,12 @@ Sounds = {
     a.pause();
     a.currentTime=0;
     a.play();
+  }
+}
+function cleanup() {
+  let e = $('#screen').nextElementSibling;
+  while (e && e.nonce != 'wghornsby') {
+    e.remove();
+    e = $('#screen').nextElementSibling;
   }
 }

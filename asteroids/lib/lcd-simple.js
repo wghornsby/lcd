@@ -183,7 +183,7 @@ class StorableObj extends Obj {
   //
   constructor(key) {
     super();
-    this._storage = new Storage(key);
+    this._storage = new Storage(key || window.location);
     this.priv('_storage');
     this.fetch();
   }
