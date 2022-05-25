@@ -392,12 +392,8 @@ class Mode extends Obj {
   setDemo(showHighScores = false) {
     this.demo = 1;
     this.entering = 0;
-    if (showHighScores) {
-      $('#highscores').style.display = 'block';
-    } else {
-      $('#welcome').style.display = 'block';
-    }
     this.demob = ! showHighScores;
+    this.showDemoScreen();
   }
   is(mode) {
     return this.mode == mode;
@@ -406,25 +402,23 @@ class Mode extends Obj {
     this.reset();
     this.mode = Mode.GAME_STARTING;
     this.starting = 1;
-    $('#welcome').style.display = '';
-    $('#highscores').style.display = '';
+    $('#welcome').className = '';
+    $('#highscores').className = '';
 }
   finish() {
     this.mode = Mode.BOARD_FINISHING;
     this.finishing = 1;
+  }
+  showDemoScreen() {
+    $('#welcome').classList.toggle('fadein', this.demob);
+    $('#highscores').classList.toggle('fadein', ! this.demob);
   }
   step() {
     if (this.demo) {
       this.demo++;
       if (this.demo % 1000 == 0) {
         this.demob = ! this.demob;
-        if (this.demob) {
-          $('#welcome').style.display = 'block';
-          $('#highscores').style.display = '';
-        } else {
-          $('#welcome').style.display = '';
-          $('#highscores').style.display = 'block';
-        }
+        this.showDemoScreen();
       }
     }
     if (this.starting) {
