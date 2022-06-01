@@ -374,10 +374,10 @@ class Controller extends LG.Controller {
       case 'ArrowUp':
         this.ship.thrust(0);
         break;
-      case '/':
-        this.killSprites();
-        this.nextBoard();
-        break;
+      //case '/':
+        //this.killSprites();
+        //this.nextBoard();
+        //break;
       }
   }
 }
