@@ -42,6 +42,7 @@ class Controller extends LG.Controller {
   }
   demo(showHighScores = false) {
     this.mode.setDemo(showHighScores);
+    $('#copy').innerHTML = '&copy;2022 by Warren';
     this.ship.dead = 1;
     this.script.reset();
     this.killSprites();
@@ -75,6 +76,10 @@ class Controller extends LG.Controller {
       this.script.reset();
     }
     this.script.next();
+    if (! this.mode.demo) {
+      let i = this.script.board < 15 ? this.script.board - 1 : 14;
+      $('#copy').innerHTML = Script.LEVELS[i] + '<br>' + Script.AUS[i];
+    }
     this.rocks = Rock.asBigs(this.script, this.mx, this.my);
     this.rocksleft = this.totalRocksLeft();
     this.halfrocks = this.rocksleft / 2;
@@ -369,6 +374,10 @@ class Controller extends LG.Controller {
       case 'ArrowUp':
         this.ship.thrust(0);
         break;
+      case '/':
+        this.killSprites();
+        this.nextBoard();
+        break;
       }
   }
 }
@@ -505,6 +514,7 @@ class Script {
     this.sf = 1;
     this.color = 39;
     this.sat = 18;
+    this.opac = '0.4';
   }
   next() {
     this.board++;
@@ -524,21 +534,67 @@ class Script {
       this.color += 50;
       this.sat += 30;
       this.inc = 30;
+    } else if (this.sf < 1.7) {
+      this.sf += 0.1;
+      this.color += this.inc * 2.5;
+      this.sat = 100;
+      this.inc -= 33;
+    } else if (this.sf < 1.8) {
+      this.sf += 0.1;
+      this.inc += 20;
+      this.color += this.inc * 2.5;
+      this.opac = '0.6';
+      this.sat = 100;
     } else if (this.sf < 1.9) {
       this.sf += 0.1;
-      this.color += this.inc;
+      this.color = 197;
       this.sat = 100;
-      this.inc -= 40;
+      this.opac = '0.9';
     } else {
       this.color = '#000';
       this.sat = 0;
       this.rocks += 2;
+      this.opac = '0.9';
       return;
     }
     if (this.color > 360) {
       this.color -= 360;
     }
   }
+  static LEVELS = [
+    'TRAINING LEVEL 1',
+    'TRAINING LEVEL 2',
+    'TRAINING LEVEL 3',
+    'TRAINING LEVEL 4',
+    'TRAINING LEVEL 5',
+    'KIMBERLITE BELT',
+    'MALACHITE BELT',
+    'BORNITE BELT',
+    'COBALT BELT',
+    'SUGILITE BELT',
+    'CORUNDUM BELT',
+    'SULPHUR BELT',
+    'EMERALD BELT',
+    'DIAMOND BELT',
+    'OORT CLOUD'
+  ]
+  static AUS = [
+    '',
+    '',
+    '',
+    '',
+    '',
+    '1.4 AU',
+    '2.3 AU',
+    '18 AU',
+    '26 AU',
+    '41 AU',
+    '88 AU',
+    '499 AU',
+    '1,020 AU',
+    '9,900 AU',
+    '50,000 AU'
+  ]
 }
 class Zone {
   //
@@ -904,7 +960,7 @@ class Rock extends LG.Sprite {
       maxHead = r ? 359 : maxHead;
     }
     let deg = minHead + rnd(maxHead - minHead + 1);
-    let html = $('#rockbp1').innerHTML.replace('39', Rock.color).replace('18', Rock.sat);
+    let html = $('#rockbp1').innerHTML.replace('39', Rock.color).replace('18', Rock.sat).replace('0.4', Rock.opac);
     super($('#screen'), html, fcls, x, y);
     this.type = cls;
     this.sf = sf;
@@ -961,6 +1017,7 @@ class Rock extends LG.Sprite {
     let us = [], x, y, min, max, edge;
     Rock.color = script.color;
     Rock.sat = script.sat;
+    Rock.opac = script.opac;
     for (let i = 0; i < script.rocks; i++) {
       edge = (rnd(mx + my) < mx) ? rnd(2) * 2 : rnd(2) * 2 + 1;
       switch (edge) {
