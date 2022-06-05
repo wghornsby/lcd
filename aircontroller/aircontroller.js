@@ -23,7 +23,7 @@ class Radar extends Obj {
       .on('click', () => this.$pause_onclick());
     $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
-    this.advance(34);
+    //this.advance(34);
     this.start();
   }
   start(unhide) {
@@ -44,7 +44,7 @@ class Radar extends Obj {
       this.speed = 0;
     }
     this.oort.speed(this.speed);
-    this.$speed.innerText = 'x' + (this.speed + 1);
+    //this.$speed.innerText = 'x' + (this.speed + 1);
   }
   $pause_onclick() {
     let s = this.$pause.innerText;
@@ -118,7 +118,7 @@ class Oort extends Obj {
     this.jets = jets;
     this.alerts = [];
     this.script = new Script();
-    $('#test2').innerText = '';
+    //$('#test2').innerText = '';
     this.test2 = [];
     this.test2ix = 0;
   }
@@ -137,7 +137,7 @@ class Oort extends Obj {
           this.test2.shift();
         }
         this.test2.push((line.mi + this.test2ix) + ': ' + js(line.map));
-        $('#test2').innerText = this.test2.join("\n");
+        //$('#test2').innerText = this.test2.join("\n");
       }
       line.types.forEach(type => {
         this.spawn(type, line.sf);
