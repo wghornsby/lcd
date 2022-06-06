@@ -116,6 +116,10 @@ const wait = (ms, fn) => setTimeout(fn, ms);
 const priv = (target, ...fids) => {
   fids.forEach(fid => Object.defineProperty(target, fid, {enumerable:false}));
 }
+const privset = (target, fid, value) => {
+  target[fid] = value;
+  priv(target, fid);
+}
 const rnd = max => Math.floor(Math.random() * Math.floor(max));
 const js = JSON.stringify;
 const jscopy = o => JSON.parse(js(o));
