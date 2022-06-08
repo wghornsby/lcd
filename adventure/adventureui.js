@@ -10,12 +10,13 @@ SA.Screen$ = class extends Obj {
       .on('cls', () => this.cls())
       .on('look', (room, items) => this.look(room, items))
       .on('dark', () => this.dark(1))
-      .on('light', () => this.dark(0));
+      .on('light', () => this.dark(0))
+      .on('gameover', () => this.gameover());
     this.header$ = new SA.Header$();
     this.output$ = new SA.Output$();
     this.entry$ = new SA.Entry$()
       .on('enter', text => this.enter(text));
-    this.wraplen = 72;
+    this.wraplen = 64;
     this.darkness = 0;
     this.reset();
   }
@@ -25,47 +26,126 @@ SA.Screen$ = class extends Obj {
   }
   reset() {
     this.game.load(game());
+    return;
     this.replay(`
-    N
-    E
-    E
-    GET AX
+    GET TAPE
     W
     S
-    E
-    GO HOLE
-    GET FLINT
+    SIT
+    PRESS WHITE
+    PRESS RED
+    PRESS WHITE
+    GET UP
+    GET PIC
+    WAIT
+    WAIT
+    N
+    D
+    N
+    FRISK SABO
+    GET PIC
+    GET SABO
+    S
     U
+    N
     W
-    CLIMB TREE
-    GET KEYS
+    N
+    SHOW PIC
+    DROP SABO
+    BREAK WINDOW
+    WITH TAPE
+    SHOW PIC
+    PRESS WHITE
+    S
     D
-    CHOP TREE
-    GO STUMP
-    GET LAMP
-    GET BOTTLE
+    S
+    SIT
+    PRESS WHITE
+    GET UP
+    N
+    N
+    N
+    W
+    S
+    W
+    N
+    SHOW PIC
+    GO WINDOW
+    GET KEY
+    GET GLASS
+    GO WINDOW
+    PRESS WHITE
+    S
     D
-    GO HOLE
-    UNLOCK DOOR`);
+    D
+    N
+    S
+    U
+    S
+    SIT
+    UNLOCK YELLOW
+    PRESS YELLOW
+    PRESS RED
+    PRESS WHITE
+    GET UP
+    GET PIC
+    N
+    D
+    N
+    SHOW PIC
+    W
+    FRISK MOP
+    GET KEY
+    GET CUTTERS
+    U
+    D
+    E
+    PRESS YELLOW
+    S
+    U
+    S
+    SIT
+    UNLOCK BLUE
+    PRESS BLUE
+    PRESS RED
+    PRESS WHITE
+    GET UP
+    GET PIC
+    N
+    I
+    DROP KEY
+    DROP KEY
+    DROP PIC
+    DROP PIC
+    DROP PIC
+    DROP PIC
+    GET PIC
+    N
+    N
+    SHOW PIC
+    PUSH HARD`)
   }
   replay(s) {
     let a = s.split("\n");
     a.forEach(cmd => this.enter(cmd));
   }
-  say(msg) {
-    msg = this.br(msg);
+  say(msg, nobr) {
+    msg = nobr ? msg : this.br(msg);
     this.output$.say(msg);
   }
   sayinv(msg, items) {
     items = this.wrap(items) || 'Nothing At All';
     this.say(msg);
-    this.say(items);
+    this.say(items, 1);
   }
   dark(b) {
     this.darkness = b;
   }
   cls() {
     // this.output$.reset();
+  }
+  gameover() {
+    this.say('GAME OVER');
   }
   look(room, items) {
     if (this.darkness && ! this.game.litlamp()) {
@@ -85,7 +165,14 @@ SA.Screen$ = class extends Obj {
   }
   //
   br(s) {
-    return s.replace(/\|/g, '<br>');
+    s = s.replace(/\|/g, '<br>');
+    let a = s.split('<br>');
+    for (let i = 0; i < a.length; i++) {
+      if (a[i].length > 64) {
+        a[i] = a[i].substring(0, 64) + '<br>' + a[i].substring(64);
+      }
+    }
+    return a.join('<br>');
   }
   wrap(items) {
     let a = [], s = '';

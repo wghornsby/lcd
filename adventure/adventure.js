@@ -32,9 +32,9 @@ SA.Game = class extends Obj {
     this.doAutos();
   }
   parse(s) {
-    log('> ' + s);
-    if (s != '') {
-      let overb, onoun, verb, noun, a = s.trim().split(' ').filter(w => w.length);
+    log(s);
+    let overb, onoun, verb, noun, a = s.trim().split(' ').filter(w => w.length);
+    if (a.length) {
       overb = a[0], onoun = (a.length > 1) ? a[1] : '';
       verb = overb.substring(0, this.wordlen), noun = onoun.substring(0, this.wordlen);
       if (verb == 'I') {
@@ -76,6 +76,7 @@ SA.Game = class extends Obj {
       this.moved = 1;
     }
     this.room = this.rooms[rx];
+    this.look();
   }
   get(ix, always) {
     if (! always && this.items.inventory().count >= this.file.header.carrymax) {
@@ -184,7 +185,7 @@ SA.Game = class extends Obj {
       }
       if (this.allTrue(action.conds)) {
         this.doAll(action.dos);
-        log(action.toString(this.file));
+        //log(action.toString(this.file));
       }
     })
   }
@@ -199,11 +200,11 @@ SA.Game = class extends Obj {
       if (! done && this.allTrue(action.conds)) {
         done = true;
         this.doAll(action.dos, onoun);
-        log(action.toString(this.file));
+        //log(action.toString(this.file));
         action.continuation.forEach(act => {
           if (this.allTrue(act.conds)) {
             this.doAll(act.dos, onoun);
-            log(act.toString(this.file));
+            //log(act.toString(this.file));
           }
         })
       }
@@ -289,7 +290,7 @@ SA.Game = class extends Obj {
         this.ctr--;
         return;
       case 78:
-        return this.onsay(ctr);
+        return this.onsay(this.ctr + '');
       case 79:
         this.ctr = x;
         return;
