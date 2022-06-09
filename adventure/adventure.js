@@ -32,7 +32,7 @@ SA.Game = class extends Obj {
     this.doAutos();
   }
   parse(s) {
-    log(s);
+    //log(s);
     let overb, onoun, verb, noun, a = s.trim().split(' ').filter(w => w.length);
     if (a.length) {
       overb = a[0], onoun = (a.length > 1) ? a[1] : '';
@@ -79,14 +79,23 @@ SA.Game = class extends Obj {
     this.look();
   }
   get(ix, always) {
-    if (! always && this.items.inventory().count >= this.file.header.carrymax) {
+    if (! always && this.items.inventory().length >= this.file.header.carrymax) {
+      this.items[ix].rx = this.room.rx;
       return this.onsay("I'm carrying too much. Try: TAKE INVENTORY");
     }
     this.items[ix].rx = -1;
     this.look();
   }
-  drop(ix, rx) {
-    this.items[ix].rx = rx || this.room.rx;
+  drop(ix) {
+    this.items[ix].rx = this.room.rx;
+    this.look();
+  }
+  dropat(ix, rx) {
+    this.items[ix].rx = rx;
+    this.look();
+  }
+  dropwith(ix, ix2) {
+    this.items[ix].rx = this.items[ix2].rx;
     this.look();
   }
   remove(ix) {
@@ -185,7 +194,7 @@ SA.Game = class extends Obj {
       }
       if (this.allTrue(action.conds)) {
         this.doAll(action.dos);
-        //log(action.toString(this.file));
+        log(action.toString(this.file));
       }
     })
   }
@@ -200,11 +209,11 @@ SA.Game = class extends Obj {
       if (! done && this.allTrue(action.conds)) {
         done = true;
         this.doAll(action.dos, onoun);
-        //log(action.toString(this.file));
+        log(action.toString(this.file));
         action.continuation.forEach(act => {
           if (this.allTrue(act.conds)) {
             this.doAll(act.dos, onoun);
-            //log(act.toString(this.file));
+            log(act.toString(this.file));
           }
         })
       }
@@ -255,7 +264,7 @@ SA.Game = class extends Obj {
       case 61:
         return this.die();
       case 62:
-        return this.drop(x, x2);
+        return this.dropat(x, x2);
       case 63:
         return this.gameover();
       case 64:
@@ -283,7 +292,7 @@ SA.Game = class extends Obj {
       case 74:
         return this.get(x, 1);
       case 75:
-        return this.drop(x, x2);
+        return this.dropwith(x, x2);
       case 76:
         return this.look();
       case 77:
@@ -500,7 +509,7 @@ SA.File = class {
     this._unknown = raw.next();
     this.rooms.applyAliases(raw);
     this.items.applyAliases(raw);
-    //log(this.actions.toString(this));
+    log(this.actions.toString(this));
   }
   //
   extractWords(verbs, nouns, raw, count) {
@@ -514,7 +523,7 @@ SA.File = class {
       case 'I':
         return this.items[i].alias;
       case 'R':
-        return this.rooms[i].alias;
+        return this.rooms[i] ? this.rooms[i].alias : 'R' + i;
       case 'B':
         return 'bit' + i;
       case 'C':
@@ -652,7 +661,9 @@ SA.File.Words = class extends Array {
           w = w.substring(1);
         }
         this.push(w);
-        this.map[w] = index;
+        if (! this.map[w]) {
+          this.map[w] = index;
+        }
       }
     })
   }
@@ -905,7 +916,7 @@ SA.File.Do = class {
     ['remove2','I'],
     ['clear','B'],
     ['die',''],
-    ['put','IR'],
+    ['dropat','IR'],
     ['gameover',''],
     ['look',''],
     ['score',''],
@@ -918,7 +929,7 @@ SA.File.Do = class {
     ['swap','II'],
     ['continue',''],
     ['superget','I'],
-    ['put2','IR'],
+    ['dropwith','II'],
     ['look2',''],
     ['ctr--',''],
     ['sayctr',''],

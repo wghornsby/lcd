@@ -177,11 +177,12 @@ SA.Screen$ = class extends Obj {
   wrap(items) {
     let a = [], s = '';
     items.forEach(item => {
-      if (s.length + item.text.length > this.wraplen) {
+      let text = this.br(item.text);
+      if (s.length + text.length > this.wraplen) {
         a.push(s);
         s = '';
       }
-      s += item.text + '. ';
+      s += text + '. ';
     })
     a.push(s);
     return a.join('<br>');
