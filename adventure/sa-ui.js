@@ -213,6 +213,12 @@ SA.Entry$ = class extends Obj {
     if (e.keyCode == 13) {
       return this.enter();
     }
+    let s = e.key.toUpperCase();
+    if (s == 'Z' && e.ctrlKey) {
+      this.$entry.innerText = 'UNDO';
+      this.enter();
+      return;
+    }
     let len = this.text().length;
     if (e.keyCode == 8) {
       if (len) {
@@ -223,7 +229,6 @@ SA.Entry$ = class extends Obj {
     if (len > 23) {
       return;
     }
-    let s = e.key.toUpperCase();
     if (s.length == 1) {
       this.$entry.innerText += s;
     }

@@ -1,0 +1,1401 @@
+/** ADVENTURE 4 v 119 */
+
+wordlen = 3
+carrymax = 9
+lightlen = 15000
+nounverbs = 90
+messages = 100
+actions = 190
+items = 66
+rooms = 26
+startroom(I am in a chapel)
+
+
+/** VOCABULARY */
+
+0: AUT
+1: GO, ENT, WAL, CLI, RUN
+6: .
+7: 
+8: 
+9: 
+10: GET, TAK, PIC, REM, PUL
+15: HEL, RES
+17: .
+18: DRO, PUT, LEA, THR
+22: DIG
+23: ON
+24: WAV
+25: DUS, CLE
+27: PRE, PUS
+29: MOV, SHO, KIC
+32: BRE, SMA
+34: SAV
+35: REA
+36: .
+37: 
+38: OPE
+39: CLO
+40: TUR, DIA
+42: LOO, EXA
+44: INV
+45: CIR
+46: .
+47: QUI
+48: DRI, EAT
+50: SAW
+51: MIX
+52: HAM
+53: .
+54: SHR
+55: .
+56: LIS, HEA
+58: STA
+59: 
+60: SHA
+61: 
+62: SLI
+63: DAN
+64: YEL, SCR, SUM, SAY, CRY
+69: CUT, STA
+71: 
+72: RUB
+73: SMO
+74: .
+75: HUG
+76: 
+77: 
+78: 
+79: 
+80: 
+81: 
+82: 
+83: 
+84: 
+85: 
+86: 
+87: 
+88: 
+89: 
+
+0: ANY
+1: NOR
+2: SOU
+3: EAS
+4: WES
+5: UP
+6: DOW
+7: KNI
+8: COF
+9: IDO
+10: INV
+11: KET
+12: HOL
+13: SWO
+14: PAT
+15: WIN
+16: CLO
+17: DOO
+18: CHU
+19: LAB
+20: GRA
+21: WAL
+22: BAL
+23: MED
+24: CHI
+25: WRI, PLA
+27: SHI
+28: SAF
+29: BRE
+30: ARM
+31: GLA
+32: RIN
+33: TUB
+34: FIR
+35: FLU, CHI
+37: 38
+38: SOO
+39: 33
+40: HEA, ANI
+42: CHE
+43: STA
+44: BAG
+45: PIN
+46: SAW
+47: FOO, RAB
+49: GAM
+50: SHO
+51: PAP
+52: SWE
+53: MAN, CRI
+55: DOL
+56: BOA
+57: HAM
+58: GRA
+59: BUT
+60: PUP
+61: STI
+62: STA
+63: BOO
+64: CHA
+65: ZAP
+66: POT
+67: CEL
+68: BAR
+69: LOC
+70: LED
+71: WOO
+72: VOI
+73: SIG
+74: FLO
+75: NAI
+76: MUM
+77: CRA
+78: SAP
+79: ROC
+80: ARO
+81: CRY, RAV
+83: 34
+84: 35
+85: 36
+86: 37
+87: LEA
+88: MOA
+89: PAG
+
+
+/** ROOMS */
+
+room(I am in a chapel)
+  N(I am in a room in the castle)
+  S(I am in a Dingy Looking Stairwell)
+  E(I am in a Tunnel)
+  W(I am in a Ballroom)
+
+room(I am in a Dingy Looking Stairwell)
+  N(I am in a chapel)
+  S(I am in a room in the castle)
+  E(I am in a room in the castle)
+  W(I am in a dungeon)
+
+room(I am in a room in the castle)
+  N(I am in a room in the castle)
+  W(I am in a Dingy Looking Stairwell)
+
+room(I am in a Tunnel)
+  W(I am in a chapel)
+
+room(I am in a room in the castle)
+  S(I am in a room in the castle)
+  E(I am in a room in the castle)
+
+room(I'm in Medium Maegen's Mad Room)
+  W(I am in a room in the castle)
+
+room(I am in a room in the castle)
+  E(I am in a Lab)
+  W(I am in a room in the castle)
+
+room(I am in a room in the castle)
+
+room(I am in a room in the castle)
+  S(I am in a chapel)
+
+room(I am in a Ballroom)
+  E(I am in a chapel)
+
+room(I am in a dungeon)
+  S(I am in a torture chamber)
+  E(I am in a Dingy Looking Stairwell)
+
+room(I'm in the Armory)
+  W(I am in a torture chamber)
+
+room(I am in a torture chamber)
+  N(I am in a dungeon)
+  E(I'm in the Armory)
+
+room(I am in a Chimney)
+  D(I am in a large fireplace)
+
+room(I am in a large fireplace)
+  S(I am in a Ballroom)
+
+room(I am in a room in the castle)
+  U(I am in a room in the castle)
+
+room(I am in a Lab)
+  W(I am in a room in the castle)
+
+room(I am in a narrow part of the chimney)
+  D(I am in a Chimney)
+
+room(I am in a Graveyard)
+  E(I am in a torture chamber)
+
+room(I am in a parlor)
+  D(I am in a Dingy Looking Stairwell)
+
+room(I am in a Jail Cell)
+
+room(I'm on a ledge)
+  S(I am in a room in the castle)
+
+room(I am in a hidden VOODOO room)
+  S(I am in a room in the castle)
+
+room(I am in a room in the castle)
+  N(I am in a Dingy Looking Stairwell)
+
+room(I am in a lot of TROUBLE!)
+
+
+/** ITEMS */
+
+item(Bloody Knife)
+  noun(KNI)
+  at(I am in a Tunnel)
+
+item(Ledge)
+  at(out-of-play)
+
+item(Plaque)
+  noun(WRI)
+  at(I am in a room in the castle)
+
+item(Animal heads)
+  noun(HEA)
+  at(I am in a room in the castle)
+
+item(Broken glass)
+  noun(GLA)
+  at(I am in a Dingy Looking Stairwell)
+
+item(Big kettle)
+  at(I am in a room in the castle)
+
+item(Dark hole)
+  at(out-of-play)
+
+item(Shield)
+  noun(SHI)
+  at(I'm in the Armory)
+
+item(Stairs)
+  at(I am in a Dingy Looking Stairwell)
+
+item(Brightly glowing idol)
+  noun(IDO)
+  at(out-of-play)
+
+item(Open Window)
+  at(I am in a room in the castle)
+
+item(Dark Chimney)
+  at(out-of-play)
+
+item(Closed Flue)
+  at(I am in a large fireplace)
+
+item(Open Flue)
+  at(out-of-play)
+
+item(Four leaf clover)
+  noun(CLO)
+  at(out-of-play)
+
+item(GrAves)
+  at(I am in a Graveyard)
+
+item(Cast iron pot)
+  noun(POT)
+  at(I am in a room in the castle)
+
+item(Closed Coffin)
+  at(I am in a chapel)
+
+item(Crystal Ball)
+  at(I'm in Medium Maegen's Mad Room)
+
+item(Closed Window)
+  at(out-of-play)
+
+item(Large fireplace)
+  at(I am in a Ballroom)
+
+item(Soot)
+  noun(SOO)
+  at(I am in a Chimney)
+
+item(Tiny open door)
+  at(I am in a torture chamber)
+
+item(Spirit Medium)
+  at(out-of-play)
+
+item(Massive stone door with a SAPPHIRE set into it)
+  at(I am in a Tunnel)
+
+item(Sapphire ring)
+  noun(RIN)
+  at(out-of-play)
+
+item(Ju-Ju bag)
+  noun(BAG)
+  at(I am in a Lab)
+
+item(Open Coffin)
+  at(out-of-play)
+
+item(Slick chute leading downward)
+  at(out-of-play)
+
+item(Ju-Ju man)
+  at(out-of-play)
+
+item(Slippery chute leading up)
+  at(I am in a room in the castle)
+
+item(Wide crack in the wall)
+  at(out-of-play)
+
+item(Rabbit's foot)
+  noun(FOO)
+  at(I am in a room in the castle)
+
+item(Dull & broken sword)
+  noun(SWO)
+  at(I'm in the Armory)
+
+item(Open SAfe)
+  at(out-of-play)
+
+item(Stuck Chimney Sweep)
+  at(I am in a narrow part of the chimney)
+
+item(Chem tubes)
+  noun(TUB)
+  at(I am in a Lab)
+
+item(Closed SAfe)
+  at(out-of-play)
+
+item(Labeled chemicals)
+  noun(CHE)
+  at(I am in a Lab)
+
+item(Pocket Shovel)
+  noun(SHO)
+  at(I am in a dungeon)
+
+item(Mixed Chemicals)
+  noun(CHE)
+  at(out-of-play)
+
+item(Wide open door)
+  at(out-of-play)
+
+item(Nails)
+  noun(NAI)
+  at(out-of-play)
+
+item(Dusty Idol)
+  noun(IDO)
+  at(I am in a large fireplace)
+
+item(Doll)
+  noun(DOL)
+  at(I'm on a ledge)
+
+item(Wooden boards)
+  noun(BOA)
+  at(out-of-play)
+
+item(Wood boards nailed to chimney wall)
+  at(I am in a Chimney)
+
+item(Antique hammer)
+  noun(HAM)
+  at(out-of-play)
+
+item(GrAting)
+  at(out-of-play)
+
+item(Rusting SAW)
+  noun(SAW)
+  at(I am in a Graveyard)
+
+item(Button in the wall)
+  at(out-of-play)
+
+item(Paper)
+  noun(PAP)
+  at(out-of-play)
+
+item(Voodoo book)
+  noun(BOO)
+  at(out-of-play)
+
+item(Ju-Ju man statue)
+  noun(STA)
+  at(I am in a parlor)
+
+item(Stick)
+  noun(STI)
+  at(out-of-play)
+
+item(Open wall)
+  at(out-of-play)
+
+item(Open jail cell)
+  at(I am in a dungeon)
+
+item(Knight's Suit of Armor)
+  at(I'm in the Armory)
+
+item(Closed cell door)
+  at(I am in a Jail Cell)
+
+item(Broken grating)
+  noun(GRA)
+  at(out-of-play)
+
+item(Advertising leaflet)
+  noun(LEA)
+  at(I am in a Jail Cell)
+
+item(Crack in the wall)
+  at(I am in a room in the castle)
+
+item(Hole in the wall)
+  at(I am in a room in the castle)
+
+item(Pieces of rock)
+  noun(ROC)
+  at(out-of-play)
+
+item(Page torn from a book)
+  noun(PAG)
+  at(I am in a hidden VOODOO room)
+
+item(Smiling Count Cristo)
+  at(out-of-play)
+
+
+/** AUTOS/COMMANDS */
+
+auto(25%)
+  if here(Open Window)
+    say(Raven crys something outside)
+
+auto(100%)
+  if at(I am in a room in the castle) & here(Open Window) & ! with(Four leaf clover)
+    say(Window just slAmmed shut)
+    swap(Open Window, Closed Window)
+
+auto(100%)
+  if ! at(I am in a room in the castle) & live(Closed Window)
+    swap(Open Window, Closed Window)
+
+continue
+
+
+continue
+
+
+auto(45%)
+  if at(I am in a Graveyard) & ! live(Four leaf clover)
+    say(A beam of light shines on grave)
+
+auto(30%)
+  if with(Chem tubes) & ! holds(Shield)
+    go(I am in a lot of TROUBLE!)
+    look
+    say(One of the test tubes EXPLODED!)
+    continue
+
+continue
+    say(A sign here says:)
+    say(This grAve reserved for you!)
+
+auto(30%)
+  if with(Chem tubes) & holds(Shield)
+    say(One of the test tubes EXPLODED!)
+
+continue
+
+
+auto(100%)
+  if at(I am in a large fireplace) & bit15
+    cleardark
+    look2
+
+auto(50%)
+  if holds(Soot) & at(I am in a Ballroom)
+    say(Maid chased me with broom for tracking soot through the Ball-|room. I wonder where I am?)
+    go(I am in a dungeon)
+
+auto(100%)
+  if at(I am in a room in the castle) & bit15
+    cleardark
+    look2
+
+continue
+
+
+auto(100%)
+  if at(I am in a narrow part of the chimney) & live(Stuck Chimney Sweep)
+    say(I hear strange sounds, as if someone were moaning.)
+
+auto(35%)
+  if at(I am in a Chimney) & live(Stuck Chimney Sweep)
+    say(I hear strange sounds, as if someone were moaning.)
+
+auto(35%)
+  if at(I am in a large fireplace) & live(Stuck Chimney Sweep)
+    say(I hear strange sounds, as if someone were moaning.)
+
+auto(100%)
+  if at(I am in a lot of TROUBLE!)
+    say(Luck wasn't with me!)
+    gameover
+
+auto(100%)
+  if ! bit7
+    say(Welcome to ADVENTURE:4, 'VOODOO CASTLE' by Alexis ADAMS.|Dedicated to all MOMS!)
+    set(bit7)
+
+auto(7%)
+  if holds(Dusty Idol)
+    say(My idol acted strange)
+    say(Some dust fell off it and it glowed briefly.)
+
+auto(35%)
+  if with(Ju-Ju man)
+    say(I hear someone mumbling.)
+
+continue
+
+
+continue
+
+
+action(GET SWE)
+  if here(Stuck Chimney Sweep)
+    say(won't budge!)
+
+action(GET GRA)
+  if with(Broken grating)
+    say(OK)
+    get(Broken grating)
+
+action(WAV BAG)
+  if at(I am in a room in the castle) & ! live(Wide crack in the wall) & with(Ju-Ju bag)
+    say(There's a CLAP OF THUNDER!)
+    wait
+    wait
+    swap(Wide crack in the wall, Crack in the wall)
+
+action(OPE CEL)
+  if ! holds(Four leaf clover)
+    say(I can't do that)
+
+action(GO CEL)
+  if here(Open jail cell) & ! here(Four leaf clover)
+    cls
+    say(Cell door slams shut)
+    go(I am in a Jail Cell)
+    look
+
+action(LOO WRI)
+  if with(Plaque)
+    say(There's something written there)
+
+action(GET INV)
+    inventory
+
+action(BRE WIN)
+  if here(Closed Window)
+    say(This glass can't be broken)
+
+action(MOV KET)
+  if here(Big kettle) & ! here(Dark hole)
+    drop(Dark hole)
+    say(OK)
+
+action(GET BAL)
+  if here(Crystal Ball)
+    say(A sepulchral voice says:)
+    say(It belongs to the medium)
+
+action(GET CLO)
+  if here(Four leaf clover)
+    get(Four leaf clover)
+
+action(LOO GRA)
+  if here(GrAves) & ! live(Four leaf clover)
+    say(Amongst the GRAVES is a four leaf clover.)
+    say(A sign here says:)
+    say(This grAve reserved for you!)
+
+action(GET CLO)
+  if ! live(Four leaf clover) & at(I am in a Graveyard)
+    get(Four leaf clover)
+    say(OK)
+
+action(LOO GRA)
+  if here(GrAves) & live(Four leaf clover)
+    say(A sign here says:)
+    say(This grAve reserved for you!)
+
+action(GO STA)
+  if here(Stairs)
+    cls
+    go(I am in a parlor)
+    look
+
+action(LOO SAF)
+  if here(Closed SAfe)
+    say(Safe's combination lock is numbered from 33 to 38.)
+
+action(LOO SAF)
+  if here(Open SAfe) & ! live(Antique hammer)
+    drop(Antique hammer)
+    say(There's an antique hammer here)
+
+action(OPE FLU)
+  if here(Closed Flue)
+    swap(Closed Flue, Open Flue)
+    say(OK)
+    drop(Dark Chimney)
+
+action(CLO FLU)
+  if here(Open Flue)
+    swap(Closed Flue, Open Flue)
+    say(OK)
+    remove2(Dark Chimney)
+
+action(GO HOL)
+  if here(Dark hole)
+    go(I am in a room in the castle)
+    dark
+    cls
+    look
+
+action(GO FLU)
+  if at(I am in a large fireplace) & here(Open Flue)
+    dark
+    go(I am in a Chimney)
+    cls
+    look
+
+action(LOO LEA)
+  if with(Advertising leaflet)
+    say(There's something written there)
+
+action(LOO BAL)
+  if at(I'm in Medium Maegen's Mad Room) & here(Crystal Ball)
+    say(I see nothing very special.)
+    go(I am in a Tunnel)
+    look2
+    say(Spirit vibrations drive me from room.)
+
+continue
+
+
+action(GO FIR)
+  if here(Large fireplace)
+    go(I am in a large fireplace)
+    look2
+
+action(OPE DOO)
+  if at(I am in a torture chamber)
+    say(OK)
+
+action(WAV RIN)
+  if here(Massive stone door with a SAPPHIRE set into it) & holds(Sapphire ring)
+    swap(Slick chute leading downward, Massive stone door with a SAPPHIRE set into it)
+    say(Ring glows briefly & door vanishes)
+
+action(GO CHU)
+  if here(Slick chute leading downward)
+    say(OK)
+    go(I am in a room in the castle)
+    look2
+
+action(GET RIN)
+  if here(Open Coffin) & ! live(Sapphire ring)
+    get(Sapphire ring)
+    say(OK)
+
+action(DRI BRE)
+  if with(Cast iron pot)
+    say(There's a CLAP OF THUNDER!)
+    wait
+    say(You've been turned into a broomstick & a witch rides off on you!)
+    gameover
+
+action(OPE COF)
+  if here(Closed Coffin)
+    swap(Closed Coffin, Open Coffin)
+    say(OK)
+
+action(CLO COF)
+  if here(Open Coffin)
+    swap(Closed Coffin, Open Coffin)
+    say(OK)
+
+action(GET ARM)
+  if here(Knight's Suit of Armor)
+    say(I can't do that)
+    say(It's much to heavy to LIFT!)
+
+action(BRE BAL)
+  if at(I'm in Medium Maegen's Mad Room)
+    die
+    say(A beam of light shines on grave)
+    say(This grAve reserved for you!)
+    gameover
+
+action(OPE DOO)
+  if here(Massive stone door with a SAPPHIRE set into it)
+    say(I can't do that)
+    say(won't budge!)
+
+action(GET BAG)
+  if with(Ju-Ju bag) & live(Ju-Ju man)
+    get(Ju-Ju bag)
+    say(OK)
+
+action(REA WRI)
+  if with(Plaque) & with(Broken glass) & bit15
+    say(Plaque says: 'safe --> 38 33')
+
+action(GO CHU)
+  if here(Slick chute leading downward)
+    go(I am in a room in the castle)
+    look2
+
+action(GO CHU)
+  if here(Slippery chute leading up)
+    say(I slide back down)
+
+action(LOO BAG)
+  if with(Ju-Ju bag) & ! live(Voodoo book) & live(Stick)
+    say(There's a book there.)
+
+action(CIR COF)
+  if at(I am in a chapel)
+    continue
+    say(OK)
+    say(Nothing happened)
+    wait
+
+continue
+  if ! live(Rabbit's foot) & with(Brightly glowing idol) & holds(Bloody Knife)
+    set(bit3)
+    say(There's a CLAP OF THUNDER!)
+    dark
+    say(Its very dark, the only light is from the idol.)
+
+action(LOO CHE)
+  if with(Mixed Chemicals)
+    say(Looks almost like lemonade. Yummy!)
+
+action(GET HEA)
+  if ! bit0 & with(Dull & broken sword) & here(Animal heads)
+    get(Animal heads)
+    drop(Closed SAfe)
+    say(OK)
+    set(0)
+
+action(OPE SAF)
+  if at(I am in a room in the castle) & here(Open SAfe)
+    say(OK)
+
+action(LOO SAF)
+  if at(I am in a room in the castle) & here(Open SAfe) & live(Antique hammer)
+    say(OK)
+    say(Its empty.)
+
+action(GET HEA)
+  if bit0 & with(Animal heads)
+    get(Animal heads)
+    say(OK)
+
+action(TUR 38)
+  if ! bit1 & here(Closed SAfe)
+    set(bit1)
+    say(OK)
+
+action(TUR 33)
+  if bit1 & here(Closed SAfe)
+    swap(Open SAfe, Closed SAfe)
+    say(OK)
+
+action(LOO BAG)
+  if with(Ju-Ju bag) & ! live(Stick) & ! live(Voodoo book) & live(Ju-Ju man)
+    say(There's a book there.)
+    say(There's a stick there.)
+
+action(REA BOO)
+  if with(Voodoo book)
+    say(It's a book on removing curses. Says: 'With knife in hand you|take a stand. Circle coffin and...' The rest of the page is|missing!!!)
+
+action(YEL MED)
+  if ! live(Spirit Medium) & at(I'm in Medium Maegen's Mad Room)
+    say(OK)
+    saynouncr
+    drop(Spirit Medium)
+    say(Medium appears, says: 'Keep a good luck charm on you & your|friend. I also see a -moving- bag helping you through a tight|squeeze!')
+
+action(GO CHI)
+  if here(Open Flue)
+    go(I am in a Chimney)
+    dark
+    look2
+
+action(REA LAB)
+  if with(Labeled chemicals)
+    say(They appear to be mixable.)
+
+action(DRI CHE)
+  if with(Mixed Chemicals)
+    say(There's a CLAP OF THUNDER!)
+    continue
+    swap(Wide open door, Tiny open door)
+    remove2(Labeled chemicals)
+
+continue
+    remove2(Mixed Chemicals)
+    wait
+    wait
+    say(I'm now 4 feet tall!)
+
+action(YEL ZAP)
+  if with(Ju-Ju man statue)
+    remove2(Ju-Ju man statue)
+    drop(Ju-Ju man)
+    continue
+    saynouncr
+
+continue
+    say(There's a Clap of Thunder & then suddenly the stone statue|begins to crack. I may be in trouble now, there's someone in|the room with me!)
+    say(I hear someone mumbling.)
+
+action(SAV GAM)
+    save
+
+action(GET KET)
+  if here(Big kettle)
+    say(I can't do that)
+    say(It's much to heavy to LIFT!)
+
+action(GO DOO)
+  if here(Tiny open door)
+    say(I can't do that)
+    say(I'm too big)
+    say(It will take some strong magic to get me through that!)
+
+action(INV)
+    inventory
+
+action(GET HEA)
+  if ! bit0 & with(Animal heads)
+    say(won't budge!)
+    say(I'll need something to pry it off the wall!)
+
+action(DRO FOO)
+  if holds(Rabbit's foot)
+    say(On what?)
+
+action(ON MAN)
+  if with(Rabbit's foot) & here(Open Coffin)
+    say(OK)
+    say(There's a CLAP OF THUNDER!)
+    remove2(Rabbit's foot)
+
+action(GET PIN)
+  if here(Doll)
+    say(I can't do that)
+    say(won't budge!)
+
+action(PRE SWE)
+  if at(I am in a narrow part of the chimney) & here(Stuck Chimney Sweep)
+    say(Sweep pops out, thanks me, hands me a piece of paper then|vanishes!)
+    remove(Stuck Chimney Sweep)
+    superget(Paper)
+
+action(REA PAP)
+  if with(Paper)
+    say(says: 'SAY ZAP   to restore someone changed to stone!')
+
+action(LOO DOL)
+  if with(Doll)
+    say(Doll looks like Count Cristo. There're pins in it!)
+
+action(LOO COF)
+  if here(Open Coffin)
+    say(A sign here says:)
+    say(Count Cristo's been CURSED! There's one way for him to flee!|Find it, and he'll go FREE!)
+    continue
+    say(There's a man here)
+
+continue
+  if ! live(Rabbit's foot)
+    say(He's wearing a rabbit's foot)
+
+continue
+  if ! live(Sapphire ring)
+    say(Wearing a sapphire ring)
+
+action(YEL CHA)
+  if at(I am in a chapel) & with(Brightly glowing idol) & with(Four leaf clover) & bit6 & with(Doll)
+    continue
+    say(There's a CLAP OF THUNDER!)
+    wait
+    say(Pins fall out of doll)
+
+continue
+    drop(Smiling Count Cristo)
+    look2
+    say(HURRAH! Look who is in the room!)
+    gameover
+
+action(GET NAI)
+  if with(Nails)
+    say(OK)
+    get(Nails)
+
+action(GO POT)
+  if here(Open jail cell)
+    say(OK)
+
+action(LOO CHE)
+  if with(Labeled chemicals)
+    say(They appear to be mixable.)
+
+action(LOO POT)
+  if with(Cast iron pot)
+    say(There's witch's brew there)
+
+action(GET FOO)
+  if ! live(Rabbit's foot) & here(Open Coffin)
+    get(Rabbit's foot)
+    say(OK)
+
+action(GET FOO)
+  if with(Rabbit's foot)
+    get(Rabbit's foot)
+    say(OK)
+
+action(GO WIN)
+  if here(Open Window)
+    go(I'm on a ledge)
+    say(OK)
+    look2
+
+action(DUS IDO)
+  if with(Dusty Idol)
+    say(As I dust of the Idol it begins to glow!)
+    swap(Brightly glowing idol, Dusty Idol)
+    look2
+
+action(MOV KET)
+  if here(Dark hole) & here(Dark hole)
+    remove2(Dark hole)
+
+action(LOO KET)
+  if here(Big kettle) & at(I am in a room in the castle) & ! live(Dark hole)
+    say(OK)
+    say(I see a hole under it!)
+    say(There's some soup here.)
+
+action(CLO DOO)
+    say(won't budge!)
+
+action(DRI SOU)
+  if here(Big kettle)
+    say(OK)
+    remove(Wooden boards)
+
+action(WAV STI)
+  if with(Doll)
+    continue
+    say(OK)
+    say(Nothing happened)
+    wait
+
+continue
+  if with(Brightly glowing idol) & at(I am in a chapel) & bit3
+    wait
+    say(There's a CLAP OF THUNDER!)
+    say(Double bubble toil & trouble the encAntAtions Are About to peAk!)
+    set(bit6)
+
+action(SAW GRA)
+  if here(GrAting) & holds(Rusting SAW)
+    say(It's hArd work but it seems to be coming loose)
+    say(OK)
+    continue
+    remove(GrAting)
+
+continue
+    drop(Button in the wall)
+    say(I've got it!)
+    superget(Broken grating)
+
+action(PRE BUT)
+  if here(Button in the wall)
+    say(Heavy duty exhaust fan comes on & sucks me up!)
+    go(I am in a narrow part of the chimney)
+    look2
+
+action(QUI)
+    gameover
+
+action(GO CRA)
+  if here(Wide crack in the wall)
+    say(OK)
+    go(I am in a hidden VOODOO room)
+    look2
+
+action(LOO STA)
+  if with(Ju-Ju man statue)
+    say(Statue is made of stone)
+
+action(LIS)
+  if with(Ju-Ju man)
+    say(Ju-Ju man says:'My bag is now yours! Its magic will help you|-CRACK- the curse!'.)
+
+action(GET HAM)
+  if with(Antique hammer)
+    get(Antique hammer)
+    say(OK)
+
+action(GET HAM)
+  if here(Open SAfe) & ! bit5
+    get(Antique hammer)
+    say(OK)
+    set(bit5)
+
+action(REA PAG)
+  if with(Page torn from a book)
+    say(...wave the stick and hold the lamp and don't forget to yell|'CHANT'! Oh yes, to help it succeed, a doll you'll need...)
+
+action(WAV)
+    say(OK)
+    say(Nothing happened)
+
+action(SHR)
+    say(how?)
+
+action(REA WRI)
+  if with(Plaque) & ! with(Broken glass)
+    say(I can't do that)
+    say(Prints too small for the unaided eye.)
+
+action(OPE BAG)
+  if live(Ju-Ju man) & with(Ju-Ju bag)
+    say(OK)
+
+action(LOO CEL)
+  if at(I am in a dungeon)
+    say(I see nothing very special.)
+
+action(MOV ARM)
+  if with(Knight's Suit of Armor)
+    say(OK)
+
+action(GET BAG)
+  if here(Ju-Ju bag)
+    say(It appears stuck to the floor!)
+
+action(REA WRI)
+  if with(Plaque) & with(Broken glass)
+    say(I can't do that)
+    say(Phosphorescent letters are very hard to read in bright light!)
+
+action(GO LED)
+  if at(I am in a room in the castle) & here(Ledge)
+    say(Bird says: 'ask for ADVENTURE 5, -THE COUNT- at your|favorite computer dealer. It will be LOVE AT FIRST BYTE!'|)
+
+action(LIS)
+  if at(I am in a large fireplace) & live(Stuck Chimney Sweep)
+    say(I hear strange sounds, as if someone were moaning.)
+    say(Its very faint.)
+
+action(LIS)
+  if live(Stuck Chimney Sweep) & at(I am in a Chimney)
+    say(I hear strange sounds, as if someone were moaning.)
+    say(Its much louder up here.)
+
+action(GO COF)
+  if here(Open Coffin)
+    say(There's no room in there for me!)
+
+action(GET SOU)
+  if here(Big kettle)
+    say(I've no container.)
+
+action(GO HOL)
+  if here(Hole in the wall)
+    go(I'm in Medium Maegen's Mad Room)
+    look2
+    say(You startled medium & she vanished)
+    remove2(Spirit Medium)
+
+action(LOO RIN)
+  if with(Sapphire ring)
+    say(There's something written there)
+
+action(CUT IDO)
+  if with(Dusty Idol) & with(Bloody Knife)
+    say(My idol acted strange)
+    say(Some dust fell off it and it glowed briefly.)
+
+action(CUT)
+  if with(Bloody Knife)
+    say(OK)
+    say(Nothing happened)
+    say(Knife made no impression on it!)
+
+action(LOO BAG)
+  if live(Voodoo book) & ! live(Stick) & live(Ju-Ju man) & with(Ju-Ju bag)
+    say(There's a stick there.)
+
+action(GET BOO)
+  if with(Ju-Ju bag) & live(Ju-Ju man) & ! live(Voodoo book)
+    get(Voodoo book)
+    say(OK)
+
+action(GET BOO)
+  if with(Voodoo book)
+    get(Voodoo book)
+    say(OK)
+
+action(GET STI)
+  if with(Ju-Ju bag) & ! live(Stick) & live(Ju-Ju man)
+    get(Stick)
+    say(OK)
+
+action(GET STI)
+  if with(Stick)
+    get(Stick)
+    say(OK)
+
+action(GO DOO)
+  if here(Wide open door)
+    go(I am in a Graveyard)
+    look2
+
+action(SHA SWO)
+  if at(I am in a )
+
+
+action(LOO IDO)
+  if with(Dusty Idol)
+    say(Boy it looks dusty.)
+    say(I see nothing very special.)
+
+action(LOO IDO)
+  if with(Brightly glowing idol)
+    say(Its glowing.)
+
+action(DIG GRA)
+  if with(Pocket Shovel)
+    say(A sepulchral voice says:)
+    say(Strange hobby you have)
+
+action(SAW)
+  if holds(Rusting SAW) & here(Closed cell door)
+    say(You've been sprung)
+    go(I am in a dungeon)
+    look
+
+action(LIS CRY)
+  if at(I am in a room in the castle)
+    say(Bird says: 'ask for ADVENTURE 5, -THE COUNT- at your|favorite computer dealer. It will be LOVE AT FIRST BYTE!'|)
+
+action(OPE WIN)
+  if at(I am in a )
+
+
+action(SLI)
+  if here(Slick chute leading downward)
+    go(I am in a room in the castle)
+    look2
+
+action(LIS)
+  if here(Stuck Chimney Sweep)
+    say(HELP ME, I'm stuck!)
+
+action(HEL)
+  if at(I am in a Ballroom)
+    say(Check out the fireplace.)
+
+action(DAN)
+    say(OK)
+    say(Nothing happened)
+
+action(YEL)
+    say(OK)
+    saynouncr
+    say(Nothing happened)
+
+action(GET NAI)
+  if here(Wood boards nailed to chimney wall) & holds(Antique hammer)
+    say(Nails were rusted but I got them out.)
+    swap(Wood boards nailed to chimney wall, Wooden boards)
+    superget(Nails)
+
+action(ON FLO)
+  if holds(Rabbit's foot)
+    drop(Rabbit's foot)
+    say(OK)
+
+action(GET BOA)
+  if with(Wooden boards) & ! bit8
+    get(Wooden boards)
+    drop(GrAting)
+    set(bit8)
+
+action(GET BOA)
+  if with(Wooden boards)
+    get(Wooden boards)
+    say(OK)
+
+action(GET BRE)
+    say(I've no container.)
+
+action(HEL)
+  if here(GrAting)
+    say(Saw grating!)
+
+action(MIX CHE)
+  if with(Labeled chemicals)
+    swap(Mixed Chemicals, Labeled chemicals)
+    say(OK)
+
+action(HEL SWE)
+  if here(Stuck Chimney Sweep)
+    say(how?)
+
+action(RUB IDO)
+  if with(Dusty Idol)
+    say(My idol acted strange)
+    say(Some dust fell off it and it glowed briefly.)
+
+action(LOO)
+    look2
+    say(I see nothing very special.)
+
+action(CUT)
+  if ! holds(Bloody Knife)
+    say(I can't do that)
+    say(I haven't got a knife!)
+
+action(LIS)
+    say(I hear nothing.)
+
+action(GET RIN)
+  if here(Sapphire ring)
+    get(Sapphire ring)
+    say(OK)
+
+action(SMO POT)
+    say(That's illegal!)
+
+action(BRE TUB)
+  if with(Chem tubes) & ! holds(Shield)
+    go(I am in a lot of TROUBLE!)
+    look
+    say(One of the test tubes EXPLODED!)
+    continue
+
+action(SAW)
+  if holds(Rusting SAW)
+    say(OK)
+    say(Nothing happened)
+
+action(REA LEA)
+  if with(Advertising leaflet)
+    say(OK)
+    say(For a reading just 'SUMMON MEDIUM MAEGEN' today!!)
+
+action(DIG)
+  if with(Pocket Shovel)
+    say(OK)
+    say(Nothing happened)
+
+action(GO CRA)
+  if here(Crack in the wall)
+    say(I can't do that)
+    say(I'm too big)
+    say(It will take some strong magic to get me through that!)
+
+action(HEL)
+    say(Nothing happened)
+
+action(OPE SAF)
+  if here(Closed SAfe)
+    say(Safe's combination lock is numbered from 33 to 38.)
+
+action(BRE STA)
+  if with(Ju-Ju man statue)
+    say(OK)
+    swap(Ju-Ju man statue, Pieces of rock)
+
+action(TUR 34)
+  if here(Closed SAfe)
+    clear(bit1)
+    say(OK)
+
+action(TUR 35)
+  if here(Closed SAfe)
+    clear(bit1)
+    say(OK)
+
+action(TUR 36)
+  if here(Closed SAfe)
+    clear(bit1)
+    say(OK)
+
+action(TUR 37)
+  if here(Closed SAfe)
+    clear(bit1)
+    say(OK)
+
+action(REA RIN)
+  if with(Sapphire ring)
+    say(Inscription on ring says: 'WAVE ME!')
+
+action(OPE WIN)
+  if here(Closed Window)
+    say(won't budge!)
+
+action(RUB RIN)
+  if with(Sapphire ring)
+    say(There's something written there)
+
+action(RUB)
+    say(OK)
+    say(Nothing happened)
+
+action(TUR LOC)
+  if here(Closed SAfe)
+    say(Use a number!)
+
+action(TUR 33)
+  if here(Closed SAfe)
+    clear(bit1)
+    say(OK)
+
+action(TUR 38)
+  if here(Closed SAfe)
+    clear(bit1)
+    say(OK)
+
+action(HUG DOL)
+  if with(Doll)
+    say(OUCH)
