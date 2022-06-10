@@ -348,7 +348,10 @@ SA.File.Actions = class extends Array {
   }
   toString() {
     let a = [];
-    this.forEach(action => a.push(action.toString()));
+    this.forEach(action => {
+      let s = action.toString();
+      s && a.push(s);
+    })
     return a.join("\n\n");
   }
   //
@@ -404,24 +407,26 @@ SA.File.Action = class {
   }
   toString() {
     let a = [], s;
-    if (this.cont) {
-      s = 'continue';
-    } else if (this.auto) {
-      s = 'auto(' + this.auto + '%' + ')';
-    } else {
-      s = 'action(' + this.file.verbs[this.verb];
-      if (this.noun > 0) {
-        s += ' ' + this.file.nouns[this.noun];
+    if (! this.empty) {
+      if (this.cont) {
+        s = 'continue';
+      } else if (this.auto) {
+        s = 'auto(' + this.auto + '%' + ')';
+      } else {
+        s = 'action(' + this.file.verbs[this.verb];
+        if (this.noun > 0) {
+          s += ' ' + this.file.nouns[this.noun];
+        }
+        s += ')';
       }
-      s += ')';
+      if (this.comment.length) {
+        s += '  // ' + this.comment;
+      }
+      a.push(s);
+      this.conds.length && a.push(this.conds.toString());
+      a.push(this.dos.toString());
+      return a.join("\n");
     }
-    if (this.comment.length) {
-      s += '  // ' + this.comment;
-    }
-    a.push(s);
-    this.conds.length && a.push(this.conds.toString());
-    a.push(this.dos.toString());
-    return a.join("\n");
   }
 }
 SA.File.Conds = class extends Array {
