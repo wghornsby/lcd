@@ -1,0 +1,1281 @@
+/** ADVENTURE 2 v 408 */
+
+wordlen = 3
+carrymax = 6
+lightlen = 150
+nounverbs = 80
+messages = 89
+actions = 178
+items = 67
+rooms = 27
+startroom(I am in a Flat in london)
+treaasures = 2
+treasureroom(I am in a Flat in london)
+
+/** VOCABULARY */
+
+verbs(GO=CLI=WAL=RUN=ENT=PAC=FOL)
+verbs(GET=TAK=CAT=PIC=REM=WEA=PUL)
+verbs(DRO=REL=THR=LEA=GIV)
+verbs(DRI=EAT)
+verbs(LOO=EXA=WAT)
+verbs(KIL=ATT)
+verbs(OPE=SHA)
+verbs(BUI=MAK)
+verbs(BRE=SMA)
+verbs(CLO=SHU)
+verbs(SAY,SAI,FLY,INV,SAI,REA,LIS,SCO,SAV,LIG,UNL,HEL,SWI,QUI,WAK,SET,CAS,DIG,BUR,FIN,JUM,EMP,WEI,WAI,FEE)
+
+nouns(BOT=RUM)
+nouns(BAG=DUF)
+nouns(BOA=SHI)
+nouns(WAT=SAL)
+nouns(LAG=TID)
+nouns(SHO=BEA)
+nouns(CRA=SAC)
+nouns(FLO=JET)
+nouns(STA=UPS)
+nouns(PAT=HIL)
+nouns(AWA=BUN)
+nouns(NORTH,SOUTH,EAST,WEST,UP,DOWN,PAS,HAL,BOO,WIN,GAM,MON,PIR,ARO,TOR,OFF,MAT,YOH,30,LUM,RUG,KEY,INV,DUB,SAI,FIS,ANC,SHA,PLA,CAV)
+nouns(SIG,DOO,CHE,PAR,HAM,NAI,SHE,CRA,PIT,MAP,PAC,BON,HOL,SAN,BOX,SNE,PIE,KEE,YOH,PIE,NOT,FLY,DES,CRO,SNA,TRE)
+
+/** ROOMS */
+
+room(I am in a Flat in london)
+
+room(I am in a alcove)
+  D(I am in a Flat in london)
+
+room(I am in a secret passageway)
+  E(I am in a musty attic)
+  W(I am in a alcove)
+
+room(I am in a musty attic)
+  W(I am in a secret passageway)
+
+room(I'M outside an open window|on the ledge of a very tall building)
+
+room(I am in a sandy beach on a tropical isle)
+  E(I am in a meadow)
+
+room(I am in a maze of caves)
+  S(I am in a maze of caves)
+  E(I am in a maze of caves)
+  W(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+  D(I am in a pit)
+
+room(I am in a meadow)
+  E(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+  W(I am in a sandy beach on a tropical isle)
+
+room(I am in a grass shack)
+  W(I am in a meadow)
+
+room(I'm in the ocean)
+  N(I'm in the ocean)
+  S(I am in a shallow lagoon.|to the north is the ocean)
+  E(I'm in the ocean)
+  W(I'm in the ocean)
+
+room(I am in a pit)
+  U(I am in a maze of caves)
+
+room(I am in a maze of caves)
+  N(I am in a maze of caves)
+  E(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+  W(I am in a maze of caves)
+
+room(I am in a maze of caves)
+  N(I am in a maze of caves)
+  S(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+  E(I am in a maze of caves)
+  W(I am in a maze of caves)
+
+room(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+  W(I am in a meadow)
+
+room(I am in a tool shed)
+  N(I am in a large cavern)
+
+room(I am in a long hallway)
+  E(I am in a large cavern)
+
+room(I am in a large cavern)
+  W(I am in a long hallway)
+
+room(I'm on top of a hill. Below is Pirates Island. Across the sea|way off in the distance I see Treasure Island)
+  D(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+
+room(I am in a maze of caves)
+  S(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+  E(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+  W(I am in a maze of caves)
+
+room(I'm aboard Pirate ship anchored off shore)
+
+room(I'm on the beach at *Treasure* Island)
+  S(I am in a spooky old graveyard filled with piles|of empty and broken rum bottles)
+
+room(I am in a spooky old graveyard filled with piles|of empty and broken rum bottles)
+  N(I'm on the beach at *Treasure* Island)
+  E(I am in a large barren field)
+
+room(I am in a large barren field)
+  W(I am in a spooky old graveyard filled with piles|of empty and broken rum bottles)
+
+room(I am in a shallow lagoon.|to the north is the ocean)
+  N(I'm in the ocean)
+  S(I am in a sandy beach on a tropical isle)
+  E(I am in a sandy beach on a tropical isle)
+  W(I am in a sandy beach on a tropical isle)
+
+room(I am in a sacked and deserted monastary)
+  W(I am in a large barren field)
+
+room(Welcome to Never Never Land)
+
+/** ITEMS */
+
+item(Flight of stairs)
+  at(I am in a Flat in london)
+
+item(Open window)
+  at(I am in a alcove)
+
+item(Books in a bookcase)
+  at(I am in a alcove)
+
+item(Large blood soaked book)
+  noun(BOO)
+  at(out-of-play)
+
+item(Bookcase with secret passage beyond)
+  at(out-of-play)
+
+item(Pirate's duffel bag)
+  noun(BAG)
+  at(I am in a musty attic)
+
+item(Sign says: 'Bring *TREASURES* here, say: SCORE')
+  at(I am in a Flat in london)
+
+item(Empty bottle)
+  noun(BOT)
+  at(out-of-play)
+
+item(Unlit torch)
+  noun(TOR)
+  at(I am in a musty attic)
+
+item(Lit torch)
+  noun(TOR)
+  at(out-of-play)
+
+item(Matches)
+  noun(MAT)
+  at(out-of-play)
+
+item(Small ship's keel and mast)
+  at(I am in a sandy beach on a tropical isle)
+
+item(Wicked looking pirate)
+  at(I am in a grass shack)
+
+item(Treasure chest)
+  noun(CHE)
+  at(I am in a grass shack)
+
+item(Mongoose)
+  noun(MON)
+  at(I am in a meadow)
+
+item(Rusty anchor)
+  noun(ANC)
+  at(I am in a shallow lagoon.|to the north is the ocean)
+
+item(Grass shack)
+  at(I am in a meadow)
+
+item(Mean and hungry looking crocodiles)
+  at(I am in a pit)
+
+item(Locked door)
+  at(I am in a pit)
+
+item(Open door with hall beyond)
+  at(out-of-play)
+
+item(Pile of sails)
+  noun(SAI)
+  at(I am in a large cavern)
+
+item(Fish)
+  noun(FIS)
+  at(I'm in the ocean)
+
+item(*DUBLEONS*)
+  noun(DUB)
+  at(I am in a sacked and deserted monastary)
+
+item(Deadly mamba snakes)
+  at(I am in a sacked and deserted monastary)
+
+item(Parrot)
+  noun(PAR)
+  at(I am in a grass shack)
+
+item(Bottle of rum)
+  noun(BOT)
+  at(I am in a Flat in london)
+
+item(Rug)
+  noun(RUG)
+  at(out-of-play)
+
+item(Ring of keys)
+  noun(KEY)
+  at(out-of-play)
+
+item(Open treasure chest)
+  noun(CHE)
+  at(out-of-play)
+
+item(Set of plans)
+  noun(PLA)
+  at(out-of-play)
+
+item(Rug)
+  at(I am in a Flat in london)
+
+item(Claw hammer)
+  noun(HAM)
+  at(I am in a tool shed)
+
+item(Nails)
+  noun(NAI)
+  at(out-of-play)
+
+item(Pile of precut lumber)
+  noun(LUM)
+  at(I am in a large cavern)
+
+item(Tool shed)
+  at(I am in a large cavern)
+
+item(Locked door)
+  at(I am in a long hallway)
+
+item(Open door with pit beyond)
+  at(out-of-play)
+
+item(Pirate ship)
+  at(out-of-play)
+
+item(Rock wall with narrow crack in it)
+  at(I'm on top of a hill. Below is Pirates Island. Across the sea|way off in the distance I see Treasure Island)
+
+item(Narrow crack in the rock)
+  at(I am in a large cavern)
+
+item(Salt water)
+  at(I'm in the ocean)
+
+item(Sleeping pirate)
+  at(out-of-play)
+
+item(Bottle of salt water)
+  noun(BOT)
+  at(out-of-play)
+
+item(Rum bottle smashed into pieces.|Sign 'Opposite of LIGHT is Unlight')
+  at(I am in a musty attic)
+
+item(Safety sneakers)
+  noun(SNE)
+  at(I am in a Flat in london)
+
+item(Map)
+  noun(MAP)
+  at(out-of-play)
+
+item(Shovel)
+  noun(SHO)
+  at(I am in a tool shed)
+
+item(Mouldy old bones)
+  noun(BON)
+  at(out-of-play)
+
+item(Sand)
+  noun(SAN)
+  at(I am in a sandy beach on a tropical isle)
+
+item(Bottles of rum)
+  noun(BOT)
+  at(out-of-play)
+
+item(*RARE STAMPS*)
+  noun(STA)
+  at(out-of-play)
+
+item(Lagoon)
+  at(I am in a sandy beach on a tropical isle)
+
+item(The tide is out)
+  at(I am in a shallow lagoon.|to the north is the ocean)
+
+item(The tide is coming in)
+  at(out-of-play)
+
+item(Water wings)
+  noun(WIN)
+  at(I am in a tool shed)
+
+item(Flotsam and jetsam)
+  at(out-of-play)
+
+item(Monastary)
+  at(I am in a large barren field)
+
+item(Wooden box)
+  noun(BOX)
+  at(out-of-play)
+
+item(Dead squirrel)
+  at(out-of-play)
+
+item(Sign in the sand says:|'Welcome to Pirates Island, watch out for the tide!')
+  at(I am in a sandy beach on a tropical isle)
+
+item(Sack of crackers)
+  noun(CRA)
+  at(I am in a Flat in london)
+
+item(Note)
+  noun(NOT)
+  at(out-of-play)
+
+item(Small advertising flyer)
+  noun(FLY)
+  at(out-of-play)
+
+item(Burnt out torch)
+  noun(TOR)
+  at(out-of-play)
+
+item()
+  at(out-of-play)
+
+item()
+  at(out-of-play)
+
+item()
+  at(out-of-play)
+
+/** AUTOS/COMMANDS */
+
+auto(80%)  // CROCODILES
+  if here(Fish) & here(Mean and hungry looking crocodiles)
+    say(Crocs eat fish and leave)
+    remove2(Fish)
+    remove2(Mean and hungry looking crocodiles)
+
+auto(80%)  // SNAKES
+  if here(Deadly mamba snakes) & here(Parrot)
+    say(The Parrot crys:)
+    say('Pieces of eight')
+    say(Parrot attacks snakes and drives them off)
+    remove(Deadly mamba snakes)
+
+auto(100%)  // RUG FLAG 11 GOT KEYS
+  if holds(Rug) & ! with(Ring of keys) & ! bit11
+    say(There's a strange sound)
+    drop(Ring of keys)
+    set(bit11)
+
+auto(3%)  // PARROT PIECES 8
+  if with(Parrot)
+    say(The Parrot crys:)
+    say('Pieces of eight')
+
+auto(100%)  // LITE
+  if at(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top) & bit15
+    cleardark
+    look2
+
+auto(100%)  // FLAG 1. BUILD BOAT. NEED SAIL/LUMBER/BEACH
+  if bit1 & with(Pile of precut lumber) & with(Pile of sails)
+    set(bit2)
+
+auto(100%)  // FLAG 2.READY TO BUILD BOAT
+  if bit2
+    clear(bit1)
+    remove(Pile of precut lumber)
+    swap(Pirate ship, Small ship's keel and mast)
+    say(CONGRATULATIONS !!!|But your Adventure is not over yet...|)
+
+auto(100%)  // NOT READY TO BUILD
+  if bit1
+    say(No, something is missing!)
+    clear(bit1)
+
+auto(100%)  // UNLOCK DOOR. FLAG 0
+  if bit0
+    swap(Locked door, Open door with pit beyond)
+    reset(0)
+
+auto(100%)  // BUILDINg BOAT
+  if bit2
+    clear(bit2)
+    remove(Nails)
+    remove(Pile of sails)
+    remove(Rusty anchor)
+
+auto(19%)  // END GAME
+  if at(Welcome to Never Never Land)
+    score
+    say(Since nothing is happening)
+    gameover
+
+auto(40%)  // SLIPPED NO SHOES
+  if at(I'M outside an open window|on the ledge of a very tall building) & ! holds(Safety sneakers)
+    say(I slipped and fell...)
+    die
+
+auto(80%)  // PIRATE RUM FLAG 0
+  if here(Wicked looking pirate) & here(Bottle of rum)
+    dropat(Sleeping pirate, I am in a musty attic)
+    say(Pirate grabs rum and scuttles off chortling)
+    set(0)
+    remove2(Wicked looking pirate)
+
+auto(100%)  // PIRATE RUM ATTIC FLAG 0
+  if bit0
+    reset(0)
+    dropat(Empty bottle, I am in a musty attic)
+    remove2(Bottle of rum)
+
+auto(25%)  // FISH ESCAPE
+  if holds(Fish) & ! holds(Bottle of salt water)
+    say(Too dry, fish vanish.)
+    dropat(Fish, I'm in the ocean)
+
+auto(100%)  // FLAG 6 INTRO
+  if ! bit6
+    say(* Welcome to Adventure number 2: 'pirate adventure'|by Alexis & Scott Adams, dedicated: Ted Heeren & Paul Sharland|Remember you can always ask for 'help'.|)
+    set(bit6)
+
+auto(50%)  // PIRATE RUM AGAIN
+  if here(Wicked looking pirate) & here(Bottles of rum)
+    dropat(Sleeping pirate, I am in a spooky old graveyard filled with piles|of empty and broken rum bottles)
+    say(Pirate grabs rum and scuttles off chortling)
+    remove2(Wicked looking pirate)
+
+auto(35%)  // PARROT BAG
+  if with(Parrot) & ! bit3
+    say(The Parrot crys:)
+    say('Check the bag matey')
+
+auto(7%)  // PARROT CHEST
+  if with(Parrot) & ! bit12
+    say(The Parrot crys:)
+    say('Check the chest matey')
+
+auto(50%)  // TIDE IN DROWN
+  if at(I am in a shallow lagoon.|to the north is the ocean) & live(The tide is coming in) & ! holds(Water wings)
+    say(The tide is coming in)
+    say(I'm underwater, I guess I don't swim well. Blub Blub...)
+    die
+
+auto(50%)  // DROWN OCEAN
+  if at(I'm in the ocean) & ! holds(Water wings)
+    say(I'm underwater, I guess I don't swim well. Blub Blub...)
+    die
+
+auto(10%)  // TIDE WITH ANCHOR
+  if ! bit10
+    swap(The tide is out, The tide is coming in)
+    swap(Rusty anchor, Flotsam and jetsam)
+    set(0)
+
+auto(10%)  // TIDE NO ANCHOR NOT T.I.
+  if bit10 & ! bit4
+    swap(The tide is out, The tide is coming in)
+    set(0)
+
+auto(100%)  // PARROT TIDE
+  if with(Parrot) & bit0
+    say(The Parrot crys:)
+    say('Tides be a changing matey')
+    reset(0)
+
+auto(100%)  // RESET FLAG 0
+  if bit0
+    reset(0)
+
+auto(100%)  // LITE
+  if at(I'M outside an open window|on the ledge of a very tall building) & bit15
+    cleardark
+    look2
+
+auto(80%)  // MONGOOSE
+  if here(Deadly mamba snakes) & here(Mongoose)
+    say(I was wrong, I guess its not a mongoose cause the snakes bit it!)
+    swap(Mongoose, Dead squirrel)
+
+auto(80%)  // BIRD & CROCS
+  if here(Mean and hungry looking crocodiles) & here(Parrot)
+    say(Parrot attacks crocs but is beaten off)
+    say(Bird flys off looking very unhappy)
+    dropat(Parrot, I am in a maze of caves)
+
+auto(30%)  // BIRD FOLLOWS CRACKERS
+  if with(Parrot) & ! with(Sack of crackers) & ! with(Wicked looking pirate)
+    say(Bird flys off looking very unhappy)
+    dropwith(Parrot, Sack of crackers)
+
+auto(20%)  // PARROT EAT CRACKS
+  if with(Parrot) & with(Sack of crackers)
+    say(Parrot ate a cracker.)
+
+auto(25%)  // PARROT BOOK
+  if ! live(Note) & with(Parrot) & with(Large blood soaked book)
+    say(The Parrot crys:)
+    say('Check the book, matey!')
+
+auto(100%)  // BURNT LAMP
+  if bit16
+    swap(Burnt out torch, Lit torch)
+    clear(bit16)
+    look2
+
+action(SAY YOH)
+  if ! at(I'M outside an open window|on the ledge of a very tall building) & holds(Large blood soaked book)
+    cls
+    say(Everything spins around and suddenly I'm elsewhere...)
+    go(I'M outside an open window|on the ledge of a very tall building)
+    look
+
+action(SET SAI)  // NO SAIL WITH BOOK
+  if at(I'm aboard Pirate ship anchored off shore) & here(Wicked looking pirate) & with(Large blood soaked book) & with(Map)
+    say(Sorry I can't)
+    say(Pirate says:|'First Yee be getting that ACCURSED thing off me ship!'|)
+
+action(LIG TOR)
+  if with(Unlit torch) & with(Matches)
+    swap(Unlit torch, Lit torch)
+    cls
+    say(Torch is lit)
+    look
+
+action(UNL TOR)
+  if with(Lit torch)
+    swap(Lit torch, Unlit torch)
+    say(OK)
+    look2
+
+action(HEL)
+  if at(I'M outside an open window|on the ledge of a very tall building)
+    say(I may need to say a MAGIC word here!)
+
+action(GET DUB)
+  if here(*DUBLEONS*) & ! here(Deadly mamba snakes)
+    get(*DUBLEONS*)
+    say(OK)
+
+action(GET DUB)
+  if here(*DUBLEONS*) & here(Deadly mamba snakes)
+    say(That's not very smart)
+    say(I'm snake bit)
+    die
+
+action(GO SHA)
+  if here(Grass shack)
+    go(I am in a grass shack)
+    cls
+    look
+
+action(GET CHE)
+  if here(Treasure chest) & here(Wicked looking pirate)
+    say(Pirate won't let me)
+
+action(GET CHE)  // .
+  if here(Treasure chest) & ! here(Wicked looking pirate)
+    get(Treasure chest)
+    say(OK)
+
+action(OPE CHE)
+  if here(Treasure chest) & here(Wicked looking pirate)
+    say(Pirate won't let me)
+
+action(OPE CHE)
+  if here(Treasure chest) & ! here(Wicked looking pirate)
+    say(Its locked)
+
+action(UNL CHE)
+  if here(Treasure chest) & ! here(Wicked looking pirate) & holds(Ring of keys)
+    say(Its open)
+    remove(Treasure chest)
+    drop(Open treasure chest)
+
+action(OPE CHE)
+  if holds(Treasure chest)
+    say(Not while I'm carrying it)
+
+action(LOO CHE)
+  if holds(Open treasure chest)
+    say(Not while I'm carrying it)
+
+action(LOO CHE)
+  if with(Treasure chest)
+    say(Sorry I can't)
+    say(Its locked)
+
+action(LOO CHE)  // FLAG 12 CHEST EMPTY
+  if here(Open treasure chest) & ! bit5 & ! bit12
+    say(There are a set of plans in it)
+    drop(Set of plans)
+    set(bit5)
+
+action(LOO CHE)  // CHEST MAP
+  if ! bit12 & here(Open treasure chest) & bit5
+    say(There's a map in it)
+    drop(Map)
+    set(bit12)
+
+action(LOO CHE)  // EMPTY
+  if bit12 & here(Open treasure chest)
+    say(Its empty)
+
+action(LOO BAG)
+  if with(Pirate's duffel bag) & ! bit3
+    say(There's something there all right. Maybe I should)
+    say(open it?)
+
+action(LOO BAG)
+  if with(Pirate's duffel bag) & bit3
+    say(Its empty)
+
+action(OPE DOO)
+  if here(Mean and hungry looking crocodiles)
+    say(Crocs stop me)
+
+action(OPE DOO)
+  if here(Locked door)
+    say(Sorry I can't)
+    say(Its locked)
+
+action(OPE DOO)
+  if here(Open door with hall beyond)
+    say(Its open)
+
+action(GO HAL)
+  if here(Open door with hall beyond)
+    go(I am in a long hallway)
+    cls
+    look
+
+action(UNL DOO)
+  if here(Mean and hungry looking crocodiles) & here(Locked door)
+    say(Crocs stop me)
+
+action(UNL DOO)
+  if ! here(Mean and hungry looking crocodiles) & here(Locked door) & holds(Ring of keys)
+    remove(Locked door)
+    drop(Open door with hall beyond)
+    set(0)
+    say(OK)
+
+action(DRI BOT)
+  if with(Bottle of rum)
+    say(Yummy)
+    say(There's a strange sound)
+    say(...I think its me, Hee Hee.)
+
+action(INV)
+    inventory
+
+action(GET INV)
+    inventory
+
+action(LOO BOX)
+  if with(Wooden box) & ! with(*RARE STAMPS*)
+    say(There's something there all right. Maybe I should)
+    say(open it?)
+
+action(SAY AWA)
+    say(Wrong game you silly goose!)
+    say(Nothing happens)
+
+action(REA BOO)
+  if ! holds(Large blood soaked book)
+    say(Sorry I can't)
+    say(I don't have it)
+
+action(SCO)
+    score
+
+action(SAV GAM)
+    save
+
+action(BUI BOA)  // .
+  if ! with(Set of plans)
+    say(Sorry I can't)
+    say(I've no plans!)
+
+action(GO CAV)
+  if at(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+    go(I am in a maze of caves)
+    dark
+    cls
+    look
+
+action(LOO LAG)
+  if ! live(The tide is out)
+    say(There's something there all right. Maybe I should)
+    say(go there?)
+    say(The tide is coming in)
+
+action(LOO LAG)  // TIDE OUT
+  if live(The tide is out)
+    say(There's something there all right. Maybe I should)
+    say(go there?)
+    say(The tide is out)
+
+action(LOO SHA)
+  if here(Grass shack)
+    say(There's something there all right. Maybe I should)
+    say(go there?)
+
+action(LOO CRA)
+  if here(Rock wall with narrow crack in it)
+    say(There's something there all right. Maybe I should)
+    say(go there?)
+
+action(GO CRA)  // CARRYING SHOVEL
+  if here(Narrow crack in the rock) & holds(Shovel)
+    say(Sorry I can't)
+    say(Something won't fit)
+
+action(GO CRA)  // CARRYING CHEST
+  if here(Rock wall with narrow crack in it) & holds(Treasure chest)
+    say(Sorry I can't)
+    say(Something won't fit)
+
+action(QUI)
+    gameover
+
+action(GET RUG)
+  if here(Rug)
+    say(Sorry I can't)
+    say(Its nailed to the floor!)
+
+action(GET NAI)
+  if holds(Claw hammer) & here(Rug)
+    get(Nails)
+    drop(Rug)
+    remove(Rug)
+    say(OK)
+
+action(GO CRA)  // CARRYING LUMBER
+  if here(Narrow crack in the rock) & holds(Pile of precut lumber)
+    say(Sorry I can't)
+    say(Something won't fit)
+
+action(BUI BOA)
+  if with(Claw hammer) & with(Set of plans) & with(Rusty anchor) & with(Nails)
+    set(bit1)
+
+action(BUI BOA)
+    say(No, something is missing!)
+
+action(GO PIT)
+  if here(Open door with pit beyond)
+    cls
+    go(I am in a pit)
+    look
+
+action(GO CRA)  // CARRYING BOOK
+  if here(Rock wall with narrow crack in it) & holds(Large blood soaked book)
+    say(Sorry I can't)
+    say(Something won't fit)
+
+action(SAY YOH)
+  if at(I'M outside an open window|on the ledge of a very tall building) & holds(Large blood soaked book)
+    cls
+    say(Everything spins around and suddenly I'm elsewhere...)
+    go(I am in a sandy beach on a tropical isle)
+    look
+
+action(GET RUG)
+  if with(Rug)
+    get(Rug)
+    say(OK)
+
+action(GO CRA)  // DARK
+  if here(Rock wall with narrow crack in it)
+    go(I am in a large cavern)
+    say(It was a tight squeeze!)
+    dark
+    look
+
+action(GO CRA)  // LITE
+  if here(Narrow crack in the rock)
+    go(I'm on top of a hill. Below is Pirates Island. Across the sea|way off in the distance I see Treasure Island)
+    cleardark
+    cls
+    look
+
+action(SET SAI)  // WAIT FOR FOR TIDE
+  if at(I'm aboard Pirate ship anchored off shore) & here(Wicked looking pirate) & live(The tide is out) & ! bit4
+    say(Pirate says: 'Aye me Buckeroo, we be waiting for the tide to|come in!')
+
+continue
+
+
+action(OPE BAG)  // FLAG 3 EMPTY BAG
+  if with(Pirate's duffel bag) & ! bit3
+    say(Something falls out)
+    drop(Matches)
+    set(bit3)
+
+action(OPE BAG)
+  if bit3
+    say(Nothing happens)
+    say(Its empty)
+
+action(GET WAT)
+  if ! holds(Empty bottle)
+    say(I've no container)
+
+action(GET WAT)
+  if here(Salt water) & holds(Empty bottle)
+    remove(Empty bottle)
+    get(Bottle of salt water)
+    say(OK)
+
+action(DRO WAT)
+  if holds(Bottle of salt water)
+    remove(Bottle of salt water)
+    get(Empty bottle)
+    say(It soaks into the ground)
+
+action(DRI WAT)
+  if here(Salt water)
+    say(That's not very smart)
+    die
+
+action(DRI WAT)
+  if holds(Bottle of salt water)
+    say(That's not very smart)
+    die
+    remove(Bottle of salt water)
+    get(Empty bottle)
+
+action(WAK PIR)
+  if here(Sleeping pirate)
+    say(Pirate awakens and says 'Aye matey we be casting off soon'|He then VANISHES!)
+    remove(Sleeping pirate)
+    dropat(Wicked looking pirate, I'm aboard Pirate ship anchored off shore)
+
+action(OPE BOT)
+  if with(Bottle of rum)
+    say(Its open)
+
+action(EMP BOT)
+  if with(Bottle of rum)
+    say(What a waste...)
+    say(It soaks into the ground)
+    swap(Bottle of rum, Empty bottle)
+
+action(GO BOA)
+  if here(Pirate ship)
+    go(I'm aboard Pirate ship anchored off shore)
+    cls
+    look
+
+action(GO SHO)  // FLAG 4 WE AT TREASUE ISLE
+  if at(I'm aboard Pirate ship anchored off shore) & bit4 & here(Wicked looking pirate)
+    go(I'm on the beach at *Treasure* Island)
+    cls
+    drop(Wicked looking pirate)
+    say(Pirate follows me ashore as if expecting something)
+
+action(GO SHO)
+  if at(I'm aboard Pirate ship anchored off shore) & ! bit4
+    go(I am in a sandy beach on a tropical isle)
+    cls
+    look
+
+action(SET SAI)  // .
+  if at(I'm aboard Pirate ship anchored off shore) & ! here(Wicked looking pirate)
+    say(Sorry I can't)
+    say(I've no crew)
+
+action(SET SAI)
+  if at(I'm aboard Pirate ship anchored off shore) & ! with(Map)
+    say(Sorry I can't)
+    say(Pirate says: 'Aye matey we be needing a map first'.)
+
+action(SET SAI)  // GO TREASURE ISLE
+  if at(I'm aboard Pirate ship anchored off shore) & ! bit4
+    cls
+    say(After a day at sea we set anchor off of a sandy beach.|All Ashore who's going Ashore...)
+    set(bit4)
+    dropat(Pirate ship, I'm on the beach at *Treasure* Island)
+
+action(SET SAI)  // RETURN FROM TR ISLE
+  if at(I'm aboard Pirate ship anchored off shore) & bit4
+    cls
+    say(After a day at sea we set anchor off of a sandy beach.|All Ashore who's going Ashore...)
+    clear(bit4)
+    dropat(Pirate ship, I am in a sandy beach on a tropical isle)
+
+action(CAS OFF)
+    say(Try: 'WEIGH ANCHOR')
+
+action(REA MAP)
+  if with(Map)
+    say(Its a map to Treasure Island. At the bottom it says:|'30 paces then dig!')
+
+action(SAI)
+    say(Try: 'WEIGH ANCHOR')
+
+action(GET BOO)
+  if here(Large blood soaked book)
+    get(Large blood soaked book)
+    say(OK)
+
+action(OPE BOO)
+  if with(Large blood soaked book) & ! live(Small advertising flyer)
+    drop(Small advertising flyer)
+    say(OK)
+    say(Something falls out)
+
+action(GO SHO)  // AT T.I.
+  if at(I'm aboard Pirate ship anchored off shore) & bit4
+    go(I'm on the beach at *Treasure* Island)
+    cls
+    look
+
+action(GO PAT)
+  if at(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+    go(I'm on top of a hill. Below is Pirates Island. Across the sea|way off in the distance I see Treasure Island)
+    cls
+    look
+
+action(GET PAR)
+  if here(Parrot) & here(Wicked looking pirate)
+    say(Pirate won't let me)
+
+action(GET PAR)
+  if here(Parrot)
+    get(Parrot)
+    say(The Parrot crys:)
+    say('Pieces of eight')
+
+action(GO SHE)
+  if here(Tool shed)
+    go(I am in a tool shed)
+    cls
+    look
+
+action(GO 30)  // FLAG 7. THIS IS IT
+  if at(I am in a large barren field)
+    set(bit7)
+    say(OK I walked off 30 paces.)
+
+action(GO 30)  // PACE 30 BUT WRONG PLACE
+    clear(bit7)
+    say(OK I walked off 30 paces.)
+
+action(DIG)  // BONES
+  if at(I am in a spooky old graveyard filled with piles|of empty and broken rum bottles) & holds(Shovel) & ! live(Mouldy old bones)
+    cls
+    say(I found something!)
+    drop(Mouldy old bones)
+    look
+
+action(DRI CRA)  // EAT CRACKERRS
+  if with(Sack of crackers)
+    say(Yummy)
+
+action(DIG)  // BEACH TREASURE RUM
+  if at(I'm on the beach at *Treasure* Island) & ! live(Bottles of rum) & holds(Shovel)
+    cls
+    drop(Bottles of rum)
+    say(I found something!)
+    look
+
+action(JUM)
+  if at(I'M outside an open window|on the ledge of a very tall building)
+    cls
+    say(That's not very smart)
+    die
+
+action(DIG)  // GOT IT
+  if at(I am in a large barren field) & bit7 & holds(Shovel) & ! live(Wooden box)
+    cls
+    drop(Wooden box)
+    say(I found something!)
+    look
+
+action(GET NAI)
+  if with(Nails)
+    get(Nails)
+    say(OK)
+
+action(GO WIN)
+  if at(I'M outside an open window|on the ledge of a very tall building)
+    go(I am in a alcove)
+    cls
+    look
+
+action(HEL)
+  if at(I am in a alcove)
+    say(Reading expands the mind)
+    say(I may need to say a MAGIC word here!)
+
+action(REA PLA)
+  if with(Set of plans)
+    say(They're plans to build the Jolly Roger (a Pirate ship!)|You'll need: hammer, nails, lumber, anchor, sails, and a keel.)
+
+action(UNL DOO)
+  if here(Locked door) & holds(Ring of keys)
+    say(Sorry I can't)
+    say(Its locked)
+    say(from the other side!)
+
+action(OPE DOO)
+  if here(Locked door)
+    say(Sorry I can't)
+    say(Its locked)
+
+action(OPE DOO)
+  if here(Open door with pit beyond)
+    say(Its open)
+
+action(GO LAG)
+  if here(Lagoon)
+    go(I am in a shallow lagoon.|to the north is the ocean)
+    cls
+    look
+
+action(GO STA)
+  if here(Flight of stairs) & at(I am in a Flat in london)
+    go(I am in a alcove)
+    cls
+    look
+
+action(GET BOO)
+  if at(I am in a alcove) & ! here(Bookcase with secret passage beyond)
+    get(Large blood soaked book)
+    say(There's a strange sound)
+    swap(Books in a bookcase, Bookcase with secret passage beyond)
+
+action(GET ANC)
+  if here(Rusty anchor) & bit10
+    get(Rusty anchor)
+    say(OK)
+
+action(GET ANC)
+  if here(Rusty anchor) & ! bit10
+    say(Sorry I can't)
+    say(Its stuck in the sand)
+
+action(GET ANC)
+  if ! here(Rusty anchor)
+    cls
+    say(Sorry I can't)
+    say(I don't see it here)
+    look
+
+action(EMP BOT)  // DROP SALT WATER
+  if with(Bottle of salt water)
+    swap(Bottle of salt water, Empty bottle)
+    say(OK)
+
+action(GO MON)
+  if here(Monastary)
+    go(I am in a sacked and deserted monastary)
+    cls
+    look
+
+action(SAI BOA)
+    say(Try: 'WEIGH ANCHOR')
+
+action(HEL)  // .
+  if at(I'm at the foot of a cave ridden hill, a pathway|leads on up to the top)
+    say(There's multiple exits here!)
+
+action(WEI ANC)
+    say(About 20 pounds. Try: 'SET SAIL')
+
+action(DIG)  // FREE ANCHOR FLAG 10
+  if holds(Shovel) & ! bit10 & here(Rusty anchor)
+    set(bit10)
+    say(OK)
+
+action(BUR)
+    say(Sorry I can't)
+
+action(OPE BOX)
+  if holds(Claw hammer) & with(Wooden box)
+    say(Something falls out)
+    drop(*RARE STAMPS*)
+
+action(KIL PIR)
+    say(Pirate won't let me)
+
+action(HEL)
+  if here(Mean and hungry looking crocodiles)
+    say(Got anything to eat matey?)
+
+action(SAY)
+    say(OK)
+    saynouncr
+    say(Nothing happens)
+
+action(HEL)
+  if at(I am in a sandy beach on a tropical isle)
+    say(There's multiple exits here!)
+
+action(WAI)
+  if bit10
+    swap(The tide is out, The tide is coming in)
+    say('Tides be a changing matey')
+
+action(HEL)
+  if at(I am in a grass shack) & here(Wicked looking pirate)
+    say(Yoho ho and a ...)
+
+action(DIG)
+  if holds(Shovel)
+    say(I didn't find anything)
+    clear(bit7)
+
+action(HEL)
+  if at(I am in a Flat in london)
+    say(Climb stairs...)
+
+action(GO PAS)
+  if here(Bookcase with secret passage beyond)
+    go(I am in a secret passageway)
+    cls
+    look
+
+action(REA BOO)
+  if with(Large blood soaked book)
+    say(The book is in bad condtion but I can make out the title:|'Treasure Island'. There's a word written in blood in the|flyleaf: 'YOHO' and a message:||'Long John Silver left 2 treasures on Treasure Island')
+
+action(DRI)
+    say(Sorry I can't)
+
+action(HEL)  // .
+    say(Nothing happens)
+
+action(GO WIN)
+  if here(Open window)
+    go(I'M outside an open window|on the ledge of a very tall building)
+    cls
+    look
+
+action(FIN)
+    say(Sorry I can't)
+    say(I don't know where to look!)
+
+action(LIS)
+    
+    say(I hear nothing now)
+
+action(GET CHE)
+  if with(Open treasure chest)
+    get(Open treasure chest)
+    say(OK)
+
+action(OPE BOO)
+  if live(Small advertising flyer) & with(Large blood soaked book) & ! live(Note)
+    say(OK)
+    drop(Note)
+    say(Something falls out)
+
+action(LOO BOO)
+  if with(Large blood soaked book)
+    say(There's something there all right. Maybe I should)
+    say(read it?)
+    say(open it?)
+
+action(REA NOT)
+  if with(Note)
+    say(Note here says: 'I be liking parrots, they be smart matey!')
+
+action(LOO MAP)
+  if with(Map)
+    say(There's something there all right. Maybe I should)
+    say(read it?)
+
+action(REA FLY)
+  if with(Small advertising flyer)
+    cls
+    say(Ask for Adventure number 3: 'MISSION IMPOSSIBLE' at your|favorite computer dealer. If they DON'T carry 'ADVENTURE'|have them call: 1-305-862-6917  TODAY! 'ADVENTURE' also|supports lower case!|)
+
+action(OPE BOO)
+  if live(Note) & with(Large blood soaked book)
+    say(Nothing happens)
+    say(Its empty)
+
+action(LOO FLY)
+  if with(Small advertising flyer)
+    say(There's something there all right. Maybe I should)
+    say(read it?)
+
+action(FLY)
+    say(Sorry I can't)
+
+action(BRE)
+    say(Sorry I can't)
+    say(I'm not feeling destructive!)
+
+action(LOO WIN)
+  if here(Open window)
+    say(There's something there all right. Maybe I should)
+    say(go there?)
+
+action(LOO BOA)
+  if here(Pirate ship)
+    say(There's something there all right. Maybe I should)
+    say(go there?)
+
+action(FEE DES)
+    say(All right, POOF the GAME is destroyed!)
+    gameover
+
+action(KIL)
+    say(Sorry I can't)
+    say(I'm not feeling destructive!)
+
+action(GET SNA)
+  if here(Deadly mamba snakes)
+    say(That's not very smart)
+    say(I'm snake bit)
+    die
+
+action(CLO WIN)
+    say(Sorry I can't)
+    say(Its stuck)
+
+action(JUM)
+    say(OK)
+    say(Nothing happens)
+
+action(WAI)
+  if ! bit10
+    swap(The tide is out, The tide is coming in)
+    swap(Rusty anchor, Flotsam and jetsam)
+    say(OK)
+
+action(LOO)
+    look2
+    say(OK)
+    say(I see nothing special)

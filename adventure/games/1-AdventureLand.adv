@@ -12,106 +12,35 @@ startroom(forest)
 treaasures = 13
 treasureroom(stump)
 
-
 /** VOCABULARY */
 
-0: AUT
-1: GO, ENT, RUN, WAL, CLI
-6: JUM
-7: AT
-8: CHO, CUT
-10: GET, TAK, PIC, CAT
-14: LIG, ., IGN, BUR
-18: DRO, REL, SPI, LEA, GIV, POU
-24: THR, TOS
-26: QUI
-27: SWI
-28: RUB
-29: LOO, EXA, DES
-32: STO
-33: SCO
-34: INV
-35: SAV
-36: WAK
-37: UNL
-38: REA
-39: ATT, SLA, KIL
-42: DRI, EAT
-44: .
-45: FIN, LOC
-47: HEL
-48: SAY, SPE, CAL
-51: SCR, YEL, HOL
-54: .
-55: FIL
-56: CRO
-57: DAM
-58: MAK, BUI
-60: WAV, TIC, KIC, KIS, TOU, FEE, FUC, HIT, POK
-69: OPE
+verbs(GO=ENT=RUN=WAL=CLI)
+verbs(CHO=CUT)
+verbs(GET=TAK=PIC=CAT)
+verbs(LIG=.=IGN=BUR)
+verbs(DRO=REL=SPI=LEA=GIV=POU)
+verbs(THR=TOS)
+verbs(LOO=EXA=DES)
+verbs(ATT=SLA=KIL)
+verbs(DRI=EAT)
+verbs(FIN=LOC)
+verbs(SAY=SPE=CAL)
+verbs(SCR=YEL=HOL)
+verbs(MAK=BUI)
+verbs(WAV=TIC=KIC=KIS=TOU=FEE=FUC=HIT=POK)
+verbs(JUM,AT,QUI,SWI,RUB,STO,SCO,INV,SAV,WAK,UNL,REA,HEL,FIL,CRO,DAM,OPE)
 
-0: ANY
-1: NORTH
-2: SOUTH
-3: EAST
-4: WEST
-5: UP
-6: DOWN
-7: NET
-8: FIS
-9: AWA
-10: MIR
-11: AXE, AX
-13: WAT
-14: BOT, CON
-16: HOL
-17: LAM
-18: SPI
-19: WIN
-20: DOO
-21: MUD, MED
-23: BEE
-24: ROC
-25: GAS
-26: FLI
-27: EGG
-28: OIL, SLI
-30: KEY
-31: HEL
-32: BUN
-33: INV
-34: LED
-35: THR
-36: CRO
-37: BRI
-38: BEA
-39: DRA
-40: RUG
-41: RUB
-42: HON
-43: FRU
-44: OX
-45: RIN
-46: CHI, BIT
-48: BRA
-49: SIG
-50: BLA
-51: WEB, WRI
-53: SWA
-54: LAV, DAM
-56: HAL
-57: TRE, STU
-59: FIR
-60: SHO, BAN
-62: ADV
-63: GLA
-64: ARO
-65: GAM
-66: BOO
-67: CHA
-68: LAK
-69: YOH
-
+nouns(AXE=AX)
+nouns(BOT=CON)
+nouns(MUD=MED)
+nouns(OIL=SLI)
+nouns(CHI=BIT)
+nouns(WEB=WRI)
+nouns(LAV=DAM)
+nouns(TRE=STU)
+nouns(SHO=BAN)
+nouns(NORTH,SOUTH,EAST,WEST,UP,DOWN,NET,FIS,AWA,MIR,WAT,HOL,LAM,SPI,WIN,DOO,BEE,ROC,GAS,FLI,EGG,KEY,HEL,BUN,INV,LED,THR,CRO,BRI,BEA)
+nouns(DRA,RUG,RUB,HON,FRU,OX,RIN,BRA,SIG,BLA,SWA,HAL,FIR,ADV,GLA,ARO,GAM,BOO,CHA,LAK,YOH)
 
 /** ROOMS */
 
@@ -259,7 +188,6 @@ room(misty-room: I am in a large misty room with strange|unreadable letters over
   W(hell)
   U(oaktop)
   D(hell)
-
 
 /** ITEMS */
 
@@ -491,7 +419,6 @@ item()
 
 item()
   at(out-of-play)
-
 
 /** AUTOS/COMMANDS */
 

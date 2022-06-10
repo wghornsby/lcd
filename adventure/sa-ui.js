@@ -5,150 +5,56 @@ SA.Screen$ = class extends Obj {
   constructor() {
     super();
     this.game = new SA.Game()
-      .on('say', msg => this.say(msg))
+      .on('ready', () => this.ready())
+      .on('say', (msg, nocr) => this.say(this.br(msg), nocr))
       .on('sayinv', (msg, items) => this.sayinv(msg, items))
-      .on('cls', () => this.cls())
+      .on('cls', (hard) => this.cls(hard))
       .on('look', (room, items) => this.look(room, items))
-      .on('dark', () => this.dark(1))
-      .on('light', () => this.dark(0))
+      .on('replay', (snapshots) => this.replay(snapshots))
       .on('gameover', () => this.gameover());
     this.header$ = new SA.Header$();
     this.output$ = new SA.Output$();
     this.entry$ = new SA.Entry$()
       .on('enter', text => this.enter(text));
     this.wraplen = 64;
-    this.darkness = 0;
     this.reset();
   }
-  enter(text) {
+  ready() {
+    this.entry$.ready();
+  }
+  enter(text, nosubmit) {
     this.say('&nbsp;-------> Tell me what to do? ' + text);
-    this.game.submit(text);
+    ! nosubmit && this.game.submit(text);
   }
   reset() {
     this.game.load(game());
     return;
-    this.replay(`
-    GET TAPE
-    W
-    S
-    SIT
-    PRESS WHITE
-    PRESS RED
-    PRESS WHITE
-    GET UP
-    GET PIC
-    WAIT
-    WAIT
-    N
-    D
-    N
-    FRISK SABO
-    GET PIC
-    GET SABO
-    S
-    U
-    N
-    W
-    N
-    SHOW PIC
-    DROP SABO
-    BREAK WINDOW
-    WITH TAPE
-    SHOW PIC
-    PRESS WHITE
-    S
-    D
-    S
-    SIT
-    PRESS WHITE
-    GET UP
-    N
-    N
-    N
-    W
-    S
-    W
-    N
-    SHOW PIC
-    GO WINDOW
-    GET KEY
-    GET GLASS
-    GO WINDOW
-    PRESS WHITE
-    S
-    D
-    D
-    N
-    S
-    U
-    S
-    SIT
-    UNLOCK YELLOW
-    PRESS YELLOW
-    PRESS RED
-    PRESS WHITE
-    GET UP
-    GET PIC
-    N
-    D
-    N
-    SHOW PIC
-    W
-    FRISK MOP
-    GET KEY
-    GET CUTTERS
-    U
-    D
-    E
-    PRESS YELLOW
-    S
-    U
-    S
-    SIT
-    UNLOCK BLUE
-    PRESS BLUE
-    PRESS RED
-    PRESS WHITE
-    GET UP
-    GET PIC
-    N
-    I
-    DROP KEY
-    DROP KEY
-    DROP PIC
-    DROP PIC
-    DROP PIC
-    DROP PIC
-    GET PIC
-    N
-    N
-    SHOW PIC
-    PUSH HARD`)
   }
-  replay(s) {
-    let a = s.split("\n");
-    a.forEach(cmd => this.enter(cmd));
+  replay(snapshots) {
+    snapshots.forEach(snap => {
+      snap.says.forEach(s => this.say(s.msg, s.nocr));
+      this.enter(snap.cmd, 1);
+      if (snap.sayinv) {
+        this.sayinv(snap.sayinv.msg, snap.sayinv.items);
+      }
+    })
   }
-  say(msg, nobr) {
-    msg = nobr ? msg : this.br(msg);
-    this.output$.say(msg);
+  say(msg, nocr) {
+    this.output$.say(msg, nocr);
   }
   sayinv(msg, items) {
     items = this.wrap(items) || 'Nothing At All';
-    this.say(msg);
-    this.say(items, 1);
+    this.say(this.br(msg));
+    this.say(items);
   }
-  dark(b) {
-    this.darkness = b;
-  }
-  cls() {
-    // this.output$.reset();
+  cls(hard) {
+    hard && this.output$.reset();
   }
   gameover() {
     this.say('GAME OVER');
   }
   look(room, items) {
-    if (this.darkness && ! this.game.litlamp()) {
+    if (this.game.isdark()) {
       this.header$.look('Its too dark to see!');
       return;
     }
@@ -193,6 +99,7 @@ SA.Entry$ = class extends Obj {
   //
   constructor() {
     super();
+    this.$footer = $('footer');
     this.$entry = $('footer entry');
     this.$cursor = $('footer cursor');
     window.on('keydown', e => this.type(e));
@@ -200,6 +107,10 @@ SA.Entry$ = class extends Obj {
   }
   reset() {
     this.$entry.innerText = '';
+    this.$footer.style.visibility = 'hidden';
+  }
+  ready() {
+    this.$footer.style.visibility = 'visible';
   }
   text() {
     return this.$entry.innerText;
@@ -248,11 +159,12 @@ SA.Output$ = class extends Obj {
   html() {
     return this.$output.innerHTML;
   }
-  say(msg) {
+  say(msg, nocr) {
     let html = this.html();
-    html += html.length ? '<br>' + msg : msg;
+    html += (html.length && ! this.nocr) ? '<br>' + msg : ' ' + msg;
     html = html.split('<br>').splice(-this.lines).join('<br>');
     this.$output.innerHTML = html;
+    this.nocr = nocr;
   }
 }
 SA.Header$ = class extends Obj {

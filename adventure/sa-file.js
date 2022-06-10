@@ -15,8 +15,8 @@ SA.File = class {
     this.actions = new SA.File.Actions(this.header.actions, raw, this);
     let verbs = [], nouns = [];
     this.extractWords(verbs, nouns, raw, this.header.nounverbs);
-    this.verbs = new SA.File.Words(verbs);
-    this.nouns = new SA.File.Words(nouns);
+    this.verbs = new SA.File.Words(verbs, this.header.wordlen);
+    this.nouns = new SA.File.Words(nouns, this.header.wordlen);
     this.rooms = new SA.File.Rooms(this.header.rooms, raw, this);
     this.messages = new SA.File.Messages(this.header.messages, raw, this);
     this.items = new SA.File.Items(this.header.items, raw, this);
@@ -27,7 +27,7 @@ SA.File = class {
     this._unknown = raw.next();
     this.rooms.applyAliases(raw);
     this.items.applyAliases(raw);
-    log(this.toString());
+    //log(this.toString());
   }
   //
   extractWords(verbs, nouns, raw, count) {
@@ -56,18 +56,19 @@ SA.File = class {
   }
   toString() {
     let a = [];
-    a.push('/** ADVENTURE ' + this.number + ' v ' + this.version + ' */');
+    a.push('/** ADVENTURE ' + this.number + ' v ' + this.version + ' */\n');
     a.push(this.header.toString());
-    a.push('\n/** VOCABULARY */');
-    a.push(this.verbs.toString());
-    a.push(this.nouns.toString());
-    a.push('\n/** ROOMS */');
+    a.push('\n/** VOCABULARY */\n');
+    a.push(this.verbs.toString('verbs'));
+    a.push('');
+    a.push(this.nouns.toString('nouns'));
+    a.push('\n/** ROOMS */\n');
     a.push(this.rooms.toString());
-    a.push('\n/** ITEMS */');
+    a.push('\n/** ITEMS */\n');
     a.push(this.items.toString());
-    a.push('\n/** AUTOS/COMMANDS */');
+    a.push('\n/** AUTOS/COMMANDS */\n');
     a.push(this.actions.toString());
-    return a.join("\n\n");
+    return a.join("\n");
   }
 }
 SA.File.Header = class {
@@ -254,8 +255,9 @@ SA.File.Room = class {
 }
 SA.File.Words = class extends Array {
   //
-  constructor(list) {
+  constructor(list, wordlen) {
     super();
+    this.wordlen = wordlen;
     this.word2index = {};
     this.index2words = {};
     let index;
@@ -277,14 +279,26 @@ SA.File.Words = class extends Array {
     return word == '' ? 0 : this.word2index[word];
   }
   synonym(word) {
-    return this[this.indexOf(word)];
+    return this[this.indexOf(word.substring(0, this.wordlen))];
   }
-  toString() {
-    let a = [];
+  toString(pre) {
+    let a = [], w = [];
     each(this.index2words, (words, index) => {
-      words = words.join(', ');
-      a.push(index + ': ' + words);
+      if (index != '0') {
+        let ws = words.join('=');
+        if (ws != '' && ws != '.') {
+          if (words.length > 1) {
+            a.push(pre + '(' + ws + ')');
+          } else {
+            w.push(ws);
+          }
+        }
+      }
     })
+    while (w.length) {
+      let ws = w.splice(0, 30);
+      a.push(pre + '(' + ws.join(',') + ')');
+    }
     return a.join('\n');
   }
 }
@@ -310,6 +324,13 @@ SA.File.Actions = class extends Array {
   }
   forEachAuto(fn) {
     this.forEachAction(fn, 0, this.cmdix);
+  }
+  autos() {
+    let a = [];
+    this.forEachAuto(action => {
+      a.push(action);
+    })
+    return a;
   }
   forEachCommand(fn) {
     this.forEachAction(fn, this.cmdix, this.length);

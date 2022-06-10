@@ -10,159 +10,33 @@ items = 66
 rooms = 26
 startroom(I am in a chapel)
 
-
 /** VOCABULARY */
 
-0: AUT
-1: GO, ENT, WAL, CLI, RUN
-6: .
-7: 
-8: 
-9: 
-10: GET, TAK, PIC, REM, PUL
-15: HEL, RES
-17: .
-18: DRO, PUT, LEA, THR
-22: DIG
-23: ON
-24: WAV
-25: DUS, CLE
-27: PRE, PUS
-29: MOV, SHO, KIC
-32: BRE, SMA
-34: SAV
-35: REA
-36: .
-37: 
-38: OPE
-39: CLO
-40: TUR, DIA
-42: LOO, EXA
-44: INV
-45: CIR
-46: .
-47: QUI
-48: DRI, EAT
-50: SAW
-51: MIX
-52: HAM
-53: .
-54: SHR
-55: .
-56: LIS, HEA
-58: STA
-59: 
-60: SHA
-61: 
-62: SLI
-63: DAN
-64: YEL, SCR, SUM, SAY, CRY
-69: CUT, STA
-71: 
-72: RUB
-73: SMO
-74: .
-75: HUG
-76: 
-77: 
-78: 
-79: 
-80: 
-81: 
-82: 
-83: 
-84: 
-85: 
-86: 
-87: 
-88: 
-89: 
+verbs(GO=ENT=WAL=CLI=RUN)
+verbs(GET=TAK=PIC=REM=PUL)
+verbs(HEL=RES)
+verbs(DRO=PUT=LEA=THR)
+verbs(DUS=CLE)
+verbs(PRE=PUS)
+verbs(MOV=SHO=KIC)
+verbs(BRE=SMA)
+verbs(TUR=DIA)
+verbs(LOO=EXA)
+verbs(DRI=EAT)
+verbs(LIS=HEA)
+verbs(YEL=SCR=SUM=SAY=CRY)
+verbs(CUT=STA)
+verbs(DIG,ON,WAV,SAV,REA,OPE,CLO,INV,CIR,QUI,SAW,MIX,HAM,SHR,STA,SHA,SLI,DAN,RUB,SMO,HUG)
 
-0: ANY
-1: NOR
-2: SOU
-3: EAS
-4: WES
-5: UP
-6: DOW
-7: KNI
-8: COF
-9: IDO
-10: INV
-11: KET
-12: HOL
-13: SWO
-14: PAT
-15: WIN
-16: CLO
-17: DOO
-18: CHU
-19: LAB
-20: GRA
-21: WAL
-22: BAL
-23: MED
-24: CHI
-25: WRI, PLA
-27: SHI
-28: SAF
-29: BRE
-30: ARM
-31: GLA
-32: RIN
-33: TUB
-34: FIR
-35: FLU, CHI
-37: 38
-38: SOO
-39: 33
-40: HEA, ANI
-42: CHE
-43: STA
-44: BAG
-45: PIN
-46: SAW
-47: FOO, RAB
-49: GAM
-50: SHO
-51: PAP
-52: SWE
-53: MAN, CRI
-55: DOL
-56: BOA
-57: HAM
-58: GRA
-59: BUT
-60: PUP
-61: STI
-62: STA
-63: BOO
-64: CHA
-65: ZAP
-66: POT
-67: CEL
-68: BAR
-69: LOC
-70: LED
-71: WOO
-72: VOI
-73: SIG
-74: FLO
-75: NAI
-76: MUM
-77: CRA
-78: SAP
-79: ROC
-80: ARO
-81: CRY, RAV
-83: 34
-84: 35
-85: 36
-86: 37
-87: LEA
-88: MOA
-89: PAG
-
+nouns(WRI=PLA)
+nouns(FLU=CHI)
+nouns(HEA=ANI)
+nouns(FOO=RAB)
+nouns(MAN=CRI)
+nouns(CRY=RAV)
+nouns(NOR,SOU,EAS,WES,UP,DOW,KNI,COF,IDO,INV,KET,HOL,SWO,PAT,WIN,CLO,DOO,CHU,LAB,GRA,WAL,BAL,MED,CHI,SHI,SAF,BRE,ARM,GLA,RIN)
+nouns(TUB,FIR,38,SOO,33,CHE,STA,BAG,PIN,SAW,GAM,SHO,PAP,SWE,DOL,BOA,HAM,GRA,BUT,PUP,STI,STA,BOO,CHA,ZAP,POT,CEL,BAR,LOC,LED)
+nouns(WOO,VOI,SIG,FLO,NAI,MUM,CRA,SAP,ROC,ARO,34,35,36,37,LEA,MOA,PAG)
 
 /** ROOMS */
 
@@ -248,7 +122,6 @@ room(I am in a room in the castle)
   N(I am in a Dingy Looking Stairwell)
 
 room(I am in a lot of TROUBLE!)
-
 
 /** ITEMS */
 
@@ -480,7 +353,6 @@ item(Page torn from a book)
 
 item(Smiling Count Cristo)
   at(out-of-play)
-
 
 /** AUTOS/COMMANDS */
 

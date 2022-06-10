@@ -6,46 +6,42 @@ SA.Game = class extends Obj {
   oncls() {}
   onlook(room, items) {}
   ongameover() {}
-  ondark() {}
-  onlight() {}
+  onready() {}
+  onreplay(snapshots) {}
   //
-  load(file) {
-    this.file = new SA.File(file);
+  load(data) {
+    this._data = data;
     this.reset();
   }
   reset() {
+    this.file = new SA.File(this._data);
     this.wordlen = this.file.header.wordlen;
     this.rooms = this.file.rooms;
     this.items = this.file.items;
     this.actions = this.file.actions;
     this.messages = this.file.messages;
-    this.locs = new Array(16);
-    this.bits = new Array(32);
-    this.ctrs = new Array(32);
+    this.locs = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    this.bits = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    this.ctrs = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     this.ctr = 0;
     this.lampleft = this.file.header.lightlen;
     this.snapshots = new SA.Game.Snapshots();
-    this.oncls();
+    this.oncls(1);
     this.go(this.file.header.startroom);
     this.look();
-    this.doAutos();
-  }
-  submit(s) {
-    if (s == 'UNDO') {
-      return this.undo();
-    }
-    this.snapshots.take(this);
-    this.parse(s);
-    this.checkLampLife();
-    this.doAutos();
+    this.doAutos(() => this.onready());
   }
   undo() {
     let snap = this.snapshots.pop();
-    if (! snap) {
+    if (! this.snapshots.length) {
       return this.reset();
     }
     this.restore(snap);
+    this.oncls(1);
+    this.onreplay(this.snapshots);
+    snap.says.forEach(s => this.onsay(s.msg, s.nocr));
     this.look();
+    this.onready();
   }
   restore(snap) {
     this.locs = snap.locs;
@@ -56,42 +52,68 @@ SA.Game = class extends Obj {
     this.room = this.rooms[snap.rx];
     this.items.forEach((item, i) => item.rx = snap.itemsrx[i]);
   }
-  parse(s) {
-    //log(s);
+  submit(s) {
+    if (s == 'UNDO') {
+      return this.undo();
+    }
+    if (s == 'QUIT') {
+      return this.reset();
+    }
+    this.snapshots.take(this, s);
+    this.parse(s, () => {
+      this.checkLampLife();
+      this.doAutos(() => this.onready());
+    })
+  }
+  parse(s, callback) {
     let overb, onoun, verb, noun, a = s.trim().split(' ').filter(w => w.length);
-    if (a.length) {
-      overb = a[0], onoun = (a.length > 1) ? a[1] : '';
-      verb = overb.substring(0, this.wordlen), noun = onoun.substring(0, this.wordlen);
-      if (verb == 'I') {
-        this.inventory();
-        return;
-      }
-      if (this.isDirection(verb, noun)) {
-        return;
-      }
-      verb = this.file.verbs.synonym(verb);
-      if (! verb) {
-        return this.onsay("I don't know how to \"" + overb + "\" something");
-      }
-      if (noun) {
-        noun = this.file.nouns.synonym(noun);
-        if (! noun) {
-          return this.onsay("I don't know what \"" + onoun + "\" is.");
-        }
-      }
-      if (this.doCommands(verb, noun, onoun)) {
-        return;
-      }
-      if (this.isGet(verb, noun) || this.isDrop(verb, noun) || this.isLook(verb, noun)) {
-        return;
+    if (a.length == 0) {
+      return callback();
+    }
+    overb = a[0], onoun = (a.length > 1) ? a[1] : '';
+    verb = overb.substring(0, this.wordlen), noun = onoun.substring(0, this.wordlen);
+    if (verb == 'I') {
+      this.inventory();
+      return callback();
+    }
+    if (this.isDirection(verb, noun)) {
+      return callback();
+    }
+    verb = this.file.verbs.synonym(verb);
+    if (! verb) {
+      this.say("I don't know how to \"" + overb + "\" something");
+      return callback();
+    }
+    if (noun) {
+      noun = this.file.nouns.synonym(noun);
+      if (! noun) {
+        this.say("I don't know what \"" + onoun + "\" is.");
+        return callback();
       }
     }
-    this.onsay("|I must be stupid, but I just don't understand what you mean.");
+    this.onoun = onoun;
+    if (this.doCommands(verb, noun, callback) == -1) {
+      if (! this.isGet(verb, noun) && ! this.isDrop(verb, noun) && ! this.isLook(verb, noun)) {
+        this.say("|I must be stupid, but I just don't understand what you mean.");
+      }
+      return callback();
+    }
   }
   // actions
-  say(mx) {
+  saymsg(mx) {
     let msg = this.messages[mx];
-    this.onsay(msg);
+    this.say(msg);
+  }
+  saynocr(msg) {
+    this.say(msg, 1);
+  }
+  say(msg, nocr) {
+    this.snapshots.say(msg, nocr);
+    this.onsay(msg, nocr);
+  }
+  sayinv(msg, items) {
+    this.snapshots.sayinv(msg, items);
+    this.onsayinv(msg, items);
   }
   look() {
     let items = this.items.at(this.room.rx);
@@ -107,7 +129,7 @@ SA.Game = class extends Obj {
   get(ix, always) {
     if (! always && this.items.inventory().length >= this.file.header.carrymax) {
       this.items[ix].rx = this.room.rx;
-      return this.onsay("I'm carrying too much. Try: TAKE INVENTORY");
+      return this.say("I'm carrying too much. Try: TAKE INVENTORY");
     }
     this.items[ix].rx = -1;
     this.look();
@@ -131,31 +153,29 @@ SA.Game = class extends Obj {
   light() {
     if (this.bits[15]) {
       this.bits[15] = 0;
-      this.onlight();
       this.look();
     }
   }
   dark() {
     if (! this.bits[15]) {
       this.bits[15] = 1;
-      this.ondark();
       this.look();
     }
   }
   die() {
     this.go(this.rooms.length - 1);
     this.light();
-    this.onsay("I'm DEAD!");
+    this.say("I'm DEAD!");
   }
   gameover() {
     this.ongameover();
   }
   showscore() {
     // TODO
-    this.onsay('score');
+    this.say('score');
   }
   inventory() {
-    this.onsayinv("|I am carrying the following:", this.items.inventory());
+    this.sayinv("|I am carrying the following:", this.items.inventory());
   }
   freshLamp() {
     this.lampleft = this.file.header.lightlen;
@@ -164,7 +184,7 @@ SA.Game = class extends Obj {
   }
   save() {
     // TODO
-    this.onsay('save');
+    this.say('save');
   }
   swap(ix1, ix2) {
     let rx = this.items[ix1].rx;
@@ -186,7 +206,7 @@ SA.Game = class extends Obj {
   }
   // conds
   holds(ix) {
-    return ix ? this.items[ix].held() : this.items.inventory().length > 0;
+    return ix !== undefined ? this.items[ix].held() : this.items.inventory().length > 0;
   }
   here(ix) {
     return this.items[ix].rx == this.room.rx;
@@ -211,153 +231,183 @@ SA.Game = class extends Obj {
     if (this.live(9) && this.lampleft > 0) {
       this.lampleft--;
       if (this.lampleft == 0) {
-        this.onsay('Light has run out');
+        this.say('Light has run out');
         this.bits[16] = 1;
         return;
       }
       if (this.lampleft < 25) {
-        this.onsay('Light runs out in ' + this.lampleft + '  turns');
+        this.say('Light runs out in ' + this.lampleft + '  turns');
       }
     }
   }
-  doAutos() {
-    this.actions.forEachAuto(action => {
-      if (action.auto <= rnd(100)) {
-        return;
-      }
-      if (this.allTrue(action.conds)) {
-        this.doAll(action.dos);
-        //log(action.toString());
+  doAutos(callback) {
+    this.doActions(this.actions.autos(), callback);
+  }
+  doCommands(verb, noun, callback) {
+    let v = this.file.verbs.indexOf(verb), n = this.file.nouns.indexOf(noun);
+    let matches = this.actions.matching(v, n);
+    if (matches.length == 0) {
+      return -1;
+    }
+    let action;
+    matches.forEach(match => {
+      if (! action && this.allTrue(match.conds)) {
+        action = match;
       }
     })
-  }
-  doCommands(verb, noun, onoun) {
-    let v = this.file.verbs.indexOf(verb), n = this.file.nouns.indexOf(noun);
-    let done;
-    let actions = this.actions.matching(v, n);
-    if (actions.length == 0) {
+    if (! action) {
+      this.say("|I can't do that...yet!");
+      callback();
       return;
     }
-    actions.forEach(action => {
-      if (! done && this.allTrue(action.conds)) {
-        done = true;
-        this.doAll(action.dos, onoun);
-        //log(action.toString());
-        action.continuation.forEach(act => {
-          if (this.allTrue(act.conds)) {
-            this.doAll(act.dos, onoun);
-            //log(act.toString());
-          }
-        })
-      }
-    })
-    if (! done) {
-      this.onsay("|I can't do that...yet!");
+    this.doActions([action], callback);
+  }
+  doActions(actions, callback) {
+    if (actions.length == 0) {
+      return callback();
     }
-    return 1;
+    let action = actions.shift();
+    if (action.auto && action.auto <= rnd(100)) {
+      return this.doActions(actions, callback);
+    }
+    if (! this.allTrue(action.conds)) {
+      return this.doActions(actions, callback);
+    }
+    if (action.continuation.length) {
+      actions.splice(0, 0, ...action.continuation);
+    }
+    let dos = [].concat(...action.dos);
+    this.do(dos, () => this.doActions(actions, callback));
   }
-  doAll(dos, onoun) {
-    dos.forEach(d => {
-      this.do(d, onoun);
-    })
-  }
-  do(d, onoun) {
-    let act = d.action; 
+  do(dos, callback) {
+    if (dos.length == 0) {
+      return callback();      
+    }
+    let d = dos.shift();
+    let act = d.action, x = d.arg1, x2 = d.arg2;
     if (act < 52) {
-      return this.say(act);
-    }
-    if (act >= 102) {
-      return this.say(act - 50);
-    }
-    let x = d.arg1;
-    let x2 = d.arg2;
+      x = act;
+      act = 1;
+    } else if (act >= 102) {
+      x = act - 50;
+      act = 1;
+    } 
     switch (act) {
+      case 1:
+        this.saymsg(x);
+        break;
       case 52:
-        return this.get(x);
+        this.get(x);
+        break;
       case 53:
-        return this.drop(x);
+        this.drop(x);
+        break;
       case 54:
-        return this.go(x);
+        this.go(x);
+        break;
       case 55:
-        return this.remove(x);
+        this.remove(x);
+        break;
       case 56:
         this.dark();
-        return;
+        break;
       case 57:
         this.light();
-        return;
+        break;
       case 58:
         this.bits[x] = 1;
-        return;
+        break;
       case 59:
-        return this.remove(x);
+        this.remove(x);
+        break;
       case 60:
         this.bits[x] = 0;
-        return;
+        break;
       case 61:
-        return this.die();
+        this.die();
+        break;
       case 62:
-        return this.dropat(x, x2);
+        this.dropat(x, x2);
+        break;
       case 63:
-        return this.gameover();
+        this.gameover();
+        break;
       case 64:
-        return this.look();
+        this.look();
+        break;
       case 65:
-        return this.showscore();
+        this.showscore();
+        break;
       case 66:
-        return this.inventory();
+        this.inventory();
+        break;
       case 67:
         this.bits[0] = 1;
-        return;
+        break;
       case 68:
         this.bits[0] = 0;
-        return;
+        break;
       case 69:
-        return this.freshLamp();
+        this.freshLamp();
+        break;
       case 70:
-        return this.oncls();
+        this.oncls();
+        break;
       case 71:
-        return this.save();
+        this.save();
+        break;
       case 72:
-        return this.swap(x, x2);
+        this.swap(x, x2);
+        break;
       case 73:
-        return;  // continue
+        break;  // continue
       case 74:
-        return this.get(x, 1);
+        this.get(x, 1);
+        break;
       case 75:
-        return this.dropwith(x, x2);
+        this.dropwith(x, x2);
+        break;
       case 76:
-        return this.look();
+        this.look();
+        break;
       case 77:
         this.ctr--;
-        return;
+        break;
       case 78:
-        return this.onsay(this.ctr + '');
+        this.saynocr(this.ctr + '');
+        break;
       case 79:
         this.ctr = x;
-        return;
+        break;
       case 80:
-        return this.swaploc(0);
+        this.swaploc(0);
+        break;
       case 81:
-        return this.swapctr(x);
+        this.swapctr(x);
+        break;
       case 82:
         this.ctr += x;
-        return;
+        break;
       case 83:
         this.ctr -= x;
-        return;
+        break;
       case 84:
-        return this.onsay(n);  
+        this.saynocr(this.onoun);  
+        break;
       case 85:
-        return this.onsay(onoun);
+        this.say(this.onoun);
+        break;
       case 86:
-        return this.onsay('');
+        this.say('');
+        break;
       case 87:
-        return this.swaploc(x);
+        this.swaploc(x);
+        break;
       case 88:
-        // TODO wait
+        wait(1000, () => this.do(dos, callback));
         return;
     }
+    this.do(dos, callback);
   }
   allTrue(conds) {
     let r = true;
@@ -412,16 +462,16 @@ SA.Game = class extends Obj {
     }
   }
   isGet(v, n) {
-    if (v != 'GET') {
+    if (this.file.verbs.synonym('GET') != v) {
       return;
     }
     if (! n) {
-      this.onsay('HUH?');
+      this.say('HUH?');
       return 1;
     }
     let items = this.items.named(n);
     if (! items.length) {
-      this.onsay('|Its beyond my power to do that.');
+      this.say('|Its beyond my power to do that.');
       return 1;
     }
     let ix, inv;
@@ -430,32 +480,32 @@ SA.Game = class extends Obj {
         ix = item.ix;
       }
       if (item.held()) {
-        inv = item.ix;
+        inv = true;
       }
     })
-    if (ix) {
+    if (ix !== undefined) {
       this.get(ix);
-      this.onsay('OK');
+      this.say('OK');
       return 1;
     }
     if (inv) {
-      this.onsay("I already have it.");
+      this.say("I already have it.");
       return 1;
     }
-    this.onsay("|I don't see it here.");
+    this.say("|I don't see it here.");
     return 1;
   }
   isDrop(v, n) {
-    if (v != 'DROP'.substring(0, this.wordlen)) {
+    if (this.file.verbs.synonym('DROP') != v) {
       return;
     }
     if (! n) {
-      this.onsay('HUH?');
+      this.say('HUH?');
       return 1;
     }
     let items = this.items.named(n);
     if (! items.length) {
-      this.onsay('|Its beyond my power to do that.');
+      this.say('|Its beyond my power to do that.');
       return 1;
     }
     let inv;
@@ -464,17 +514,17 @@ SA.Game = class extends Obj {
         inv = item.ix;
       }
     })
-    if (inv) {
+    if (inv !== undefined) {
       this.drop(inv);
-      this.onsay('OK');
+      this.say('OK');
       return 1;
     }
-    this.onsay("I'm not carrying it!");
+    this.say("I'm not carrying it!");
     return 1;
   }
   isLook(v, n) {
-    if (v == 'LOOK'.substring(0, this.wordlen)) {
-      this.onsay('OK|I see nothing special');
+    if (this.file.verbs.synonym('LOOK') == v) {
+      this.say('OK|I see nothing special');
       return 1;
     }
   }
@@ -482,7 +532,7 @@ SA.Game = class extends Obj {
     let dir;
     if (v == 'GO') {
       if (n == '') {
-        this.onsay('I need a direction too|');
+        this.say('I need a direction too|');
         return 1;
       }
       let i = SA.Game.LDIRS.findIndex(d => d.substring(0, this.wordlen) == n);
@@ -494,18 +544,18 @@ SA.Game = class extends Obj {
       return;
     }
     if (this.isdark()) {
-      this.onsay('Its dangerous to move in the dark!');
+      this.say('Its dangerous to move in the dark!');
     }  
     let rx = this.room.exit(dir);
     if (rx == 0) {
       if (this.isdark()) {
-        this.onsay("I fell & broke my neck! I'm DEAD!");
+        this.say("I fell & broke my neck! I'm DEAD!");
         this.die();
       } else {
-        this.onsay("I can't go in THAT direction");
+        this.say("I can't go in THAT direction");
       }
     } else {
-      this.onsay('OK');
+      this.say('OK');
       this.go(rx);
       this.look();
     }
@@ -516,13 +566,30 @@ SA.Game = class extends Obj {
 }
 SA.Game.Snapshots = class extends Array {
   //
-  take(game) {
-    this.push(new SA.Game.Snapshot(game));
+  constructor() {
+    super();
+    this.says = [];
+  }
+  say(msg, nocr) {
+    this.says.push({msg:msg, nocr:nocr});
+  }
+  take(game, cmd) {
+    this.push(new SA.Game.Snapshot(game, this.says, cmd));
+    this.says = [];
+  }
+  pop() {
+    this.says = [];
+    let snap = super.pop();
+    this.says = snap.says.concat();
+    return snap;
+  }
+  sayinv(msg, items) {
+    this[this.length - 1].sayinv = {msg:msg, items:jscopy(items)};
   }
 }
 SA.Game.Snapshot = class {
   //
-  constructor(game) {
+  constructor(game, says, cmd) {
     this.locs = jscopy(game.locs);
     this.bits = jscopy(game.bits);
     this.ctrs = jscopy(game.ctrs);
@@ -531,5 +598,7 @@ SA.Game.Snapshot = class {
     this.rx = game.room.rx;
     this.itemsrx = [];
     game.items.forEach(item => this.itemsrx.push(item.rx));
+    this.says = says.concat();
+    this.cmd = cmd;
   }
 }

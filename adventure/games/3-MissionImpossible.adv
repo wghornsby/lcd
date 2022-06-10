@@ -1,0 +1,1136 @@
+/** ADVENTURE 3 v 306 */
+
+wordlen = 3
+carrymax = 7
+lightlen = 10000
+nounverbs = 65
+messages = 82
+actions = 162
+items = 54
+rooms = 24
+startroom(I am in a briefing room)
+
+/** VOCABULARY */
+
+verbs(GO=ENT=WAL=RUN)
+verbs(POU=SPI=EMP)
+verbs(GET=TAK=MOV)
+verbs(CLE=MOP)
+verbs(UNA=DIS)
+verbs(DRO=PUT=LEA=REM)
+verbs(CHA=FOL)
+verbs(PRE=TOU=PUS)
+verbs(LOA=INS)
+verbs(FIN=LOC)
+verbs(LOO=EXA)
+verbs(BRE=SMA=CUT=UNB)
+verbs(FRI=SEA=SHA)
+verbs(ACT=STA=PLA)
+verbs(INV,HEL,WIT,REA,WAI,KIC,JUM,SUI,SHO,PUL,SIT,UNL,CLO,OPE,SAV,QUI,SCO,WEA,KNO)
+
+nouns(TAP=REC)
+nouns(PIC=PAS=BAD=AUT)
+nouns(WIN=GLA)
+nouns(FIL=CAR)
+nouns(ENV=MAN)
+nouns(CAM=BOX)
+nouns(SAB=HIM=THE)
+nouns(PAI=PLA)
+nouns(SUI=ANT=RAD)
+nouns(HAN=FIS=FOO=FEE)
+nouns(FLO=WAL)
+nouns(DIA=GAU)
+nouns(NORTH,SOUTH,EAST,WEST,UP,DOWN,RED,WHI,BLU,YEL,GAM,ARO,BUT,DOO,YAR,PRO,CAS,WAT,BOM,DET,WIR,CUT,CHA,KEY,MOP,MAP,GRE,INV,HAR,LEA)
+nouns(VAT,DEB)
+
+/** ROOMS */
+
+room(I am in a )
+
+room(I am in a briefing room)
+  W(I am in a long sloping grey corridor)
+
+room(I am in a long sloping grey corridor)
+  N(I am in a twisting blue hallway)
+  S(I am in a grey room)
+  E(I am in a briefing room)
+  W(I am in a maintenance room 1)
+  U(I am in a twisting white hallway)
+  D(I am in a twisting yellow hallway)
+
+room(I am in a grey room)
+  N(I am in a long sloping grey corridor)
+
+room(I'm sitting in a grey chair|there's a box pointing at me)
+
+room(I am in a twisting white hallway)
+  N(I am in a white room)
+  E(I am in a twisting blue hallway)
+  D(I am in a long sloping grey corridor)
+
+room(I am in a twisting yellow hallway)
+  N(I am in a yellow room)
+  U(I am in a long sloping grey corridor)
+
+room(I am in a twisting blue hallway)
+  N(I am in a blue room)
+  S(I am in a long sloping grey corridor)
+  W(I am in a twisting white hallway)
+
+room(I am in a white room)
+  S(I am in a twisting white hallway)
+
+room(I am in a yellow room)
+  S(I am in a twisting yellow hallway)
+
+room(I am in a blue room)
+  S(I am in a twisting blue hallway)
+
+room(I am in a maintenance room 1)
+  E(I am in a long sloping grey corridor)
+
+room(I am in a large white visitors room)
+
+room(I am in a yellow corridor)
+  W(I am in a maintenance room 2)
+
+room(I am in a blue anteroom)
+  W(I am in a storage room)
+  U(I am in a small viewing room)
+
+room(I'm on a ledge outside of a window|high above the reactor core)
+
+room(I am in a maintenance room 2)
+  E(I am in a yellow corridor)
+  U(I am in a projectionist room)
+
+room(I am in a projectionist room)
+  D(I am in a maintenance room 2)
+
+room(I am in a Control room surronding|the reactor core)
+  E(I am in a break room)
+  D(I am in a reactor core)
+
+room(I am in a break room)
+  W(I am in a Control room surronding|the reactor core)
+
+room(I am in a reactor core)
+  U(I am in a Control room surronding|the reactor core)
+
+room(I am in a small viewing room)
+  D(I am in a blue anteroom)
+
+room(I am in a storage room)
+  E(I am in a blue anteroom)
+
+/** ITEMS */
+
+item(Torn up map)
+  noun(MAP)
+  at(out-of-play)
+
+item(Picture of me stamped -security-)
+  noun(PIC)
+  at(out-of-play)
+
+item(Bomb detector flashing yellow (bomb is now armed))
+  at(I am in a )
+
+item(Large tape recorder)
+  noun(TAP)
+  at(I am in a briefing room)
+
+item(Box with apparatus pointing at chair)
+  at(I am in a grey room)
+
+item(Chair bolted to floor)
+  at(I am in a grey room)
+
+item(Row of 4 buttons -red white blue yellow-)
+  at(I'm sitting in a grey chair|there's a box pointing at me)
+
+item(Picture of me stamped: -visitor-)
+  noun(PIC)
+  at(I am in a )
+
+item(Picture of me stamped -maintenance-)
+  noun(PIC)
+  at(out-of-play)
+
+item(Surgically implanted bomb detector glows green (bomb's -safe-))
+  at(inventory)
+
+item(Bomb detector glowing red (final countdown active))
+  at(out-of-play)
+
+item(Blue key)
+  noun(KEY)
+  at(out-of-play)
+
+item(Yellow key)
+  noun(KEY)
+  at(I'm on a ledge outside of a window|high above the reactor core)
+
+item(Closed white door with tv camera mounted over it)
+  at(I am in a white room)
+
+item(Plate glass window with embeded red wires)
+  at(I am in a large white visitors room)
+
+item(Panel of buttons -white green-)
+  at(I am in a large white visitors room)
+
+item(Old fashioned yarn mop)
+  noun(MOP)
+  at(I am in a maintenance room 2)
+
+item(Empty window frame)
+  at(out-of-play)
+
+item(Tv camera mounted over window)
+  at(I am in a large white visitors room)
+
+item(Broken glass)
+  noun(WIN)
+  at(I'm on a ledge outside of a window|high above the reactor core)
+
+item(Empty movie projector)
+  at(I am in a projectionist room)
+
+item(Movie projector with film cartridge)
+  at(out-of-play)
+
+item(Movie film cartridge)
+  noun(FIL)
+  at(I am in a Control room surronding|the reactor core)
+
+item(Empty plastic pail)
+  noun(PAI)
+  at(I am in a maintenance room 1)
+
+item(Water filled plastic pail)
+  noun(PAI)
+  at(out-of-play)
+
+item(Vat of heavy water)
+  at(I am in a storage room)
+
+item(Wire cutters)
+  noun(CUT)
+  at(I am in a maintenance room 2)
+
+item(Anti-radiation suit)
+  noun(SUI)
+  at(I am in a storage room)
+
+item(Very large time bomb)
+  at(I am in a reactor core)
+
+item(Red wire going from bomb into wall)
+  at(I am in a reactor core)
+
+item(Strange lump of glowing plastic)
+  noun(PAI)
+  at(out-of-play)
+
+item(Sign 'No beverages, Please use Break Room.')
+  at(I am in a Control room surronding|the reactor core)
+
+item(Yellow door with tv camera over it)
+  at(I am in a yellow room)
+
+item(Metal door jammed partially open by remains of a tape recorder)
+  at(I am in a Control room surronding|the reactor core)
+
+item(Blue door with tv camera over it)
+  at(I am in a blue room)
+
+item(Plain metal door with sign -control room-)
+  at(I am in a blue anteroom)
+
+item(The door is partially open)
+  at(out-of-play)
+
+item(Empty pill case)
+  noun(CAS)
+  at(out-of-play)
+
+item(6 inch window)
+  at(I am in a small viewing room)
+
+item(Empty manila envelope)
+  noun(ENV)
+  at(out-of-play)
+
+item(Piece of yarn)
+  noun(YAR)
+  at(out-of-play)
+
+item(Picture of saboteur stamped -window maintance-)
+  noun(PIC)
+  at(out-of-play)
+
+item(Dead saboteur)
+  noun(SAB)
+  at(out-of-play)
+
+item(Loose red wire going into wall)
+  at(out-of-play)
+
+item(Steps leading down into the reactor core)
+  at(I am in a Control room surronding|the reactor core)
+
+item(Yellow button)
+  at(I am in a yellow corridor)
+
+item(Blue button)
+  at(I am in a blue anteroom)
+
+item(Keyholes under buttons)
+  at(I'm sitting in a grey chair|there's a box pointing at me)
+
+item(Exposed dials and gauges everywhere)
+  at(I am in a Control room surronding|the reactor core)
+
+item(A leaflet)
+  noun(LEA)
+  at(out-of-play)
+
+item()
+  at(out-of-play)
+
+item()
+  at(out-of-play)
+
+item()
+  at(out-of-play)
+
+item()
+  at(out-of-play)
+
+/** AUTOS/COMMANDS */
+
+auto(15%)  // WIRE CUT BOOM SOON
+  if ! live(Red wire going from bomb into wall)
+    remove2(Surgically implanted bomb detector glows green (bomb's -safe-))
+
+auto(100%)  // BOOOM SOON
+  if ! live(Surgically implanted bomb detector glows green (bomb's -safe-)) & ! holds(Bomb detector glowing red (final countdown active))
+    remove2(Bomb detector flashing yellow (bomb is now armed))
+    say(My bomb detector)
+    say(wails ALARMINGLY!)
+    superget(Bomb detector glowing red (final countdown active))
+
+auto(30%)  // STEAL TAPE PLAYER
+  if ! with(Large tape recorder) & ! live(Dead saboteur) & ! moved()
+    remove2(Large tape recorder)
+
+auto(100%)  // DEC COUNTER
+    ctr--
+
+auto(9%)  // BOOOM
+  if holds(Bomb detector glowing red (final countdown active))
+    cls
+    inventory
+    say(*   B O O O O O O O O O M ! * * * * * *)
+    gameover
+
+auto(100%)  // MSG DOOM
+  if ctr <= 40 & ctr > 0 & ! holds(Bomb detector glowing red (final countdown active))
+    say(Final countdown starts in)
+    sayctr
+    say(turns!)
+
+auto(100%)  // FIRST IN
+  if ! bit12
+    say(Welcome to Adventure number 3 'MISSION IMPOSSIBLE'|by Scott Adams, Dedicated to Maegen Adams.|)
+    say(A minute ago someone ran out of this room! By the way I seem|to be carrying something!|)
+    set(bit12)
+    ctr = 300
+
+auto(30%)  // SABETOUR
+  if ! live(Dead saboteur) & ! at(I am in a yellow room) & ctr <= 275
+    dropat(Dead saboteur, I am in a yellow room)
+    say(In the distance you hear a dull thud; as if someone fell or|dropped something heavy.)
+
+auto(30%)  // SABETOUR
+  if ! live(Dead saboteur) & ! at(I am in a grey room) & ctr <= 275
+    dropat(Dead saboteur, I am in a grey room)
+    say(In the distance you hear a dull thud; as if someone fell or|dropped something heavy.)
+
+auto(30%)  // SABETOUR
+  if ! live(Dead saboteur) & ! at(I am in a long sloping grey corridor) & ctr <= 275
+    dropat(Dead saboteur, I am in a long sloping grey corridor)
+    say(In the distance you hear a dull thud; as if someone fell or|dropped something heavy.)
+
+auto(25%)  // VOICE
+  if at(I am in a yellow room)
+    say(Metallic voice says:)
+    say('Show authorization please'|)
+
+auto(15%)  // RAN IN AND LEFT
+  if ! live(Dead saboteur)
+    say(Someone came in the room, he saw me and ran out!)
+
+auto(25%)  // SHOW AUTHORIZATION
+  if at(I am in a white room)
+    say(Metallic voice says:)
+    say('Show authorization please'|)
+
+auto(25%)  // SHOW AUTHORIZATION
+  if at(I am in a blue room)
+    say(Metallic voice says:)
+    say('Show authorization please'|)
+
+auto(80%)  // TV
+  if at(I am in a large white visitors room) & bit13
+    say(TV camera is slow scanning the window area.)
+
+auto(40%)  // TV
+  if at(I am in a large white visitors room) & ! bit13
+    say(TV camera is powered down.|)
+
+auto(100%)  // ALREADY SET DETECTOR
+  if bit1 & holds(Surgically implanted bomb detector glows green (bomb's -safe-))
+    clear(bit1)
+
+auto(100%)  // DITTO
+  if bit2 & holds(Bomb detector flashing yellow (bomb is now armed))
+    clear(bit2)
+
+auto(100%)  // SET GREEN
+  if bit1 & live(Surgically implanted bomb detector glows green (bomb's -safe-))
+    say(My bomb detector)
+    swap(Surgically implanted bomb detector glows green (bomb's -safe-), Bomb detector flashing yellow (bomb is now armed))
+    say(politely beeps...|)
+    clear(bit1)
+
+auto(100%)  // SET YELLO
+  if bit2 & live(Surgically implanted bomb detector glows green (bomb's -safe-))
+    say(My bomb detector)
+    swap(Surgically implanted bomb detector glows green (bomb's -safe-), Bomb detector flashing yellow (bomb is now armed))
+    say(angrily buzzes...|)
+    clear(bit2)
+
+auto(80%)  // PAIL
+  if at(I am in a reactor core) & holds(Water filled plastic pail)
+    swap(Water filled plastic pail, Strange lump of glowing plastic)
+    say(The radiation did something to my pail!)
+    say(the water soaks into the floor)
+
+auto(80%)  // NO SUIT
+  if at(I am in a reactor core) & holds(Anti-radiation suit)
+    say(Holding a Radiation Suit)
+    say(doesn't provide much protection for me|as I fall down retching I hear/FEEL THE BOMB explode!|)
+    gameover
+
+auto(80%)  // NO SUIT
+  if at(I am in a reactor core) & live(Anti-radiation suit)
+    say(A business suit)
+    say(doesn't provide much protection for me|as I fall down retching I hear/FEEL THE BOMB explode!|)
+    gameover
+
+auto(100%)  // BOMB TRIGGED
+  if ctr <= 0
+    remove2(Surgically implanted bomb detector glows green (bomb's -safe-))
+
+continue  // .
+
+
+action(SHO PIC)  // NEED SAB TOO
+  if at(I am in a large white visitors room) & ! with(Dead saboteur) & with(Picture of saboteur stamped -window maintance-) & bit13
+    say(Metallic voice says:)
+    say('Authorization INSUFFICIENT for access'|)
+    say('Owner of badge is not present!')
+
+action(REA LEA)  // .
+  if with(A leaflet)
+    cls
+    say(Hi! Look for Adventure number 4: 'VOODOO CASTLE' at your|favorite computer store! (Now back to our current program.))
+
+continue  // .
+
+
+action(FRI MOP)  // .
+  if with(Old fashioned yarn mop) & ! live(Blue key)
+    drop(Blue key)
+    say(Something fell to the floor.)
+
+continue  // .
+
+
+action(OPE DOO)  // .
+  if ! at(I am in a blue anteroom)
+    say(I can't do that)
+    say(It appears locked)
+    say(Most doors & windows are under automated security control.)
+
+action(PRE WHI)  // GIVE BADGES
+  if ! holds(Surgically implanted bomb detector glows green (bomb's -safe-)) & here(Row of 4 buttons -red white blue yellow-)
+    set(bit1)
+    go(I am in a )
+    continue
+    say(CLICK!)
+
+continue  // SECURITY BADGE
+  if here(Picture of me stamped -security-)
+    dropat(Picture of me stamped -security-, I am in a grey room)
+    go(I'm sitting in a grey chair|there's a box pointing at me)
+    say(There's a Bright flash & I hear something fall to the floor.|I can't see what it is from here though.|)
+
+continue  // MAINTANCE BADGE
+  if here(Picture of me stamped -maintenance-)
+    dropat(Picture of me stamped -maintenance-, I am in a grey room)
+    go(I'm sitting in a grey chair|there's a box pointing at me)
+    say(There's a Bright flash & I hear something fall to the floor.|I can't see what it is from here though.|)
+
+continue  // VISITOR BADGE
+  if here(Picture of me stamped: -visitor-)
+    dropat(Picture of me stamped: -visitor-, I am in a grey room)
+    go(I'm sitting in a grey chair|there's a box pointing at me)
+    say(There's a Bright flash & I hear something fall to the floor.|I can't see what it is from here though.|)
+
+continue  // NO PIC
+  if at(I am in a )
+    go(I'm sitting in a grey chair|there's a box pointing at me)
+    say(Nothing happened)
+    say(Strange...)
+
+action(CLE)
+  if with(Old fashioned yarn mop) & live(Blue key)
+    say(HUH?)
+    say(Nothing happened)
+
+action(JUM)
+  if at(I'm on a ledge outside of a window|high above the reactor core)
+    say(Oh Boy...I think I did something...)
+    say(*   B O O O O O O O O O M ! * * * * * *)
+    gameover
+
+continue
+
+
+action(LOO MOP)
+  if with(Old fashioned yarn mop) & ! live(Blue key)
+    say(It made an odd sound.)
+
+action(PRE RED)  // DANGER
+  if here(Row of 4 buttons -red white blue yellow-) & ! holds(Bomb detector flashing yellow (bomb is now armed))
+    set(bit2)
+    say(CLICK!)
+
+action(UNL BUT)  // .
+    say(say again & use a color!)
+
+action(PRE BLU)  // LOCKED
+  if ! bit4 & here(Row of 4 buttons -red white blue yellow-)
+    say(I can't do that)
+    say(It appears locked)
+
+action(PRE YEL)  // LOCKED
+  if ! bit3 & here(Row of 4 buttons -red white blue yellow-)
+    say(I can't do that)
+    say(It appears locked)
+
+action(PRE BLU)  // MOVE PICTURE
+  if here(Row of 4 buttons -red white blue yellow-) & ! live(Picture of me stamped -security-)
+    dropat(Picture of me stamped -security-, I am in a )
+    say(CLICK!)
+
+action(PRE BUT)
+    say(say again & use a color!)
+
+action(PRE YEL)  // MOVE PIC
+  if here(Row of 4 buttons -red white blue yellow-) & ! live(Picture of me stamped -maintenance-)
+    dropat(Picture of me stamped -maintenance-, I am in a )
+    say(CLICK!)
+
+action(PRE RED)  // CLICK?
+  if here(Row of 4 buttons -red white blue yellow-) & holds(Bomb detector flashing yellow (bomb is now armed))
+    say(CLICK!)
+    remove2(Surgically implanted bomb detector glows green (bomb's -safe-))
+
+action(PRE)  // .
+  if here(Row of 4 buttons -red white blue yellow-)
+    say(CLICK!)
+
+action(ACT UP)  // STAND UP
+  if at(I'm sitting in a grey chair|there's a box pointing at me)
+    go(I am in a grey room)
+    cls
+    look
+
+action(GET TAP)  // TAPE
+  if with(Large tape recorder)
+    get(Large tape recorder)
+
+action(GET UP)  // STAND UP
+  if at(I'm sitting in a grey chair|there's a box pointing at me)
+    go(I am in a grey room)
+    cls
+    look
+
+action(INV)
+  if live(Anti-radiation suit)
+    cls
+    inventory
+
+action(INV)
+  if ! live(Anti-radiation suit)
+    cls
+    inventory
+    say(I'm WEARING an anti-radiation suit.)
+
+action(LOO TAP)
+  if with(Large tape recorder)
+    say(Try starting it.)
+
+action(SAV GAM)
+    save
+
+action(QUI)
+    say(*   B O O O O O O O O O M ! * * * * * *)
+    gameover
+
+action(LOO SAB)
+  if with(Dead saboteur)
+    say(I see nothing special.)
+    say(Maybe I should FRISK him?)
+
+action(PRE GRE)  // MOVIE
+  if here(Panel of buttons -white green-) & live(Empty movie projector)
+    say(Click!|Room lights dim and a screen drops from the ceiling.|You hear a hidden projector start.)
+    say(Strange...)
+    say(The screen illuminates for awhile, but no movie!?)
+    say(The projector stops, the screen rises, and the lights return.)
+
+action(PRE GRE)  // MOVIE
+  if here(Panel of buttons -white green-) & ! live(Empty movie projector)
+    cls
+    say(Click!|Room lights dim and a screen drops from the ceiling.|You hear a hidden projector start.)
+    say(A movie runs telling about the reactor and its construction|interesting highlights:|1) Plastic DEFORMS strangely in radiation|2) Even short exposure to HIGH radiation is LETHAL, so suit up|)
+    say(The projector stops, the screen rises, and the lights return.)
+
+action(ACT TAP)
+  if with(Large tape recorder)
+    cls
+    say(Good morning Mr. Phelps. Your Mission (should you decide to|accept it) is to prevent this automated nuclear reactor|from being destroyed by a saboteur's TIME BOMB!|)
+    say(The saboteur (who also rewired the security system) is a heart|patient. He plans to SUICIDE with the reactor! He is still loosein the building.|You'll find Security keys & a map in the manila envelope lying|next to the tape player.)
+
+action(UNL)
+  if here(Row of 4 buttons -red white blue yellow-) & with(Blue key) & ! bit4
+    set(bit4)
+    say(Blue)
+    say(button is now unlocked)
+
+action(UNL)  // UNLOCK
+  if here(Row of 4 buttons -red white blue yellow-) & with(Yellow key) & ! bit3
+    set(bit3)
+    say(Yellow)
+    say(button is now unlocked)
+
+action(GET INV)
+  if live(Anti-radiation suit)
+    cls
+    inventory
+
+action(GET INV)
+  if ! live(Anti-radiation suit)
+    cls
+    inventory
+    say(I'm WEARING an anti-radiation suit.)
+
+action(PRE WHI)
+  if at(I am in a large white visitors room)
+    say(CLICK!)
+    go(I am in a white room)
+    say(The door opens just long enough for me to scurry through.)
+
+action(PRE YEL)
+  if at(I am in a yellow corridor)
+    cls
+    say(CLICK!)
+    say(The door opens just long enough for me to scurry through.)
+    go(I am in a yellow room)
+
+action(GO WIN)  // BOOM SOON
+  if here(Empty window frame) & bit13
+    remove2(Surgically implanted bomb detector glows green (bomb's -safe-))
+    go(I'm on a ledge outside of a window|high above the reactor core)
+    cls
+    look
+
+action(GO WIN)  // THRU WINDOW SAFE
+  if here(Empty window frame) & ! bit13
+    go(I'm on a ledge outside of a window|high above the reactor core)
+    cls
+    look
+
+action(GO WIN)
+  if at(I'm on a ledge outside of a window|high above the reactor core)
+    go(I am in a large white visitors room)
+    cls
+    look
+
+action(PRE BLU)
+  if at(I am in a blue anteroom)
+    cls
+    say(CLICK!)
+    say(The door opens just long enough for me to scurry through.)
+    go(I am in a blue room)
+
+action(LOA)
+  if with(Movie film cartridge) & with(Empty movie projector)
+    swap(Empty movie projector, Movie projector with film cartridge)
+    remove2(Movie film cartridge)
+    cls
+    look
+
+action(UNL)  // UNLOAD MOVIE
+  if with(Movie projector with film cartridge)
+    get(Movie film cartridge)
+    swap(Movie projector with film cartridge, Empty movie projector)
+    cls
+    look
+
+action(BRE BOM)
+  if with(Very large time bomb)
+    say(Tell me with what? Example: 'WITH FIST')
+    set(bit8)
+
+action(WIT)  // END IS NEAR
+  if bit8 & with(Very large time bomb)
+    clear(bit8)
+    say(It made an odd sound.)
+    remove2(Surgically implanted bomb detector glows green (bomb's -safe-))
+    say(Oh Boy...I think I did something...)
+
+action(GET BOM)
+  if here(Very large time bomb) & ! live(Red wire going from bomb into wall)
+    get(Very large time bomb)
+
+action(CHA)
+    say(I see no one here.)
+
+action(GET BOM)
+  if here(Very large time bomb) & ! live(Loose red wire going into wall)
+    
+    say(I can't do that)
+    say(its still connected)
+
+action(DRO BOM)  // BOOM NEAR
+  if holds(Very large time bomb)
+    say(It made an odd sound.)
+    remove2(Surgically implanted bomb detector glows green (bomb's -safe-))
+    say(Oh Boy...I think I did something...)
+    drop(Very large time bomb)
+
+action(POU)
+  if at(I am in a Control room surronding|the reactor core) & with(Water filled plastic pail) & with(Very large time bomb)
+    cls
+    say(the water spills on the bomb and)
+    say(the control panel which immediately shorts out triggering|the bomb)
+    gameover
+
+action(POU)  // WON!!!
+  if at(I am in a break room) & with(Water filled plastic pail) & with(Very large time bomb)
+    say(the water spills on the bomb and)
+    say(defuses it! FANTASTIC, You completed an IMPOSSIBLE mission!)
+    gameover
+
+action(BRE WIR)
+  if here(Red wire going from bomb into wall) & with(Wire cutters)
+    swap(Loose red wire going into wall, Red wire going from bomb into wall)
+    set(bit2)
+    cls
+    look
+
+action(DRO MOP)
+  if holds(Old fashioned yarn mop) & ! live(Blue key)
+    say(Strange...)
+    say(It made an odd sound.)
+    drop(Old fashioned yarn mop)
+
+action(POU)
+  if with(Water filled plastic pail)
+    swap(Water filled plastic pail, Empty plastic pail)
+    say(the water soaks into the floor)
+
+action(SHO PIC)
+  if at(I am in a white room) & holds(Picture of me stamped: -visitor-)
+    say(Metallic voice says:)
+    say('ACCEPTED')
+    say(The door opens just long enough for me to scurry through.)
+    go(I am in a large white visitors room)
+
+action(SHO PIC)
+  if at(I am in a white room) & holds(Picture of me stamped -maintenance-)
+    say(Metallic voice says:)
+    say('ACCEPTED')
+    say(The door opens just long enough for me to scurry through.)
+    go(I am in a large white visitors room)
+
+action(SHO PIC)
+  if at(I am in a white room) & holds(Picture of me stamped -security-)
+    say(Metallic voice says:)
+    say('ACCEPTED')
+    say(The door opens just long enough for me to scurry through.)
+    go(I am in a large white visitors room)
+
+action(DRO MOP)
+  if holds(Old fashioned yarn mop) & live(Blue key)
+    drop(Old fashioned yarn mop)
+
+action(SHO PIC)
+  if at(I am in a yellow room) & holds(Picture of me stamped -security-)
+    say(Metallic voice says:)
+    say('ACCEPTED')
+    say(The door opens just long enough for me to scurry through.)
+    go(I am in a yellow corridor)
+
+action(SHO PIC)
+  if at(I am in a yellow room) & holds(Picture of me stamped -maintenance-)
+    say(Metallic voice says:)
+    say('ACCEPTED')
+    say(The door opens just long enough for me to scurry through.)
+    go(I am in a yellow corridor)
+
+action(SHO PIC)
+  if at(I am in a blue room) & holds(Picture of me stamped -security-)
+    say(Metallic voice says:)
+    say('ACCEPTED')
+    say(The door opens just long enough for me to scurry through.)
+    go(I am in a blue anteroom)
+
+action(SHO PIC)
+  if at(I am in a yellow room)
+    cls
+    say(Metallic voice says:)
+    say('Authorization INSUFFICIENT for access'|)
+
+action(SHO PIC)
+  if at(I am in a white room)
+    cls
+    say(Metallic voice says:)
+    say('Authorization INSUFFICIENT for access'|)
+
+action(SHO PIC)
+  if at(I am in a blue room)
+    cls
+    say(Metallic voice says:)
+    say('Authorization INSUFFICIENT for access'|)
+
+action(CLE)
+  if with(Old fashioned yarn mop) & ! live(Blue key)
+    say(Oh Boy...I think I did something...)
+    say(It made an odd sound.)
+
+action(BRE WIN)
+  if here(Plate glass window with embeded red wires) & with(Large tape recorder)
+    say(Tell me with what? Example: 'WITH FIST')
+    set(bit7)
+    set(bit10)
+
+action(WIT TAP)  // BREAK WINDOW
+  if here(Plate glass window with embeded red wires) & with(Large tape recorder) & bit7
+    continue
+    dropat(Large tape recorder, I am in a )
+    cls
+    say(Recorder goes flying thru the glass landing in the control room.Boy what a MESS!|)
+
+continue
+    clear(bit7)
+    set(bit2)
+    swap(Empty window frame, Plate glass window with embeded red wires)
+    set(bit13)
+
+action(GET CHA)
+    say(I can't do that)
+    say(It won't budge!)
+
+action(LOO WIN)
+  if at(I am in a large white visitors room)
+    say(I'm on the 2nd floor. Below I see the control room surronding|the reactor core. There's a wide ledge just under the window.)
+
+action(SCO)
+    cls
+    say(In this Adventure there's NO score. Either you make it or ...|)
+
+action(SIT)
+  if here(Chair bolted to floor)
+    cls
+    go(I'm sitting in a grey chair|there's a box pointing at me)
+    look
+
+action(OPE WIN)
+    say(I can't do that)
+    say(It appears locked)
+    say(Most doors & windows are under automated security control.)
+
+action(BRE MOP)
+  if with(Old fashioned yarn mop)
+    set(bit10)
+    set(bit11)
+    say(Tell me with what? Example: 'WITH FIST')
+
+action(WIT CUT)
+  if with(Wire cutters) & bit11
+    drop(Blue key)
+    say(Something fell to the floor.)
+    clear(bit10)
+    clear(bit11)
+
+action(UNL WIN)
+    say(Nothing happened)
+    say(Most doors & windows are under automated security control.)
+
+continue  // AUT
+
+
+action(SHO PIC)
+  if with(Dead saboteur) & at(I am in a large white visitors room) & with(Picture of saboteur stamped -window maintance-)
+    clear(bit13)
+    say(Metallic voice says:)
+    say('TV deactivated'|)
+
+action(GO CHA)
+  if at(I am in a grey room)
+    say(It seems safe. Shall I sit down?)
+
+action(LOO CHA)  // .
+  if at(I am in a grey room)
+    say(It seems safe. Shall I sit down?)
+
+action(LOO BOM)
+  if with(Very large time bomb)
+    say(Its a seamless box with 1 small hole for the red wire.)
+
+action(LOO DET)
+    inventory
+
+action(DRO SUI)
+  if ! live(Anti-radiation suit)
+    drop(Anti-radiation suit)
+
+action(DRO SUI)
+  if holds(Anti-radiation suit)
+    drop(Anti-radiation suit)
+
+action(LOO WIN)
+  if at(I am in a small viewing room)
+    cls
+    say(I'm looking into the control room. I notice that the door is|blocked by some debris.)
+
+action(GET WAT)
+  if with(Empty plastic pail) & here(Vat of heavy water)
+    swap(Empty plastic pail, Water filled plastic pail)
+
+action(WEA SUI)  // PUT ON SUIT
+  if with(Anti-radiation suit)
+    remove2(Anti-radiation suit)
+
+action(GET TAP)
+  if here(Metal door jammed partially open by remains of a tape recorder)
+    say(I can't do that)
+    say(It won't budge!)
+
+action(OPE DOO)
+  if here(Metal door jammed partially open by remains of a tape recorder)
+    say(I can't do that)
+    say(It won't budge!)
+
+action(GO DOO)
+  if here(Metal door jammed partially open by remains of a tape recorder) & holds(Very large time bomb)
+    say(Something won't fit thru the door.)
+
+action(GO DOO)
+  if here(Metal door jammed partially open by remains of a tape recorder)
+    cls
+    go(I am in a blue anteroom)
+    look
+
+action(OPE DOO)  // OPE
+  if here(Plain metal door with sign -control room-)
+    say(Strange...)
+    say(I turn the knob and push)
+    say(gently on the door)
+    say(It won't budge!)
+
+action(PRE DOO)
+  if here(Plain metal door with sign -control room-)
+    say(Strange...)
+    say(I turn the knob and push)
+    say(gently on the door)
+    say(It won't budge!)
+
+action(PRE HAR)
+  if here(Plain metal door with sign -control room-) & ! here(The door is partially open)
+    say(I turn the knob and push)
+    say(hard on the door)
+    say(it opens slightly)
+    drop(The door is partially open)
+
+action(PRE HAR)
+  if here(Plain metal door with sign -control room-) & here(The door is partially open)
+    say(Strange...)
+    say(I turn the knob and push)
+    say(hard on the door)
+    say(It won't budge!)
+
+action(GO DOO)
+  if here(Plain metal door with sign -control room-) & here(The door is partially open)
+    go(I am in a Control room surronding|the reactor core)
+    cls
+    look
+
+action(GO DOO)
+  if here(Plain metal door with sign -control room-) & ! here(The door is partially open)
+    say(I can't do that)
+    say(its closed)
+
+action(KIC DOO)
+  if here(Plain metal door with sign -control room-) & ! here(The door is partially open)
+    say(OW! That HURT! Anyway)
+    say(it opens slightly)
+    drop(The door is partially open)
+
+action(CLO DOO)
+    say(It won't budge!)
+
+action(SUI UP)
+  if with(Anti-radiation suit)
+    remove2(Anti-radiation suit)
+
+action(SHO PIC)
+  if at(I am in a large white visitors room) & bit13
+    say(Metallic voice says:)
+    say('Authorization INSUFFICIENT for access'|)
+
+action(UNL DOO)
+    say(Nothing happened)
+    say(Most doors & windows are under automated security control.)
+
+action(FRI SAB)
+  if with(Dead saboteur) & ! live(Empty manila envelope)
+    drop(Empty manila envelope)
+    drop(Piece of yarn)
+    drop(Picture of saboteur stamped -window maintance-)
+    continue
+
+continue  // FRISKING SABOTEUR
+    drop(Torn up map)
+    drop(Empty pill case)
+    say(Something fell to the floor.)
+    drop(A leaflet)
+
+continue  // RETURN STOLEN TAPE TOO
+  if ! live(Large tape recorder)
+    drop(Large tape recorder)
+
+action(KNO)
+  if at(I am in a white room)
+    cls
+    say(Metallic voice says:)
+    say('Show authorization please'|)
+
+action(HEL)
+    say(Only help I can think of is to: 'Examine everything closely!'|)
+
+action(PUL)
+    say(It won't budge!)
+
+action(PRE)
+    say(Nothing happened)
+
+action(KNO)
+  if at(I am in a yellow room)
+    cls
+    say(Metallic voice says:)
+    say('Show authorization please'|)
+
+action(KNO)
+  if at(I am in a blue room)
+    cls
+    say(Metallic voice says:)
+    say('Show authorization please'|)
+
+action(KNO)
+    say(Nothing happened)
+
+action(WIT)
+  if ! bit10
+    say(HUH?)
+
+action(WIT HAN)  // .
+  if bit10
+    clear(bit10)
+    say(OW! That HURT! Anyway)
+    say(Nothing happened)
+
+action(FRI)
+    say(Nothing happened)
+
+action(KIC)
+    say(OW! That HURT! Anyway)
+    say(Nothing happened)
+
+action(SHO)
+    say(Strange...)
+    say(Nothing happened)
+
+action(REA)
+    say(I can't do that)
+    say(its unreadable)
+
+action(FIN)
+    say(I can't do that)
+    say(I don't know where to look)
+
+action(BRE)
+    say(Tell me with what? Example: 'WITH FIST')
+    set(bit10)
+
+action(WIT)
+  if bit10
+    clear(bit10)
+    say(Strange...)
+    say(Nothing happened)
+    say(Be sure I'm carrying it!)
+
+action(ACT)
+    say(Tell me how?)
+
+action(WAI)
+    ctr -= 30
+    say(Some time passes...)
+
+action(UNA)
+    say(Tell me how?)
+
+action(LOO LEA)
+  if with(A leaflet)
+    say(There is something written there)
+
+action(LOO CAM)
+  if at(I am in a large white visitors room) & bit13
+    say(TV camera is slow scanning the window area.)
+
+action(LOO CAM)
+  if at(I am in a large white visitors room) & ! bit13
+    say(TV camera is powered down.|)
+
+continue
+
+
+continue
+
+
+continue
+
+
+continue
+
+
+action(LOO)
+    say(I see nothing special.)
+    look2
