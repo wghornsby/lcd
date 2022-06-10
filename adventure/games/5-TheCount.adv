@@ -1,0 +1,1514 @@
+/** ADVENTURE 5 v 115 */
+
+wordlen = 3
+carrymax = 7
+lightlen = 175
+nounverbs = 80
+messages = 89
+actions = 220
+items = 73
+rooms = 23
+startroom(I'm lying in a large brass bed)
+
+/** VOCABULARY */
+
+verbs(GO=RUN=WAL=ENT=USE)
+verbs(LOO=EXA)
+verbs(GET=TAK=PIC=CAT=REM=MOV)
+verbs(OUT=EXI)
+verbs(PUT=DRO=LEA=LOW)
+verbs(KIL=ATT)
+verbs(CLO=SHU)
+verbs(OPE=LIF=RAI)
+verbs(UNL=EXT)
+verbs(LIG=BUR=IGN)
+verbs(EMP=SPI)
+verbs(CUT=BRE=FIL=TRI)
+verbs(PUL=RIN)
+verbs(EAT=DRI)
+verbs(JAM=SMA=BUS)
+verbs(SAY=YEL)
+verbs(SME=SNI)
+verbs(FEE=TOU)
+verbs(QUI,UNC,SAV,SMO,FIN,HEL,CLI,LOC,INV,TIE,UNT,FLY,SLE,REA,TO,JUM,WAI,FLU,WIT,MAK,SCO)
+
+nouns(SHE=END)
+nouns(WIN=BOX=LED)
+nouns(POL=FLA)
+nouns(BAT=VAM=DRA)
+nouns(COF=LID)
+nouns(FIL=NAI)
+nouns(BOT=BLO)
+nouns(POS=CAR)
+nouns(GAT=CRO)
+nouns(FIS=HAN=FOO=FEE)
+nouns(NEC=BIT)
+nouns(NORTH,SOUTH,EAST,WEST,UP,DOWN,INV,COA,ROO,NOT,PIT,DOO,TOR,PAC,MAT,CLI,STA,CAS,CIG,GAR,DAI,PAS,BED,POR,DUM,MAL,MIR,OVE,LEN,WAT)
+nouns(VIA,VEN,TAB,TOI,RIN,LOC,ARO,BEL,LET,SLE,BOL,HOL,GAM,PIL,HEL,KEY,TRE,GLA,DRE,DUS,TAC,MEM)
+
+/** ROOMS */
+
+room(I'm lying in a large brass bed)
+
+room(I am in a bedroom)
+  N(I am in a hall inside the castle)
+
+room(I'm on A ledge outside An open window)
+
+room(I'm hanging on the end of a sheet, I made a fold in the sheet|so I can leave things here. There's a window box here on the|side of the castle)
+
+room(I am in a flower box outside An open window)
+
+room(I am in a CRYPT)
+  S(I am in a Dark passage)
+
+room(I am in a closet)
+  W(I am in a workroom)
+
+room(I am in a Bathroom)
+  S(I am in a hall inside the castle)
+
+room(I'm outside the castle)
+  E(I am in a Meandering path)
+  W(I am in a hall inside the castle)
+
+room(I am in a DOORLESS room)
+
+room(I am in a hall inside the castle)
+  N(I am in a Bathroom)
+  S(I am in a bedroom)
+  E(I'm outside the castle)
+  W(I am in a kitchen)
+
+room(I am in a kitchen)
+  E(I am in a hall inside the castle)
+
+room(I am in a large COFFIN)
+  U(I am in a CRYPT)
+
+room(I am in a pAntry)
+
+room(I am in a giant SOLAR OVEN)
+  W(I am in a kitchen)
+
+room(I am in a Dungeon)
+  U(I am in a workroom)
+
+room(I am in a Meandering path)
+  W(I'm outside the castle)
+
+room(I am in a Pit)
+
+room(I am in a Dark passage)
+  N(I am in a CRYPT)
+  S(I am in a DOORLESS room)
+
+room(I am in a dumb-waiter by a room)
+
+room(I am in a workroom)
+  D(I am in a Dungeon)
+
+room(I am in a LOT OF TROUBLE! (And so Are you!))
+
+/** ITEMS */
+
+item(Sheets)
+  noun(SHE)
+  at(I'm lying in a large brass bed)
+
+item(Open window)
+  at(out-of-play)
+
+item(Closed window)
+  at(I am in a bedroom)
+
+item(Pillow)
+  noun(PIL)
+  at(I'm lying in a large brass bed)
+
+item(Flag pole in wall)
+  at(I'm on A ledge outside An open window)
+
+item(Coat-of-arms)
+  noun(COA)
+  at(I'm outside the castle)
+
+item(Sheet going into window)
+  at(out-of-play)
+
+item(End of sheet tied to flAgpole)
+  at(out-of-play)
+
+item(1 nodoz tablet)
+  noun(TAB)
+  at(out-of-play)
+
+item(LIT torch)
+  noun(TOR)
+  at(out-of-play)
+
+item(Loose end of sheet going over ledge)
+  at(out-of-play)
+
+item(End of sheet hAnging here)
+  at(I am in a flower box outside An open window)
+
+item(Closed & UNLOCKED door)
+  at(out-of-play)
+
+item(Open door)
+  at(out-of-play)
+
+item(Locked door)
+  at(I am in a workroom)
+
+item(Paper clip)
+  noun(CLI)
+  at(out-of-play)
+
+item(Tent STAKE)
+  noun(STA)
+  at(inventory)
+
+item(Mirror)
+  noun(MIR)
+  at(I am in a Bathroom)
+
+item(Bottle of type V blood)
+  noun(BOT)
+  at(out-of-play)
+
+item(Empty bottle)
+  noun(BOT)
+  at(out-of-play)
+
+item(Unlit torch)
+  noun(TOR)
+  at(I am in a Pit)
+
+item(Sulfur mAtches)
+  noun(MAT)
+  at(I am in a pAntry)
+
+item(2 small holes in my neck)
+  at(out-of-play)
+
+item(3 no-doz tablets)
+  noun(TAB)
+  at(out-of-play)
+
+item(2 nodoz tablets)
+  noun(TAB)
+  at(out-of-play)
+
+item(Piles of extinguished cigArettes)
+  at(I am in a CRYPT)
+
+item(Pack of Transylvanian cigarettes)
+  noun(PAC)
+  at(out-of-play)
+
+item(LIT cigArette)
+  noun(CIG)
+  at(out-of-play)
+
+item(Stone COFFIN)
+  at(out-of-play)
+
+item(Coffin is open)
+  at(out-of-play)
+
+item(Coffin is closed)
+  at(out-of-play)
+
+item(Dusty clove of garlic)
+  noun(GAR)
+  at(I am in a pAntry)
+
+item(DARK pit)
+  at(I am in a Dungeon)
+
+item(Cigarette)
+  noun(CIG)
+  at(out-of-play)
+
+item(Brass bed)
+  at(I am in a bedroom)
+
+item(The other end of the sheet)
+  noun(SHE)
+  at(out-of-play)
+
+item(Sheet tied to bed)
+  at(out-of-play)
+
+item(Pocket watch)
+  noun(WAT)
+  at(I am in a Bathroom)
+
+item(Coffin lid is open)
+  at(I am in a large COFFIN)
+
+item(Lockable slide bolt)
+  at(I am in a large COFFIN)
+
+item(Broken slide lock)
+  at(out-of-play)
+
+item(Large tempered nail file)
+  noun(FIL)
+  at(I am in a giant SOLAR OVEN)
+
+item(Small Vial)
+  noun(VIA)
+  at(I am in a closet)
+
+item(Large dark lens set in ceiling)
+  at(I am in a giant SOLAR OVEN)
+
+item(Oven)
+  at(I am in a kitchen)
+
+item(Package)
+  noun(PAC)
+  at(out-of-play)
+
+item(Empty box)
+  noun(WIN)
+  at(out-of-play)
+
+item(Postcard)
+  noun(POS)
+  at(out-of-play)
+
+item(Bell pull)
+  at(I'm outside the castle)
+
+item(Castle towering above me)
+  at(I am in a Meandering path)
+
+item(Fence with an open gate & a crowd beyond)
+  at(I am in a Meandering path)
+
+item(Note)
+  noun(NOT)
+  at(out-of-play)
+
+item(DRACULA)
+  noun(BAT)
+  at(out-of-play)
+
+item(Rubber mallet)
+  noun(MAL)
+  at(I am in a workroom)
+
+item(Iron rings in wAll)
+  at(I am in a Dungeon)
+
+item(Sheet tied to ring going into pit)
+  at(out-of-play)
+
+item(DARK foreboding passage)
+  at(out-of-play)
+
+item(.)
+  at(out-of-play)
+
+item(Full size portrait of DRACULA)
+  noun(POR)
+  at(I am in a DOORLESS room)
+
+item(Window)
+  at(I am in a DOORLESS room)
+
+item(Vent)
+  at(I am in a CRYPT)
+
+item(Daisies)
+  noun(DAI)
+  at(I am in a flower box outside An open window)
+
+item(Toilet)
+  at(I am in a Bathroom)
+
+item(Dumb-waiter)
+  at(I am in a kitchen)
+
+item(Vent)
+  at(I am in a workroom)
+
+item(Letter)
+  noun(LET)
+  at(out-of-play)
+
+item(Sign says: 'POSITIVELY NO SMOKING ALLOWED HERE!' signed Dracula)
+  at(I am in a CRYPT)
+
+item(Mouldy old skeleton with a stake in the rib cage)
+  at(out-of-play)
+
+item(.)
+  noun(KEY)
+  at(out-of-play)
+
+item(Broken glass)
+  at(out-of-play)
+
+item(Century worth of dust)
+  noun(DUS)
+  at(I am in a closet)
+
+item(Memo tacked to the door)
+  at(I am in a workroom)
+
+item(.)
+  at(out-of-play)
+
+/** AUTOS/COMMANDS */
+
+auto(100%)  // DECRMNT MINUTES
+    ctr--
+    continue
+
+continue  // INTRO
+  if ! bit1
+    say(Welcome to ADVEWNTURE: 5 'THE COUNT'. Dedicated to Alvin Files.|)
+    ctr = 3
+    swapct(ctr0)
+    ctr = 65
+
+continue  // INTRO
+  if ! bit1
+    say(I see I was put to bed. Its AFternoon & I overslept!)
+    swapct(ctr3)
+    ctr = 0
+    swapct(ctr3)
+
+continue  // 18
+  if ctr <= 10 & ctr > 1 & ! bit2 & ! at(I am in a Pit) & ! at(I am in a CRYPT)
+    say(Its getting DARK outside!)
+
+continue  // GETTING TIRED
+  if ctr <= 4 & ! bit4 & ctr > 1 & ! bit2
+    say(I'm getting very tired)
+
+continue  // SUNSET
+  if ctr = 1
+    dark
+    say(The sun has set!)
+    look
+
+auto(100%)  // SHEET OVER LEDGE
+  if here(The other end of the sheet) & at(I'm on A ledge outside An open window)
+    swap(The other end of the sheet, Loose end of sheet going over ledge)
+
+auto(100%)  // DEC PILL
+  if bit4
+    swapct(ctr1)
+    ctr--
+    continue
+
+continue  // WEARING OFF
+  if ctr <= 8 & ctr <= 4
+    say(I'm getting very tired)
+
+continue  // WORE OFF
+  if ctr <= 0
+    clear(bit4)
+
+continue  // RESET COUNTER
+    swapct(ctr1)
+
+auto(33%)  // POLE BROKE
+  if at(I'm hanging on the end of a sheet, I made a fold in the sheet|so I can leave things here. There's a window box here on the|side of the castle) & live(End of sheet tied to flAgpole)
+    say(I hear the)
+    say(Flagpole splinter)
+    say(I fall to my death)
+    go(I am in a LOT OF TROUBLE! (And so Are you!))
+
+auto(100%)  // UNTIE SHEET
+  if holds(The other end of the sheet) & at(I am in a hall inside the castle)
+    remove2(Sheet tied to bed)
+    swap(The other end of the sheet, Sheets)
+    say(Sheet came untied)
+
+auto(100%)  // FELL ASLEEP
+  if ctr <= 0 & ! bit4 & ! at(I am in a LOT OF TROUBLE! (And so Are you!))
+    set(bit2)
+    cls
+
+auto(25%)  // BAT AT NITE
+  if ctr <= 0 & holds(Dusty clove of garlic) & ! bit2 & ! at(I am in a LOT OF TROUBLE! (And so Are you!))
+    say(A bAt flew by & LAUGHED At me!)
+    say(He smelled something & flew on)
+
+auto(40%)  // BAT BITE AT NITE
+  if ctr <= 0 & ! holds(Dusty clove of garlic) & ! bit2 & ! at(I am in a LOT OF TROUBLE! (And so Are you!))
+    say(A bAt flew by & LAUGHED At me!)
+    say(he settled on my NECK!)
+    set(bit2)
+    wait
+
+auto(50%)  // BURNT SHEET
+  if at(I'm hanging on the end of a sheet, I made a fold in the sheet|so I can leave things here. There's a window box here on the|side of the castle) & with(LIT torch)
+    say(The torch burnt thru the sheet!)
+    say(I fall to my death)
+    go(I am in a LOT OF TROUBLE! (And so Are you!))
+
+auto(100%)  // FELL SLEEP?
+  if bit2 & ! at(I am in a LOT OF TROUBLE! (And so Are you!))
+    continue
+    go(I am in a closet)
+    set(bit3)
+    clear(bit2)
+
+continue  // OPEN IF DOOR UNLOCKED
+  if ! live(Locked door)
+    go(I am in a )
+    dropat(Open door, I am in a workroom)
+    remove2(Closed & UNLOCKED door)
+
+continue  // STEAL STAKE
+  if live(Tent STAKE) & ! here(Tent STAKE)
+    remove2(Tent STAKE)
+    set(bit9)
+
+continue  // RETURN SHEE
+    remove2(Sheet going into window)
+    remove2(End of sheet tied to flAgpole)
+    remove2(Loose end of sheet going over ledge)
+    remove2(The other end of the sheet)
+
+continue  // CLOSE WINDOW
+    remove2(Open window)
+    dropat(Closed window, I am in a bedroom)
+    ctr = 65
+    remove2(Sheet tied to ring going into pit)
+
+continue  // GET PACKAGE
+  if live(Package) & ! here(Package)
+    remove2(Package)
+    set(bit9)
+
+continue  // GET CIGS
+  if live(Pack of Transylvanian cigarettes) & ! here(Pack of Transylvanian cigarettes)
+    dropat(Pack of Transylvanian cigarettes, I am in a large COFFIN)
+    set(bit9)
+
+continue  // DREAMING?
+  if at(I am in a )
+    go(I'm lying in a large brass bed)
+    say(What a DREAM I just had !!!!)
+
+continue  // RIPPED OFF?
+  if bit9
+    clear(bit9)
+    go(I'm lying in a large brass bed)
+    say(I've a hunch I've been robbed!)
+
+continue  // PUT TO BED
+    go(I'm lying in a large brass bed)
+    cleardark
+    say(I see I was put to bed. Its AFternoon & I overslept!)
+    drop(Sheets)
+
+continue  // GET BLOOD
+  if with(Bottle of type V blood)
+    clear(bit3)
+    swap(Bottle of type V blood, Empty bottle)
+    say(Odd, I wasn't bitten last nite!)
+
+continue  // SHEETS
+    clear(bit4)
+    remove2(Sheet tied to bed)
+    drop(Sheets)
+    look
+
+auto(100%)  // DEC DAYS
+  if bit3
+    clear(bit3)
+    swapct(ctr0)
+    ctr--
+    continue
+
+continue  // LOST GAME
+  if ctr <= 0
+    say(My neck looks BITTEN!)
+    say(I've turned into A VAMPIRE!)
+    go(I am in a LOT OF TROUBLE! (And so Are you!))
+
+continue  // RESET DAY + REPORT BITE
+    say(My neck looks BITTEN!)
+    swapct(ctr0)
+    superget(2 small holes in my neck)
+
+auto(50%)  // CIGARETTE OUT
+  if live(LIT cigArette) & ! at(I am in a large COFFIN)
+    swapct(ctr2)
+    ctr--
+    continue
+
+continue  // GONE OUT?
+  if ctr = 0
+    remove2(LIT cigArette)
+    remove2(Stone COFFIN)
+    remove2(Coffin is open)
+    remove2(Coffin is closed)
+
+continue  // REPORT IT
+  if at(I am in a CRYPT) & ctr = 0
+    say(The cigArette went out & the coffin VANISHED)
+
+continue  // RESET COUNTER
+    swapct(ctr2)
+
+auto(100%)  // END GAME
+  if at(I am in a LOT OF TROUBLE! (And so Are you!))
+    say(YOU HAVE LOST!)
+    gameover
+
+auto(30%)  // DELIVER PACKAGE
+  if ctr <= 25 & ! live(Package) & ! at(I'm outside the castle) & ! live(Empty box)
+    continue
+    swapct(ctr0)
+
+continue  // CHECK DAY
+  if ctr = 2
+    dropat(Package, I'm outside the castle)
+    dropat(Letter, I'm outside the castle)
+    say(|A bell rings somewhere: 'DING-DONG'.|)
+
+continue  // RESET COUNTER
+    swapct(ctr0)
+
+auto(100%)  // MORE INTRO
+  if ! bit1
+    set(bit1)
+
+auto(100%)  // SUNSET?
+  if ctr <= 1 & ! with(LIT torch)
+    dark
+    look
+
+auto(100%)  // LITE DOORLW
+  if at(I am in a DOORLESS room) & ctr > 0 & bit15
+    cleardark
+    look2
+
+auto(29%)  // DELIVER POSTCARD
+  if ctr <= 39 & ! live(Postcard) & ! at(I'm outside the castle)
+    dropat(Postcard, I'm outside the castle)
+    say(|A bell rings somewhere: 'DING-DONG'.|)
+
+action(TIE SHE)
+  if with(Sheets)
+    say(Tell me to what? i.e. 'TO TREE')
+
+action(GO WIN)
+  if at(I'm hanging on the end of a sheet, I made a fold in the sheet|so I can leave things here. There's a window box here on the|side of the castle)
+    go(I am in a flower box outside An open window)
+    look2
+    say(OK)
+
+action(GO WIN)
+  if at(I am in a flower box outside An open window)
+    go(I am in a DOORLESS room)
+    look2
+    say(OK)
+
+action(LOO MIR)
+  if with(Mirror) & live(2 small holes in my neck)
+    continue
+    say(My neck looks BITTEN!)
+    say(I appear pale & drained!)
+    say(I think I can only take)
+
+continue
+    swapct(ctr0)
+    sayctr
+    swapct(ctr0)
+    say(more days of this!)
+
+action(UNL TOR)
+  if with(LIT torch)
+    swap(LIT torch, Unlit torch)
+    say(OK)
+    look
+
+action(LIG TOR)
+  if with(Unlit torch) & with(Sulfur mAtches)
+    swap(LIT torch, Unlit torch)
+    look2
+    say(OK)
+
+action(EMP BOT)
+  if with(Bottle of type V blood)
+    swap(Bottle of type V blood, Empty bottle)
+    say(OK)
+
+action(LOO MIR)
+  if with(Mirror) & ! live(2 small holes in my neck)
+    say(TODAY I look healthy...)
+
+action(LOO WIN)
+  if at(I am in a bedroom)
+    say(I'm up in A cAstle, in the distAnce I see VOODOO CASTLE. There'sstAnding room outside the window)
+
+action(CLO WIN)  // CLO
+  if here(Open window)
+    swap(Open window, Closed window)
+    look2
+    say(OK)
+
+action(GO WIN)
+  if here(Open window) & holds(The other end of the sheet)
+    go(I'm on A ledge outside An open window)
+    drop(Sheet going into window)
+    look2
+    say(OK)
+
+action(TO BED)
+  if with(Sheets) & here(Brass bed)
+    remove2(Sheets)
+    drop(The other end of the sheet)
+    drop(Sheet tied to bed)
+    look2
+
+action(TO POL)
+  if with(Sheets) & with(Flag pole in wall)
+    remove2(Sheets)
+    drop(End of sheet tied to flAgpole)
+    drop(Loose end of sheet going over ledge)
+    look2
+
+action(CLI)
+  if here(Loose end of sheet going over ledge)
+    go(I'm hanging on the end of a sheet, I made a fold in the sheet|so I can leave things here. There's a window box here on the|side of the castle)
+    look2
+    say(OK)
+
+action(CLI)
+  if here(End of sheet hAnging here)
+    go(I'm hanging on the end of a sheet, I made a fold in the sheet|so I can leave things here. There's a window box here on the|side of the castle)
+    look2
+    say(OK)
+
+action(SLE)
+    set(bit2)
+    cls
+    clear(bit4)
+
+action(LOO WAT)
+  if with(Pocket watch)
+    say(Strange watch says)
+    sayctr
+    say(moves till sunset)
+
+action(GO WIN)
+  if at(I'm on A ledge outside An open window) & holds(The other end of the sheet)
+    go(I am in a bedroom)
+    remove2(Sheet going into window)
+    look2
+    say(OK)
+
+action(LOO OVE)
+  if ctr > 0 & with(Oven)
+    say(There's A tremendous Amount of HEAT & SUNLIGHT coming out.)
+
+action(LOO OVE)
+  if with(Oven) & ctr <= 0
+    say(There's something there, maybe I should)
+    say(go there?)
+
+action(TO RIN)
+  if here(Iron rings in wAll)
+    remove2(Sheets)
+    dropat(The other end of the sheet, I am in a Pit)
+    drop(Sheet tied to ring going into pit)
+    look2
+
+action(UNT)
+  if here(Sheet tied to ring going into pit)
+    remove2(The other end of the sheet)
+    remove2(Sheet tied to ring going into pit)
+    drop(Sheets)
+    look2
+
+action(UNT)
+  if here(End of sheet tied to flAgpole)
+    remove2(End of sheet tied to flAgpole)
+    remove2(Loose end of sheet going over ledge)
+    drop(Sheets)
+    look2
+
+action(LOO DUM)
+  if here(Dumb-waiter)
+    say(OK)
+    say(There's something there, maybe I should)
+    say(go there?)
+
+action(EAT TAB)
+  if with(3 no-doz tablets)
+    set(bit4)
+    swap(3 no-doz tablets, 2 nodoz tablets)
+    swapct(ctr1)
+    continue
+
+continue
+    ctr = 40
+    swapct(ctr1)
+    say(OK)
+    say(I'm real PEPPY now!)
+
+action(EAT TAB)  // PILL 2
+  if with(2 nodoz tablets)
+    set(bit4)
+    swap(2 nodoz tablets, 1 nodoz tablet)
+    swapct(ctr1)
+    continue
+
+continue
+    ctr = 40
+    swapct(ctr1)
+    say(OK)
+    say(I'm real PEPPY now!)
+
+action(LOO PAC)
+  if at(I'm hanging on the end of a sheet, I made a fold in the sheet|so I can leave things here. There's a window box here on the|side of the castle)
+    say(There's something there, maybe I should)
+    say(go there?)
+
+action(SMO)
+  if with(LIT cigArette) & at(I am in a CRYPT) & ! live(Stone COFFIN)
+    say(There's A COUGHIN (sic) in the room.)
+    drop(Stone COFFIN)
+    drop(Coffin is closed)
+
+action(LOO TOI)
+  if here(Toilet)
+    say(There's something there, maybe I should)
+    say(go there?)
+
+action(LOO ROO)
+  if at(I am in a dumb-waiter by a room)
+    say(There's something there, maybe I should)
+    say(go there?)
+
+action(LIG CIG)
+  if with(Cigarette) & with(Sulfur mAtches)
+    swapct(ctr2)
+    ctr = 8
+    swapct(ctr2)
+    continue
+
+continue
+    swap(Cigarette, LIT cigArette)
+    say(OK)
+
+action(GET CIG)
+  if with(Cigarette)
+    get(Cigarette)
+    say(OK)
+
+action(LOO POS)
+  if with(Postcard)
+    say(There's writing on it.)
+
+action(LOO LET)
+  if with(Letter)
+    say(There's writing on it.)
+
+action(GET CIG)
+  if with(LIT cigArette)
+    get(LIT cigArette)
+    say(OK)
+
+action(LOO GAT)
+  if with(Fence with an open gate & a crowd beyond)
+    say(Mob looks ANGRY)
+
+action(LOO COF)
+  if here(Coffin is closed)
+    say(I see nothing special.)
+
+action(LOO COF)
+  if here(Coffin is open)
+    say(There's something there, maybe I should)
+    say(go there?)
+
+action(LOO VIA)
+  if with(Small Vial) & ! bit6
+    say(There's something there, maybe I should)
+    say(empty it?)
+
+action(OPE DOO)
+  if here(Closed & UNLOCKED door)
+    swap(Closed & UNLOCKED door, Open door)
+    look2
+    say(OK)
+
+action(CLO DOO)
+  if here(Open door)
+    swap(Closed & UNLOCKED door, Open door)
+    look2
+    say(OK)
+
+action(LOC DOO)
+  if here(Closed & UNLOCKED door) & with(Paper clip)
+    swap(Closed & UNLOCKED door, Locked door)
+    look2
+    say(OK)
+
+action(LOO CAS)
+  if here(Castle towering above me)
+    say(OK)
+    say(I see nothing special.)
+    say(EXCEPT)
+    say(I notice a DARK WINDOW UNDER the bedroom window ledge!)
+
+action(GET LOC)  // .
+  if here(Locked door) & with(Paper clip)
+    swap(Locked door, Closed & UNLOCKED door)
+    look2
+    say(OK)
+
+action(REA NOT)
+  if with(Postcard) & ! live(Note)
+    say(The paper clip is in the way!)
+
+action(GO BED)
+  if here(Brass bed)
+    go(I'm lying in a large brass bed)
+    look2
+    say(OK)
+
+action(GO OVE)
+  if with(Oven) & ctr > 0
+    say(Sorry I can't do that)
+    say(There's A tremendous Amount of HEAT & SUNLIGHT coming out.)
+
+action(GO OVE)
+  if with(Oven) & ctr <= 0
+    go(I am in a giant SOLAR OVEN)
+    look2
+    say(OK)
+
+action(WIT FIL)
+  if with(Large tempered nail file) & here(Lockable slide bolt)
+    swap(Lockable slide bolt, Broken slide lock)
+    look2
+    say(OK)
+
+action(OPE WIN)
+  if here(Closed window)
+    swap(Open window, Closed window)
+    look2
+    say(OK)
+
+action(GO DUM)
+  if here(Dumb-waiter)
+    go(I am in a dumb-waiter by a room)
+    look2
+    say(OK)
+
+action(KIL BAT)  // WIN
+  if with(DRACULA) & with(Tent STAKE) & with(Rubber mallet)
+    swap(DRACULA, Mouldy old skeleton with a stake in the rib cage)
+    look2
+    say(I drive the stake through his HEART. The townspeople|come and carry me off cheering! (Don't worry, I tell them I|owe it all to you!!!!))
+    gameover
+
+action(GO ROO)
+  if ! bit8 & ! bit7 & at(I am in a dumb-waiter by a room)
+    go(I am in a kitchen)
+    look2
+    say(OK)
+
+action(EMP VIA)  // .
+  if with(Small Vial) & ! bit6
+    drop(3 no-doz tablets)
+    look2
+    set(bit6)
+
+action(UNT)
+  if here(Sheet tied to bed)
+    remove2(Sheet tied to bed)
+    remove2(Sheet going into window)
+    remove2(The other end of the sheet)
+    continue
+
+continue
+    remove2(Loose end of sheet going over ledge)
+    drop(Sheets)
+    look2
+
+action(CUT FIL)
+  if with(Large tempered nail file)
+    say(OK)
+    say(Some time passes...)
+    ctr--
+    ctr--
+
+action(WAI)
+  if ctr > 5
+    say(Some time passes...)
+    ctr -= 5
+
+action(PUL BEL)
+  if here(Bell pull)
+    say(OK)
+    say(|A bell rings somewhere: 'DING-DONG'.|)
+
+action(EAT TAB)
+  if with(1 nodoz tablet)
+    set(bit4)
+    remove2(1 nodoz tablet)
+    swapct(ctr1)
+    continue
+
+continue
+    ctr = 40
+    swapct(ctr1)
+    say(OK)
+    say(I'm real PEPPY now!)
+
+action(WIT FIL)  // NO FILE
+  if ! with(Large tempered nail file)
+    say(Sorry I can't do that)
+    say(I've a hunch I've been robbed!)
+
+action(GO PAS)
+  if here(DARK foreboding passage)
+    go(I am in a Dark passage)
+    dark
+    look2
+    say(OK)
+
+action(FIN)
+    say(Sorry I can't do that)
+    say(I don't know where to look)
+
+action(GO WIN)
+  if at(I am in a DOORLESS room)
+    go(I am in a flower box outside An open window)
+    look2
+    say(OK)
+
+action(GET POR)
+  if with(Full size portrait of DRACULA)
+    get(Full size portrait of DRACULA)
+    dropat(DARK foreboding passage, I am in a DOORLESS room)
+    say(OK)
+
+action(CLI)
+  if here(The other end of the sheet) & at(I am in a Pit)
+    go(I am in a Dungeon)
+    cleardark
+    look2
+    say(OK)
+
+action(CLI)
+  if here(DARK pit)
+    dark
+    go(I am in a Pit)
+    look2
+    say(OK)
+
+action(GO SHE)
+    say(Try: 'CLIMB SHEET')
+
+action(GO PIT)
+  if here(DARK pit)
+    dark
+    go(I am in a Pit)
+    look2
+    say(OK)
+
+action(CLO)
+  if here(Coffin lid is open)
+    say(I closed the lid and I suffocated!)
+    gameover
+
+action(CLO)
+  if here(Coffin is open)
+    swap(Coffin is open, Coffin is closed)
+    look2
+
+action(OPE COF)
+  if here(Stone COFFIN) & live(Lockable slide bolt) & ctr > 0
+    say(Sorry I can't do that)
+    say(Its LOCKED from INSIDE!)
+
+action(OPE COF)
+  if here(Stone COFFIN)
+    remove2(Coffin is closed)
+    drop(Coffin is open)
+    look2
+    continue
+
+continue  // PUT DRACKY
+  if ctr > 0
+    dropat(DRACULA, I am in a large COFFIN)
+
+action(EAT GAR)
+  if with(Dusty clove of garlic)
+    say(OK)
+    remove2(Dusty clove of garlic)
+
+action(GO GAT)
+  if here(Fence with an open gate & a crowd beyond)
+    say(Peasants attack me, I was SUPPOSED to destroy the VAMPIRE!)
+    say(YOU HAVE LOST!)
+    gameover
+
+action(GO ROO)
+  if at(I am in a dumb-waiter by a room) & bit7
+    go(I am in a workroom)
+    look2
+    say(OK)
+
+action(REA LET)
+  if with(Letter)
+    say(DeAr DRACKY, Don't open this present till HALLOWEEN.|signed COUNT YORGA.)
+
+action(REA POS)
+  if with(Postcard) & live(Note)
+    say(Its for DRACULA, its and EATING & GHOULING bill from a|local mortuary!)
+
+action(REA POS)
+  if with(Postcard) & ! live(Note)
+    say(Its for DRACULA, its and EATING & GHOULING bill from a|local mortuary!)
+    say(There's a note PAPER CLIPPED to the postcard)
+
+action(REA NOT)
+  if with(Note)
+    say(Postmaster says he'll be delivering a package tomorrow.)
+
+action(GET CLI)
+  if with(Postcard) & ! live(Paper clip)
+    superget(Paper clip)
+    superget(Note)
+    cls
+    say(OK)
+
+action(UNC)
+  if with(Postcard) & ! live(Paper clip)
+    superget(Paper clip)
+    superget(Note)
+    cls
+    say(OK)
+
+action(GET NOT)
+  if with(Note)
+    superget(Note)
+    say(OK)
+
+action(GET CLI)
+  if with(Paper clip)
+    superget(Paper clip)
+    say(OK)
+
+action(OPE PAC)
+  if with(Package)
+    drop(Empty box)
+    drop(Pack of Transylvanian cigarettes)
+    drop(Bottle of type V blood)
+    continue
+
+continue
+    remove2(Package)
+    say(OK)
+
+action(HEL)
+  if here(Locked door)
+    say(I'm A pretty good LOCK PICK!)
+
+action(LIG MAT)
+  if with(Sulfur mAtches) & bit15
+    cleardark
+    look2
+    say(The match flares up briefly ...)
+    continue
+
+continue
+    wait
+    wait
+    wait
+    say(and then goes out!)
+
+continue
+    dark
+    look2
+
+action(JUM)
+  if at(I'm on A ledge outside An open window)
+    say(I fall to my death)
+    say(as I fall)
+    say(I notice a DARK WINDOW UNDER the bedroom window ledge!)
+    go(I am in a LOT OF TROUBLE! (And so Are you!))
+
+action(GO ROO)
+  if at(I am in a dumb-waiter by a room) & bit8
+    go(I am in a pAntry)
+    look2
+    say(OK)
+
+action(CLI)
+  if at(I'm hanging on the end of a sheet, I made a fold in the sheet|so I can leave things here. There's a window box here on the|side of the castle)
+    go(I'm on A ledge outside An open window)
+    look2
+    say(OK)
+
+action(SAV GAM)
+    say(OK)
+    save
+
+action(GET SHE)
+  if with(Sheets)
+    get(Sheets)
+    say(OK)
+
+action(OPE WIN)
+  if at(I'm hanging on the end of a sheet, I made a fold in the sheet|so I can leave things here. There's a window box here on the|side of the castle)
+    say(Sorry I can't do that)
+    say(There's something there, maybe I should)
+    say(go there?)
+
+action(GO TOI)
+  if here(Toilet)
+    say(OK)
+    say(Ah that's much better!)
+
+action(TO)
+  if with(Sheets) & ! at(I'm lying in a large brass bed)
+    say(Sorry I can't do that)
+
+action(GET SHE)
+  if with(The other end of the sheet)
+    get(The other end of the sheet)
+    say(OK)
+
+action(REA MEM)
+  if with(Memo tacked to the door)
+    say(Dear Adventurer:|I wanted to take this time (1 move!) to thank ALL of you out|there in ADventureland for the fantastically warm reception|Adventure has received!|Happy Adventuring,|Scott Adams|(Chief Adventurer))
+
+action(GET UP)
+  if at(I'm lying in a large brass bed)
+    go(I am in a bedroom)
+    look2
+    say(OK)
+
+action(OUT)
+  if at(I am in a dumb-waiter by a room)
+    say(Try: 'GO ROOM')
+
+action(FLY)
+  if at(I am in a )
+
+
+action(OPE LET)
+  if with(Letter)
+    say(There's writing on it.)
+
+action(EAT BOT)
+  if with(Bottle of type V blood)
+    go(I am in a LOT OF TROUBLE! (And so Are you!))
+    say(I've turned into A VAMPIRE!)
+
+action(GO DOO)
+  if here(Open door)
+    go(I am in a closet)
+    look2
+    say(OK)
+
+action(PUL)
+    say(Nothing happens.)
+
+action(SMO)
+  if with(LIT cigArette)
+    say(COUGH!)
+
+action(UNL DOO)
+  if here(Locked door)
+    say(How?)
+
+action(HEL)
+  if at(I am in a dumb-waiter by a room)
+    say(I know how to RAISE and LOWER this thing!)
+
+action(QUI)
+    gameover
+
+action(CLI POL)
+  if here(Flag pole in wall)
+    cls
+    say(I'm At the tip of the pole)
+    continue
+    say(I hear the)
+
+continue
+    say(Flagpole splinter)
+    say(as I fall)
+    go(I am in a LOT OF TROUBLE! (And so Are you!))
+    say(I notice a DARK WINDOW UNDER the bedroom window ledge!)
+
+action(PUT DUM)
+  if at(I am in a dumb-waiter by a room) & bit7
+    say(Sorry I can't do that)
+    say(It won't go any)
+    say(lower)
+
+action(PUT DUM)
+  if at(I am in a dumb-waiter by a room) & bit8
+    clear(bit8)
+    say(OK)
+    dropat(Dumb-waiter, I am in a kitchen)
+
+action(PUT DUM)
+  if at(I am in a dumb-waiter by a room)
+    set(bit7)
+    say(OK)
+    dropat(Dumb-waiter, I am in a workroom)
+
+action(OPE DUM)  // OPE
+  if at(I am in a dumb-waiter by a room) & bit8
+    say(Sorry I can't do that)
+    say(It won't go any)
+    say(higher)
+
+action(OPE DUM)  // RAISE DUMBWAITER
+  if bit7 & at(I am in a dumb-waiter by a room)
+    clear(bit7)
+    say(OK)
+    dropat(Dumb-waiter, I am in a kitchen)
+
+action(OPE DUM)  // RAISE DUMBWAITER
+  if at(I am in a dumb-waiter by a room)
+    set(bit8)
+    say(OK)
+    dropat(Dumb-waiter, I am in a pAntry)
+
+action(GET CIG)
+  if with(Pack of Transylvanian cigarettes)
+    get(Cigarette)
+    say(OK)
+
+action(GO SLE)
+    set(bit2)
+    cls
+
+action(LOO UP)
+  if at(I'm outside the castle)
+    say(OK)
+    say(I see nothing special.)
+    say(EXCEPT)
+    say(I notice a DARK WINDOW UNDER the bedroom window ledge!)
+
+action(LOO CAS)
+  if at(I'm outside the castle)
+    say(OK)
+    say(I see nothing special.)
+    say(EXCEPT)
+    say(I notice a DARK WINDOW UNDER the bedroom window ledge!)
+
+action(LOO UP)
+  if here(Castle towering above me)
+    say(OK)
+    say(I see nothing special.)
+    say(EXCEPT)
+    say(I notice a DARK WINDOW UNDER the bedroom window ledge!)
+
+action(WAI)
+    say(Some time passes...)
+
+action(JUM)
+    say(OK)
+    say(Nothing happens.)
+
+action(GO COF)
+  if here(Coffin is open)
+    go(I am in a large COFFIN)
+    look2
+    say(OK)
+
+action(WIT)
+    say(It doesn't work!)
+    say(Nothing happens.)
+
+action(OUT)
+    say(go there?)
+    say(How?)
+
+action(OPE DUM)
+  if here(Dumb-waiter)
+    say(There's something there, maybe I should)
+    say(go there?)
+
+action(GET INV)
+    inventory
+
+action(CUT)
+    say(Tell me with what? Like: 'WITH FIST')
+
+action(LOO NEC)
+    inventory
+
+action(LOO MIR)
+  if ! with(Mirror)
+    say(How?)
+
+action(HEL)
+  if at(I'm lying in a large brass bed)
+    say(GET UP you sleepy head!)
+
+action(HEL)
+    swapct(ctr3)
+    ctr += 1
+    continue
+
+continue
+  if ctr > 4
+    say(I'm getting very tired)
+    say(of you always asking for help!)
+    swapct(ctr3)
+
+continue
+  if ctr <= 4
+    say(Try examining things.)
+    swapct(ctr3)
+
+action(GET GLA)
+  if here(Broken glass)
+    say(Yuck!)
+    say(Sorry I can't do that)
+
+action(LIG CIG)
+  if ! with(Cigarette)
+    say(First I need an unlit cigarette.)
+
+action(LIG MAT)
+  if with(Sulfur mAtches)
+    say(The match flares up briefly ...)
+    wait
+    wait
+    say(and then goes out!)
+
+action(LIG)
+  if ! holds(Sulfur mAtches)
+    say(How?)
+    say(I've no matches!)
+
+action(LIG)
+  if with(Sulfur mAtches)
+    say(Sorry I can't do that)
+    say(I'm not an arsonist!)
+
+action(OPE OVE)
+    say(Its already open.)
+
+action(CLO OVE)
+    say(Sorry I can't do that)
+
+action(GO POL)
+  if at(I'm on A ledge outside An open window)
+    say(Try: 'CLIMB POLE')
+
+action(FLU TOI)
+  if here(Toilet)
+    say(OK)
+
+action(SAV)
+    say(Try: 'SAVE GAME')
+
+action(TIE)
+    say(Sorry I can't do that)
+
+action(GO VEN)
+    say(Sorry I can't do that)
+    say(A bat might make it, but not me!)
+
+action(LOO DOO)
+  if at(I am in a workroom)
+    say(There's something there, maybe I should)
+    say(go there?)
+
+action(LOO DUS)
+  if with(Century worth of dust)
+    say(A choooooo)
+    say(I see nothing special.)
+
+action(GO WIN)
+  if here(Open window) & ! holds(The other end of the sheet)
+    go(I'm on A ledge outside An open window)
+    look2
+    say(OK)
+
+action(JAM)
+    say(Maybe I should BREAK it?)
+
+action(EAT STA)  // DRIVE STAKE
+  if with(DRACULA) & with(Tent STAKE) & with(Rubber mallet)
+    swap(DRACULA, Mouldy old skeleton with a stake in the rib cage)
+    look2
+    say(I drive the stake through his HEART. The townspeople|come and carry me off cheering! (Don't worry, I tell them I|owe it all to you!!!!))
+    gameover
+
+action(GO WIN)
+  if at(I'm on A ledge outside An open window) & ! holds(The other end of the sheet)
+    go(I am in a bedroom)
+    look2
+    say(OK)
+
+action(SAY)
+    say(OK)
+    saynouncr
+
+action(MAK BED)
+    say(OK)
+
+action(SCO)
+    say(How?)
+
+action(SME)
+    say(OK)
+
+action(EAT)
+    say(Yuck!)
+
+action(FEE)
+    say(OK)
+    say(I see nothing special.)
+
+action(PUT MIR)
+  if holds(Mirror) & ! here(Pillow)
+    remove2(Mirror)
+    drop(Broken glass)
+    say(Mirror shatters! That's 7 years bad luck!)
+
+action(PUT MIR)
+  if holds(Mirror) & here(Pillow)
+    say(OK)
+    drop(Mirror)
+    say(I set the mirror on the pillow.)
+
+action(LOO COA)
+  if with(Coat-of-arms)
+    say(It bears the Family Crest of DRACULA!)
+
+action(REA)
+    say(try looking at it)
+
+action(LOO MEM)
+  if with(Memo tacked to the door)
+    say(There's writing on it.)
+
+action(LOO NOT)
+  if with(Note)
+    say(There's writing on it.)
+
+action(INV)
+    inventory
+
+action(LOO)
+    look2
+    say(I see nothing special.)

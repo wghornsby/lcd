@@ -198,9 +198,9 @@ SA.Game = class extends Obj {
     this.ctrs[i] = c;
   }
   swaploc(i) {
-    brx = this.locs[i];
+    let brx = this.locs[i];
     this.locs[i] = this.room.rx;
-    if (this.brx) {
+    if (brx) {
       this.go(brx);
     }
   }
@@ -276,6 +276,7 @@ SA.Game = class extends Obj {
     if (action.continuation.length) {
       actions.splice(0, 0, ...action.continuation);
     }
+    log(action);
     let dos = [].concat(...action.dos);
     this.do(dos, () => this.doActions(actions, callback));
   }

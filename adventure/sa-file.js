@@ -27,7 +27,7 @@ SA.File = class {
     this._unknown = raw.next();
     this.rooms.applyAliases(raw);
     this.items.applyAliases(raw);
-    //log(this.toString());
+    log(this.toString());
   }
   //
   extractWords(verbs, nouns, raw, count) {
@@ -307,19 +307,21 @@ SA.File.Actions = class extends Array {
   constructor(count, raw, file) {
     //
     super();
+    privset(this, 'file', file);
     let action, last;
     for (let i = 0; i < count; i++) {
       action = new SA.File.Action(raw, file);
-      if (action.verb && ! this.cmdix) {
-        this.cmdix = this.length;
-      }
-      if (action.cont) {
-        last.continuation.push(action);
-      } else {
-        last = action;
+      if (! action.empty) {
+        if (action.verb && ! this.cmdix) {
+          this.cmdix = this.length;
+        }
+        if (action.cont) {
+          last.continuation.push(action);
+        } else {
+          last = action;
+        }
       }
       this.push(action);
-      privset(this, 'file', file);
     }
   }
   forEachAuto(fn) {
@@ -375,6 +377,7 @@ SA.File.Action = class {
    * Action[] continuation (if exists for this action)
    */
   constructor(raw, file) {
+    privset(this, 'file', file);
     let doargs = [];
     let r = raw.next();
     if (r <= 100) {
@@ -389,8 +392,11 @@ SA.File.Action = class {
     }
     this.conds = new SA.File.Conds(raw, doargs, file);
     this.dos = new SA.File.Dos(raw, doargs, file);
-    this.continuation = [];
-    privset(this, 'file', file);
+    if (this.conds.length == 0 && this.dos.length == 0) {
+      this.empty = 1;
+    } else {
+      this.continuation = [];
+    }
   }
   fixVerbNoun() {
     this.verb = this.file.verbs.indexOf(this.file.verbs[this.verb]);
