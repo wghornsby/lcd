@@ -12,14 +12,14 @@ SA.File = class {
   constructor(/*string*/file) {
     let raw = new SA.Raw(file);
     this.header = new SA.File.Header(raw, this);
-    this.actions = new SA.File.Actions(this.header.actions, raw, this);
+    this.actions = SA.File.Actions.create(this.header.actions, raw, this);
     let verbs = [], nouns = [];
     this.extractWords(verbs, nouns, raw, this.header.nounverbs);
     this.verbs = new SA.File.Words(verbs, this.header.wordlen);
     this.nouns = new SA.File.Words(nouns, this.header.wordlen);
-    this.rooms = new SA.File.Rooms(this.header.rooms, raw, this);
+    this.rooms = SA.File.Rooms.create(this.header.rooms, raw, this);
     this.messages = new SA.File.Messages(this.header.messages, raw, this);
-    this.items = new SA.File.Items(this.header.items, raw, this);
+    this.items = SA.File.Items.create(this.header.items, raw, this);
     this.actions.applyComments(raw);
     this.actions.fixVerbNouns();
     this.version = raw.next();
@@ -122,14 +122,16 @@ SA.File.AliasArray = class extends Array {
 }
 SA.File.Items = class extends SA.File.AliasArray {
   //
-  constructor(count, raw, file) {
-    super();
+  static create(count, raw, file) {
+    let me = new this();
     for (let i = 0; i < count; i++) {
       let item = new SA.File.Item(raw, i, file);
-      this.push(item);
+      me.push(item);
     }
-    privset(this, 'file', file);
+    privset(me, 'file', file);
+    return me;
   }
+  //
   inventory() {
     return this.filter(item => item.held());
   }
@@ -138,6 +140,12 @@ SA.File.Items = class extends SA.File.AliasArray {
   }
   at(rx) {
     return this.filter(item => item.rx == rx);
+  }
+  treasures() {
+    return this.filter(item => item.treasure);
+  }
+  treasuresStored() {
+    return this.treasures().filter(item => item.rx == this.file.header.treasureroom);
   }
   toString() {
     let a = [];
@@ -157,7 +165,10 @@ SA.File.Item = class {
     this.ix = i;
     this.text = t[0];
     this.noun = t[1];
-    this.rx = parseInt(a[2]);
+    this.rx = parseInt(a[2] == 255 ? -1 : a[2]);
+    if (this.text.substring(0, 1) == '*') {
+      this.treasure = 1;
+    }
     privset(this, 'file', file);
   }
   inplay() {
@@ -181,13 +192,15 @@ SA.File.Item = class {
 }
 SA.File.Rooms = class extends SA.File.AliasArray {
   //
-  constructor(count, raw, file) {
-    super();
+  static create(count, raw, file) {
+    let me = new this();
     for (let i = 0; i < count; i++) {
-      this.push(new SA.File.Room(raw, i, file));
+      me.push(new SA.File.Room(raw, i, file));
     }
-    privset(this, 'file', file);
+    privset(me, 'file', file);
+    return me;
   }
+  //
   toString() {
     let a = [];
     this.forEach((room, i) => i && a.push(room.toString()));
@@ -264,9 +277,10 @@ SA.File.Words = class extends Array {
     list.forEach(w => {
       if (w.substring(0, 1) != '*') {
         index = this.length;
+        w = w.substring(0, wordlen);
         this.index2words[index] = [w];
       } else {
-        w = w.substring(1);
+        w = w.substring(1, wordlen + 1);
         this.index2words[index].push(w);
       }
       this.push(w);
@@ -304,16 +318,16 @@ SA.File.Words = class extends Array {
 }
 SA.File.Actions = class extends Array {
   //
-  constructor(count, raw, file) {
+  static create(count, raw, file) {
     //
-    super();
-    privset(this, 'file', file);
+    let me = new this();
+    privset(me, 'file', file);
     let action, last;
     for (let i = 0; i < count; i++) {
       action = new SA.File.Action(raw, file);
       if (! action.empty) {
-        if (action.verb && ! this.cmdix) {
-          this.cmdix = this.length;
+        if (action.verb && ! me.cmdix) {
+          me.cmdix = me.length;
         }
         if (action.cont) {
           last.continuation.push(action);
@@ -321,9 +335,11 @@ SA.File.Actions = class extends Array {
           last = action;
         }
       }
-      this.push(action);
+      me.push(action);
     }
+    return me;
   }
+  //
   forEachAuto(fn) {
     this.forEachAction(fn, 0, this.cmdix);
   }

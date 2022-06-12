@@ -102,7 +102,9 @@ SA.Entry$ = class extends Obj {
     this.$footer = $('footer');
     this.$entry = $('footer entry');
     this.$cursor = $('footer cursor');
-    window.on('keydown', e => this.type(e));
+    window
+      .on('keydown', e => this.type(e))
+      .on('keyup', e => this.keyup(e))
     this.reset();
   }
   reset() {
@@ -121,9 +123,6 @@ SA.Entry$ = class extends Obj {
     this.onenter(text);
   }
   type(e) {
-    if (e.keyCode == 13) {
-      return this.enter();
-    }
     let s = e.key.toUpperCase();
     if (s == 'Z' && e.ctrlKey) {
       this.$entry.innerText = 'UNDO';
@@ -144,6 +143,11 @@ SA.Entry$ = class extends Obj {
       this.$entry.innerText += s;
     }
   }  
+  keyup(e) {
+    if (e.keyCode == 13) {
+      this.enter();
+    }
+  }
 }
 SA.Output$ = class extends Obj {
   //

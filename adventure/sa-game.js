@@ -67,37 +67,39 @@ SA.Game = class extends Obj {
   }
   parse(s, callback) {
     let overb, onoun, verb, noun, a = s.trim().split(' ').filter(w => w.length);
-    if (a.length == 0) {
-      return callback();
-    }
-    overb = a[0], onoun = (a.length > 1) ? a[1] : '';
-    verb = overb.substring(0, this.wordlen), noun = onoun.substring(0, this.wordlen);
-    if (verb == 'I') {
-      this.inventory();
-      return callback();
-    }
-    if (this.isDirection(verb, noun)) {
-      return callback();
-    }
-    verb = this.file.verbs.synonym(verb);
-    if (! verb) {
-      this.say("I don't know how to \"" + overb + "\" something");
-      return callback();
-    }
-    if (noun) {
-      noun = this.file.nouns.synonym(noun);
-      if (! noun) {
-        this.say("I don't know what \"" + onoun + "\" is.");
+    if (a.length) {
+      overb = a[0], onoun = (a.length > 1) ? a[1] : '';
+      verb = overb.substring(0, this.wordlen), noun = onoun.substring(0, this.wordlen);
+      if (verb == 'I') {
+        this.inventory();
         return callback();
       }
-    }
-    this.onoun = onoun;
-    if (this.doCommands(verb, noun, callback) == -1) {
-      if (! this.isGet(verb, noun) && ! this.isDrop(verb, noun) && ! this.isLook(verb, noun)) {
-        this.say("|I must be stupid, but I just don't understand what you mean.");
+      if (this.isDirection(verb, noun)) {
+        return callback();
       }
-      return callback();
+      verb = this.file.verbs.synonym(verb);
+      if (! verb) {
+        this.say("I don't know how to \"" + overb + "\" something");
+        return callback();
+      }
+      if (noun) {
+        noun = this.file.nouns.synonym(noun);
+        if (! noun) {
+          this.say("I don't know what \"" + onoun + "\" is.");
+          return callback();
+        }
+      }
+      this.onoun = onoun;
+      if (this.doCommands(verb, noun, callback) !== -1) {
+        return callback();
+      } else {
+        if (this.isGet(verb, noun) || this.isDrop(verb, noun) || this.isLook(verb, noun)) {
+          return callback();
+        }
+      }
     }
+    this.say("|I must be stupid, but I just don't understand what you mean.");
+    callback();
   }
   // actions
   saymsg(mx) {
@@ -171,8 +173,9 @@ SA.Game = class extends Obj {
     this.ongameover();
   }
   showscore() {
-    // TODO
-    this.say('score');
+    let ts = this.items.treasuresStored().length;
+    let s = Math.floor(100 / this.file.header.treasures * ts);
+    this.say("I've stored " + ts + " treasures.  On a scale of 0 to 100 that rates: " + s);
   }
   inventory() {
     this.sayinv("|I am carrying the following:", this.items.inventory());
@@ -581,7 +584,7 @@ SA.Game.Snapshots = class extends Array {
   pop() {
     this.says = [];
     let snap = super.pop();
-    this.says = snap.says.concat();
+    this.says = snap && snap.says.concat();
     return snap;
   }
   sayinv(msg, items) {

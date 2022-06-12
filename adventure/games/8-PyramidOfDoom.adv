@@ -1,0 +1,1584 @@
+/** ADVENTURE 8 v 125 */
+
+wordlen = 3
+carrymax = 8
+lightlen = 555
+nounverbs = 85
+messages = 89
+actions = 230
+items = 101
+rooms = 28
+startroom(I am in a desert)
+treaasures = 13
+treasureroom(I am in a hieroglyphics room)
+
+/** VOCABULARY */
+
+verbs(GO=ENT=WAL=RUN=CLI)
+verbs(POU=SPI=EMP)
+verbs(GET=TAK)
+verbs(UNL=OPE)
+verbs(DRO=PUT=LEA)
+verbs(ATT=KIL)
+verbs(LIG=FLA)
+verbs(LOO=SEA)
+verbs(PUL=GRA)
+verbs(CLO=SHU)
+verbs(SHA=.=SME=PUS=WAV)
+verbs(ASK=TAL=YEL=SAY=SCR=KIC=TIC)
+verbs(CLE=WAS)
+verbs(FEE=TOU=GRO)
+verbs(PUN=HIT)
+verbs(HEL,REA,BRE,SCO,QUI,PET,SHO,YES,BUR,DIG,PLA,BAL,RUB,PLA,THR,SAW,WEA,GLO,DRI,SAV,INV,DRA,LOA,SMO,SWI,JUM,REM,EAT,WET,HUG)
+verbs(UNC)
+
+nouns(WAT=LIQ)
+nouns(DOO=BRI)
+nouns(STO=MAR)
+nouns(BAR=WIN)
+nouns(NORTH,SOUTH,EAST,WEST,UP,DOWN,SIG,POO,SKE,SAR,BAN,INV,NOM,BRA,BON,TAP,LEA,MUM,ALC,SKU,CRO,FLO,HIE,THR,ROP,PLA,BLO,BAS,TEE,GLO)
+nouns(SAW,LAD,BOX,CHA,ARO,OYS,PEA,FLU,ARC,PIS,JER,POL,SHO,NEC,CAN,RAT,HOL,COB,ASH,KEY,EXP,RUB,POR,PIN,CAR,STA,WOR,MIR,SAP,CHE)
+nouns(MUR,COF,COA,COI,PAS,GAM,TAB,FLA,STA,ENT,PYR,HEA,SCA,FIR,ALT)
+
+/** ROOMS */
+
+room(I am in a desert)
+  S(I am in a desert next to a pyramid)
+  W(I am in a desert)
+
+room(I am in a desert)
+  S(I am in a desert)
+  E(I am in a desert)
+
+room(I am in a desert)
+  N(I am in a desert)
+  E(I am in a desert next to a pyramid)
+
+room(I am in a desert next to a pyramid)
+  N(I am in a desert)
+  W(I am in a desert)
+
+room(I am in a hole)
+  U(I am in a desert next to a pyramid)
+
+room(I am in a rocky entrance-way)
+  N(I am in a dining hall)
+  S(I am in a sitting room)
+
+room(I am in a sarcophagus)
+  W(I am in a rocky entrance-way)
+  D(I am in a burial room)
+
+room(I am in a burial room)
+  N(I am in a long, narrow passageway)
+  S(I am in a tall room)
+  U(I am in a sarcophagus)
+
+room(I am in a long, narrow passageway)
+  S(I am in a burial room)
+
+room(I am in a hidden alcove)
+  W(I am in a burial room)
+
+room(I am in a tall room)
+  N(I am in a burial room)
+
+room(I am in a dining hall)
+  S(I am in a rocky entrance-way)
+  E(I am in a hallway)
+
+room(I am in a hallway)
+  W(I am in a dining hall)
+
+room(I am in a round altar room)
+  N(I am in a hallway)
+  S(I am in a sloping crawlway)
+  E(I am in a hieroglyphics room)
+
+room(I am in a hieroglyphics room)
+  W(I am in a round altar room)
+
+room(I am in a sitting room)
+  N(I am in a rocky entrance-way)
+
+room(I am in a sloping crawlway)
+  N(I am in a round altar room)
+
+room(I am in a Revolving cavern)
+  N(I am in a prison cell)
+  S(I'm on a narrow ledge)
+  D(I am in a tall room)
+
+room(I am in a prison cell)
+  S(I'm on a narrow ledge)
+  W(I am in a Revolving cavern)
+
+room(I'm on a narrow ledge)
+  S(I am in a prison cell)
+  W(I am in a Revolving cavern)
+
+room(I am in a throne room)
+  D(I'm on a narrow ledge)
+
+room(I am in a treasure room)
+  D(I am in a throne room)
+
+room(I'm on top of a pyramid)
+  W(I am in a treasure room)
+
+room(I am in a Pool of water)
+  E(I am in a desert)
+
+room(I am in a .)
+  N(I am in a long, narrow passageway)
+  S(I am in a long, narrow passageway)
+  E(I am in a dressing room)
+  W(I am in a long, narrow passageway)
+  U(I am in a long, narrow passageway)
+  D(I am in a long, narrow passageway)
+
+room(I am in a dressing room)
+  W(I am in a .)
+
+room(I am in a lot of TROUBLE!)
+
+/** ITEMS */
+
+item()
+  at(out-of-play)
+
+item(Stone)
+  noun(STO)
+  at(I am in a desert next to a pyramid)
+
+item(Door with large keyhole)
+  at(out-of-play)
+
+item(Dried Camel Jerky)
+  noun(JER)
+  at(I am in a hieroglyphics room)
+
+item(Empty canteen)
+  noun(CAN)
+  at(out-of-play)
+
+item(Full canteen)
+  noun(CAN)
+  at(out-of-play)
+
+item(Hole)
+  at(out-of-play)
+
+item(Tiny locked door)
+  at(I am in a hole)
+
+item(Unlit flashlite)
+  noun(FLA)
+  at(out-of-play)
+
+item(Lit flashlite)
+  noun(FLA)
+  at(out-of-play)
+
+item(Wooden pole sticking from sand)
+  at(I am in a desert)
+
+item(Shovel)
+  noun(SHO)
+  at(out-of-play)
+
+item(Tiny key)
+  noun(KEY)
+  at(out-of-play)
+
+item(Lump of coal)
+  noun(COA)
+  at(out-of-play)
+
+item(Pool of liquid)
+  at(I am in a desert)
+
+item(Sign)
+  at(I am in a desert next to a pyramid)
+
+item(Door with large keyhole)
+  at(out-of-play)
+
+item(Open door)
+  at(out-of-play)
+
+item(Large key)
+  noun(KEY)
+  at(I am in a Pool of water)
+
+item(I'm wearing an iron glove)
+  at(out-of-play)
+
+item(Closed sarcophagus)
+  at(I am in a rocky entrance-way)
+
+item(Mouldy bandages)
+  noun(BAN)
+  at(I am in a rocky entrance-way)
+
+item(Open sarcophagus)
+  at(out-of-play)
+
+item(Stairs)
+  at(I am in a sarcophagus)
+
+item(Bones)
+  noun(BON)
+  at(out-of-play)
+
+item(Open door)
+  at(I am in a rocky entrance-way)
+
+item(Tiny open door)
+  at(out-of-play)
+
+item(Small Nomad)
+  at(out-of-play)
+
+item(Pistol)
+  noun(PIS)
+  at(I am in a rocky entrance-way)
+
+item(Fearsome mummy)
+  at(I am in a burial room)
+
+item(* ANTIQUE TAPESTRY *)
+  noun(TAP)
+  at(I am in a burial room)
+
+item(Burning tanna leaves)
+  at(I am in a burial room)
+
+item(Enraged mummy)
+  at(out-of-play)
+
+item(Sleeping mummy)
+  at(out-of-play)
+
+item(* GOLD SCARAB *)
+  noun(SCA)
+  at(I am in a dressing room)
+
+item(.)
+  at(out-of-play)
+
+item(Wet tanna leaves)
+  noun(LEA)
+  at(out-of-play)
+
+item(Entrance to an alcove)
+  at(out-of-play)
+
+item(Bricked up doorway)
+  at(I am in a long, narrow passageway)
+
+item(Open door)
+  at(out-of-play)
+
+item(* GOLD COIN *)
+  noun(COI)
+  at(out-of-play)
+
+item(Ashes)
+  at(I am in a sitting room)
+
+item(Basket)
+  noun(BAS)
+  at(I am in a sitting room)
+
+item(Passageway behind fireplace)
+  at(out-of-play)
+
+item(Open treasure coffer)
+  at(out-of-play)
+
+item(Rope)
+  noun(ROP)
+  at(I am in a long, narrow passageway)
+
+item( )
+  at(out-of-play)
+
+item(Chopping block)
+  noun(BLO)
+  at(I am in a hidden alcove)
+
+item(Skull)
+  noun(SKU)
+  at(I am in a hidden alcove)
+
+item(Box)
+  noun(BOX)
+  at(I am in a hidden alcove)
+
+item(* GOLD TEETH *)
+  noun(TEE)
+  at(out-of-play)
+
+item(Iron glove)
+  noun(GLO)
+  at(out-of-play)
+
+item(Archway)
+  at(I am in a hallway)
+
+item(Metal bar protruding from ceiling)
+  at(I am in a tall room)
+
+item(Decapitated skeleton)
+  at(I am in a tall room)
+
+item(Saw)
+  noun(SAW)
+  at(I am in a tall room)
+
+item(Fireplace)
+  at(I am in a sitting room)
+
+item( )
+  at(out-of-play)
+
+item(Ladder)
+  at(out-of-play)
+
+item(Glowing skeleton)
+  at(out-of-play)
+
+item(Table)
+  noun(TAB)
+  at(I am in a dining hall)
+
+item(  )
+  at(out-of-play)
+
+item( )
+  at(out-of-play)
+
+item(Giant Oyster)
+  at(I am in a hallway)
+
+item(* BLACK PEARL *)
+  noun(PEA)
+  at(out-of-play)
+
+item(Flute)
+  noun(FLU)
+  at(I am in a hallway)
+
+item(Blood-stained altar)
+  at(I am in a round altar room)
+
+item(* PLATINUM BAR *)
+  noun(BAR)
+  at(I'm on top of a pyramid)
+
+item(* DIAMOND NECKLACE *)
+  noun(NEC)
+  at(out-of-play)
+
+item(Satisfied rats)
+  noun(RAT)
+  at(out-of-play)
+
+item( )
+  at(out-of-play)
+
+item(Starving rats)
+  noun(RAT)
+  at(I am in a sloping crawlway)
+
+item( )
+  at(out-of-play)
+
+item(Hissing cobra)
+  at(out-of-play)
+
+item(* GOLD NECKLACE *)
+  noun(NEC)
+  at(out-of-play)
+
+item(Passageway)
+  at(out-of-play)
+
+item(Dead explorer chained to wall)
+  at(I am in a prison cell)
+
+item(Pile of Rubbish)
+  at(I am in a prison cell)
+
+item(Closed portal)
+  at(I am in a prison cell)
+
+item(Open portal)
+  at(out-of-play)
+
+item(Purple Worm)
+  at(out-of-play)
+
+item(* GOLD PIN *)
+  noun(PIN)
+  at(out-of-play)
+
+item(* JADE CARVING *)
+  noun(CAR)
+  at(out-of-play)
+
+item(* SAPPHIRE *)
+  noun(SAP)
+  at(I'm on a narrow ledge)
+
+item(Hole in the ceiling)
+  at(I'm on a narrow ledge)
+
+item(Rope hanging from ceiling)
+  at(out-of-play)
+
+item(Iron statue of Pharoah seated on throne)
+  at(I am in a throne room)
+
+item(Chain hanging from ceiling)
+  at(I am in a throne room)
+
+item(Chest)
+  at(I am in a throne room)
+
+item(Wall Mural)
+  at(I am in a throne room)
+
+item( * RUBY *)
+  noun(RUB)
+  at(out-of-play)
+
+item(Pool of liquid (far below ledge))
+  at(I'm on a narrow ledge)
+
+item(Spiral Staircase)
+  at(out-of-play)
+
+item(* PLATINUM CROWN *)
+  noun(CRO)
+  at(out-of-play)
+
+item(Standing iron statue)
+  at(out-of-play)
+
+item(Iron Statue, slowly advancing. . .)
+  at(out-of-play)
+
+item(Pile of Melted iron)
+  at(out-of-play)
+
+item(* EMERALD BRACELET *)
+  noun(BRA)
+  at(out-of-play)
+
+item(Open window)
+  at(out-of-play)
+
+item(Treasure coffer)
+  at(I am in a treasure room)
+
+item(Barred window)
+  at(I am in a treasure room)
+
+/** AUTOS/COMMANDS */
+
+auto(100%)  // INTRO
+  if ! bit3
+    set(bit3)
+    say(Welcome to Adventure: 8 'PYRAMID OF DOOM')
+    say(By Alvin Files & Scott Adams Dedicated to Ray Harshaw!)
+
+auto(50%)  // RATS HOLD
+  if holds(Starving rats)
+    say(Rats)
+    say(attacks!)
+    die
+
+auto(100%)
+  if bit16 & live(Lit flashlite)
+    swap(Lit flashlite, Unlit flashlite)
+    look2
+
+auto(2%)  // ARAB
+  if ! live(Small Nomad)
+    drop(Small Nomad)
+    say(A small desert nomad appears...)
+
+auto(100%)  // AMMO
+  if ! bit14
+    set(bit14)
+    ctr = 4
+
+auto(100%)  // PISTOL
+  if bit12 & holds(Pistol) & ctr > 1
+    say(Pistol has)
+    sayctr
+    say(bullets)
+
+auto(100%)  // PISTOL
+  if bit12
+    clear(bit12)
+
+auto(70%)  // SHOOT ARAB
+  if bit11
+    say(Got him!!)
+    say(Nomad vanishes in a puff of yellow smoke.)
+    clear(bit11)
+    remove(Small Nomad)
+
+auto(100%)
+  if bit11
+    clear(bit11)
+    say(Missed...)
+
+auto(10%)
+  if here(Fearsome mummy)
+    swap(Fearsome mummy, Enraged mummy)
+    say(Mummy moves toward me.)
+
+auto(20%)
+  if here(Enraged mummy)
+    say(Mummy has me by the throat!)
+    die
+
+auto(10%)  // GLOVE
+  if holds(I'm wearing an iron glove)
+    remove2(I'm wearing an iron glove)
+    drop(Iron glove)
+    say(Glove falls off my sweaty hand)
+
+auto(25%)  // ARAB HELP
+  if here(Small Nomad) & at(I am in a tall room) & ! live(Glowing skeleton) & bit20
+    say(Nomad: 'Look up decapitated!')
+    clear(bit20)
+
+auto(100%)  // HEAD
+  if here(Decapitated skeleton) & here(Skull)
+    say(Skeleton places skull on his shoulders, grasps)
+    say(metal bar, pulls down ladder)
+    drop(Glowing skeleton)
+    drop(Ladder)
+
+auto(100%)
+  if here(Decapitated skeleton) & here(Skull)
+    remove(Decapitated skeleton)
+    remove(Skull)
+    remove(Metal bar protruding from ceiling)
+
+auto(100%)  // ARAB FOLLOWS
+  if live(Small Nomad) & ! here(Small Nomad)
+    drop(Small Nomad)
+
+auto(100%)  // CLAM
+  if here(Giant Oyster) & here(Dried Camel Jerky)
+    remove(Dried Camel Jerky)
+    say(Oyster makes a slobbering noise)
+    set(bit10)
+    drop(* BLACK PEARL *)
+
+auto(20%)  // ARAB RUN
+  if here(Small Nomad) & at(I am in a prison cell)
+    say(Nomad: 'RUN YOU FOOL!')
+
+auto(25%)  // OYSTER CLUE
+  if here(Small Nomad) & here(Giant Oyster) & ! live(* BLACK PEARL *) & bit20
+    say(Nomad: 'Oyster thirsty?')
+    clear(bit20)
+
+auto(100%)  // STAT FINI
+  if bit17 & ! live(Pile of Melted iron)
+    dropat(Pile of Melted iron, I am in a throne room)
+    remove2(Iron statue of Pharoah seated on throne)
+
+auto(100%)  // RATS EAT
+  if here(Dried Camel Jerky) & here(Starving rats)
+    remove(Dried Camel Jerky)
+    swap(Starving rats, Satisfied rats)
+
+auto(30%)
+  if here(Hissing cobra)
+    say(Cobra)
+    say(attacks!)
+    die
+
+auto(10%)  // RATS ATTACK
+  if here(Starving rats)
+    say(Rats)
+    say(attacks!)
+    die
+
+auto(40%)  // WORM
+  if here(Purple Worm)
+    say(Purple worm devours me.)
+    die
+
+auto(20%)  // STATUE
+  if here(Iron Statue, slowly advancing. . .)
+    say(Iron Statue tears me apart!)
+    die
+
+auto(100%)
+  if at(I'm on top of a pyramid) & bit15
+    cleardark
+    look2
+
+auto(100%)  // MIRROR ROOM
+  if at(I am in a .) & with(Lit flashlite)
+    swap(Lit flashlite, Unlit flashlite)
+    say(Mirrors EVERYWHERE! Light blinds me, so I shut it OFF!)
+    look2
+
+auto(100%)  // DEATH
+  if at(I am in a lot of TROUBLE!)
+    score
+    gameover
+
+auto(100%)  // AMMO USE
+  if bit1
+    clear(bit1)
+    ctr -= 1
+
+auto(1%)  // ARAB ATTACK
+  if here(Small Nomad) & ! holds(Pistol)
+    say(What! The nomad jumped me while my back was turned!)
+    die
+
+action(LOO HIE)
+  if at(I am in a hieroglyphics room)
+    say(OK)
+    say(Strange markings are present.)
+
+action(JUM)
+  if at(I'm on a narrow ledge)
+    say(OK)
+    say(Liquid is acid.)
+    die
+
+action(JUM)
+    say(OK)
+    say(Strange . . . Nothing happens.)
+
+action(SAW BAR)
+  if at(I am in a tall room) & holds(Saw)
+    say(I can't reach it.)
+
+action(LOO STO)
+  if with(Stone)
+    say(OK)
+    say(Strange markings are present.)
+
+action(SWI)
+  if at(I am in a Pool of water)
+    say(OK)
+    say(That feels good.)
+
+action(SWI)
+  if at(I'm on a narrow ledge)
+    say(OK)
+    say(Liquid is acid.)
+    die
+
+action(THR STO)
+  if holds(Stone)
+    drop(Stone)
+    say(OK)
+
+action(LOO FIR)
+  if here(Fireplace) & ! live(Lump of coal) & ! live( * RUBY *) & ! bit17
+    say(I see something.)
+    drop(Lump of coal)
+
+action(DIG)  // DIG
+  if holds(Shovel) & ! live(Tiny key) & at(I am in a desert)
+    say(I see something.)
+    drop(Tiny key)
+
+action(DIG)
+  if ! holds(Shovel)
+    say(Bare-handed?)
+
+action(DIG)
+  if holds(Shovel) & live(Tiny key) & at(I am in a desert)
+    say(I see nothing special.)
+
+action(LOO EXP)  // SEARCH
+  if here(Dead explorer chained to wall) & ! live(* GOLD PIN *)
+    say(Something falls out.)
+    drop(* GOLD PIN *)
+
+action(GET INV)  // INVENTORY
+    inventory
+    set(bit12)
+
+action(INV)  // INVENTORY
+    inventory
+    set(bit12)
+
+action(DIG)
+  if at(I am in a desert)
+    say(I see nothing special.)
+
+action(DIG)
+  if at(I am in a desert) & live(Lump of coal)
+    say(I see nothing special.)
+
+action(GET STO)
+  if at(I am in a desert next to a pyramid) & here(Stone) & ! live(Door with large keyhole)
+    drop(Door with large keyhole)
+    say(The sound of machinery.)
+    get(Stone)
+
+action(GET WAT)  // WATER
+  if at(I am in a Pool of water) & holds(Empty canteen)
+    remove(Empty canteen)
+    get(Full canteen)
+
+action(GET WAT)
+  if here(Pool of liquid) & ! holds(Empty canteen)
+    say(No container.)
+
+action(GET WAT)
+  if here(Pool of liquid) & holds(Full canteen)
+    say(Canteen is full.)
+
+action(GO POO)  // POOL
+  if at(I am in a desert)
+    go(I am in a Pool of water)
+    look2
+
+action(GET WAT)
+  if at(I am in a desert) & holds(Empty canteen)
+    remove(Empty canteen)
+    get(Full canteen)
+
+action(GO DOO)
+  if here(Open door) & at(I am in a desert next to a pyramid)
+    go(I am in a rocky entrance-way)
+    dark
+    look2
+
+action(GO DOO)
+  if here(Door with large keyhole) & at(I am in a desert next to a pyramid)
+    say(The right key could help (maybe).)
+
+action(DIG)
+  if holds(Shovel) & ! live(Hole) & at(I am in a desert next to a pyramid)
+    drop(Hole)
+
+action(DIG)
+  if holds(Shovel) & here(Hole)
+    say(I see nothing special.)
+
+action(GO HOL)
+  if here(Hole)
+    go(I am in a hole)
+    look2
+
+action(UNL DOO)
+  if here(Door with large keyhole) & holds(Large key) & bit6
+    swap(Open door, Door with large keyhole)
+
+action(UNL DOO)
+  if here(Door with large keyhole) & ! holds(Large key)
+    say(The right key could help (maybe).)
+
+action(REA SIG)
+  if here(Sign)
+    say(Sign: He who defiles the tombs of Egypt shall surely perish!)
+
+action(QUI)  // QUIT
+    gameover
+
+action(UNL DOO)
+  if here(Door with large keyhole) & holds(Large key) & ! bit6
+    say(Large stone falls on me!)
+    die
+
+action(UNL DOO)  // TRAP OFF
+  if at(I am in a hole) & holds(Tiny key)
+    say(I hear strange noises!)
+    say(The sound of machinery.)
+    set(bit6)
+    swap(Tiny locked door, Tiny open door)
+
+action(UNL DOO)
+  if at(I am in a hole) & ! holds(Tiny key)
+    say(The right key could help (maybe).)
+
+action(GO DOO)
+  if at(I am in a hole) & bit6
+    say(Something won't fit.)
+
+action(DRI WAT)
+  if holds(Full canteen)
+    say(Thanks.)
+    swap(Full canteen, Empty canteen)
+
+action(UNL SAR)
+  if here(Closed sarcophagus)
+    swap(Open sarcophagus, Closed sarcophagus)
+
+action(GO SAR)
+  if here(Open sarcophagus)
+    go(I am in a sarcophagus)
+    look2
+    dark
+
+action(BRE SKE)
+  if here(Decapitated skeleton)
+    say(Crash!!!)
+    say(I hear a hollow laugh. . .)
+    swap(Bones, Decapitated skeleton)
+
+action(ATT SKE)
+  if here(Decapitated skeleton)
+    say(Crash!!!)
+    say(I hear a hollow laugh. . .)
+    swap(Bones, Decapitated skeleton)
+
+action(GO DOO)
+  if at(I am in a rocky entrance-way) & here(Open door)
+    go(I am in a desert next to a pyramid)
+    cleardark
+    look2
+
+action(GO ALC)
+  if here(Fearsome mummy) & here(Entrance to an alcove)
+    say(Mummy)
+    say(won't let me)
+
+action(YES)
+    say(Sorry, won't work.)
+
+action(SHO)  // SHOOT
+  if ! holds(Pistol)
+    say(Bare-handed?)
+
+action(SHO)
+  if ctr = 0
+    say(No bullets.)
+
+action(SHO NOM)
+    set(bit11)
+    set(bit1)
+
+action(POU WAT)
+  if holds(Full canteen) & here(Burning tanna leaves)
+    swap(Wet tanna leaves, Burning tanna leaves)
+    set(bit2)
+    continue
+
+continue
+  if bit2
+    swap(Full canteen, Empty canteen)
+    continue
+
+continue
+  if bit2 & here(Fearsome mummy)
+    swap(Sleeping mummy, Fearsome mummy)
+    clear(bit2)
+    continue
+
+continue  // POU
+  if bit2 & here(Enraged mummy)
+    swap(Enraged mummy, Sleeping mummy)
+    clear(bit2)
+
+action(GET TAP)
+  if ! here(* ANTIQUE TAPESTRY *)
+    say(I can't.)
+
+action(GET TAP)
+  if here(Fearsome mummy)
+    say(Mummy)
+    say(won't let me)
+
+action(GET MUM)
+  if here(Fearsome mummy)
+    say(Mummy)
+    say(won't let me)
+    say(You be weird. Cut that out.)
+
+action(GET LEA)
+  if here(Burning tanna leaves)
+    say(Too hot.)
+
+action(SHO MUM)
+  if here(Fearsome mummy)
+    say(Doesn't bother him.)
+    swap(Fearsome mummy, Enraged mummy)
+    set(bit1)
+
+action(SHO MUM)
+  if here(Enraged mummy)
+    say(Doesn't bother him.)
+    set(bit1)
+
+action(BRE RUB)
+  if holds( * RUBY *)
+    say(I can't.)
+
+action(LOO SKU)
+  if with(Skull) & ! live(* GOLD TEETH *)
+    drop(* GOLD TEETH *)
+    say(Something falls out.)
+
+action(LOO BOX)
+  if with(Box) & ! live(Iron glove) & ! live(I'm wearing an iron glove) & live(Bones)
+    say(I see something.)
+    say(Something falls out.)
+    drop(Iron glove)
+
+action(PUN NOM)
+  if here(Small Nomad)
+    say(won't let me)
+    say(Rats)
+    say(The nomad stuck out his tongue at me.)
+
+action(SHO MUM)
+  if here(Decapitated skeleton)
+    say(Doesn't bother him.)
+    set(bit1)
+
+action(GET POL)
+  if here(Wooden pole sticking from sand)
+    remove(Wooden pole sticking from sand)
+    get(Shovel)
+
+action(PUL BAR)
+  if here(Metal bar protruding from ceiling)
+    say(I can't reach it.)
+
+action(GO BAR)
+  if here(Metal bar protruding from ceiling)
+    say(I can't reach it.)
+
+action(GO LAD)
+  if here(Ladder)
+    go(I am in a Revolving cavern)
+    look2
+
+action(GO ARC)
+  if at(I am in a hallway) & ! bit10
+    say(Oyster won't let me)
+
+action(GO ARC)
+  if at(I am in a hallway) & bit10 & ! holds(Giant Oyster)
+    go(I am in a round altar room)
+    look2
+
+action(GET TAB)  // .
+  if here(Table) & live(* DIAMOND NECKLACE *)
+    say(OK)
+    get(Table)
+
+action(GET STO)
+  if here(Stone)
+    get(Stone)
+    say(OK)
+
+action(SAW TAB)
+  if with(Saw) & with(Table) & ! live(* DIAMOND NECKLACE *)
+    say(I see something.)
+    drop(* DIAMOND NECKLACE *)
+
+action(LIG FLA)
+  if holds(Unlit flashlite) & ! bit16
+    swap(Unlit flashlite, Lit flashlite)
+    look2
+
+action(SCO)  // SCORE
+    score
+
+action(UNL FLA)
+  if holds(Lit flashlite)
+    swap(Unlit flashlite, Lit flashlite)
+    look2
+
+action(LOO ASH)
+  if at(I am in a sitting room) & ! live(* GOLD NECKLACE *)
+    say(I see something.)
+    drop(* GOLD NECKLACE *)
+
+action(LOO BAS)
+  if ! live(Hissing cobra) & at(I am in a sitting room) & ! live(Passageway behind fireplace)
+    drop(Hissing cobra)
+    say(I see something.)
+
+action(GET COB)
+  if here(Hissing cobra)
+    say(Cobra)
+    say(attacks!)
+    die
+
+action(PLA FLU)
+  if at(I am in a sitting room) & ! live(Passageway behind fireplace) & holds(Flute)
+    say(Cobra crawls out, presses a loose brick and then disappears intoa passage which appeared.)
+    drop(Passageway behind fireplace)
+    remove(Hissing cobra)
+    continue
+
+continue
+    dropat(Passageway, I am in a sloping crawlway)
+
+action(GET BAS)
+  if here(Basket) & ! live(Passageway behind fireplace)
+    say(Something falls out.)
+    drop(Hissing cobra)
+
+action(GO PAS)
+  if at(I am in a sitting room) & here(Passageway behind fireplace)
+    go(I am in a sloping crawlway)
+    look2
+
+action(GO ASH)
+  if at(I am in a sitting room) & ! live(* GOLD NECKLACE *)
+    say(I see something.)
+
+action(GO PAS)
+  if at(I am in a sloping crawlway) & here(Passageway)
+    go(I am in a sitting room)
+    look2
+
+action(PLA FLU)
+  if holds(Flute)
+    say(Ah, 'tis music to my ears.)
+
+action(GET TAB)
+  if here(Table) & ! live(* DIAMOND NECKLACE *)
+    get(Table)
+    say(OK)
+    say(I hear strange noises!)
+
+action(LOO RUB)  // RUBBISH
+  if here(Pile of Rubbish) & ! live(* JADE CARVING *)
+    say(I see something.)
+    drop(* JADE CARVING *)
+
+action(LOO RUB)
+  if here(Pile of Rubbish) & live(* JADE CARVING *)
+    say(I just caught dengue fever. Very bad.)
+    die
+
+action(GO POR)
+  if here(Closed portal)
+    say(The right key could help (maybe).)
+
+action(GO POR)
+  if here(Open portal)
+    say(Into the worm's mouth!)
+    die
+
+action(UNL POR)
+  if here(Closed portal)
+    drop(Purple Worm)
+    swap(Open portal, Closed portal)
+
+action(SHO WOR)  // WORM
+  if here(Purple Worm)
+    say(Doesn't bother him.)
+    set(bit1)
+
+action(WET)
+    say(Pour water?)
+
+action(THR ROP)  // ROPE
+  if at(I'm on a narrow ledge) & holds(Rope)
+    remove(Rope)
+    drop(Rope hanging from ceiling)
+
+action(GO ROP)
+  if at(I'm on a narrow ledge) & here(Rope hanging from ceiling)
+    go(I am in a throne room)
+    look2
+
+action(GO HOL)
+  if at(I'm on a narrow ledge) & here(Rope hanging from ceiling)
+    go(I am in a throne room)
+    look2
+
+action(GO HOL)
+  if at(I'm on a narrow ledge) & ! live(Rope hanging from ceiling)
+    say(I can't reach it.)
+
+action(GET LAD)
+  if here(Ladder)
+    say(It's stuck.)
+
+action(BUR)
+  if at(I am in a throne room)
+    say(.)
+    remove(Fireplace)
+
+action(GO POO)
+  if at(I'm on a narrow ledge)
+    say(Liquid is acid.)
+    die
+
+action(GET WAT)
+  if at(I'm on a narrow ledge) & holds(Full canteen)
+    say(Canteen is full.)
+
+action(GET WAT)
+  if at(I'm on a narrow ledge) & holds(Empty canteen)
+    say(Liquid is acid.)
+    say(Canteen dissolves.)
+    remove(Empty canteen)
+
+action(GET WAT)
+  if at(I'm on a narrow ledge) & ! holds(Empty canteen)
+    say(No container.)
+
+action(GO CHA)
+  if here(Iron statue of Pharoah seated on throne)
+    say(I hear a hollow laugh. . .)
+    swap(Standing iron statue, Iron statue of Pharoah seated on throne)
+    say(The sound of machinery.)
+
+action(GO CHA)
+  if here(Standing iron statue)
+    say(The sound of machinery.)
+    say(I hear a hollow laugh. . .)
+    swap(Standing iron statue, Iron Statue, slowly advancing. . .)
+    drop(Spiral Staircase)
+
+action(PUL CHA)
+  if here(Iron statue of Pharoah seated on throne)
+    say(I hear a hollow laugh. . .)
+    swap(Standing iron statue, Iron statue of Pharoah seated on throne)
+    say(The sound of machinery.)
+
+action(PUL CHA)
+  if here(Standing iron statue)
+    say(The sound of machinery.)
+    say(I hear a hollow laugh. . .)
+    swap(Standing iron statue, Iron Statue, slowly advancing. . .)
+    drop(Spiral Staircase)
+
+action(GO STA)
+  if here(Iron Statue, slowly advancing. . .)
+    say(Iron Statue)
+    say(won't let me)
+
+action(GO STA)
+  if here(Spiral Staircase) & ! live(Iron Statue, slowly advancing. . .)
+    go(I am in a treasure room)
+    look2
+
+action(UNL CHE)
+  if at(I am in a throne room) & ! live(Iron statue of Pharoah seated on throne) & ! live(Standing iron statue) & ! live(Iron Statue, slowly advancing. . .) & ! live(* PLATINUM CROWN *)
+    continue
+
+continue
+    say(I see something.)
+    drop(* PLATINUM CROWN *)
+
+action(UNL CHE)
+  if at(I am in a throne room)
+    say(Iron Statue)
+    say(won't let me)
+
+action(THR RUB)
+  if holds( * RUBY *) & at(I'm on a narrow ledge)
+    remove( * RUBY *)
+    remove(Iron Statue, slowly advancing. . .)
+    remove(Standing iron statue)
+    continue
+
+continue
+    set(bit17)
+    say(OK)
+    say(Ruby falls into pool of acid, burns up.)
+
+action(REA MUR)
+  if at(I am in a throne room)
+    say(Mural: Seek ye well the HEART of Iron.)
+
+action(GET SIG)
+  if here(Sign)
+    say(It's stuck.)
+
+action(DRI WAT)
+  if at(I'm on a narrow ledge)
+    say(Liquid is acid.)
+    die
+
+action(GET RUB)
+  if here( * RUBY *) & here(Standing iron statue)
+    get( * RUBY *)
+    swap(Iron Statue, slowly advancing. . ., Standing iron statue)
+    say(The sound of machinery.)
+
+action(GET RUB)
+  if here( * RUBY *) & here(Iron statue of Pharoah seated on throne)
+    get( * RUBY *)
+    swap(Iron Statue, slowly advancing. . ., Iron statue of Pharoah seated on throne)
+    say(The sound of machinery.)
+
+action(GO BAR)
+  if at(I am in a treasure room) & here(Open window)
+    go(I'm on top of a pyramid)
+    look2
+
+action(SAW BAR)
+  if at(I am in a treasure room) & holds(Saw)
+    swap(Barred window, Open window)
+
+action(UNL BAR)
+  if at(I am in a treasure room) & holds(Saw)
+    swap(Barred window, Open window)
+
+action(UNL COF)
+  if here(Treasure coffer) & holds(I'm wearing an iron glove) & holds(Tiny key)
+    swap(Treasure coffer, Open treasure coffer)
+
+action(UNL COF)
+  if here(Treasure coffer) & ! holds(I'm wearing an iron glove) & holds(Tiny key)
+    say(ARRGH! Poison needle in the lock.)
+    die
+
+action(WEA GLO)
+  if holds(Iron glove)
+    swap(Iron glove, I'm wearing an iron glove)
+
+action(REM GLO)
+  if holds(I'm wearing an iron glove)
+    swap(Iron glove, I'm wearing an iron glove)
+
+action(GO DOO)
+  if here(Open door)
+    go(I am in a .)
+    say(OK)
+
+action(REA STO)
+  if with(Stone) & ! at(I am in a hieroglyphics room)
+    say(Confusing. Part appears missing.)
+
+action(GO PYR)
+    say(I can't.)
+
+action(RUB)
+    say(You be weird. Cut that out.)
+
+action(POU WAT)
+  if holds(Full canteen)
+    say(OK)
+    swap(Full canteen, Empty canteen)
+
+action(DIG)
+  if holds(Shovel)
+    say(I see nothing special.)
+
+action(SAV GAM)
+    save
+
+action(PUL CHA)
+  if at(I am in a throne room) & ! live(Iron statue of Pharoah seated on throne) & ! live(Iron Statue, slowly advancing. . .) & ! live(Standing iron statue)
+    drop(Spiral Staircase)
+    say(I see something.)
+
+action(GO CHA)
+  if at(I am in a throne room) & ! live(Iron statue of Pharoah seated on throne) & ! live(Iron Statue, slowly advancing. . .) & ! live(Standing iron statue)
+    drop(Spiral Staircase)
+    say(I see something.)
+
+action(LOO COF)
+  if here(Open treasure coffer) & ! live(* EMERALD BRACELET *)
+    drop(* EMERALD BRACELET *)
+    say(I see something.)
+
+action(BRE MIR)
+  if at(I am in a .)
+    say(1000 years bad luck starts with a cave in!)
+    die
+
+action(GO ALC)
+  if here(Entrance to an alcove) & ! here(Fearsome mummy)
+    go(I am in a hidden alcove)
+    look2
+
+action(POU WAT)
+  if holds(Full canteen)
+    swap(Empty canteen, Full canteen)
+    say(The sound of machinery.)
+
+action(HEL)
+    set(bit20)
+    say(A tiny voice says: 'SEARCH AND YE SHALL FIND!')
+
+action(GET OYS)
+  if here(Giant Oyster)
+    say(I can't lift it. This is a big oyster)
+
+action(GET OYS)
+  if ! here(Giant Oyster)
+    say(I don't see it)
+
+action(THR RUB)
+  if holds( * RUBY *)
+    say(OK)
+    drop( * RUBY *)
+
+action(FEE)
+  if ! live(* GOLD COIN *) & at(I am in a .)
+    say(I feel a coin on the floor)
+    drop(* GOLD COIN *)
+
+action(GO STA)
+  if at(I am in a sarcophagus)
+    go(I am in a burial room)
+    look2
+
+action(GO ENT)
+  if at(I am in a hole)
+    say(I can't.)
+
+action(GO DOO)
+  if at(I am in a hole)
+    say(I can't.)
+
+action(GET RUB)
+  if here( * RUBY *)
+    get( * RUBY *)
+    say(OK)
+
+action(GET TAP)
+  if ! here(Fearsome mummy) & ! here(Enraged mummy) & ! live(Entrance to an alcove)
+    drop(Entrance to an alcove)
+    superget(* ANTIQUE TAPESTRY *)
+    say(OK)
+
+action(GET TAP)
+  if here(Enraged mummy)
+    say(Mummy)
+    say(won't let me)
+
+action(GO ENT)
+  if here(Entrance to an alcove) & here(Fearsome mummy)
+    say(Mummy)
+    say(won't let me)
+
+action(GO ENT)
+  if here(Entrance to an alcove) & ! here(Fearsome mummy)
+    go(I am in a hidden alcove)
+    look2
+
+action(LOO SIG)
+  if here(Sign)
+    say(Sign: He who defiles the tombs of Egypt shall surely perish!)
+
+action(LOO MUR)
+  if at(I am in a throne room)
+    say(Mural: Seek ye well the HEART of Iron.)
+
+action(SHO RAT)
+  if here(Starving rats) & at(I am in a sloping crawlway)
+    dropat(Starving rats, I am in a round altar room)
+    say(Missed...)
+    set(bit1)
+    say(Noise scares them off)
+
+action(SHO RAT)
+  if here(Starving rats) & here(Starving rats)
+    dropat(Starving rats, I am in a sloping crawlway)
+    say(Missed...)
+    set(bit1)
+    say(Noise scares them off)
+
+action(SMO LEA)
+  if here(Burning tanna leaves)
+    say(WOW, man, crazy...)
+
+action(THR ROP)
+  if holds(Rope)
+    drop(Rope)
+    say(OK)
+
+action(CLO SAR)
+  if here(Open sarcophagus)
+    swap(Open sarcophagus, Closed sarcophagus)
+    say(OK)
+
+action(LOO BOX)
+  if with(Box) & ! live(Bones)
+    say(I see something.)
+    say(Something falls out.)
+    drop(Bones)
+
+action(GET HEA)
+    say(Pharoah's heart is red like yours, yet evil has darkened it!)
+
+action(LOA PIS)
+  if holds(Pistol)
+    say(TRY: 'TAKE INVENTORY')
+
+action(LOO COA)
+  if with(Lump of coal)
+    say(Its black, dirty & dusty)
+
+action(THR STO)
+  if holds(Stone)
+    drop(Stone)
+    say(Strange . . . Nothing happens.)
+
+action(GET BAR)
+  if at(I am in a tall room)
+    say(I can't reach it.)
+
+action(PUN DOO)
+  if here(Bricked up doorway) & holds(I'm wearing an iron glove)
+    swap(Bricked up doorway, Open door)
+    say(OK)
+    say(Crash!!!)
+
+action(THR)
+    say(I don't see any reason to throw a )
+    saynouncr
+
+action(LOO)
+    say(I see nothing special.)
+    look2
+
+action(GET BAS)
+  if here(Basket)
+    get(Basket)
+    say(OK)
+
+action(EAT JER)
+  if holds(Dried Camel Jerky)
+    say(OK)
+    say(Thanks.)
+    remove(Dried Camel Jerky)
+
+action(SHO)
+    say(OK)
+    set(bit1)
+    say(Missed...)
+
+action(SHA)
+    say(Strange . . . Nothing happens.)
+
+action(ASK NOM)
+  if here(Small Nomad)
+    say(The nomad stuck out his tongue at me.)
+
+action(UNL OYS)
+  if here(Giant Oyster)
+    say(Oyster won't let me)
+
+action(REA HIE)
+  if at(I am in a hieroglyphics room) & ! with(Stone)
+    say(Confusing. Part appears missing.)
+
+action(REA HIE)
+  if at(I am in a hieroglyphics room) & with(Stone)
+    say(OK)
+    say(It says: 'LEAVE *TREASURES* HERE!')
+
+action(REA STO)
+  if with(Stone) & at(I am in a hieroglyphics room)
+    say(OK)
+    say(It says: 'LEAVE *TREASURES* HERE!')
+
+action(FEE RAT)
+  if here(Starving rats) & with(Dried Camel Jerky)
+    say(OK)
+    swap(Starving rats, Satisfied rats)
+    remove(Dried Camel Jerky)
+
+action(DRI WAT)
+  if at(I am in a Pool of water)
+    say(OK)
+    say(Thanks.)
+
+action(GO PAS)
+  if at(I am in a long, narrow passageway)
+    say(I'm there.)
+
+action(FEE OYS)
+  if here(Giant Oyster) & holds(Dried Camel Jerky)
+    remove(Dried Camel Jerky)
+    set(bit10)
+    drop(* BLACK PEARL *)
+    say(Oyster makes a slobbering noise)
+
+action(GET ASH)
+  if here(Ashes)
+    say(I can't.)
+    say(Too hot.)
+
+action(GET TAP)
+  if ! here(Fearsome mummy) & ! here(Enraged mummy) & live(Entrance to an alcove)
+    say(OK)
+    superget(* ANTIQUE TAPESTRY *)
+
+action(SAW CHA)
+  if holds(Saw) & here(Dead explorer chained to wall)
+    say(Chain too tough.)
+
+action(SAW CHA)
+  if holds(Saw) & here(Iron statue of Pharoah seated on throne)
+    say(Chain too tough.)
+
+action(UNC EXP)
+  if here(Dead explorer chained to wall)
+    say(Chain too tough.)
+
+action(ASK)
+    say(Strange . . . Nothing happens.)
+
+action(PUL CHA)
+  if here(Iron Statue, slowly advancing. . .)
+    say(OK)
+    say(I hear a hollow laugh. . .)
+    say(Nomad: 'RUN YOU FOOL!')
+
+action(POU CAN)
+    say(Pour water?)
+
+action(CLO)
+    say(I can't.)
+
+action(GET LEA)
+  if here(Wet tanna leaves)
+    get(Wet tanna leaves)
+    say(OK)
+
+action(GET BAR)
+  if here(* PLATINUM BAR *)
+    get(* PLATINUM BAR *)
+    say(OK)
+
+action(UNL COF)
+  if here(Treasure coffer) & ! holds(Tiny key)
+    say(Its locked.)
+
+action(CLE COA)
+  if with(Lump of coal) & with(Full canteen)
+    swap(Lump of coal,  * RUBY *)
+    say(OK)
+
+action(CLE COA)
+  if with(Lump of coal) & at(I am in a Pool of water)
+    swap(Lump of coal,  * RUBY *)
+    say(OK)
+
+action(BRE)
+    say(I can't.)
+
+action(PUN)
+  if ! holds(I'm wearing an iron glove)
+    say(Bare-handed?)
+
+action(ATT)
+  if here(Small Nomad)
+    say(Bare-handed?)
+
+action(FEE)  // .
+    say(You be weird. Cut that out.)
