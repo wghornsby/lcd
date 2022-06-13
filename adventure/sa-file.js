@@ -29,6 +29,9 @@ SA.File = class {
     this.items.applyAliases(raw);
     log(this.toString());
   }
+  filename() {
+    return 'adv' + this.number + '.adv';
+  }
   //
   extractWords(verbs, nouns, raw, count) {
     for (let i = 0; i < count; i++) {
@@ -87,8 +90,6 @@ SA.File.Header = class {
     this.messages = raw.next() + 1;
     this.treasureroom = raw.next();
     privset(this, 'file', file);
-  }
-  applyVersion(raw) {
   }
   toString() {
     let a = [];

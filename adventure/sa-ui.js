@@ -31,9 +31,9 @@ SA.Screen$ = class extends Obj {
     return;
   }
   replay(snapshots) {
-    snapshots.forEach(snap => {
-      snap.says.forEach(s => this.say(s.msg, s.nocr));
-      this.enter(snap.cmd, 1);
+    snapshots.forEach((snap, i) => {
+      i && this.enter(snap.cmd, 1);
+      snap.says.forEach(s => this.say(this.br(s.msg), s.nocr));
       if (snap.sayinv) {
         this.sayinv(snap.sayinv.msg, snap.sayinv.items);
       }

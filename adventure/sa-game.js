@@ -25,21 +25,30 @@ SA.Game = class extends Obj {
     this.ctrs = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     this.ctr = 0;
     this.lampleft = this.file.header.lightlen;
-    this.snapshots = new SA.Game.Snapshots();
-    this.oncls(1);
     this.go(this.file.header.startroom);
+    this.snapshots = new SA.Game.Snapshots(this);
+    if (this.snapshots.length > 1) {
+      this.replay();
+      return;
+    }
+    this.oncls(1);
     this.look();
     this.doAutos(() => this.onready());
   }
   undo() {
     let snap = this.snapshots.pop();
-    if (! this.snapshots.length) {
-      return this.reset();
+    if (! snap) {
+      this.snapshots.reset();
+      this.reset();
+      return;
     }
+    this.replay(snap);
+  }
+  replay(snap) {
+    snap = snap || this.snapshots.last();
     this.restore(snap);
     this.oncls(1);
     this.onreplay(this.snapshots);
-    snap.says.forEach(s => this.onsay(s.msg, s.nocr));
     this.look();
     this.onready();
   }
@@ -54,15 +63,21 @@ SA.Game = class extends Obj {
   }
   submit(s) {
     if (s == 'UNDO') {
-      return this.undo();
+      this.undo();
+      return;
     }
     if (s == 'QUIT') {
-      return this.reset();
+      this.snapshots.reset();
+      this.reset();
+      return;
     }
     this.snapshots.take(this, s);
     this.parse(s, () => {
       this.checkLampLife();
-      this.doAutos(() => this.onready());
+      this.doAutos(() => {
+        this.snapshots.apply(this);
+        this.onready();
+      })
     })
   }
   parse(s, callback) {
@@ -91,7 +106,7 @@ SA.Game = class extends Obj {
       }
       this.onoun = onoun;
       if (this.doCommands(verb, noun, callback) !== -1) {
-        return callback();
+        return;
       } else {
         if (this.isGet(verb, noun) || this.isDrop(verb, noun) || this.isLook(verb, noun)) {
           return callback();
@@ -279,7 +294,7 @@ SA.Game = class extends Obj {
     if (action.continuation.length) {
       actions.splice(0, 0, ...action.continuation);
     }
-    log(action);
+    //log(action);
     let dos = [].concat(...action.dos);
     this.do(dos, () => this.doActions(actions, callback));
   }
@@ -568,32 +583,65 @@ SA.Game = class extends Obj {
   static DIRS = ['N','S','E','W','U','D']
   static LDIRS = ['NORTH','SOUTH','EAST','WEST','UP','DOWN']
 }
-SA.Game.Snapshots = class extends Array {
+SA.Game.Snapshots = class extends StorableObj {
   //
-  constructor() {
-    super();
-    this.says = [];
+  constructor(game) {
+    super(game.file.filename());
+    if (! this.snaps || this.snaps.length == 1) {
+      this.reset();
+      this.take(game, '');
+    }
+    log(this);
+  }
+  reset() {
+    this.snaps = [];
+    this.length = 0;
+    this.save();
   }
   say(msg, nocr) {
-    this.says.push({msg:msg, nocr:nocr});
+    this.last().say(msg, nocr);
+    this.save();
   }
   take(game, cmd) {
-    this.push(new SA.Game.Snapshot(game, this.says, cmd));
-    this.says = [];
+    this.snaps.push(new SA.Game.Snapshot(game, cmd));
+    this.save();
+  }
+  apply(game) {
+    this.last().apply(game);
+    this.save();
   }
   pop() {
-    this.says = [];
-    let snap = super.pop();
-    this.says = snap && snap.says.concat();
+    if (this.snaps.length == 1) {
+      return;
+    }
+    let snap = this.snaps.pop();
+    this.save();
     return snap;
   }
+  last() {
+    return this.snaps[this.snaps.length - 1];
+  }
+  forEach(fn) {
+    this.snaps.forEach((snap, i) => fn(snap, i));
+  }
   sayinv(msg, items) {
-    this[this.length - 1].sayinv = {msg:msg, items:jscopy(items)};
+    this.snaps[this.snaps.length - 1].sayinv = {msg:msg, items:jscopy(items)};
+    this.save();
+  }
+  save() {
+    this.length = this.snaps.length;
+    log(this);
+    super.save();
   }
 }
 SA.Game.Snapshot = class {
   //
-  constructor(game, says, cmd) {
+  constructor(game, cmd) {
+    this.cmd = cmd;
+    this.says = [];
+    this.apply(game);
+  }
+  apply(game) {
     this.locs = jscopy(game.locs);
     this.bits = jscopy(game.bits);
     this.ctrs = jscopy(game.ctrs);
@@ -602,7 +650,8 @@ SA.Game.Snapshot = class {
     this.rx = game.room.rx;
     this.itemsrx = [];
     game.items.forEach(item => this.itemsrx.push(item.rx));
-    this.says = says.concat();
-    this.cmd = cmd;
+  }
+  say(msg, nocr) {
+    this.says.push({msg:msg, nocr:nocr});
   }
 }
