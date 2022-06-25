@@ -51,7 +51,7 @@ LG.Controller = class extends LG.Obj {
     let ms = this.paused ? (this.timep0 - this.time0) : (new Date().getTime() - this.time0);
     return ms / 1000; // seconds
   }
-  sprite(sprite) {
+  register(sprite) {
     if (sprite.length) {
       this.sprites = this.sprites.concat(sprite);
     } else {
