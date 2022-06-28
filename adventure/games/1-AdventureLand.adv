@@ -39,7 +39,7 @@ nouns(WEB=WRI)
 nouns(LAV=DAM)
 nouns(TRE=STU)
 nouns(SHO=BAN)
-nouns(NORTH,SOUTH,EAST,WEST,UP,DOWN,NET,FIS,AWA,MIR,WAT,HOL,LAM,SPI,WIN,DOO,BEE,ROC,GAS,FLI,EGG,KEY,HEL,BUN,INV,LED,THR,CRO,BRI,BEA)
+nouns(NOR,SOU,EAS,WES,UP,DOW,NET,FIS,AWA,MIR,WAT,HOL,LAM,SPI,WIN,DOO,BEE,ROC,GAS,FLI,EGG,KEY,HEL,BUN,INV,LED,THR,CRO,BRI,BEA)
 nouns(DRA,RUG,RUB,HON,FRU,OX,RIN,BRA,SIG,BLA,SWA,HAL,FIR,ADV,GLA,ARO,GAM,BOO,CHA,LAK,YOH)
 
 /** ROOMS */
@@ -795,7 +795,8 @@ action(JUM)
 
 action(DAM LAV)
   if with(bricks) & here(lava-stream)
-    swap(*firestone*, lava-stream)
+    swap(*
+    *, lava-stream)
     drop(lava-stream-dammed)
     look2
 
