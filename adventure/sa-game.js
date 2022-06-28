@@ -38,14 +38,14 @@ SA.Game = class extends Obj {
   undo() {
     let snap = this.snapshots.pop();
     if (! snap) {
-      this.snapshots.reset();
+      this.snapshots.reset(this);
       this.reset();
       return;
     }
-    this.replay(snap);
+    this.replay();
   }
-  replay(snap) {
-    snap = snap || this.snapshots.last();
+  replay() {
+    let snap = this.snapshots.last();
     this.restore(snap);
     this.oncls(1);
     this.onreplay(this.snapshots);
@@ -67,7 +67,7 @@ SA.Game = class extends Obj {
       return;
     }
     if (s == 'QUIT') {
-      this.snapshots.reset();
+      this.snapshots.reset(this);
       this.reset();
       return;
     }
@@ -86,8 +86,8 @@ SA.Game = class extends Obj {
       overb = a[0], onoun = (a.length > 1) ? a[1] : '';
       verb = overb.substring(0, this.wordlen), noun = onoun.substring(0, this.wordlen);
       if (verb == 'I') {
-        this.inventory();
-        return callback();
+        verb = this.file.verbs.synonym('GET');
+        noun = this.file.nouns.synonym('INVENTORY');
       }
       if (this.isDirection(verb, noun)) {
         return callback();
@@ -136,12 +136,12 @@ SA.Game = class extends Obj {
     let items = this.items.at(this.room.rx);
     this.onlook(this.room, items);
   }
-  go(rx) {
+  go(rx, nolook) {
     if (this.room && this.room.rx != rx) {
       this.moved = 1;
     }
     this.room = this.rooms[rx];
-    this.look();
+    !nolook && this.look();
   }
   get(ix, always) {
     if (! always && this.items.inventory().length >= this.file.header.carrymax) {
@@ -191,6 +191,10 @@ SA.Game = class extends Obj {
     let ts = this.items.treasuresStored().length;
     let s = Math.floor(100 / this.file.header.treasures * ts);
     this.say("I've stored " + ts + " treasures.  On a scale of 0 to 100 that rates: " + s);
+    if (s == 100) {
+      this.say("FANTASTIC! You've solved it ALL!");
+      this.gameover();
+    }
   }
   inventory() {
     this.sayinv("|I am carrying the following:", this.items.inventory());
@@ -219,7 +223,7 @@ SA.Game = class extends Obj {
     let brx = this.locs[i];
     this.locs[i] = this.room.rx;
     if (brx) {
-      this.go(brx);
+      this.go(brx, 1);
     }
   }
   // conds
@@ -587,15 +591,15 @@ SA.Game.Snapshots = class extends StorableObj {
   //
   constructor(game) {
     super(game.file.filename());
-    if (! this.snaps || this.snaps.length == 1) {
-      this.reset();
-      this.take(game, '');
+    if (! this.snaps || this.snaps.length <= 1) {
+      this.reset(game);
     }
-    log(this);
+    //log(this);
   }
-  reset() {
+  reset(game) {
     this.snaps = [];
     this.length = 0;
+    this.take(game, '');
     this.save();
   }
   say(msg, nocr) {
@@ -630,7 +634,7 @@ SA.Game.Snapshots = class extends StorableObj {
   }
   save() {
     this.length = this.snaps.length;
-    log(this);
+    //log(this);
     super.save();
   }
 }

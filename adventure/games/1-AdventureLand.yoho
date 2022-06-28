@@ -1,0 +1,1244 @@
+/** ADVENTURE 1 v 416 */
+wordlen = 3
+carrymax = 6
+lightlen = 27
+
+/** SYNONYMS */
+verbs
+  GO=ENT=RUN=WAL=CLI
+  CHO=CUT
+  GET=TAK=PIC=CAT
+  LIG=IGN=BUR
+  DRO=REL=SPI=LEA=GIV=POU
+  THR=TOS
+  LOO=EXA=DES
+  ATT=SLA=KIL
+  DRI=EAT
+  FIN=LOC
+  SAY=SPE=CAL
+  SCR=YEL=HOL
+  MAK=BUI
+  WAV=TIC=KIC=KIS=TOU=FEE=FUC=HIT=POK
+nouns
+  AXE=AX
+  BOT=CON
+  MUD=MED
+  OIL=SLI
+  CHI=BIT
+  WEB=WRI
+  LAV=DAM
+  TRE=STU
+  SHO=BAN
+
+/** ROOM/ITEMS */
+rooms
+  inventory 
+
+  out-of-play
+
+  forest "I am in a forest" start
+    exits
+      n=forest s=forest e=meadow w=forest
+    items
+      "Trees"
+    auto
+      if !b(welcome)
+        b(welcome)=1
+        say "A voice BOOOOMS out:"
+        say "Welcome to Adventure number: 1 'ADVENTURELAND'."
+        say "In this Adventure you're to find *TREASURES* & store them away."
+        say
+        say
+        say "To see how well you're doing say: 'SCORE'"
+        say "Remember you can always say 'HELP'"
+    cmd(GO TRE)
+      if at()
+        go(oaktop)
+        look
+    cmd(HEL)
+      if at()
+        say "A voice BOOOOMS out:"
+        say "Try --> 'LOOK, JUMP, SWIM, CLIMB, FIND, TAKE, SCORE, DROP'"
+        say "and any other verbs you can think of..."
+
+  swamp "I am in a dismal swamp"
+    exits
+      n=meadow e=bottomless-edge w=hidden-grove
+    items
+      cypress "Cypress tree"
+      mud "Evil smelling mud" MUD
+      swamp-gas "Swamp gas"
+      oily-slime "Patches of 'OILY' slime" OIL
+      chiggers "Chiggers" CHI
+    out-of-play
+      hollow-stump "-HOLLOW- stump and remains of a felled tree"
+      bites "Infected chigger bites"
+      bites-infected "Infected chigger bites"
+    auto
+      if rnd(30) & holds(chiggers) & !holds(mud) & !holds(bites) & !holds(bites-infected)
+        forceget(bites)
+        say "I'm bitten by chiggers."
+      if rnd(8) & here(chiggers) & !holds(mud) & !holds(bites) & !holds(bites-infected)
+        forceget(bites)
+        say "I'm bitten by chiggers."
+      if rnd(10) & holds(bites) & !holds(mud)
+        say "My chigger bites are now INFECTED!"
+        forceget(bites-infected)
+        remove(bites)
+      if rnd(10) & holds(bites-infected) & !at(misty-room)
+        say "My bites have rotted my whole body!"
+        die
+    cmd(GET GAS)
+      if at() & !holds(bladder-empty)
+        say "First I need an empty container."
+      if at() & holds(bladder-empty)
+        swap(bladder-empty, bladder-distended)
+        ok
+    cmd(DRO GAS)
+      if holds(bladder-distended)
+        swap(bladder-distended, bladder-empty)
+        ok
+        say "Gas dissipates. (I think you blew it)"
+    cmd(LIG GAS)
+      if holds(bladder-distended) & holds(flint)
+        remove(bladder-distended)
+        say "Gas bladder blew up in my hands!"
+        die
+      if here(bladder-distended) & holds(flint)
+        remove(bladder-distended)
+        b(gas-exploded)=1
+        say "Gas bladder blew up!"
+      if at() & holds(flint) 
+        say "Gas needs to be contained before it will burn"
+  
+  treetop "I am in a top of a tall cypress tree"
+    exits
+      d=swamp
+    items
+      web "Spider web with writing on it"
+      keys "Ring of skeleton keys" KEY
+  
+  stump "I am in a damp hollow stump in the swamp" treasury
+    exits
+      u=swamp d=root-chamber
+    items
+      lamp "Old fashioned brass lamp" LAM
+      bottle-water "Water in bottle" BOT
+      "Sign 'Leave *TREASURES* here, then say: SCORE'"
+    out-of-play
+      lamp "Lit brass lamp" LAM
+      bottle-empty "Empty bottle" BOT
+      bottle-bees "Bees in a bottle" BOT
+      *ring* "*DIAMOND RING*" RIN
+      *bracelet* "*DIAMOND BRACELET*" BRA     
+  
+  root-chamber "I am in a root chamber under the stump"
+    exits
+      u=stump
+    items
+      dark-hole "Dark hole"
+      *rubies* "*Pot of RUBIES*" RUB
+    cmd(GO HOL) 
+      if at()
+        go(hole)
+  
+  hole "I am in a semi-dark hole by the root chamber"
+    exits 
+      u=root-chamber
+    items
+      door-locked "Locked door"
+    out-of-play
+      door-open "Open door with a hallway beyond"
+    auto
+      if at() & dark
+        cleardark
+    action(OPE DOO,UNL DOO)
+      if at() & here(door-locked) & holds(keys)
+        ok
+        swap(door-locked, door-open)
+      if at() & here(door-locked) & !holds(keys)
+        say "I can't, it's locked"
+      if at()
+        look
+
+  hall "I am in a long down sloping hall"
+    exits
+      u=hole d=cavern
+  
+  cavern "I am in a large cavern"
+    exits
+      n=tunnel s=anteroom w=computer u=hall d=maze-1
+  
+  8-sided-room "I am in a large 8 sided room"
+    exits
+      s=tunnel
+    items
+      *honey* "*ROYAL HONEY*" HON
+      bees "Large African bees"
+    cmd(HEL)
+      say "A voice BOOOOMS out:"
+      say "Read the sign in the meadow!"
+    cmd(GET BEE)
+      if here(bees) & holds(mud) & holds(bottle-empty)
+        swap(bottle-empty, bottle-bees)
+        ok
+      elseif here(bees) & holds(mud) & !holds(bottle-empty)
+        say "First I need an empty container."
+      elseif here(bees)
+        say "Bees sting me"
+        die
+        
+  anteroom "I am in a royal anteroom"
+    exits
+      n=cavern u=royal-chamber
+    items
+      bladder-empty "Empty wine bladder" BLA
+    out-of-play
+      bladder-distended "Distended gas bladder" BLA      
+  
+  lake "I'm on the shore of a lake"
+    exits
+      n=quicksand s=bottomless-edge w=meadow
+    items
+      water "Water"
+      *fish* "*GOLDEN FISH*" FIS
+      axe "Rusty axe (Magic word 'BUNYON' on it)" AXE
+      "Sign says 'NO SWIMMING ALLOWED HERE'"
+    out-of-play
+      fish-dead "Dead fish" FIS
+    auto
+      if rnd(75) & holds(*fish*) & !holds(*net)
+        say "Fish have escaped back to the lake."
+        drop(*fish*, lake)
+    cmd(SAY BUN)
+      if with(*ox*) & holds(axe)
+        saynouncr
+        say "Something I'm holding vibrates and..."
+        drop(axe, hidden-grove)
+        drop(*ox*, hidden-grove)
+      elseif with(axe) & !at(quicksand)
+        saynouncr
+        say "Something I'm holding vibrates and..."
+        drop(axe, hidden-grove)
+        inventory      
+      elseif here(axe)
+        ok
+        saynouncr
+        say "The ax vibrated!"
+      else
+        ok
+        saynouncr
+        say "Nothing happens"
+    cmd(FIN AXE)
+      say "A voice BOOOOMS out:"
+      say "I don't know where it is"
+    cmd(THR AXE)
+      if holds(axe)
+        say "In 2 words tell me at what...like: AT TREE"
+        b(say-axe)=1
+        drop(axe)
+    
+    
+  
+  maze-1 "I am in a maze of pits"
+    exits
+      n=maze-2 s=maze-4 e=maze-4 d=maze-2
+    items
+      "Sign here says 'Opposite of LIGHT is UNLIGHT'"
+  
+  maze-2 "I am in a maze of pits"
+    exits
+      w=maze-3 u=maze-1
+  
+  maze-3 "I am in a maze of pits"
+    exits
+      n=maze-6 s=maze-1 e=maze-2 w=maze-5 u=maze-5 d=maze-6
+    items
+      "Strange scratchings on rock says: 'ALADIN was here'"
+  
+  maze-4 "I am in a maze of pits"
+    exits
+      n=maze-1 e=maze-2 w=maze-1 u=maze-2
+  
+  maze-5 "I am in a maze of pits"
+    exits
+      s=maze-6 u=maze-3 d=maze-6
+  
+  maze-6 "I am in a maze of pits"
+    exits
+      n=maze-6 s=maze-1 e=maze-1 w=maze-4 u=maze-3 d=chasm
+    items
+      *rug* "*Thick PERSIAN RUG*" rug
+      "Arrow pointing down"
+    out-of-play
+      rug-ruined "Muddy worthless old rug" rug
+  
+  chasm "I'm at the bottom of a very deep chasm. High above me is a pair of ledges. One has a bricked up window across its face, the other faces a Throne-room"
+    exits
+      u-maze-6
+    items
+      *net* "*GOLDEN NET*" NET
+      "Sign: 'Magic word's AWAY! Look la...' (Rest of sign is missing!)"
+      lava "Stream of lava"
+    out-of-play
+      lava-dam "Lava stream with brick dam"
+      firestone "Glowing *FIRESTONE*"
+      *firestone* "*FIRESTONE* (cold now)"
+
+  chasm-ledge "I'm on a narrow ledge by a chasm. Across the chasm is the Throne-room"
+    exits
+      w=royal-chamber
+  
+  royal-chamber "I am in a royal chamber"
+    exits
+      d=anteroom
+    items
+      window-bricked "Bricked up window"
+    out-of-play
+      window-hole "Bricked up window with a hole in it"
+      bricks "Loose fire bricks" BRI
+    auto
+      if b(gas-exploded) & here(window-bricked)
+        b(gas-exploded)=0
+        drop(bricks)
+        swap(window-bricked, window-hole)
+  
+  throne-ledge "I'm on a narrow ledge by a Throne-room. Across the chasm is another ledge"
+    items
+      bear "Very thin black bear"
+      *mirror* "*MAGIC MIRROR*"
+    out-of-play
+      bear-sleeping "Sleeping bear"
+      bear-woozy "Slightly woozy bear"
+      glass "Broken glass"
+  
+  throne "I am in a throne room"
+    exits
+      w=throne-ledge
+    items
+      *crown* "*GOLD CROWN*" CRO
+  
+  meadow "I am in a sunny meadow"
+    exits
+      s=swamp e=lake w=forest
+    items
+      dragon "Large sleeping dragon"
+      "Sign here says 'In many cases mud is good. In others...'"
+    out-of-play
+      smoking-hole "Smoking hole, pieces of dragon and gore"
+  
+  hell "I think I'm in real trouble now. There's a fellow here with|a pitchfork and pointed tail. ...Oh Hell!"
+
+  hidden-grove "I am in a hidden grove"
+    exits
+      n=forest e=swamp
+    items
+      *fruit* "*JEWELED FRUIT*" FRU
+      "Sign says 'Paul's place'"
+
+  quicksand "I am in a quick-sand bog"
+    items
+      *ox* "*Small statue of a BLUE OX*" OX
+
+  computer "I am in a Memory chip of a COMPUTER!|I took a wrong turn!"
+    exits
+      e=cavern
+
+  oaktop "I am in a top of an oak. To the East I see a meadow, beyond that a lake"
+    exits
+      d=forest
+
+  bottomless-edge "I'm at the edge of a BOTTOMLESS hole"
+    exits
+      n=lake w=swamp
+    items
+      ad "Large outdoor advertisement" ADV
+      hole "Hole"
+
+  bottomless-ledge "I'm on a ledge just below the rim of the BOTTOMLESS hole. I don't think I want to go down"
+    exits
+      u=bottomless-edge d=hell
+    items
+      flint "Flint & steel" FLI
+
+  tunnel "I am in a long tunnel. I hear buzzing ahead"
+    exits
+      n=8-sided-room s=cavern
+   
+  endless-corridor "I'm in an endless corridor"
+    exits
+      n=endless-corridor s=misty-room e=endless-corridor w=endless-corridor u=endless-corridor d=endless-corridor
+
+  misty-room "I am in a large misty room with strange unreadable letters over all the exits"
+    exits
+      n=endless-corridor s=hell e=forest w=hell u=oaktop d=hell
+    items
+      "Sign says 'LIMBO. Find right exit and live again!'"
+    
+
+/** AUTOS */
+
+auto(75%)  // FISH ESCAPE
+  if holds(*fish*) & ! holds(*net*)
+    say(Fish have escaped back to the lake.)
+    dropat(*fish*, lake)
+
+auto(10%)  // DIE BITES
+  if holds(bites-infected) & ! at(misty-room)
+    say(My bites have rotted my whole body!)
+    die
+
+auto(10%)  // BITE INFECT
+  if holds(bites) & ! holds(mud)
+    say(|My chigger bites are now INFECTED!|)
+    superget(bites-infected)
+    remove2(bites)
+
+auto(8%)  // BEES DIE
+  if with(bottle-bees) & ! bit17
+    say(The bees all suffocated and disappeared)
+    swap(bottle-bees, bottle-empty)
+
+auto(100%)  // HIT MIRROR
+  if bit5
+    remove(*mirror*)
+    dropat(glass, throne-ledge)
+    clear(bit5)
+    look
+
+auto(100%)  // IN HADES
+  if at(hell)
+    say(You lost *ALL* treasures.)
+    gameover
+
+auto(5%)  // MUD OFF
+  if holds(mud) & ! holds(bottle-water)
+    say(The mud dried up and fell off.)
+    dropat(mud, swamp)
+
+auto(8%)  // BIT CHIG
+  if ! holds(bites) & ! holds(bites-infected) & here(chiggers) & ! holds(mud)
+    superget(bites)
+    say(|I'm bitten by chiggers.|)
+
+auto(8%)  // BEE STING
+  if here(bees) & ! with(mud)
+    say(Bees sting me)
+    die
+
+auto(100%)  // LITE
+  if at(hole) & bit15
+    cleardark
+    look2
+
+auto(50%)  // FISH DIE
+  if holds(*fish*) & ! holds(bottle-water)
+    say(Too dry, the fish died.)
+    remove2(*fish*)
+    get(fish-dead)
+
+auto(100%)  // MOVE OX
+  if bit7
+    clear(bit7)
+    dropat(*ox*, hidden-grove)
+    inventory
+
+auto(30%)  // GET CHIG
+  if holds(chiggers) & ! holds(bites-infected) & ! holds(bites) & ! holds(mud)
+    superget(bites)
+    say(|I'm bitten by chiggers.|)
+
+auto(50%)  // MUD DRAGON
+  if here(dragon) & with(mud)
+    cls
+    say(Dragon smells something. Awakens & attacks me!)
+    die
+
+auto(100%)  // BLAST WALL
+  if bit12 & here(window-bricked)
+    drop(bricks)
+    remove(window-bricked)
+    drop(window-hole)
+
+auto(100%)  // BLAS DRAGON
+  if bit12 & here(dragon)
+    drop(smoking-hole)
+    remove(dragon)
+
+auto(100%)  // 1ST MIRROR CLUE
+  if bit1 & ! bit2
+    say(' DRAGON STING ' and fades. I don't get it, I hope you do.)
+    clear(bit1)
+    set(bit2)
+
+auto(100%)  // BEAR MAD
+  if bit14
+    superget(bottle-empty)
+    clear(bit14)
+    die
+
+auto(100%)  // RESET BLAST
+  if bit12
+    look
+    clear(bit12)
+
+auto(100%)  // INTRO
+  if ! bit13
+    say(A voice BOOOOMS out:)
+    set(bit13)
+    say(|Welcome to Adventure number: 1 'ADVENTURELAND'.|In this Adventure you're to find *TREASURES* & store them away.||To see how well you're doing say: 'SCORE')
+    say(Remember you can always say 'HELP')
+
+auto(100%)  // 2ND MIRROR CLUE
+  if bit1 & bit2
+    say('Don't waste honey, get mad instead! Dam lava!?')
+    clear(bit1)
+    clear(bit2)
+
+auto(100%)  // DEAD LAMP
+  if bit16
+    clear(bit16)
+    swap(lamp-empty, light)
+    look2
+
+auto(100%)  // MUDDY RUG
+  if at(quicksand) & with(*rug*)
+    swap(*rug*, rug-ruined)
+
+action(LOO LAV)
+  if here(lava-stream)
+    say(There's something there all right! Maybe I should go there?)
+
+action(LOO TRE)
+  if here(hollow-stump)
+    say(There's something there all right! Maybe I should go there?)
+
+action(GET MUD)
+  if here(mud) & holds(bites-infected)
+    remove2(bites-infected)
+    get(mud)
+    say(OK)
+    say(BOY that really hit the spot!)
+
+action(GET HON)
+  if here(*honey*) & ! holds(mud) & here(bees)
+    say(Bees sting me)
+    die
+
+action(GET MUD)
+  if here(mud) & holds(bites)
+    remove2(bites)
+    get(mud)
+    say(OK)
+    say(BOY that really hit the spot!)
+
+action(DRO HON)
+  if holds(*honey*) & here(bear)
+    remove2(*honey*)
+    say(Bear eats the honey and falls asleep.)
+    drop(bear-sleeping)
+    remove(bear)
+
+action(DRO HON)
+  if holds(*honey*)
+    drop(*honey*)
+
+action(GET BEE)
+  if here(bees) & ! holds(mud)
+    say(Bees sting me)
+    die
+
+action(GET BEE)
+  if here(bees) & holds(mud) & ! holds(bottle-empty)
+    say(First I need an empty container.)
+
+action(GET BEE)
+  if here(bees) & holds(mud) & holds(bottle-empty)
+    swap(bottle-empty, bottle-bees)
+    say(OK)
+
+action(GET INV)
+    inventory
+
+action(CRO LAV)
+  if at(chasm)
+    say(No, its too hot.)
+
+action(INV)
+    inventory
+
+action(SAY AWA)
+  if holds(*rug*) & at(maze-6)
+    go(meadow)
+    say(Something I'm holding vibrates and...)
+    cleardark
+    look
+
+action(LIG)
+  if ! holds(flint)
+    say(nothing to light it with)
+
+action(LIG GAS)
+  if holds(bladder-distended) & holds(flint)
+    say(Gas bladder blew up)
+    say(in my hands!)
+    die
+    remove2(bladder-distended)
+
+action(MAK HOL)
+  if with(bottle-bees)
+    set(bit17)
+    say(OK)
+
+action(LIG GAS)
+  if here(bladder-distended) & holds(flint)
+    cls
+    remove(bladder-distended)
+    set(bit12)
+    say(Gas bladder blew up)
+
+action(GO LED)
+  if at(royal-chamber) & here(window-hole)
+    go(chasm-ledge)
+    cls
+    look
+
+action(GET GAS)
+  if at(swamp) & ! holds(bladder-empty)
+    say(First I need an empty container.)
+
+action(GET GAS)
+  if at(swamp) & holds(bladder-empty)
+    swap(bladder-empty, bladder-distended)
+    say(OK)
+
+action(DRO GAS)
+  if holds(bladder-distended)
+    swap(bladder-distended, bladder-empty)
+    say(OK)
+    say(Gas dissipates. (I think you blew it))
+
+action(LIG GAS)
+  if here(swamp-gas) & holds(flint)
+    say(gas needs to be contained before it will burn)
+
+action(FIN SWA)
+    say(I don't know where it is)
+
+action(GO THR)
+  if at(chasm-ledge)
+    say(How?)
+
+action(GET MIR)
+  if here(*mirror*) & ! here(bear)
+    get(*mirror*)
+    say(OK)
+
+action(DRO MIR)
+  if holds(*mirror*) & here(*rug*)
+    drop(*mirror*)
+    say(Mirror lands softly on rug, lights up and says:)
+    set(bit1)
+
+action(DRI FRU)
+  if holds(*fruit*)
+    say(BOY that really hit the spot!)
+    remove2(*fruit*)
+
+action(GET WAT)
+  if here(water) & holds(bottle-empty)
+    remove2(bottle-empty)
+    get(bottle-water)
+    say(OK)
+
+action(JUM)
+  if at(chasm-ledge) & ! holds(bricks)
+    go(throne-ledge)
+    look
+
+action(JUM)
+  if at(throne-ledge)
+    go(chasm-ledge)
+    look
+
+action(GO THR)
+  if at(throne-ledge) & here(bear)
+    say(Bear won't let me)
+
+action(GO THR)
+  if at(throne-ledge) & ! here(bear)
+    go(throne)
+    cls
+    look
+
+action(MAK LAV)  // BUILD DAM
+  if with(bricks) & here(lava-stream)
+    swap(*firestone*, lava-stream)
+    drop(lava-stream-dammed)
+    look2
+
+action(GO LAV)
+  if at(chasm)
+    say(No, its too hot.)
+
+action(DRO BEE)
+  if holds(bottle-bees) & here(bear)
+    say(Bees madden bear, bear then attacks me!)
+    remove2(bottle-bees)
+    drop(bees)
+    set(bit14)
+
+action(GET WAT)
+  if here(water) & ! holds(bottle-empty)
+    say(First I need an empty container.)
+
+action(REA WEB)
+  if here(web)
+    say(Chop 'er down!)
+
+action(GO TRE)
+  if here(cypress)
+    go(treetop)
+    cls
+    look
+
+action(DRO WAT)
+  if holds(bottle-water) & ! at(chasm)
+    swap(bottle-water, bottle-empty)
+    say(OK)
+    say(It soaks into the ground)
+
+action(FIL LAM)
+  if with(oily-slime) & holds(lamp-empty)
+    remove2(oily-slime)
+    remove2(lamp-empty)
+    say(Lamp is now full & lit)
+    getfreshlamp
+
+action(CHO TRE)
+  if here(cypress) & ! with(keys) & holds(axe)
+    remove(cypress)
+    drop(hollow-stump)
+    say(TIMBER. Something fell from the tree top & vanished in the swamp)
+
+action(OPE DOO)
+  if at(hole) & here(door-locked) & ! holds(keys)
+    say(I can't its locked)
+
+action(UNL DOO)
+  if at(hole) & here(door-locked) & ! holds(keys)
+    say(I can't its locked)
+
+action(THR AXE)
+  if holds(axe)
+    say(In 2 words tell me at what...like: AT TREE)
+    set(bit3)
+    drop(axe)
+
+action(OPE DOO)
+  if here(door-locked) & holds(keys)
+    remove(door-locked)
+    drop(door-open)
+    look2
+
+action(CRO)
+    say(How?)
+
+action(JUM)
+  if at(chasm-ledge) & holds(bricks)
+    say(Somethings too heavy. I fall.)
+    die
+
+action(DAM LAV)
+  if with(bricks) & here(lava-stream)
+    swap(*firestone*, lava-stream)
+    drop(lava-stream-dammed)
+    look2
+
+action(GET BRI)
+  if here(bricks)
+    get(bricks)
+    say(OK)
+    say(Its heavy!)
+
+action(STO)
+    say(To stop game say QUIT)
+
+action(QUI)
+    score
+    gameover
+
+action(GET MIR)
+  if here(*mirror*) & here(bear)
+    say(Bear won't let me)
+
+action(DRO MIR)
+  if holds(*mirror*) & ! here(*rug*)
+    say(Mirror hits floor and shatters into a MILLION pieces)
+    drop(glass)
+    remove2(*mirror*)
+
+action(AT BEA)
+  if bit3 & ! here(*mirror*)
+    say(OK, I threw it.)
+    say(A voice BOOOOMS out:)
+    say(please leave it alone)
+    clear(bit3)
+
+action(AT DRA)
+  if bit3 & here(dragon)
+    say(OK, I threw it.)
+    say(It doesn't seem to bother him at all!)
+    clear(bit3)
+
+action(SCO)
+    score
+
+action(HEL)
+  if holds(bites)
+    cls
+    say(A voice BOOOOMS out:)
+    say(Medicine is good for bites.)
+    say(Try --> 'LOOK, JUMP, SWIM, CLIMB, FIND, TAKE, SCORE, DROP'|and any other verbs you can think of...)
+
+action(HEL)
+  if holds(bites-infected)
+    cls
+    say(A voice BOOOOMS out:)
+    say(Medicine is good for bites.)
+    say(Try --> 'LOOK, JUMP, SWIM, CLIMB, FIND, TAKE, SCORE, DROP'|and any other verbs you can think of...)
+
+action(GO LED)
+  if at(chasm)
+    say(Not here.)
+
+action(GET LAV)
+  if here(lava-stream)
+    say(No, its too hot.)
+
+action(SCR)
+  if here(bear)
+    say(Bear is so startled that he FELL off the ledge!)
+    dropat(bear-woozy, chasm)
+    remove(bear)
+
+action(DRO BEE)
+  if holds(bottle-bees) & here(dragon)
+    drop(bees)
+    drop(*eggs*)
+    remove(dragon)
+    say(The bees attack the dragon which gets so annoyed it gets up|and flys away...)
+
+action(AT WIN)
+  if bit3
+    clear(bit3)
+    say(Nothing happens)
+    say(A voice BOOOOMS out:)
+    say(Remember you can always say 'HELP')
+
+action(OPE DOO)
+  if here(door-open)
+    look
+
+action(GO HOL)
+  if here(window-hole)
+    cls
+    go(chasm-ledge)
+    look
+
+action(AT BEA)
+  if bit3 & here(*mirror*)
+    remove(*mirror*)
+    set(bit5)
+    say(OH NO... Bear dodges... CRASH!)
+    clear(bit4)
+
+action(FIN AXE)
+    say(A voice BOOOOMS out:)
+    say(I don't know where it is)
+
+action(WAK)
+    say(Nothing happens)
+    say(Maybe if I threw something?...)
+
+action(GO TRE)
+  if here(hollow-stump)
+    go(stump)
+    cls
+    look
+
+action(CHO TRE)
+  if here(cypress) & holds(axe) & holds(keys)
+    remove(cypress)
+    drop(hollow-stump)
+    say(TIMBER!)
+
+action(ATT BEA)
+  if here(bear)
+    say(Bear won't let me)
+    say(Maybe if I threw something?...)
+
+action(ATT DRA)
+  if here(dragon)
+    say(It doesn't seem to bother him at all!)
+    say(Maybe if I threw something?...)
+
+action(DRI WAT)
+  if holds(bottle-water)
+    say(BOY that really hit the spot!)
+    remove2(bottle-water)
+    get(bottle-empty)
+
+action(DRI WAT)
+  if here(water)
+    say(BOY that really hit the spot!)
+
+action(DRI HON)
+  if with(*honey*)
+    say(BOY that really hit the spot!)
+    remove2(*honey*)
+
+action(AT DOO)
+  if here(door-locked) & bit3
+    remove(door-locked)
+    drop(door-open)
+    say(Lock shatters)
+    clear(bit3)
+
+action(SWI)
+  if at(quicksand) & holds()
+    say(Somethings too heavy. I fall.)
+
+action(SWI)
+  if at(quicksand) & ! holds()
+    go(lake)
+    cls
+    look
+
+action(CHO)
+  if ! holds(axe)
+    say(I'm not carrying ax, take inventory!)
+
+action(SAY BUN)
+  if with(*ox*) & holds(axe)
+    saynouncr
+    say(Something I'm holding vibrates and...)
+    dropat(axe, hidden-grove)
+    set(bit7)
+
+action(SAY BUN)
+  if holds(axe) & ! at(quicksand)
+    saynouncr
+    say(Something I'm holding vibrates and...)
+    dropat(axe, hidden-grove)
+    inventory
+
+action(RUB LAM)
+  if with(light)
+    say(No, its too hot.)
+
+action(GET MUD)
+  if here(mud)
+    get(mud)
+    say(OK)
+
+action(RUB LAM)
+  if with(lamp) & ! bit8
+    say(A glowing Genie appears, drops somehting, then vanishes.)
+    drop(*ring*)
+    set(bit8)
+
+action(RUB LAM)
+  if with(lamp) & bit11
+    say(Nothing happens)
+
+action(RUB LAM)
+  if with(lamp) & bit10
+    say(A glowing Genie appears, says 'Boy you're selfish', takes|something and then makes 'ME' vanish!)
+    set(bit11)
+    die
+    remove2(*ring*)
+
+action(RUB LAM)
+  if with(lamp) & bit9
+    say(A glowing Genie appears, says 'Boy you're selfish', takes|something and then makes 'ME' vanish!)
+    set(bit10)
+    die
+    remove2(*bracelet*)
+
+action(RUB LAM)
+  if with(lamp) & bit8
+    say(A glowing Genie appears, drops somehting, then vanishes.)
+    drop(*bracelet*)
+    set(bit9)
+
+action(SCR)
+  if holds(bites)
+    say(BOY that really hit the spot!)
+    say(|My chigger bites are now INFECTED!|)
+    swap(bites, bites-infected)
+
+action(SCR)
+  if holds(bites-infected)
+    say(BOY that really hit the spot!)
+    say(My bites have rotted my whole body!)
+    die
+
+action(SWI)
+  if ! at(quicksand)
+    say(Not here.)
+
+action(WAV)
+    say(Nothing happens)
+
+action(SAY BUN)
+  if here(axe)
+    say(OK)
+    saynouncr
+    say(The ax vibrated!)
+
+action(LIG LAM)
+  if with(light)
+    say(Lamp burns with a cold flameless blue glow.)
+
+action(FIN TRE)
+    say(Try the swamp)
+
+action(DRO BEE)
+  if holds(bottle-bees)
+    drop(bees)
+    swap(bottle-bees, bottle-empty)
+    say(OK)
+
+action(FIN KEY)
+    say(Try the swamp)
+
+action(FIN MUD)
+    say(Try the swamp)
+
+action(AT SHO)
+  if bit3 & at(quicksand)
+    clear(bit3)
+    dropat(axe, lake)
+    say(OK)
+
+action(GO TRE)
+  if at(forest)
+    go(oaktop)
+    cls
+    look
+
+action(HEL)
+  if at(quicksand)
+    say(A voice BOOOOMS out:)
+    say(Try --> 'LOOK, JUMP, SWIM, CLIMB, FIND, TAKE, SCORE, DROP'|and any other verbs you can think of...)
+    say(You may need to say magic words here)
+
+action(HEL)
+  if at(forest)
+    say(A voice BOOOOMS out:)
+    say(Try --> 'LOOK, JUMP, SWIM, CLIMB, FIND, TAKE, SCORE, DROP'|and any other verbs you can think of...)
+
+action(HEL)
+  if at(chasm-ledge)
+    say(A voice BOOOOMS out:)
+    say(Try --> 'LOOK, JUMP, SWIM, CLIMB, FIND, TAKE, SCORE, DROP'|and any other verbs you can think of...)
+
+action(HEL)
+  if at(meadow)
+    say(A voice BOOOOMS out:)
+    say(There are only 3 ways to wake the Dragon!)
+
+action(HEL)
+  if at(maze-2)
+    say(A voice BOOOOMS out:)
+    say(You may need to say magic words here)
+
+action(HEL)
+  if at(maze-6)
+    say(A voice BOOOOMS out:)
+    say(You may need to say magic words here)
+
+action(HEL)
+  if at(maze-4)
+    say(A voice BOOOOMS out:)
+    say(You may need to say magic words here)
+
+action(HEL)
+  if at(throne-ledge)
+    say(A voice BOOOOMS out:)
+    say(Try --> 'LOOK, JUMP, SWIM, CLIMB, FIND, TAKE, SCORE, DROP'|and any other verbs you can think of...)
+
+action(HEL)
+  if at(8-sided-room)
+    say(A voice BOOOOMS out:)
+    say(Read the sign in the meadow!)
+
+action(UNL DOO)
+  if holds(keys) & here(door-locked)
+    drop(door-open)
+    remove(door-locked)
+
+action(GO HAL)
+  if here(door-open)
+    go(hall)
+    dark
+    cls
+    look
+
+action(LIG LAM)
+  if with(lamp)
+    swap(lamp, light)
+    say(Lamp burns with a cold flameless blue glow.)
+    look2
+
+action(UNL LAM)
+  if with(light)
+    swap(light, lamp)
+    say(OK)
+    say(Lamp is off)
+    look2
+
+action(GET WEB)
+  if here(web)
+    say(I'm bit by a spider)
+    die
+
+action(GO HOL)
+  if here(smoking-hole)
+    go(hell)
+    cls
+    look
+
+action(GET SIG)
+    say(A voice BOOOOMS out:)
+    say(please leave it alone)
+
+action(LIG)
+  if holds(flint) & ! here(swamp-gas)
+    say(That won't ignite)
+
+action(SCR)
+    say(Nothing happens)
+
+action(SAY AWA)
+  if holds(*rug*) & ! at(maze-6) & ! at(misty-room) & ! at(quicksand)
+    go(maze-6)
+    say(Something I'm holding vibrates and...)
+    dark
+    look
+
+action(HEL)
+  if at(swamp)
+    say(A voice BOOOOMS out:)
+    say(Try --> 'LOOK, JUMP, SWIM, CLIMB, FIND, TAKE, SCORE, DROP'|and any other verbs you can think of...)
+
+action(THR AXE)
+  if ! holds(axe)
+    say(I'm not carrying ax, take inventory!)
+
+action(HEL)
+  if at(royal-chamber)
+    say(A voice BOOOOMS out:)
+    say(Blow it up!)
+    say(Try the swamp)
+
+action(SAY BUN)
+    say(OK)
+    saynouncr
+    say(Nothing happens)
+
+action(GO HOL)
+  if at(root-chamber)
+    go(hole)
+    cls
+    look
+
+action(GET HON)
+  if here(*honey*)
+    get(*honey*)
+    say(OK)
+
+action(HEL)
+    say(Nothing happens)
+    say(You might try examining things...)
+
+action(CHO)
+    say(Nothing happens)
+    say(Maybe if I threw something?...)
+
+action(THR)
+    say(Sorry, I can only throw the ax.)
+
+action(AT)
+  if bit3
+    clear(bit3)
+    say(OK, I threw it.)
+    say(Nothing happens)
+
+action(SAV GAM)
+    say(OK)
+    save
+
+action(RUB)
+    say(Nothing happens)
+
+action(SAY)
+    say(OK)
+    saynouncr
+    say(Nothing happens)
+
+action(DRI)
+    say(Huh? I don't think so!)
+
+action(DRO WAT)
+  if holds(bottle-water) & at(chasm)
+    say(Sizzle...)
+    continue
+    swap(bottle-water, bottle-empty)
+
+continue
+  if here(*firestone*)
+    swap(*firestone-cold*, *firestone*)
+
+action(GET FIR)
+  if here(*firestone*)
+    say(No, its too hot.)
+
+action(GET FIR)
+  if here(*firestone-cold*)
+    say(OK)
+    get(*firestone-cold*)
+
+action(FIN)
+    say(I don't know where it is)
+
+action(REA ADV)
+  if with(sign-ad)
+    cls
+    say(|Check with your favorite computer dealer for the next Adventure|program: PIRATE ADVENTURE. If they don't carry 'ADVENTURE' have|them call: 1-305-862-6917 today!|)
+
+action(LOO HOL)
+    say(There's something there all right! Maybe I should go there?)
+
+action(JUM)
+    say(Not here.)
+
+action(ATT SPI)
+    say(I don't know where it is)
+
+action(ATT)
+    say(How?)
+
+action(LOO)
+    say(OK)
+    say(I see nothing special)
+    look2
+
+action(AT)
+    say(What?)
+
+action(GO HOL)
+  if at(bottomless-edge)
+    go(bottomless-ledge)
+    look2

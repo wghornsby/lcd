@@ -1,0 +1,67 @@
+<html>
+<head>
+  <script type='text/javascript' src='lib/lcd-simple.js'></script>
+  <script type='text/javascript' src='games/adv06.js'></script>
+  <script type='text/javascript' src='sa-game.js'></script>
+  <script type='text/javascript' src='sa-file.js'></script>
+  <script type='text/javascript' src='sa-ui.js'></script>
+<style>
+body {
+  margin:0;
+  padding:0;
+  display:flex;
+  overflow:hidden;
+  background-color:#000;
+}
+screen {
+  margin:60pt auto 0 auto;
+  font-size:20pt;
+  font-family:Consolas;
+  line-height:30pt;
+  color:aquamarine;
+  width:830pt;
+}
+header {
+  color:white;
+  position:absolute;
+  z-index:10;
+  background-color:black;
+  width:830pt;
+}
+footer {
+  color:white;
+  position:absolute;
+  top:660pt;
+  z-index:11;
+  background-color:black;
+  width:830pt;
+}
+visible, obvious, divider {
+  display:none;
+}
+cursor {
+  animation:cursor .75s infinite;
+  border-bottom:5px solid;
+} 
+@keyframes cursor {
+  0% {border-color:white;}
+  33% {border-color:black;}
+  100% {border-color:white;}
+}
+</style>
+</head>
+<body>
+  <screen>
+    <header>
+      <room></room><visible>.&nbsp;Visible items:<br><br><items></items></visible>
+      <obvious><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Some obvious exits are: <exits></exits></obvious>
+      <divider><br>&lt;------------------------------------------------------------------------&gt;<br><br></divider>
+    </header>
+    <output></output>
+    <footer>&nbsp;-------> Tell me what to do? <entry></entry><cursor>&nbsp;</cursor></footer>
+  </screen>
+</body>
+<script nonce='wghornsby'>
+  window.on('DOMContentLoaded', () => new SA.Screen$());
+</script>
+</html>

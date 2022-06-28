@@ -1,0 +1,1703 @@
+/** ADVENTURE 9 v 223 */
+
+wordlen = 4
+carrymax = 7
+lightlen = 175
+nounverbs = 120
+messages = 98
+actions = 238
+items = 78
+rooms = 39
+startroom(I am in a Ghost Town)
+treaasures = 13
+treasureroom(I am in a Dry Goods store)
+
+/** VOCABULARY */
+
+verbs(GO=WALK=RUN=CLIM=ENTE=MOUN=RIDE)
+verbs(GET=TAKE=PICK=GRAB=COLL=LIFT)
+verbs(DROP=PUT=THRO=LEAV=REMO=TOSS)
+verbs(LOOK=EXAM=DESC=CHEC)
+verbs(SAY=YELL=SCRE=WHIS=SING)
+verbs(DIG=SHOV)
+verbs(MIX=MAKE)
+verbs(SMEL=TAST=EAT)
+verbs(BURN=IGNI=LIGH)
+verbs(OPEN=UNLO)
+verbs(CLOS=SHUT)
+verbs(WITH=USE)
+verbs(HIT=RING=BEAT)
+verbs(CLAP=APPL)
+verbs(UNLI=EXTI)
+verbs(LIST=HEAR)
+verbs(BREA=SMAS=BUST)
+verbs(JUMP=LEAP)
+verbs(CUT=SLIC)
+verbs(SHAK=WAVE)
+verbs(WEAR=PUTO)
+verbs(FIND=LOCA=SEEK)
+verbs(CONN=SPLI=REPA)
+verbs(MOVE=PUSH=PRES=TAP)
+verbs(EMPT=SPIL)
+verbs(KNOC=TOUC=FEEL=KISS)
+verbs(SPUR=KICK)
+verbs(HELP,SAVE,QUIT,SCOR,LOCK,LOAD,SHOO,INVE,PLAY,KILL,READ,TAPE,CROS,SLEE,PASS,WAIT,CLEA,COVE,DANC,FILL,SHOE)
+
+nouns(MANU=PILE)
+nouns(SULF=POWD)
+nouns(HORS=MAGN)
+nouns(GHOS=FIGU)
+nouns(HAND=FEET)
+nouns(KEY=KEYS)
+nouns(CAND=LIGH)
+nouns(DERR=GUN)
+nouns(TUMB=SAGE=BRUS)
+nouns(MINE=ENTR)
+nouns(GIDD=GITT=GIDY=GITY)
+nouns(TAPE=ROLL)
+nouns(TELE=OFFI)
+nouns(SNAK=RATT)
+nouns(WORM=SLIM)
+nouns(BOX=CASH)
+nouns(GO=BOAR)
+nouns(GOLD=NUGG)
+nouns(RAVI=RIDG)
+nouns(BAG=DUST)
+nouns(NORT,SOUT,EAST,WEST,UP,DOWN,GAME,AROU,STAB,HILL,GUNP,GRAV,CHAR,MATC,ON,SAFE,MIRR,COMP,BELL,HEAD,MAP,MUSI,BULL,STAB,WIRE,STOR,JAIL,ROOF,SIGN,BARB)
+nouns(BED,HOTE,ROOM,COIN,TOWN,HOLE,INVE,STAL,SALO,DOOR,WIND,SPUR,HAT,STRI,WALL,PAIN,SLEE,SHOV,ROAD,FORK,VAIN,PIAN,$200,PATH,HELL,HI,FIEL,CRYS,KEG,NAIL)
+nouns(FUSE,TOPP,LOBB,SHAC,TRAI,MOUN,FLOO,PLAN,PELT,CUP,HAMM,TEEP,TOM,HOW,NECK,COUN)
+
+/** ROOMS */
+
+room(I am in a Ghost Town)
+  E(I am in a road)
+  W(I am in a Ghost Town)
+
+room(I am in a Ghost Town)
+  E(I am in a Ghost Town)
+  W(I am in a Ghost Town)
+
+room(I am in a Ghost Town)
+  E(I am in a Ghost Town)
+  W(I am in a Ghost Town)
+
+room(I am in a Ghost Town)
+  E(I am in a Ghost Town)
+  W(I am in a road)
+
+room(I am in a stable)
+  S(I am in a Ghost Town)
+
+room(I am in a road)
+  E(I am in a Ghost Town)
+  W(I am in a fork in the road)
+
+room(I am in a fork in the road)
+  N(I am in a large field)
+  S(I'm on a ridge above a narrow ravine I see|mountains in the distance)
+  E(I am in a road)
+
+room(I'm on a ridge above a narrow ravine I see|mountains in the distance)
+  N(I am in a fork in the road)
+
+room(I am in a large field)
+  S(I am in a fork in the road)
+
+room(I am in a ravine)
+  U(I'm on a ridge above a narrow ravine I see|mountains in the distance)
+
+room(I am in a saloon)
+  S(I am in a Ghost Town)
+
+room(I am in a hidden office)
+  E(I am in a saloon)
+
+room(I am in a Jail)
+  N(I am in a Ghost Town)
+
+room(I am in a cell)
+  N(I am in a Jail)
+
+room(I am in a Dry Goods store)
+  N(I am in a Ghost Town)
+
+room(I am in a Barbershop)
+  S(I am in a Ghost Town)
+
+room(I am in a road)
+  E(I'm on Boot hill)
+  W(I am in a Ghost Town)
+
+room(I'm on a ridge above a ravine)
+  W(I am in a mountain trail)
+
+room(I am in a stall)
+  S(I am in a stable)
+
+room(I'm on Boot hill)
+  W(I am in a road)
+
+room(I am in a Mine)
+  U(I am in a ravine)
+  D(I am in a Mine)
+
+room(I am in a Mine)
+  S(I am in a Mine)
+  U(I am in a Mine)
+
+room(I am in a Mine)
+  N(I am in a Mine)
+
+room(I am in a Telegraph office)
+  S(I am in a Ghost Town)
+
+room(I'm on back of 'Ole Paint)
+  D(I am in a stall)
+
+room(I am in a warm bed)
+
+room(I am in a hotel room)
+  W(I am in a lobby)
+
+room(I am in a lobby)
+  N(I am in a Ghost Town)
+  E(I am in a hotel room)
+
+room(I am in a grave)
+  U(I'm on Boot hill)
+
+room(I'm flat on my back in a manure pile)
+
+room(I am in a storeroom)
+  N(I am in a stall)
+
+room(I am in a mountain trail)
+  E(I'm on a ridge above a ravine)
+
+room(I am in a line shack)
+  S(I am in a mountain trail)
+
+room(I am in a root cellar)
+  U(I am in a line shack)
+
+room(I'm behind the counter)
+  N(I am in a lobby)
+
+room(I am in a hidden canyon)
+
+room(I am in a teepee)
+  N(I am in a hidden canyon)
+
+room(I am in a lot of trouble!)
+
+/** ITEMS */
+
+item(Worn out fiddle strings)
+  noun(STRI)
+  at(out-of-play)
+
+item(Barbershop)
+  at(I am in a Ghost Town)
+
+item(Jail)
+  at(I am in a Ghost Town)
+
+item(Saloon)
+  at(I am in a Ghost Town)
+
+item(Stable)
+  at(I am in a Ghost Town)
+
+item(Stall)
+  at(I am in a stable)
+
+item(Manure pile)
+  at(I am in a stable)
+
+item(Shovel)
+  noun(SHOV)
+  at(I am in a Dry Goods store)
+
+item(White crystals)
+  noun(CRYS)
+  at(out-of-play)
+
+item(Lit candle)
+  noun(CAND)
+  at(out-of-play)
+
+item(Yellow powder)
+  noun(SULF)
+  at(out-of-play)
+
+item(Sagebrush charcoal)
+  noun(CHAR)
+  at(I am in a ravine)
+
+item(Pile of gunpowder)
+  at(out-of-play)
+
+item(Entrance to a mine)
+  at(I am in a ravine)
+
+item(Matches)
+  noun(MATC)
+  at(I am in a Dry Goods store)
+
+item(Mirror)
+  at(I am in a saloon)
+
+item('ole Paint)
+  at(I am in a stall)
+
+item(Broken mirror)
+  at(out-of-play)
+
+item(Hole in the wall)
+  at(out-of-play)
+
+item(Compass)
+  noun(COMP)
+  at(I am in a Dry Goods store)
+
+item(Horseshoe)
+  noun(HORS)
+  at(I am in a stall)
+
+item(Male cow manure)
+  noun(MANU)
+  at(out-of-play)
+
+item(Large bell)
+  noun(BELL)
+  at(I am in a saloon)
+
+item(Wraithlike figure playing equally ghostly piano)
+  at(out-of-play)
+
+item(Piano with set of keys)
+  at(out-of-play)
+
+item(Map)
+  noun(MAP)
+  at(out-of-play)
+
+item(Unlit candle)
+  noun(CAND)
+  at(I am in a Mine)
+
+item(*SILVER BULLET*)
+  noun(BULL)
+  at(I am in a Mine)
+
+item(*GOLDEN DERRINGER*)
+  noun(DERR)
+  at(I am in a Jail)
+
+item(Open door)
+  at(out-of-play)
+
+item(Sign-'Ring for ROOM service')
+  noun(SIGN)
+  at(I'm behind the counter)
+
+item(Locked door)
+  at(I am in a Jail)
+
+item(Dry-Goods store)
+  at(I am in a Ghost Town)
+
+item(Sign)
+  noun(SIGN)
+  at(I am in a Dry Goods store)
+
+item(*SILVER SPURS*)
+  noun(SPUR)
+  at(I'm on back of 'Ole Paint)
+
+item(Stetson hat)
+  noun(HAT)
+  at(I am in a Barbershop)
+
+item(Which I'm wearing)
+  at(out-of-play)
+
+item(Small key)
+  noun(KEY)
+  at(out-of-play)
+
+item(Roll of tape)
+  noun(TAPE)
+  at(out-of-play)
+
+item(Taped up mirror)
+  at(out-of-play)
+
+item(*GOLD NUGGET*)
+  noun(GOLD)
+  at(out-of-play)
+
+item(Telegraph office)
+  at(I am in a Ghost Town)
+
+item(Empty matchbook)
+  noun(MATC)
+  at(out-of-play)
+
+item(Bed)
+  at(out-of-play)
+
+item(Hotel)
+  at(I am in a Ghost Town)
+
+item(Rattlesnake)
+  noun(SNAK)
+  at(I'm on Boot hill)
+
+item(Open grave)
+  at(out-of-play)
+
+item(*GOLD COIN*)
+  noun(COIN)
+  at(I am in a grave)
+
+item(Purple worm)
+  noun(WORM)
+  at(I am in a grave)
+
+item(Purple Slime)
+  noun(WORM)
+  at(out-of-play)
+
+item(Telegraph key)
+  at(I am in a Telegraph office)
+
+item(2 loose wires)
+  at(out-of-play)
+
+item(Spliced wire)
+  at(out-of-play)
+
+item(Pieces of wire)
+  noun(WIRE)
+  at(out-of-play)
+
+item(Large safe)
+  at(I am in a Telegraph office)
+
+item(*CASHBOX*)
+  noun(BOX)
+  at(I'm behind the counter)
+
+item(* $200 *)
+  noun($200)
+  at(out-of-play)
+
+item(*ORIENTAL GO BOARD*)
+  noun(GO)
+  at(I am in a hidden office)
+
+item(Hole kicked in wall & bare hoof print)
+  at(out-of-play)
+
+item(Keg of nails)
+  noun(KEG)
+  at(I am in a storeroom)
+
+item(Empty keg)
+  noun(KEG)
+  at(out-of-play)
+
+item(Keg of gunpowder)
+  noun(KEG)
+  at(out-of-play)
+
+item(Nails)
+  noun(NAIL)
+  at(out-of-play)
+
+item(Telegraph key)
+  at(I am in a line shack)
+
+item(Smoking open safe)
+  at(out-of-play)
+
+item(Line shack)
+  at(I am in a mountain trail)
+
+item(Plank)
+  noun(PLAN)
+  at(out-of-play)
+
+item(Hole in floor)
+  at(out-of-play)
+
+item(*PELTS*)
+  noun(PELT)
+  at(I am in a root cellar)
+
+item(Counter)
+  at(I am in a lobby)
+
+item(Ghostly square dance)
+  at(out-of-play)
+
+item(*SILVER CUP*)
+  noun(CUP)
+  at(out-of-play)
+
+item(*BAG GOLD DUST*)
+  noun(BAG)
+  at(out-of-play)
+
+item(Hammer)
+  noun(HAMM)
+  at(I am in a cell)
+
+item(TeePee)
+  at(I am in a hidden canyon)
+
+item(Indian ghost)
+  at(out-of-play)
+
+item(*SACRED TOM TOM*)
+  noun(TOM)
+  at(I am in a teepee)
+
+item(*TURQUOISE NECKLACE*)
+  noun(NECK)
+  at(I am in a teepee)
+
+/** AUTOS/COMMANDS */
+
+auto(3%)
+  if live(Lit candle)
+    say(Candle blew out!)
+    swap(Lit candle, Unlit candle)
+    look2
+
+auto(100%)
+  if here(Ghostly square dance) & with(Lit candle)
+    remove2(Ghostly square dance)
+    look2
+    say(something)
+    say(scared them off!)
+
+auto(100%)
+  if ! bit1
+    ctr = 0
+    continue
+    swapct(ctr2)
+    ctr = 12
+
+continue
+    swapct(ctr6)
+    say(Welcome to Adventure 9 'GHOST TOWN')
+    say(by Scott Adams dedicated: the Cherens)
+
+continue
+    set(bit1)
+    ctr = 25
+    swapct(ctr3)
+    ctr = 170
+
+continue
+    swapct(ctr7)
+    go(I am in a Telegraph office)
+    swaploc
+    go(I am in a saloon)
+
+continue
+    ctr = 1
+    swaploc21
+    go(I am in a Ghost Town)
+
+auto(100%)
+    ctr += 1
+    swapct(ctr7)
+    continue
+    ctr--
+
+continue
+  if ctr <= 25 & ! bit15 & ctr > 0
+    say(Its getting)
+    say(dark!)
+
+continue
+  if ctr <= 0 & ! bit17
+    say(Sunset!)
+    dark
+    look2
+    set(bit17)
+
+continue
+    swapct(ctr7)
+    swapct(ctr3)
+    ctr--
+    swapct(ctr3)
+
+continue
+  if at(I am in a ravine) & ! bit17
+    cleardark
+    look2
+
+auto(100%)
+  if bit17 & ! live(Ghostly square dance) & at(I am in a saloon) & ! with(Lit candle)
+    drop(Ghostly square dance)
+
+auto(100%)
+  if bit17 & ! at(I am in a saloon) & ! live(Ghostly square dance)
+    dropat(Ghostly square dance, I am in a saloon)
+
+auto(20%)
+  if ctr > 225
+    set(bit6)
+
+auto(20%)
+  if ! bit12
+    swapct(ctr3)
+    continue
+
+continue
+  if ctr <= 0
+    say(Ding-Ding)
+    say(Bell rings somewhere)
+    dropat(Wraithlike figure playing equally ghostly piano, I am in a saloon)
+
+continue
+  if ctr <= 0
+    ctr = 30
+    swapct(ctr4)
+    ctr = 10
+    swapct(ctr4)
+
+continue
+    swapct(ctr3)
+
+auto(100%)
+  if ! bit17 & live(Ghostly square dance)
+    remove2(Ghostly square dance)
+
+auto(100%)
+  if live(Wraithlike figure playing equally ghostly piano)
+    swapct(ctr4)
+    ctr--
+    continue
+
+continue
+  if ctr <= 0
+    remove2(Wraithlike figure playing equally ghostly piano)
+    cls
+
+continue
+    swapct(ctr4)
+
+auto(4%)
+  if ! live(Piano with set of keys)
+    say(Ghostly voice whispers:)
+    say(Vain...)
+
+auto(100%)
+  if bit18
+    clear(bit18)
+    swapct(ctr6)
+    ctr--
+    continue
+
+continue
+  if ctr <= 0
+    swap(Matches, Empty matchbook)
+
+continue
+    swapct(ctr6)
+
+auto(100%)
+  if holds(Keg of gunpowder) & holds(Lit candle)
+    say(Boom!)
+    say(TOO CLOSE! Pieces of me rain down for days!)
+    die
+
+auto(15%)
+  if at(I am in a Ghost Town) & ! live(*SILVER CUP*) & live(Ghostly square dance)
+    say(I hear)
+    say(something)
+    say(in saloon)
+
+auto(100%)
+  if holds(Which I'm wearing) & ! holds(Stetson hat)
+    remove(Which I'm wearing)
+
+auto(100%)
+  if bit16
+    clear(bit16)
+    remove2(Lit candle)
+    look2
+
+auto(100%)
+  if holds(Rattlesnake)
+    say(I'm snake bit)
+    die
+
+auto(100%)
+  if at(I am in a lot of trouble!)
+    set(bit8)
+
+auto(100%)
+  if bit8
+    set(bit9)
+
+auto(100%)
+  if bit9
+    clear(bit9)
+    continue
+    swapct(ctr2)
+
+continue
+    say(You've made)
+    sayctr
+    say(BONUS points out of a possible 50 in)
+    swapct(ctr2)
+
+continue
+    sayctr
+    say(moves)
+    score
+
+auto(100%)
+  if bit8
+    gameover
+
+auto(100%)
+    swapct(ctr2)
+    continue
+
+continue
+  if bit6
+    ctr -= 3
+    clear(bit6)
+
+continue
+  if bit2
+    ctr += 3
+    clear(bit2)
+
+continue
+  if bit3
+    ctr += 10
+    clear(bit3)
+
+continue
+  if bit5
+    ctr += 1
+    clear(bit5)
+
+continue
+    swapct(ctr2)
+
+action(MIX FUSE)
+    say(How?)
+
+action(GO SLEE)
+    say(Try: SLEEP)
+
+action(SAVE GAME)
+    swapct(ctr2)
+    ctr -= 2
+    swapct(ctr2)
+    save
+
+action(QUIT)
+    set(bit8)
+    set(bit9)
+
+action(DIG)
+  if ! holds(Shovel)
+    say(Sorry I can't)
+    say(I've nothing to do that with)
+
+action(DIG MANU)
+  if holds(Shovel) & here(Manure pile) & ! live(White crystals)
+    say(I found)
+    say(something)
+    drop(White crystals)
+
+action(GET MANU)
+  if here(Manure pile)
+    say(BARF!)
+    say(OK)
+    get(Male cow manure)
+    set(bit6)
+
+action(GO MOUN)
+    say(How?)
+
+action(SMEL SULF)
+  if with(Yellow powder)
+    say(OK)
+    say(reminds me of)
+    say(rotten eggs)
+
+action(MIX)
+  if with(White crystals) & with(Yellow powder) & with(Sagebrush charcoal)
+    say(OK)
+    continue
+    remove2(White crystals)
+    remove2(Yellow powder)
+
+continue
+    remove2(Sagebrush charcoal)
+    drop(Pile of gunpowder)
+
+continue
+  if ctr <= 80
+    set(bit3)
+
+action(GO RAVI)
+  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance) & ! bit10
+    say(Sorry I can't)
+    say(its full of sage brush, tumbleweed & is impassable)
+
+action(GO RAVI)
+  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance) & bit10
+    say(OK)
+    go(I am in a ravine)
+    cls
+
+action(BURN)
+  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance) & ! bit10 & with(Matches)
+    say(OK)
+    say(The dry wash is burnt clear)
+    set(bit10)
+    set(bit18)
+
+action(BREA MIRR)
+  if here(Mirror)
+    say(Crack!)
+    say(flying glass slices me up)
+    die
+
+action(LOOK MIRR)
+  if here(Mirror)
+    say(OK)
+    say(very pretty)
+
+action(SAY HOW)
+  if here(Indian ghost)
+    say(How?)
+    say(Geronimo says: 'Its easy! Happy Landings!')
+    go(I'm flat on my back in a manure pile)
+    continue
+
+continue
+  if ctr <= 100
+    look2
+    set(bit3)
+
+action(GO HOLE)
+  if here(Hole in the wall)
+    say(OK)
+    go(I am in a hidden office)
+    look2
+
+action(LOOK COMP)
+  if with(Compass) & with(Horseshoe)
+    say(OK)
+    say(its pointing to the)
+    say(horseshoe)
+
+action(GO JAIL)
+  if here(Jail) & ! bit11
+    say(Sorry I can't)
+    say(Doors closed, windows barred!)
+
+action(HIT GHOS)
+  if here(Wraithlike figure playing equally ghostly piano)
+    say(Sorry I can't)
+    say(My hand passes thru!)
+
+action(CLAP)
+  if here(Wraithlike figure playing equally ghostly piano)
+    set(bit12)
+    swap(Wraithlike figure playing equally ghostly piano, Piano with set of keys)
+    set(bit2)
+    say(Ghost stands, bows, vanishes!)
+
+action(GET KEY)
+  if here(Piano with set of keys) & ! here(Small key)
+    say(Silly, wrong type keys!)
+
+action(GO JAIL)
+  if here(Jail) & bit11 & live(* $200 *)
+    say(OK)
+    go(I am in a Jail)
+    look2
+
+action(PLAY)
+  if here(Piano with set of keys) & ! bit13
+    say(OK)
+    say(Odd)
+    say(something)
+    say(goes thunk!)
+
+action(PLAY)
+  if here(Piano with set of keys) & bit13
+    say(OK)
+    say(very pretty)
+
+action(OPEN DOOR)
+  if here(Jail) & ! bit11
+    say(with what?)
+    say(Inside bolt is latched!)
+
+action(WITH HORS)
+  if here(Jail) & ! bit11 & with(Horseshoe)
+    continue
+    say(Magnet!)
+    set(bit11)
+    say(it worked!)
+
+continue
+  if ctr <= 30
+    set(bit2)
+
+action(HIT BELL)
+  if with(Large bell) & at(I am in a hotel room) & ! live(Bed)
+    say(Whoosh!)
+    say(I see)
+    say(something)
+    drop(Bed)
+
+action(WITH)
+  if here(Jail) & ! bit11
+    saynoun
+    say( doesn't seem to do it!)
+
+action(OPEN PIAN)
+  if here(Piano with set of keys) & ! bit13
+    say(something)
+    say(falls out)
+    set(bit13)
+    drop(Map)
+
+action(BURN CAND)
+  if with(Unlit candle) & with(Matches)
+    say(OK)
+    swap(Unlit candle, Lit candle)
+    look2
+    set(bit18)
+
+action(UNLI CAND)
+  if with(Lit candle)
+    say(OK)
+    swap(Unlit candle, Lit candle)
+    look2
+
+action(LIST)
+  if here(Wraithlike figure playing equally ghostly piano)
+    say(very pretty)
+
+action(HIT BELL)
+  if with(Large bell)
+    say(OK)
+    say(Ding-Ding)
+    say(Ghostly voice whispers:)
+    say(Vain...)
+
+action(LOAD DERR)
+  if with(*GOLDEN DERRINGER*)
+    say(OK)
+    say(it already is)
+
+action(GO STOR)
+  if here(Dry-Goods store)
+    say(OK)
+    go(I am in a Dry Goods store)
+    look2
+
+action(READ SIGN)
+  if with(Sign)
+    say(OK)
+    say(Drop *TREASURES* then SCORE)
+
+action(OPEN DOOR)
+  if here(Locked door) & with(Small key)
+    say(OK)
+    swap(Locked door, Open door)
+
+action(GO DOOR)
+  if here(Open door)
+    say(OK)
+    go(I am in a cell)
+    look2
+
+action(OPEN DOOR)
+  if here(Locked door)
+    say(its locked!)
+
+action(SCOR)
+    set(bit9)
+
+action(GO STAB)
+  if here(Stable)
+    go(I am in a stable)
+    look2
+    say(OK)
+
+action(GO SALO)
+  if here(Saloon)
+    go(I am in a saloon)
+    look2
+    say(OK)
+
+action(LOOK COMP)
+  if with(Compass)
+    say(OK)
+    say(its pointing to the)
+    say(north)
+
+action(GO BARB)
+  if here(Barbershop)
+    go(I am in a Barbershop)
+    look2
+    say(OK)
+
+action(LIST)
+    say(OK)
+    say(I hear)
+    say(nothing special)
+
+action(WITH NAIL)
+  if with(Empty keg) & with(Nails)
+    remove2(Nails)
+    swap(Empty keg, Keg of nails)
+    say(OK)
+
+action(JUMP RAVI)
+  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance)
+    say(OK)
+    go(I'm on a ridge above a ravine)
+    look2
+
+action(GO RAVI)
+  if at(I'm on a ridge above a ravine)
+    say(Sorry I can't)
+    say(Too steep!)
+
+action(JUMP RAVI)
+  if at(I'm on a ridge above a ravine)
+    say(OK)
+    go(I'm on a ridge above a narrow ravine I see|mountains in the distance)
+    look2
+
+action(OPEN KEG)
+    say(it already is)
+
+action(SMEL MANU)
+    say(BARF!)
+    say(Sorry I can't)
+
+action(SHAK HAT)
+  if with(Stetson hat) & ! live(Small key)
+    drop(Small key)
+    set(bit2)
+    say(something)
+    say(falls out)
+
+action(GET KEY)
+  if with(Small key)
+    get(Small key)
+    say(OK)
+
+action(WEAR HAT)
+  if holds(Stetson hat)
+    superget(Which I'm wearing)
+    say(OK)
+    continue
+
+continue
+  if ! live(Small key)
+    say(Odd)
+    say(something)
+    say(feels strange)
+
+action(TAPE MIRR)
+  if with(Roll of tape) & here(Mirror)
+    say(OK)
+    swap(Mirror, Taped up mirror)
+
+action(BREA MIRR)
+  if here(Taped up mirror)
+    say(OK)
+    swap(Taped up mirror, Broken mirror)
+    drop(Hole in the wall)
+
+action(LOOK HAT)
+  if with(Stetson hat)
+    say(OK)
+    say(I see)
+    say(its my size)
+
+action(GO STAL)
+  if here(Stall)
+    say(OK)
+    go(I am in a stall)
+    look2
+
+action(KNOC GHOS)
+  if here(Wraithlike figure playing equally ghostly piano)
+    say(Sorry I can't)
+    say(My hand passes thru!)
+
+action(KNOC PIAN)
+  if here(Wraithlike figure playing equally ghostly piano)
+    say(Sorry I can't)
+    say(My hand passes thru!)
+
+action(CROS)
+  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance)
+    say(How?)
+
+action(DIG ROOF)
+  if with(Shovel) & at(I am in a Mine) & ! live(*GOLD NUGGET*)
+    drop(*GOLD NUGGET*)
+    say(I found)
+    say(something)
+    continue
+
+continue
+  if ctr <= 80
+    set(bit3)
+
+action(READ MAP)
+  if with(Map)
+    say(OK)
+    say(Its mine, dig roof!)
+
+action(GO TELE)
+  if with(Telegraph office)
+    say(OK)
+    go(I am in a Telegraph office)
+    look2
+
+action(GO PAIN)
+  if here('ole Paint)
+    say(OK)
+    go(I'm on back of 'Ole Paint)
+    look2
+
+action(GET PAIN)
+  if here('ole Paint)
+    say(What?)
+    say(Sorry I can't)
+    say(Too big!)
+
+action(GO HORS)
+  if here('ole Paint)
+    say(OK)
+    go(I'm on back of 'Ole Paint)
+    look2
+
+action(BURN MATC)
+  if with(Matches)
+    swapct(ctr6)
+    continue
+    set(bit18)
+
+continue
+    say(Match flares up...)
+    wait
+    wait
+
+continue
+  if bit15
+    cleardark
+    look2
+    set(bit14)
+
+continue
+  if bit14
+    wait
+    wait
+    wait
+
+continue
+  if bit14
+    clear(bit14)
+    dark
+    look2
+
+continue
+    swapct(ctr6)
+    say(...and then goes out)
+
+action(SAY GIDD)
+  if at(I'm on back of 'Ole Paint) & ! bit20
+    say(OK)
+    saynouncr
+    say(He won't budge)
+
+action(GO MINE)
+  if here(Entrance to a mine)
+    dark
+    go(I am in a Mine)
+    look2
+    say(OK)
+
+action(SLEE)
+    swapct(ctr7)
+    ctr = 175
+    swapct(ctr7)
+    continue
+
+continue
+    say(Good night)
+    clear(bit17)
+    wait
+    wait
+
+continue
+  if at(I am in a warm bed)
+    say(Good Morning)
+    say(I feel refreshed)
+    cleardark
+    look2
+
+continue
+  if ! at(I am in a warm bed)
+    say(Nights are cold! I caught Pneumonia)
+    die
+
+continue
+  if ! live(Worn out fiddle strings)
+    dropat(Worn out fiddle strings, I am in a saloon)
+
+action(GET UP)
+  if at(I am in a warm bed)
+    say(OK)
+    go(I am in a hotel room)
+    look2
+
+action(GO BED)
+  if here(Bed)
+    say(OK)
+    go(I am in a warm bed)
+    look2
+
+action(GO HOTE)
+  if here(Hotel)
+    say(OK)
+    go(I am in a lobby)
+    look2
+
+action(SHOO)
+  if with(Rattlesnake) & with(*GOLDEN DERRINGER*)
+    remove2(Rattlesnake)
+    say(shoots stream of water)
+    say(it worked!)
+    say(its gone)
+
+action(KILL SNAK)
+  if with(Rattlesnake)
+    say(snake won't let me)
+
+action(DIG)
+  if with(Rattlesnake)
+    say(snake won't let me)
+
+action(DIG)
+  if ! here(Rattlesnake) & at(I'm on Boot hill)
+    say(OK)
+    drop(Open grave)
+
+action(GO GRAV)
+  if here(Open grave)
+    say(OK)
+    go(I am in a grave)
+    look2
+
+action(KILL WORM)
+  if with(Purple worm)
+    say(OK)
+    swap(Purple worm, Purple Slime)
+    say(That felt good!)
+    set(bit5)
+
+action(GET KEY)
+  if with(Telegraph key)
+    say(Sorry I can't)
+
+action(MOVE KEY)
+  if ! live(Spliced wire)
+    say(OK)
+    say(nothing special)
+    say(happens)
+
+action(CONN WIRE)
+  if with(2 loose wires)
+    say(OK)
+    swap(2 loose wires, Spliced wire)
+    continue
+
+continue
+  if ctr <= 30
+    set(bit3)
+
+action(MOVE SAFE)
+  if here(Large safe) & ! live(2 loose wires) & ! live(Spliced wire) & ! live(Pieces of wire)
+    say(OK)
+    drop(2 loose wires)
+
+action(GET SAFE)
+  if here(Large safe)
+    say(Sorry I can't)
+    say(Too big!)
+
+action(OPEN SAFE)
+  if here(Large safe)
+    say(Sorry I can't)
+    say(its locked!)
+
+action(GET WIRE)
+  if with(Pieces of wire)
+    get(Pieces of wire)
+    say(OK)
+
+action(MOVE SAFE)
+  if here(Large safe)
+    say(OK)
+
+action(MOVE PAIN)
+  if here('ole Paint)
+    say(He won't budge)
+
+action(DIG)
+  if at(I am in a large field) & ! live(Pile of gunpowder) & ! live(Yellow powder)
+    say(OK)
+    drop(Yellow powder)
+    say(I found)
+    say(something)
+
+action(GO JAIL)
+  if here(Jail) & bit11 & ! live(* $200 *)
+    say(Ghostly voice whispers:)
+    go(I am in a Jail)
+    look2
+    say(Don't collect $200 then don't pass GO! CONTRAPOSITIVE.)
+
+action(PASS GO)
+  if ! live(* $200 *) & with(*ORIENTAL GO BOARD*)
+    drop(* $200 *)
+    say(Ghostly voice whispers:)
+    say(it worked!)
+
+action(MOVE PIAN)
+  if here(Piano with set of keys)
+    say(OK)
+
+action(GET WIRE)
+  if with(2 loose wires)
+    remove2(2 loose wires)
+    superget(Pieces of wire)
+    say(OK)
+
+action(OPEN DOOR)
+  if here(Jail) & bit11
+    say(it already is)
+
+action(WAIT)
+    ctr += 45
+    swapct(ctr7)
+    ctr -= 45
+    swapct(ctr7)
+
+action(WEAR SPUR)
+  if holds(*SILVER SPURS*)
+    say(OK)
+
+action(CLEA)
+    say(How?)
+
+action(LOOK MATC)
+  if with(Matches)
+    swapct(ctr6)
+    sayctr
+    say(left!)
+    swapct(ctr6)
+
+action(JUMP)
+    say(What?)
+
+action(BURN MAP)
+  if with(Matches) & with(Map)
+    set(bit18)
+    remove2(Map)
+    say(OK)
+
+action(BURN MAP)
+  if with(Lit candle) & with(Map)
+    say(OK)
+    remove2(Map)
+
+action(BURN GUNP)
+  if here(Pile of gunpowder) & with(Lit candle)
+    say(OK)
+    remove2(Pile of gunpowder)
+    say(Whoosh!)
+
+action(BURN GUNP)
+  if here(Pile of gunpowder) & with(Matches)
+    set(bit18)
+    say(OK)
+    remove2(Pile of gunpowder)
+    say(Whoosh!)
+
+action(BURN GUNP)
+  if with(Keg of gunpowder) & with(Lit candle)
+    say(OK)
+    say(Boom!)
+    say(TOO CLOSE! Pieces of me rain down for days!)
+    die
+
+action(BURN GUNP)
+  if with(Keg of gunpowder) & with(Matches)
+    say(OK)
+    say(Boom!)
+    say(TOO CLOSE! Pieces of me rain down for days!)
+    die
+
+action(MOVE KEY)
+  if live(Spliced wire) & here(Telegraph key)
+    say(Click)
+    say(SPARK! * * * *)
+    say(... .... .-  -.-  .  - ---  .--.  .--.  .  .-.)
+    continue
+
+continue
+  if with(Keg of gunpowder)
+    say(SPARK! * * * *)
+    say(Boom!)
+    say(TOO CLOSE! Pieces of me rain down for days!)
+    die
+
+continue
+  if with(Pile of gunpowder)
+    say(SPARK! * * * *)
+    say(Whoosh!)
+    remove2(Pile of gunpowder)
+
+action(SAY GIDD)
+  if at(I'm on back of 'Ole Paint) & bit20
+    say(OK)
+    saynouncr
+    continue
+    say(after a long ride)
+
+continue
+    say(He bucks, I'm thrown)
+    say(he rides off without me)
+    clear(bit20)
+
+continue
+    go(I am in a hidden canyon)
+    look2
+    remove2('ole Paint)
+
+action(GET INVE)
+    inventory
+
+action(INVE)
+    inventory
+
+action(FIND)
+    say(Sorry I can't)
+
+action(WITH GUNP)
+  if with(Empty keg) & with(Pile of gunpowder)
+    remove2(Empty keg)
+    swap(Pile of gunpowder, Keg of gunpowder)
+    say(OK)
+
+action(SAY)
+    say(OK)
+    saynouncr
+
+action(HELP)
+    say(Sorry I can't)
+
+action(BURN)
+  if with(Matches)
+    say(Its fireproof)
+
+action(BURN)
+  if with(Lit candle)
+    say(Its fireproof)
+
+action(BURN)
+    say(Sorry I can't)
+    say(I've nothing to do that with)
+
+action(SHOO)
+  if with(*GOLDEN DERRINGER*)
+    say(OK)
+    say(shoots stream of water)
+
+action(SPUR)
+  if holds(*SILVER SPURS*) & at(I'm on back of 'Ole Paint)
+    say(He bucks, I'm thrown)
+    go(I'm flat on my back in a manure pile)
+    dropat(Hole kicked in wall & bare hoof print, I am in a stall)
+
+action(DROP ON)
+    
+    say(Wear?)
+
+action(PLAY PIAN)
+  if here(Wraithlike figure playing equally ghostly piano)
+    say(Sorry I can't)
+    say(My hand passes thru!)
+
+action(COVE SNAK)
+  if here(Rattlesnake) & with(Stetson hat)
+    say(OK)
+    say(Thru the Hat!)
+    say(I'm snake bit)
+    die
+
+action(MOVE BED)
+  if here(Bed) & ! bit19
+    say(OK)
+    drop(Roll of tape)
+    set(bit19)
+
+action(GO MIRR)
+    say(Sorry I can't)
+    say(I'm not Alice!)
+
+action(EMPT KEG)
+  if with(Keg of nails)
+    say(OK)
+    swap(Empty keg, Keg of nails)
+    drop(Nails)
+
+action(EMPT KEG)
+  if with(Keg of gunpowder)
+    say(OK)
+    swap(Empty keg, Keg of gunpowder)
+    drop(Pile of gunpowder)
+
+action(GET GUNP)
+  if with(Pile of gunpowder)
+    say(How?)
+
+action(CLAP)
+    say(OK)
+
+action(MOVE BED)
+  if here(Bed)
+    say(OK)
+
+action(MOVE KEY)
+  if with(Telegraph key) & live(Spliced wire)
+    say(Click)
+    swaploc
+    continue
+
+continue
+  if here(Keg of gunpowder)
+    swap(Telegraph office, Smoking open safe)
+    say(Boom!)
+    remove2(Spliced wire)
+
+continue
+  if here(Pile of gunpowder)
+    remove2(Pile of gunpowder)
+
+continue
+    swaploc
+    look2
+
+action(MOVE KEY)
+  if with(Telegraph key) & ! live(Spliced wire)
+    say(nothing special)
+    say(happens)
+
+action(SHAK TOPP)
+    say(Is he a ghost? Anyway wrong idea.)
+
+action(BREA)
+    say(Sorry I can't)
+
+action(GO PAIN)
+  if at(I'm on back of 'Ole Paint)
+    say(may need to say a magic word here)
+
+action(LOOK DOOR)
+  if here(Jail)
+    say(There's not even a keyhole!)
+
+action(KNOC)
+    say(OK)
+    say(nothing special)
+    say(happens)
+
+action(TAPE)
+  if with(Roll of tape)
+    say(masking tape)
+    say( doesn't seem to do it!)
+
+action(GO HOLE)
+  if here(Hole kicked in wall & bare hoof print)
+    say(OK)
+    go(I am in a storeroom)
+    look2
+
+action(GO SHAC)
+  if here(Line shack)
+    say(OK)
+    go(I am in a line shack)
+    look2
+    say(Floorboards sure are creaky)
+
+action(LOOK FLOO)
+  if at(I am in a line shack) & ! live(Plank)
+    say(OK)
+    say(I see)
+    say(Loose plank here)
+
+action(GET PLAN)
+  if ! live(Plank)
+    superget(Plank)
+    drop(Hole in floor)
+    say(OK)
+
+action(GET PLAN)
+  if with(Plank)
+    get(Plank)
+    say(OK)
+
+action(GO HOLE)
+  if here(Hole in floor)
+    say(OK)
+    go(I am in a root cellar)
+    look2
+
+action(SMEL CRYS)
+  if with(White crystals)
+    say(OK)
+    say(reminds me of)
+    say(salt peter)
+
+action(GO COUN)
+  if here(Counter)
+    say(OK)
+    go(I'm behind the counter)
+    look2
+
+action(GET UP)
+  if at(I'm flat on my back in a manure pile)
+    say(OK)
+    go(I am in a stable)
+    look2
+
+action(DANC)
+  if here(Ghostly square dance) & ! live(*SILVER CUP*)
+    say(OK)
+    superget(*SILVER CUP*)
+    say(very pretty)
+    say(I won a prize!)
+
+action(DANC)
+    say(OK)
+    say(very pretty)
+    say(nothing special)
+    say(happens)
+
+action(LOOK SAFE)
+  if here(Smoking open safe) & ! live(*BAG GOLD DUST*)
+    say(OK)
+    drop(*BAG GOLD DUST*)
+    say(I found)
+    say(something)
+
+action(SHOE)
+  if with(Nails) & here('ole Paint) & with(Horseshoe) & with(Hammer)
+    say(OK)
+    remove2(Horseshoe)
+    continue
+
+continue
+    remove2(Nails)
+    set(bit20)
+
+action(SHOE)
+  if here('ole Paint) & with(Keg of nails)
+    say(Sorry I can't)
+    say(reach a nail)
+
+action(DIG)
+  if holds(Shovel)
+    say(I found)
+    say(nothing special)
+
+action(GO TEEP)
+  if here(TeePee)
+    say(OK)
+    go(I am in a teepee)
+    look2
+
+action(HIT TOM)
+  if with(*SACRED TOM TOM*) & ! live(Indian ghost)
+    say(Boom!)
+    say(Boom!)
+    drop(Indian ghost)
+    say(it worked!)
+
+action(HIT TOM)
+  if with(*SACRED TOM TOM*) & live(Indian ghost)
+    
+    say(Boom!)
+    say(Boom!)
+
+action(SHOE)
+  if here('ole Paint)
+    say(Sorry I can't)
+    say(something)
+    say(is missing)
+
+action(HIT GHOS)
+  if here(Indian ghost)
+    say(Sorry I can't)
+    say(My hand passes thru!)
+
+action(FILL KEG)
+  if with(Empty keg)
+    say(OK)
+    say(with what?)
+
+action(LOOK)
+    say(OK)
+    say(I see)
+    say(nothing special)
+    look2
+
+action(MIX)
+    say(Sorry I can't)
+    say(something)
+    say(is missing)
+
+action(GO HORS)
+  if at(I'm on back of 'Ole Paint)
+    say(may need to say a magic word here)
+
+action(SPUR)
+    say(nothing special)
+    say(happens)
+
+action(WITH)
+    say(Sorry I can't)
+    saynoun
+    say( doesn't seem to do it!)
+
+action(GO MANU)
+    say(BARF!)
+    say(Sorry I can't)

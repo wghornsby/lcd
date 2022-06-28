@@ -1,0 +1,1510 @@
+/** ADVENTURE 6 v 119 */
+
+wordlen = 4
+carrymax = 6
+lightlen = 10000
+nounverbs = 80
+messages = 95
+actions = 224
+items = 56
+rooms = 36
+startroom(I am in a one man scoutship)
+treaasures = 5
+treasureroom(I am in a storage hold of the mother ship)
+
+/** VOCABULARY */
+
+verbs(GO=WALK=RUN=ENTE=CLIM)
+verbs(GET=TAKE=GRAB=.=UNST)
+verbs(FIRE=ACTI)
+verbs(DROP=PUT=DISC=LEAV=THRO)
+verbs(PUSH=PRES=BANG=HIT)
+verbs(CONN=HOOK)
+verbs(TOUC=RUB=FEEL=PET)
+verbs(LOOK=DESC=EXAM=SEE)
+verbs(SAY=YELL=HOLL=SCRE)
+verbs(CHAR=RECH)
+verbs(REMO=UNWE)
+verbs(SHOO=BLAS)
+verbs(SET=RESE)
+verbs(WEAR=FAST)
+verbs(BEND=TWIS=BREA)
+verbs(CLOS=SHUT=SLAM)
+verbs(JUMP=FALL)
+verbs(DIG=PICK=CRA)
+verbs(FIX=REPA)
+verbs(LIFT=RAIS)
+verbs(SAVE,QUIT,HELP,TO,PULL,READ,KICK,WAKE,DRIN,AT,FIND,MOVE,SUIT,SCOR,INVE,OPEN,MELT,EMPT)
+
+nouns(FLAS=BRAN)
+nouns(SUIT=HELM)
+nouns(PHAS=GUN)
+nouns(CURT=LIGH)
+nouns(SHIP=SCOU=AIRL)
+nouns(PLAS=FING)
+nouns(MOUN=ICE=WALL)
+nouns(GROU=PLAN)
+nouns(TREE=SLIM)
+nouns(NORT,SOUT,EAST,WEST,UP,DOWN,INVE,HOUN,JUNG,VIEW,HELL,CRYS,HELP,OUT,IN,ZOO,SHOV,MACH,MINE,HOSE,RED,BLUE,BUTT,CONS,DOOR,BLAC,SNOW,ROD,CAVE,PICK)
+nouns(HOLD,HATC,TOOL,CONN,GAME,LEDG,AROU,META,CRAW,DIAM,BUCK,BELT,PAIN,HOLE,SCRI,ALIE,NOVA,DUST,SCUL,BOUL,DEST,STUN,GAUG,GOGG,BOX,YELL,SIGN,WHIT)
+
+/** ROOMS */
+
+room(I am in a one man scoutship)
+  D(I am in a storage hold)
+
+room(I am in a small airlock)
+
+room(I am in a large cavern)
+  U(I'm on a small planetoid)
+
+room(I'm on a small planetoid)
+  N(I'm on a small planetoid)
+  S(I'm on a small planetoid)
+  E(I'm on a small planetoid)
+  W(I'm on a small planetoid)
+
+room(I'm on a small planetoid)
+  N(I'm on a small planetoid)
+  S(I'm on a small planetoid)
+  E(I'm on a small planetoid)
+  W(I'm on a small planetoid)
+
+room(I am in a strange hexagonal room)
+
+room(I am in a storage hold)
+  U(I am in a one man scoutship)
+
+room(I'm on a small planetoid)
+  N(I'm on a small planetoid)
+  S(I'm on a small planetoid)
+  E(I'm on a small planetoid)
+  W(I'm on a small planetoid)
+
+room(I am in a Large grassy plain at edge of a jungle)
+
+room(I am in a methane snow storm)
+  N(I am in a methane snow storm)
+  S(I am in a methane snow storm)
+  E(I am in a methane snow storm)
+  W(I am in a methane snow storm)
+
+room(I am in a small derelict spacecraft)
+
+room(I'm outside the airlock on a ledge.|The ground is 90 meters below)
+
+room(I am in a Alien Art Museum)
+
+room(I am in a deserted Jovian mining colony)
+
+room(I am in a Strange jungle)
+  N(I am in a Strange jungle)
+  S(I am in a Strange jungle)
+  E(I'm in the ruins of an intergalatic ZOO)
+  W(I am in a Large grassy plain at edge of a jungle)
+
+room(I am in a .)
+
+room(I am in a BLACK EMPTINESS)
+
+room(I am in a methane snow storm)
+  N(I am in a methane snow storm)
+  S(I am in a methane snow storm)
+  E(I am in a methane snow storm)
+  W(I am in a methane snow storm)
+
+room(I am in a methane snow storm)
+  N(I am in a methane snow storm)
+  S(I am in a methane snow storm)
+  E(I am in a methane snow storm)
+  W(I am in a methane snow storm)
+
+room(I am in a methane snow storm)
+  N(I am in a methane snow storm)
+  S(I am in a methane snow storm)
+  E(I am in a methane snow storm)
+  W(I am in a methane snow storm)
+
+room(I'm in the ruins of an intergalatic ZOO)
+  S(I am in a Strange jungle)
+
+room(I am in a storage hold of the mother ship)
+
+room(I am in a maintenance crawl way)
+  U(I am in a storage hold)
+
+room(I am in a hollow ice mound)
+
+room(I am in a )
+
+room(I am in a )
+
+room(I am in a )
+
+room(I am in a )
+
+room(I am in a )
+
+room(I am in a )
+
+room(I am in a )
+
+room(I am in a )
+
+room(I am in a )
+
+room(I am in a )
+
+room(I am in a lot of TROUBLE!)
+
+/** ITEMS */
+
+item(.)
+  at(out-of-play)
+
+item(Strange flickering curtain of light)
+  at(out-of-play)
+
+item(Scoutship)
+  at(out-of-play)
+
+item(Maintenance access hatch)
+  noun(HATC)
+  at(I am in a storage hold)
+
+item(Alien sign)
+  noun(SIGN)
+  at(I am in a Alien Art Museum)
+
+item(Control console)
+  at(I am in a one man scoutship)
+
+item(Space suit)
+  noun(SUIT)
+  at(I am in a storage hold)
+
+item(which I'm wearing)
+  at(out-of-play)
+
+item(Black Hole)
+  at(I am in a BLACK EMPTINESS)
+
+item(.)
+  at(out-of-play)
+
+item(Phaser)
+  noun(PHAS)
+  at(I am in a storage hold)
+
+item(Phaser)
+  noun(PHAS)
+  at(out-of-play)
+
+item(Closed door)
+  at(I am in a one man scoutship)
+
+item(Open door)
+  at(out-of-play)
+
+item(Strange flickering curtain of light)
+  at(I am in a strange hexagonal room)
+
+item(Cave)
+  at(I'm on a small planetoid)
+
+item(Empty flask)
+  noun(FLAS)
+  at(out-of-play)
+
+item(Red button by door)
+  at(I am in a small airlock)
+
+item(Closed outer door)
+  at(I am in a small airlock)
+
+item(OPen outer door)
+  at(out-of-play)
+
+item(Closed inner door)
+  at(out-of-play)
+
+item(Open inner door)
+  at(I am in a small airlock)
+
+item(Alien machine)
+  at(I am in a small derelict spacecraft)
+
+item(Hose connects my suit to machine)
+  at(out-of-play)
+
+item(Large boulder)
+  at(I am in a large cavern)
+
+item(Small piece of plastic flush in the wall)
+  at(I am in a strange hexagonal room)
+
+item(.)
+  at(out-of-play)
+
+item(Rod jutting straight out of the wall)
+  at(I am in a strange hexagonal room)
+
+item(Broken piece of rod)
+  noun(ROD)
+  at(out-of-play)
+
+item(Strange light far to the NORTH)
+  at(I am in a methane snow storm)
+
+item(Rigilian Dia-Ice Hound)
+  noun(HOUN)
+  at(I'm in the ruins of an intergalatic ZOO)
+
+item(Stunned Dia-Ice Hound)
+  noun(HOUN)
+  at(out-of-play)
+
+item(Viewport)
+  at(I am in a small derelict spacecraft)
+
+item(Sign: 'Leave Treasures here say: SCORE')
+  at(I am in a storage hold of the mother ship)
+
+item(* ANCIENT FLASK SAURIAN BRANDY *)
+  noun(FLAS)
+  at(I am in a deserted Jovian mining colony)
+
+item(Empty crystal holder)
+  at(I am in a maintenance crawl way)
+
+item(Broken pieces of Power Crystal)
+  noun(CRYS)
+  at(I am in a maintenance crawl way)
+
+item(Broken rod in power holder)
+  at(out-of-play)
+
+item(Large ice mound)
+  at(out-of-play)
+
+item(Ancient ice pick)
+  noun(PICK)
+  at(out-of-play)
+
+item(Broken ice pick)
+  noun(PICK)
+  at(out-of-play)
+
+item(Short twisted piece of metal)
+  noun(META)
+  at(I am in a deserted Jovian mining colony)
+
+item(Entrance to a crawlway)
+  at(out-of-play)
+
+item(* RIGILIAN ICE DIAMOND *)
+  noun(DIAM)
+  at(I am in a hollow ice mound)
+
+item(* STRANGE ALIEN BELT *)
+  noun(BELT)
+  at(out-of-play)
+
+item(which I'm wearing)
+  at(out-of-play)
+
+item(& its activated)
+  at(out-of-play)
+
+item(* RARE ALIEN PAINTING *)
+  noun(PAIN)
+  at(I am in a Alien Art Museum)
+
+item(Rock dust)
+  noun(DUST)
+  at(out-of-play)
+
+item(Centurion Slime Trees)
+  at(I am in a Strange jungle)
+
+item(* ALIEN SCULPTURE *)
+  noun(SCUL)
+  at(I am in a Alien Art Museum)
+
+item(Strange looking goggles)
+  noun(GOGG)
+  at(I am in a strange hexagonal room)
+
+item(which I'm wearing)
+  at(out-of-play)
+
+item(Shovel)
+  noun(SHOV)
+  at(I am in a storage hold)
+
+item(Broken splintered shovel)
+  noun(SHOV)
+  at(out-of-play)
+
+item(EVERYTHING HAS A BLUEISH TINT)
+  at(out-of-play)
+
+/** AUTOS/COMMANDS */
+
+auto(100%)  // JOVIAN SQUASH
+  if at(I am in a deserted Jovian mining colony) & ! holds(which I'm wearing)
+    say(The gravity here is very)
+    say(strong.)
+    say(I'm SQUASHED!)
+    gameover
+
+auto(100%)  // AIR GOOD
+  if here(Closed outer door)
+    clear(bit2)
+
+auto(100%)  // JOVIAN SQUASH
+  if at(I am in a deserted Jovian mining colony) & ! holds(& its activated)
+    say(The gravity here is very)
+    say(strong.)
+    say(I'm SQUASHED!)
+    gameover
+
+auto(100%)  // INTRO
+  if ! bit1
+    set(bit1)
+    continue
+    set(bit5)
+    set(bit6)
+
+continue  // SET PHASER
+    swapct(ctr2)
+    ctr = 28
+    swapct(ctr2)
+    say(Welcome to Adventure: 6 'STRANGE ODYSSEY' by Scott Adams.|Dedicated to the Novaks.|)
+
+continue  // AIR SUIT
+    swapct(ctr1)
+    ctr = 110
+    swapct(ctr1)
+    go(I am in a strange hexagonal room)
+
+continue  // ROD COUNTER
+    swapct(ctr3)
+    ctr = 2
+    swapct(ctr3)
+    swaploc
+
+continue  // STRT RM.GOGGLE CNTR
+    go(I am in a one man scoutship)
+    swapct(ctr5)
+    ctr = 20
+    swapct(ctr5)
+
+auto(100%)  // AIR SUIT
+  if with(which I'm wearing)
+    swapct(ctr1)
+    ctr--
+    continue
+
+continue
+  if ctr <= 27
+    say(Air is getting stale! Read gauge!)
+
+continue
+  if ctr <= 0
+    say(My air ran out!)
+    die
+
+continue
+    swapct(ctr1)
+
+auto(100%)  // ACT BELT
+  if holds(* STRANGE ALIEN BELT *) & live(& its activated) & ! holds(& its activated)
+    get(& its activated)
+
+auto(100%)  // ACT BELT
+  if here(* STRANGE ALIEN BELT *) & live(& its activated) & ! here(& its activated)
+    drop(& its activated)
+
+auto(30%)  // HOUND ATTACKS
+  if holds(Rigilian Dia-Ice Hound)
+    say(Ice Hound attacks me unexpectidly!)
+    die
+
+auto(15%)  // HOUND ATTACKS
+  if here(Rigilian Dia-Ice Hound)
+    say(Ice Hound attacks me unexpectidly!)
+    die
+
+auto(100%)  // HOUND WAKES
+  if live(Stunned Dia-Ice Hound)
+    swapct(ctr4)
+    ctr--
+    continue
+
+continue
+  if ctr <= 0
+    swap(Stunned Dia-Ice Hound, Rigilian Dia-Ice Hound)
+
+continue
+  if with(Rigilian Dia-Ice Hound)
+    say(It woke up!)
+
+continue  // RESET COUNTER
+    swapct(ctr4)
+
+auto(100%)  // PHASER FIRED
+  if bit4
+    continue
+    clear(bit4)
+    swapct(ctr2)
+
+continue  // STUN
+  if ! bit3
+    ctr -= 4
+    swapct(ctr2)
+
+continue  // KILL
+  if bit3
+    ctr -= 7
+    swapct(ctr2)
+
+auto(100%)  // DIE NO AIR
+  if bit2 & ! holds(which I'm wearing)
+    say(It is)
+    say(not)
+    say(breathable.)
+    gameover
+
+auto(100%)  // EMPTY PHASER
+    swapct(ctr2)
+    continue
+
+continue
+  if ctr <= 0 & ! live(Phaser)
+    swap(Phaser, Phaser)
+
+continue
+    swapct(ctr2)
+
+auto(100%)  // DROP ROD
+  if here(Empty crystal holder) & here(Broken piece of rod)
+    swap(Broken piece of rod, Broken rod in power holder)
+    remove2(Empty crystal holder)
+    say(Tight fit!)
+    look2
+
+auto(100%)  // ICE HOUND
+  if here(Rigilian Dia-Ice Hound)
+    continue
+
+continue
+  if at(I am in a methane snow storm)
+    dropat(Large ice mound, I am in a methane snow storm)
+    remove2(Rigilian Dia-Ice Hound)
+    say(The Ice Hound burrows off...)
+
+continue
+  if at(I am in a methane snow storm)
+    dropat(Large ice mound, I am in a methane snow storm)
+    remove2(Rigilian Dia-Ice Hound)
+    say(The Ice Hound burrows off...)
+
+continue
+  if at(I am in a methane snow storm)
+    dropat(Large ice mound, I am in a methane snow storm)
+    remove2(Rigilian Dia-Ice Hound)
+    say(The Ice Hound burrows off...)
+
+continue
+  if at(I am in a methane snow storm)
+    dropat(Large ice mound, I am in a methane snow storm)
+    remove2(Rigilian Dia-Ice Hound)
+    say(The Ice Hound burrows off...)
+
+continue
+  if ! live(Rigilian Dia-Ice Hound)
+    dropat(Rigilian Dia-Ice Hound, I am in a hollow ice mound)
+
+auto(100%)  // DEAD!
+  if at(I am in a lot of TROUBLE!)
+    gameover
+
+auto(100%)  // .
+  if bit9
+    swapct(ctr5)
+    ctr--
+    continue
+
+continue  // BURNT OUT
+  if ctr <= 1
+    clear(bit9)
+    set(bit10)
+
+continue  // WEARING GOOD
+  if holds(which I'm wearing) & holds(Strange looking goggles)
+    cleardark
+    drop(EVERYTHING HAS A BLUEISH TINT)
+    look2
+
+continue
+    swapct(ctr5)
+
+auto(100%)  // WEAR OFF GOGGLES
+  if holds(which I'm wearing) & ! bit9 & ! bit15
+    dark
+    look2
+
+action(LOOK GAUG)
+  if with(Space suit)
+    say(There's writing there)
+
+action(CHAR)
+  if with(Space suit) & here(.)
+    say(OK)
+    swapct(ctr1)
+    ctr = 75
+    swapct(ctr1)
+
+action(SET PHAS)
+  if with(Phaser)
+    say('TO STUN' or 'TO DESTROY' ?)
+    say((use 2 words))
+
+action(TO STUN)
+  if with(Phaser)
+    clear(bit3)
+    say(OK)
+
+action(TO DEST)
+  if with(Phaser)
+    set(bit3)
+    say(OK)
+
+action(DIG)
+  if at(I am in a hollow ice mound)
+    say(I can't do that)
+    say(Ice is very smooth & hard!)
+
+action(WAKE HOUN)
+  if with(Stunned Dia-Ice Hound)
+    say(OK)
+    swap(Stunned Dia-Ice Hound, Rigilian Dia-Ice Hound)
+
+action(PUSH RED)
+  if at(I am in a one man scoutship)
+    swap(Closed door, Open door)
+    say(OK)
+
+action(PUSH RED)
+  if here(Red button by door)
+    say(OK)
+    swap(Closed outer door, OPen outer door)
+    swap(Closed inner door, Open inner door)
+    continue
+
+continue
+  if ! bit7 & here(OPen outer door)
+    set(bit2)
+    say(Whooosh!)
+
+continue
+  if ! bit7 & here(Closed outer door)
+    clear(bit2)
+
+action(PUSH BLAC)
+  if with(Alien machine) & ! here(Hose connects my suit to machine)
+    say(OK)
+    say(Some GAS comes out of the hose for awhile then stops.)
+
+action(PUSH WHIT)
+  if with(Alien machine) & ! bit8
+    say(OK)
+    say(Nothing happens)
+    set(bit8)
+
+action(PUSH BLAC)
+  if with(Alien machine) & with(Hose connects my suit to machine) & ! bit8
+    say(OK)
+    say(Some GAS comes out of the hose for awhile then stops.)
+    say(It is)
+    continue
+
+continue
+    say(not)
+    say(breathable.)
+    die
+
+action(PUSH BLAC)  // CHARGE SUIT
+  if with(Alien machine) & with(Hose connects my suit to machine) & bit8
+    swapct(ctr1)
+    say(OK)
+    continue
+    ctr += 25
+
+continue
+  if ctr > 110
+    say(Some GAS comes out of the hose for awhile then stops.)
+    say(|My suit popped open!)
+    say(My air ran out!)
+    die
+
+continue
+    say(Some GAS comes out of the hose for awhile then stops.)
+    swapct(ctr1)
+
+action(GET HOSE)
+  if here(Alien machine) & ! live(Hose connects my suit to machine)
+    say(OK)
+    drop(Hose connects my suit to machine)
+
+action(DROP HOSE)
+  if here(Hose connects my suit to machine)
+    say(OK)
+    remove2(Hose connects my suit to machine)
+
+action(GO DOOR)
+  if here(OPen outer door) & ! bit7
+    say(OK)
+    go(I'm outside the airlock on a ledge.|The ground is 90 meters below)
+    look2
+
+action(GO DOOR)
+  if here(Open inner door)
+    say(OK)
+    go(I am in a one man scoutship)
+    look2
+
+action(GO DOOR)
+  if here(Open door)
+    say(OK)
+    go(I am in a small airlock)
+    look2
+
+action(LOOK CONS)  // .
+  if here(Control console)
+    say(Blue button marked 'BLAST OFF' & a unmarked red button)
+
+action(PUSH BLUE)
+  if here(Control console) & ! live(Broken rod in power holder)
+    say(OK)
+    say(Console replies: 'INSUFFICIENT POWER')
+    say(Warning light says: 'POWER CRYSTAL DAMAGED')
+    say(Nothing happens)
+
+action(SHOO BOUL)
+  if holds(Phaser) & bit3 & here(Large boulder)
+    say(I fire the Phaser,)
+    continue
+    set(bit4)
+    wait
+
+continue
+    swap(Large boulder, Strange flickering curtain of light)
+    say(I destroyed it!)
+    drop(Rock dust)
+    look2
+
+action(PUSH WHIT)
+  if with(Alien machine) & bit8
+    say(OK)
+    say(Nothing happens)
+    clear(bit8)
+
+action(WEAR SUIT)
+  if with(Space suit)
+    superget(which I'm wearing)
+    superget(Space suit)
+    say(OK)
+
+action(SUIT UP)
+  if with(Space suit)
+    superget(which I'm wearing)
+    superget(Space suit)
+    say(OK)
+
+action(DROP SUIT)
+  if with(Space suit)
+    drop(Space suit)
+    remove2(which I'm wearing)
+    say(OK)
+
+action(LOOK CURT)
+  if here(Strange flickering curtain of light)
+    say(Its some sort of force field.)
+
+action(SHOO CURT)
+  if holds(Phaser) & here(Strange flickering curtain of light)
+    say(Its some sort of force field.)
+    say(I fire the Phaser,)
+    say(Either I missed or beam was absorbed without visible effect!)
+    set(bit4)
+
+action(SHOO SHIP)
+  if holds(Phaser) & bit3 & here(Scoutship)
+    say(I fire the Phaser,)
+    set(bit4)
+    say(I destroyed it!)
+    remove2(Scoutship)
+
+action(GO CAVE)
+  if here(Cave)
+    say(OK)
+    go(I am in a large cavern)
+    look2
+
+action(SHOO)  // IN SHIP
+  if holds(Phaser) & bit3 & at(I am in a one man scoutship)
+    say(I fire the Phaser,)
+    go(I am in a lot of TROUBLE!)
+    say(I ruined the ship!)
+    gameover
+
+action(SHOO)  // IN SHIP
+  if holds(Phaser) & bit3 & at(I am in a storage hold)
+    say(I fire the Phaser,)
+    go(I am in a lot of TROUBLE!)
+    say(I ruined the ship!)
+    gameover
+
+action(SHOO)  // IN SHIP
+  if holds(Phaser) & bit3 & at(I am in a small airlock)
+    say(I fire the Phaser,)
+    go(I am in a lot of TROUBLE!)
+    say(I ruined the ship!)
+    gameover
+
+action(LOOK PHAS)
+  if with(Phaser) & ! bit15
+    continue
+    swapct(ctr2)
+    say(Charge left registers:)
+    sayctr
+
+continue
+  if bit3
+    say(|Phaser is set on:)
+    say(DESTROY!)
+    swapct(ctr2)
+
+continue
+  if ! bit3
+    say(|Phaser is set on:)
+    say(stun.)
+    swapct(ctr2)
+
+action(LOOK PHAS)  // EMPTY
+  if with(Phaser) & ! bit15
+    say(Charge left registers:)
+    say(Its empty.)
+
+action(GO HOLE)
+  if here(Black Hole)
+    say(Tidal force rips me apart!)
+    die
+
+action(PULL ROD)
+  if here(Rod jutting straight out of the wall) & ! bit5
+    say(Nothing happens)
+    say(It seems to be as far)
+    say(out)
+    say(as it will go.)
+
+action(PUSH ROD)
+  if here(Rod jutting straight out of the wall) & bit5
+    say(Nothing happens)
+    say(It seems to be as far)
+    say(in)
+    say(as it will go.)
+
+action(BEND ROD)
+  if here(Rod jutting straight out of the wall)
+    say(Odd it only required very little force)
+    say(for it to break off in my hand with a|CRYSTALLINE snap!)
+    remove2(Rod jutting straight out of the wall)
+    superget(Broken piece of rod)
+
+action(GET ROD)
+  if here(Rod jutting straight out of the wall)
+    say(HOW?)
+
+action(GET ROD)
+  if with(Broken piece of rod)
+    say(OK)
+    get(Broken piece of rod)
+
+action(SHOO ROD)
+  if holds(Phaser) & bit3 & here(Rod jutting straight out of the wall)
+    say(I fire the Phaser,)
+    say(I destroyed it!)
+    remove2(Rod jutting straight out of the wall)
+    set(bit4)
+
+action(SHOO PLAS)
+  if holds(Phaser) & bit3 & here(Small piece of plastic flush in the wall)
+    say(I fire the Phaser,)
+    say(I destroyed it!)
+    remove2(Small piece of plastic flush in the wall)
+    set(bit4)
+
+action(SHOO PLAS)
+  if holds(Phaser) & ! bit3 & here(Small piece of plastic flush in the wall)
+    say(The plastic GLOWED briefly)
+    set(bit4)
+
+action(PUSH PLAS)
+  if here(Small piece of plastic flush in the wall)
+    say(Odd it only required very little force)
+    say(for it to shatter!)
+    say(Wiring behind plastic shorts & I'm electrocuted!)
+    die
+
+action(SHOO PLAS)
+  if holds(Phaser) & bit3 & with(Strange light far to the NORTH)
+    say(I fire the Phaser,)
+    say(I destroyed it!)
+    remove2(Strange light far to the NORTH)
+    set(bit4)
+
+action(TOUC PLAS)  // OUT
+  if here(Small piece of plastic flush in the wall) & ! bit5
+    say(The plastic GLOWED briefly)
+    continue
+    swapct(ctr3)
+    ctr = 0
+
+continue  // RESET
+    swapct(ctr3)
+
+action(PUSH ROD)
+  if here(Rod jutting straight out of the wall) & ! bit5
+    continue
+    say(Odd it only required very little force)
+    say(to slide)
+    swapct(ctr3)
+
+continue
+    say(in)
+    ctr += 1
+    set(bit5)
+
+continue
+    say(The plastic GLOWED briefly)
+    sayctr
+    say(times.)
+    swapct(ctr3)
+
+action(PULL ROD)
+  if here(Rod jutting straight out of the wall) & bit5
+    say(Odd it only required very little force)
+    say(to slide)
+    say(out)
+    clear(bit5)
+
+action(READ SIGN)
+  if with(Alien sign)
+    say(OK)
+    say(Get Adventure 7 'MYSTERY FUN HOUSE' from your favorite Dealer!|Have you gotten your Adventure T-SHIRT yet?|)
+
+action(TOUC PLAS)  // IN
+  if here(Small piece of plastic flush in the wall) & bit5
+    continue
+    swapct(ctr3)
+    swaploc
+    say(OK)
+
+continue  // TRANSFERS
+    say(I feel strangely disoriented for a moment!)
+    wait
+    wait
+
+continue
+  if ctr = 1
+    go(I am in a large cavern)
+    set(bit6)
+
+continue
+  if ctr = 2
+    go(I am in a Large grassy plain at edge of a jungle)
+    clear(bit6)
+
+continue
+  if ctr = 3
+    go(I am in a methane snow storm)
+    set(bit6)
+
+continue
+  if ctr = 4
+    go(I am in a small derelict spacecraft)
+    set(bit6)
+
+continue
+  if ctr = 5
+    go(I am in a BLACK EMPTINESS)
+    set(bit6)
+
+continue
+  if ctr = 6
+    go(I am in a Alien Art Museum)
+
+continue
+  if ctr = 7
+    go(I am in a deserted Jovian mining colony)
+
+continue
+  if ctr > 7
+    go(I am in a BLACK EMPTINESS)
+    set(bit6)
+
+continue
+    swaploc
+    look2
+    swapct(ctr3)
+
+action(SHOO PHAS)
+    say(Try: 'SHOOT SOMETHING')
+
+action(TOUC CURT)
+  if here(Strange flickering curtain of light)
+    say(OK)
+    say(My hand went THROUGH it!)
+
+action(TOUC CURT)
+  if here(Strange flickering curtain of light)
+    say(OK)
+    say(My hand went THROUGH it!)
+
+action(DIG)
+  if ! live(Broken ice pick) & with(Shovel) & at(I am in a Large grassy plain at edge of a jungle) & ! live(Ancient ice pick)
+    drop(Ancient ice pick)
+    say(OK)
+    say(I found something.)
+
+action(GO CURT)  // OUT NO AIR
+  if at(I am in a strange hexagonal room) & bit6
+    swaploc
+    drop(Strange flickering curtain of light)
+    look2
+    set(bit2)
+
+action(GO CURT)  // IN GOOD AIR
+  if here(Strange flickering curtain of light) & ! live(Hose connects my suit to machine)
+    swaploc
+    look2
+    clear(bit2)
+    say(OK)
+
+action(GO CURT)  // OUT AIR
+  if at(I am in a strange hexagonal room) & ! bit6
+    swaploc
+    drop(Strange flickering curtain of light)
+    look2
+    clear(bit2)
+
+action(SHOO HOUN)
+  if holds(Phaser) & with(Rigilian Dia-Ice Hound) & bit3
+    set(bit4)
+    say(I fire the Phaser,)
+    say(I destroyed it!)
+    remove2(Rigilian Dia-Ice Hound)
+
+action(SHOO HOUN)  // STUN IT
+  if holds(Phaser) & with(Rigilian Dia-Ice Hound) & ! bit3
+    set(bit4)
+    say(I fire the Phaser,)
+    continue
+    say(its stunned!)
+
+continue
+    swap(Rigilian Dia-Ice Hound, Stunned Dia-Ice Hound)
+    swapct(ctr4)
+    ctr = 17
+    swapct(ctr4)
+
+action(GO CURT)  // IN HOSE
+  if here(Strange flickering curtain of light) & live(Hose connects my suit to machine)
+    say(Hose rips out)
+    say(|My suit popped open!)
+    die
+
+action(JUMP)  // GO SHIP
+  if here(Scoutship)
+    say(OK)
+    go(I am in a small airlock)
+    look2
+
+action(LOOK VIEW)
+  if here(Viewport) & ! bit15
+    say(OK)
+    say(We're drifting in space!)
+
+action(SCOR)
+    score
+
+action(LOOK MACH)
+  if with(Alien machine) & ! bit15
+    say(OK)
+    say(I see: a black button, a white button, a hose.)
+
+action(LOOK PAIN)
+  if with(* RARE ALIEN PAINTING *) & bit9 & holds(which I'm wearing) & ! bit15
+    say(OK)
+    say(Painting is of an Alien twisting a buckle on a belt.)
+
+action(PUSH BLUE)
+  if here(Control console) & live(Broken rod in power holder) & ! bit7
+    say(Lift off!! After a brief flight we arrive...)
+    set(bit7)
+
+action(PUSH BLUE)
+  if here(Control console) & live(Broken rod in power holder) & bit7
+    say(Lift off!! After a brief flight we arrive...)
+    clear(bit7)
+
+action(GO DOOR)
+  if here(OPen outer door) & bit7
+    say(OK)
+    go(I am in a storage hold of the mother ship)
+    drop(Scoutship)
+    look2
+
+action(GO SHIP)
+  if here(Scoutship)
+    say(OK)
+    go(I am in a small airlock)
+    look2
+
+action(SHOO MOUN)
+  if holds(Phaser) & bit3 & here(Large ice mound)
+    say(I fire the Phaser,)
+    say(I destroyed it!)
+    remove2(Large ice mound)
+    set(bit4)
+
+action(DIG)
+  if here(Large ice mound) & holds(Ancient ice pick)
+    say(Ice fills back in around me as I dig my way in. The|pick broke but I made it!)
+    go(I am in a hollow ice mound)
+    swap(Ancient ice pick, Broken ice pick)
+    look2
+
+action(SHOO MOUN)
+  if at(I am in a hollow ice mound) & bit3 & holds(Phaser)
+    go(I am in a methane snow storm)
+    set(bit4)
+    say(I destroyed it!)
+    say(The Ice Hound burrows off...)
+
+action(GO MOUN)
+  if here(Large ice mound) & ! holds(Ancient ice pick)
+    say(HOW?)
+    say(Ice is very smooth & hard!)
+    say(I slide back down.)
+
+action(DIG)
+  if here(Large ice mound) & ! holds(Ancient ice pick)
+    say(HOW?)
+    say(Ice is very smooth & hard!)
+
+action(MELT MOUN)
+  if here(Large ice mound)
+    say(HOW?)
+
+action(OPEN DOOR)
+  if at(I am in a one man scoutship)
+    say(HOW?)
+
+action(JUMP)
+  if at(I'm outside the airlock on a ledge.|The ground is 90 meters below)
+    say(OK)
+    say(The gravity here is very)
+    say(weak.)
+    continue
+
+continue
+    wait
+    wait
+    wait
+
+continue
+    go(I'm on a small planetoid)
+    drop(Scoutship)
+    look2
+
+action(JUMP)
+    say(OK)
+
+action(GO JUNG)
+  if at(I am in a Large grassy plain at edge of a jungle)
+    say(OK)
+    go(I am in a Strange jungle)
+    look2
+
+action(GET HATC)
+  if here(Maintenance access hatch) & ! with(Short twisted piece of metal) & ! live(Entrance to a crawlway)
+    say(I can't do that)
+    say(Its stuck.)
+
+action(GET HATC)
+  if here(Maintenance access hatch) & with(Short twisted piece of metal) & ! live(Entrance to a crawlway)
+    get(Maintenance access hatch)
+    drop(Entrance to a crawlway)
+    say(OK)
+    say(The metal helped!)
+
+action(GO CRAW)
+  if here(Entrance to a crawlway)
+    go(I am in a maintenance crawl way)
+    look2
+
+action(DRIN FLAS)
+  if with(* ANCIENT FLASK SAURIAN BRANDY *)
+    swap(* ANCIENT FLASK SAURIAN BRANDY *, Empty flask)
+    say(OK)
+    say(Whooosh!)
+
+action(GET HATC)
+  if with(Maintenance access hatch) & live(Entrance to a crawlway)
+    get(Maintenance access hatch)
+    say(OK)
+
+action(WEAR BELT)
+  if with(* STRANGE ALIEN BELT *)
+    superget(which I'm wearing)
+    say(OK)
+    continue
+    superget(* STRANGE ALIEN BELT *)
+
+continue
+  if live(& its activated)
+    superget(& its activated)
+    say(I feel LIGHT HEADED!)
+
+action(DROP BELT)
+  if with(* STRANGE ALIEN BELT *)
+    remove2(which I'm wearing)
+    say(OK)
+    continue
+    drop(* STRANGE ALIEN BELT *)
+
+continue
+  if live(& its activated)
+    drop(& its activated)
+    say(It floats!)
+
+action(BEND BUCK)
+  if with(* STRANGE ALIEN BELT *) & ! live(& its activated)
+    dropwith(& its activated, * STRANGE ALIEN BELT *)
+    say(OK)
+    say(It floats!)
+
+action(BEND BUCK)
+  if with(* STRANGE ALIEN BELT *) & live(& its activated)
+    say(OK)
+    remove2(& its activated)
+
+action(LOOK BELT)
+  if with(* STRANGE ALIEN BELT *) & ! bit15
+    say(It should fit. It has a large buckle.)
+
+action(LOOK PAIN)
+  if with(* RARE ALIEN PAINTING *) & ! bit15
+    say(OK)
+    say(I just see shades of black, it makes my eyes swim!)
+
+action(FIRE MACH)
+    say(HOW?)
+
+action(GO BOUL)
+  if here(Large boulder)
+    say(I found nothing)
+    say(I slide back down.)
+
+action(LOOK BOUL)
+  if here(Large boulder)
+    say(OK)
+    say(Alien script covers it)
+
+action(OPEN SUIT)
+  if holds(which I'm wearing)
+    say(OK)
+    remove2(which I'm wearing)
+
+action(CLOS SUIT)
+  if holds(Space suit)
+    say(OK)
+    superget(which I'm wearing)
+
+action(GO GROU)
+  if at(I'm outside the airlock on a ledge.|The ground is 90 meters below)
+    say(HOW?)
+
+action(LOOK CRYS)
+  if with(Broken pieces of Power Crystal) & ! bit15
+    say(The power crystal was in the shape of a thin rod.)
+
+action(HELP)
+  if at(I am in a strange hexagonal room)
+    say(A gentle touch will work wonders!)
+
+action(OPEN HATC)
+  if here(Maintenance access hatch) & ! with(Short twisted piece of metal) & ! live(Entrance to a crawlway)
+    say(I can't do that)
+    say(Its stuck.)
+
+action(OPEN HATC)
+  if here(Maintenance access hatch) & with(Short twisted piece of metal)
+    get(Maintenance access hatch)
+    drop(Entrance to a crawlway)
+    say(OK)
+    say(The metal helped!)
+
+action(GO SHIP)
+  if at(I'm outside the airlock on a ledge.|The ground is 90 meters below)
+    say(OK)
+    go(I am in a small airlock)
+    look2
+
+action(GET PLAS)
+  if here(Small piece of plastic flush in the wall)
+    say(HOW?)
+
+action(LOOK PLAS)
+  if here(Small piece of plastic flush in the wall) & ! bit15
+    say(I see a picture of an ALIEN TENTACLE.)
+
+action(TOUC)
+    say(OK)
+    say(Nothing happens)
+
+action(CONN)  // .
+  if here(Alien machine) & ! live(Hose connects my suit to machine)
+    drop(Hose connects my suit to machine)
+    say(OK)
+
+action(GO TREE)
+  if here(Centurion Slime Trees)
+    say(Wonderful. It ATE me!)
+    die
+
+action(LOOK SCUL)
+  if with(* ALIEN SCULPTURE *) & ! bit15
+    continue
+    say(OK)
+    say(It is of an alien being.)
+
+continue
+  if ! live(* STRANGE ALIEN BELT *)
+    say(Its wearing only a strange belt!)
+
+action(GET BELT)
+  if with(* ALIEN SCULPTURE *) & ! live(* STRANGE ALIEN BELT *)
+    say(OK)
+    get(* STRANGE ALIEN BELT *)
+
+action(GET BELT)
+  if with(* STRANGE ALIEN BELT *)
+    say(OK)
+    get(* STRANGE ALIEN BELT *)
+
+action(LOOK HOUN)
+  if with(Rigilian Dia-Ice Hound) & ! bit15
+    say(Watch it! Its known to spit molten DIAMONDS!)
+
+action(SHOO BELT)
+  if with(* ALIEN SCULPTURE *) & holds(Phaser) & bit3
+    remove2(* ALIEN SCULPTURE *)
+    set(bit4)
+    continue
+
+continue
+    remove2(* STRANGE ALIEN BELT *)
+    say(I fire the Phaser,)
+    say(I destroyed it!)
+
+action(WEAR GOGG)
+  if with(Strange looking goggles)
+    superget(Strange looking goggles)
+    superget(which I'm wearing)
+    say(OK)
+    continue
+
+action(LOOK GOGG)
+  if with(Strange looking goggles) & ! bit15
+    say(There's a box on it with a yellow button.)
+
+action(DROP GOGG)
+  if holds(Strange looking goggles)
+    drop(Strange looking goggles)
+    remove2(which I'm wearing)
+    cleardark
+    continue
+
+continue
+    say(OK)
+    remove2(EVERYTHING HAS A BLUEISH TINT)
+    look2
+
+action(PUSH YELL)
+  if with(Strange looking goggles) & ! bit10 & ! bit9
+    say(OK)
+    set(bit9)
+
+action(LOOK PAIN)
+  if with(* RARE ALIEN PAINTING *) & ! holds(which I'm wearing) & ! bit15
+    say(OK)
+    say(I just see shades of black, it makes my eyes swim!)
+
+action(PUSH YELL)
+  if with(Strange looking goggles) & ! bit10 & bit9
+    say(OK)
+    clear(bit9)
+
+action(PUSH YELL)  // BURNT OUT
+  if with(Strange looking goggles) & bit10
+    say(OK)
+    say(Nothing happens)
+    say(I think its broken!)
+
+action(LOOK SUIT)
+  if with(Space suit)
+    say(The outside has a pressure gauge & a connecter for a hose.)
+
+action(READ GAUG)
+  if with(Space suit)
+    say(Pressure gauge says)
+    swapct(ctr1)
+    sayctr
+    continue
+
+continue
+    say(moves till suit air expended. Air outside suit is)
+
+continue
+  if bit2
+    say(not)
+
+continue
+    say(breathable.)
+    swapct(ctr1)
+
+action(DIG)
+  if here(Large ice mound) & with(Shovel)
+    say(OK)
+    say(Odd it only required very little force)
+    say(for it to shatter!)
+    swap(Shovel, Broken splintered shovel)
+
+action(SAY)
+    say(OK)
+    saynouncr
+
+action(PUSH BUTT)
+    say(Say again & use a color)
+
+action(FIRE PHAS)
+  if with(Phaser)
+    say(Try: 'SHOOT SOMETHING')
+
+action(SHOO)
+  if with(Phaser)
+    say(OK)
+    say(I fire the Phaser,)
+    say(Nothing happens)
+    say(Its empty.)
+
+action(SHOO)
+  if holds(Phaser)
+    set(bit4)
+    say(I fire the Phaser,)
+    say(Nothing happens)
+    say(Either I missed or beam was absorbed without visible effect!)
+
+action(MOVE)
+    say(won't budge!)
+
+action(LOOK)
+    say(I see nothing special.)
+    look2
+
+action(INVE)
+    inventory
+
+action(DIG)  // DIG
+  if with(Shovel)
+    say(I found nothing)
+
+action(FIND)
+    say(I found nothing)
+    say(I don't know where to look)
+
+action(READ)
+    say(I can't do that)
+
+action(HELP)
+    say(OK)
+    say(HOW?)
+
+action(QUIT)
+    gameover
+
+action(SAVE GAME)
+    save
+
+action(KICK)
+    say(Ouch!)
+    say(Nothing happens)
+
+action(CLOS)
+    say(HOW?)
+
+action(GO ROD)
+  if here(Rod jutting straight out of the wall)
+    say(Odd it only required very little force)
+    say(for it to break off in my hand with a|CRYSTALLINE snap!)
+    remove2(Rod jutting straight out of the wall)
+    superget(Broken piece of rod)
+
+action(LIFT GOGG)
+  if holds(which I'm wearing)
+    say(OK)
+    remove2(which I'm wearing)
+    remove2(EVERYTHING HAS A BLUEISH TINT)
+
+action(REMO SUIT)
+  if holds(which I'm wearing)
+    say(OK)
+    remove2(which I'm wearing)
+
+action(REMO GOGG)
+  if holds(which I'm wearing)
+    cleardark
+    remove2(which I'm wearing)
+    remove2(EVERYTHING HAS A BLUEISH TINT)
+    look2
+
+action(REMO)
+    say(I can't do that)
+    say(I'm not wearing it!)
+
+action(BEND BUCK)
+  if ! live(* STRANGE ALIEN BELT *)
+    say(I can't do that)
+    say(Don't have it!)
+
+action(EMPT FLAS)
+  if with(* ANCIENT FLASK SAURIAN BRANDY *)
+    swap(* ANCIENT FLASK SAURIAN BRANDY *, Empty flask)
+    say(OK)
+
+action(GET INVE)
+    inventory
+
+action(GO HATC)
+  if here(Entrance to a crawlway)
+    say(Nothing happens)
+    go(I am in a maintenance crawl way)
+    look2
+
+action(FIX CRYS)
+  if at(I am in a .)

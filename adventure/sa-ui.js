@@ -125,8 +125,6 @@ SA.Entry$ = class extends Obj {
   type(e) {
     let s = e.key.toUpperCase();
     if (s == 'Z' && e.ctrlKey) {
-      this.$entry.innerText = 'UNDO';
-      this.enter();
       return;
     }
     let len = this.text().length;
@@ -145,6 +143,12 @@ SA.Entry$ = class extends Obj {
   }  
   keyup(e) {
     if (e.keyCode == 13) {
+      this.enter();
+      return;
+    }
+    let s = e.key.toUpperCase();
+    if (s == 'Z' && e.ctrlKey) {
+      this.$entry.innerText = 'UNDO';
       this.enter();
     }
   }
