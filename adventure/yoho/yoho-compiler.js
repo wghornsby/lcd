@@ -18,6 +18,7 @@ YOHO.Compiler = class {
     console.log(this.game.toString());
   }
 }
+//
 YC = YOHO.Compiler;
 YC.Errors = [];
 //
