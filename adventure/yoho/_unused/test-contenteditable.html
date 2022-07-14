@@ -1,0 +1,269 @@
+<html>
+  <head>
+    <style>
+DIV#editor {
+  height:400px;
+  border:1px solid blue;
+  padding:1em;
+  font-family:'Consolas';
+  font-size:9pt;
+}      
+DIV#log {
+  height:400px;
+  background-color:black;
+  color:aquamarine;
+  padding:1em;
+  font-family:'Consolas';
+  font-size:9pt;
+  margin-top:1em;
+}
+DIV.t1 {margin-left:2ch;}
+DIV.t2 {margin-left:4ch;}
+DIV.t3 {margin-left:6ch;}
+DIV.t4 {margin-left:8ch;}
+DIV.t5 {margin-left:10ch;}
+DIV.t6 {margin-left:12ch;}
+DIV.t7 {margin-left:14ch;}
+DIV.t8 {margin-left:16ch;}
+DIV.t9 {margin-left:18ch;}
+BLOCKQUOTE {
+  margin-left:2ch !important;
+}
+    </style>
+  </head>
+  <body>
+    <div id='editor' contenteditable></div>
+    <div id='log'></div>
+  </body>
+<script>
+var editor = document.getElementById('editor');
+var log = document.getElementById('log');
+var text = editor.textContent;
+cls();
+editor.addEventListener("input", function() {
+  // if (editor.textContent != text) {
+  //   let offset = getCursorOffset(editor);
+  //   text = editor.textContent;
+  //   reformat();
+  //   setCursor(editor, offset);
+  // }
+  // return;
+  // let sel = window.getSelection();  
+  // let selRange = sel.getRangeAt(0);
+  // sel.collapseToStart();
+  // sel.modify("move", "backward", "word");
+  // sel.modify("extend", "forward", "word");
+  // let word = sel.toString().trim();
+  // let keyword = word == 'about' || word == 'verbs';
+  // let bolded = isBolded(sel);
+  // if (keyword && ! bolded) {
+  //   document.execCommand('bold');
+  //   sel.collapseToEnd();
+  //   document.execCommand('bold');
+  // } else if (! keyword && bolded) {
+  //   document.execCommand('bold');
+  //   if (isBolded(sel)) {
+  //     document.execCommand('bold');
+  //   }
+  //   sel.collapseToEnd();
+  // } else {
+  //   sel.removeAllRanges();
+  //   sel.addRange(selRange);  
+  // }
+  if (editor.innerHTML == '' || editor.innerHTML == '<br>') {
+    cls();
+  } else {
+    reformat();
+  }
+  logit();
+}, false);
+function reformat() {
+  let node = line();
+  if (node.innerHTML == '' || node.innerHTML == '<br>') {
+    if (node.className == '') {
+      if (node.previousSibling?.className) {
+        node.className = node.previousSibling.className;
+      }
+    }
+    return;
+  }
+  let offset = getCursorOffset(node);
+  let html = node.innerText;
+  html = html.replaceAll('bold', '<b>bold</b>');
+  node.innerHTML = html;
+  setCursor(node, offset);
+  logit();
+}
+function getTab(div) {
+  if (div && div.className) {
+    return +div.className.substring(1);
+  } else {
+    return 0;
+  }
+}
+function setTab(div, offset) {
+  if (div) {
+    let tab = getTab(div) + offset;
+    div.className = 't' + ((tab > 0) ? tab : 0); 
+  }
+}
+function isBolded(sel) {
+  return sel.anchorNode.parentElement.tagName == 'B';
+}
+function cls() {
+  editor.innerHTML = '<div class="t0"><br></div>';
+  setRange(editor.firstElementChild);
+  logit();
+} 
+function logit() {
+  log.innerText = editor.innerHTML;
+  log.innerHTML += "<br><br>" + line().innerText + "<br><br>" + getCursorOffset();
+}
+function line() {
+  let node = window.getSelection().anchorNode;
+  while (node.tagName != 'DIV') {
+    node = node.parentElement;
+  }
+  return node;
+}
+function setRange(node, offset = 0) {
+  let sel = window.getSelection();
+  let range = document.createRange();
+  range.setStart(node, offset);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+function setCursor(node, offset, cp = 0) {
+  if (! node) {
+    return;
+  }
+  if (node.nodeType == 1) {
+    if (cp) {
+      if (node.nextSibling) {
+        return setCursor(node.nextSibling, offset);
+      } else {
+        return setCursor(node.parentElement, offset, 1);
+      }
+    } else {
+      return setCursor(node.firstChild, offset);
+    }
+  }
+  if (node.nodeType == 3) {
+    let len = node.textContent.length;
+    if (offset > len) {
+      offset -= len;
+      if (node.nextSibling) {
+        return setCursor(node.nextSibling, offset);
+      } else {
+        return setCursor(node.parentElement, offset, 1);
+      }
+    }
+    setRange(node, offset);
+  }
+}
+function getCursorOffset(node, range, offset = 0, cp = 0) {
+  if (! node) {
+    node = line();
+  }
+  if (! range) {
+    range = window.getSelection().getRangeAt(0);
+  }
+  if (node == range.startContainer) {
+    return offset + range.startOffset;
+  }
+  if (node.nodeType == 1) {
+    let next;
+    if (! cp) {
+      next = node.firstChild, cp = 0;
+    }
+    if (! next) {
+      next = node.nextSibling, cp = 0;
+    }
+    if (! next) {
+      next = node.parentElement, cp = 1;
+    }
+    return next ? getCursorOffset(next, range, offset, cp) : null;
+  }
+  if (node.nodeType == 3) {
+    offset += node.textContent.length;
+    if (node.nextSibling) {
+      return getCursorOffset(node.nextSibling, range, offset);
+    } else if (node.parentElement) {
+      return getCursorOffset(node.parentElement, range, offset, 1);
+    }
+  }
+}
+editor.addEventListener("keyup", function(e) {
+  logit();
+})
+editor.addEventListener("keydown", function(e) {
+  if (e.keyCode == 9) {
+    setTab(line(), e.shiftKey ? -1 : 1);
+    e.preventDefault();
+    return;
+  }
+  if (e.keyCode == 8) {
+    let div = line();
+    if (getCursorOffset(div) == 0 && getTab(div) > 0) {
+      setTab(div, -1);
+      e.preventDefault();
+      return;
+    }
+  }
+  // if (e.keyCode == 192) {
+  //   //console.log(getCursorOffset(editor));
+  //   setCursor(editor, 13);
+  //   e.preventDefault();
+  //   return;
+  // }
+  // if (e.keyCode == 9 && e.shiftKey) {
+  //   e.preventDefault();
+  //   document.execCommand('outdent');
+  //   return;
+  // } 
+  // if (e.keyCode == 9) {
+  //   //document.execCommand('insertText', false, '..');
+  //   e.preventDefault();
+  //   document.execCommand('indent');
+  //   return;
+  // }
+  // if (e.keyCode == 8) {
+  //   let sel = window.getSelection();  
+  //   let selRange = sel.getRangeAt(0);
+  //   let node = sel.anchorNode, outdent;
+  //   if (node.tagName == 'BLOCKQUOTE' || node.innerHTML == '<br>') {
+  //     outdent = 1;
+  //   } else {
+  //     if (sel.anchorOffset == 0 && sel.toString().length == 0) {
+  //       if (node.parentElement.tagName == 'BLOCKQUOTE') {
+  //         outdent = 1;
+  //       } else if (tabbed(node)) {
+  //         sel.modify("extend", "backward", "lineboundary");
+  //         if (sel.toString().length == 0) {
+  //           outdent = 1;
+  //         } else {
+  //           sel.removeAllRanges();
+  //           sel.addRange(selRange);  
+  //         }
+  //       }
+  //     }
+  //   }
+  //   if (outdent) {
+  //     e.preventDefault();
+  //     document.execCommand('outdent');
+  //     return;
+  //   }
+  // }
+}, false);
+function tabbed(n) {
+  let tab = 0;
+  while (! tab && n.parentElement.id != 'editor') {
+    n = n.parentElement;
+    tab = n.tagName == 'BLOCKQUOTE';
+  }
+  return tab;
+}
+editor.focus();
+</script>
+</html>

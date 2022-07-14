@@ -1,0 +1,160 @@
+<html>
+<head>
+  <title>YOHO Editor</title>
+  <script type='text/javascript' src='yoho-compiler.js'></script>
+  <style>
+body {
+  margin:0;
+  background-color:#000;
+  color:white;
+  overflow:hidden;
+}
+.flexrow {
+  display:flex;
+  flex-direction:row;
+  min-height:0;
+}
+.flexcol {
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.grow1 {flex-grow:1;}
+.grow2 {flex-grow:2;}
+.grow3 {flex-grow:3;}
+.grow4 {flex-grow:4;}
+.grow35 {flex-grow:0;flex-basis:35%;}
+.grow45 {flex-grow:0;flex-basis:45%;}
+.grow50 {flex-grow:0;flex-basis:50%;}
+.tile {
+  flex-grow:1;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.tile ui {
+  flex-grow:1;
+  max-height:100%;
+  border:1px solid transparent;
+}
+.tile.sel ui {
+  border:1px dotted #696969;
+}
+.scrollxy {
+  overflow-x:scroll;
+  overflow-y:scroll;
+}
+.scrollxy::-webkit-scrollbar {
+  background-color:#252525;
+}
+.scrollxy::-webkit-scrollbar-thumb {
+  background-color:#696969;
+}
+.scrollxy::-webkit-scrollbar-corner {
+  background-color:#252525;
+}
+.scroll {
+  overflow-y:scroll;
+}
+.scroll::-webkit-scrollbar {
+  background-color:#252525;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background-color:#454545;
+}
+tile#body {
+  height:100vh;
+}
+tile#head {
+  background-color:#1c4c6d;
+  height:40px;
+  line-height:40px;
+  padding:0 10px 0 10px;
+  font-family:'Calibri';
+  font-size:14pt;
+  font-weight:bold;
+}
+header {
+  background-color:#2e2e2e;
+  color:#bbbbbb;
+  height:30px;
+  line-height:32px;
+  padding:0 10px;
+  font-family:'Calibri';
+  font-size:10.5pt;
+}
+#editor {
+  padding:1em;
+  font-family:'Consolas';
+  font-size:9pt;
+  background-color:#1e1e1e;
+  color:#d4d4d4;
+}
+[contenteditable]:focus {
+  outline:none;
+}
+#player {
+  background-color:#1e1e1e;
+}
+#map {
+  background-color:#1e1e1e;
+}
+#items {
+  background-color:#333333;
+}
+#bits, #ctrs {
+  background-color:#3c3c3c;
+}
+tile.bitctr {
+  flex-grow:3;
+  display:flex;
+  flex-direction:row;
+}
+tile.bits {
+  flex-grow:1;
+}
+tile.ctrs {
+  flex-grow:1;
+}
+  </style>
+  <body>
+    <tile id='body' class='flexcol'>
+      <tile id='head'>YOHO</tile>
+      <tile class='grow1 flexrow'>
+        <tile id='col1' class='grow45 flexcol'>
+          <tile class='tile sel'>
+            <header>Source</header>
+            <ui id='editor' class='scroll' contenteditable></editor>
+          </tile>
+        </tile>
+        <tile id='col2' class='grow35 flexcol'>
+          <tile class='tile'>
+            <header>Player</header>
+            <ui id='player' class='scroll'></player>
+          </tile>
+          <tile class='tile'>
+            <header>Map</header>
+            <ui id='map'></map>
+          </tile>
+        </tile>
+        <tile id='col3' class='grow1 flexcol'>
+          <tile class='grow4 flexcol'>
+            <tile class='tile'>
+              <header>Items</header>
+              <ui id='items' class='scroll'></items>
+            </tile>
+          </tile>
+          <tile class='grow3 flexrow'>
+            <tile class='tile grow50'>
+              <header>Bits</header>
+              <ui id='bits' class='scroll'></bits>
+            </tile>
+            <tile class='tile grow50'>
+              <header>Counters</header>
+              <ui id='ctrs' class='scroll'></ctrs>
+            </tile>
+          </tile>
+        </tile>
+      </tile>
+  </body>
+</head>

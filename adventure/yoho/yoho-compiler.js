@@ -2,24 +2,29 @@ YOHO = window.YOHO || {};
 //
 YOHO.Compiler = class {
   //
-  load(raw) {
+  /*YC.Result*/load(raw) {
     YC.Errors = [];
     this.src = new YC.Source(raw);
-    this.game = new YC.Game(this.src);
-    let errors = YC.Errors.filter(e => e.severity == 1);
-    if (errors.length) {
-      //throw new YC.CompileErrors(errors);
-      errors.forEach(e => console.log(e.toString())); return;
-    }
-    let warnings = YC.Errors.filter(e => e.severity == 0);
-    if (warnings.length) {
-      warnings.forEach(e => console.log(e.toString()));       // TODO
-    }
-    console.log(this.game.toString());
+    this.game = new YC.Game(this.src);     
+    return new YC.Result(this.game);
   }
 }
-//
 YC = YOHO.Compiler;
+//
+YC.Result = class {
+  /**
+   * YC.Error[] errors
+   * YC.Error[] warnings
+   * s bytecode
+   */
+  constructor(game) {
+    this.errors = YC.Errors.filter(e => e.severity == 1);
+    this.warnings = YC.Errors.filter(e => e.severity == 0);
+    if (this.errors.length == 0) {
+      this.bytecode = game.toString();
+    }
+  }
+}
 YC.Errors = [];
 //
 YC.Game = class {
@@ -1047,15 +1052,5 @@ YC.Error.TooManyArgs = class extends YC.Error {
 YC.Error.InvalidArg = class extends YC.Error {
   constructor(line, arg) {
     super('Invalid argument: ' + arg, line);
-  }
-}
-YC.CompileErrors = class extends Error {
-  /**
-   * s msg
-   * YC.Error[] errors
-   */
-  constructor(errors) {
-    super("Compilation error(s)");
-    this.errors = errors;
   }
 }

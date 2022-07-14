@@ -4,7 +4,8 @@
 </head>
 <script>
 let compiler = new YOHO.Compiler();
-compiler.load(src());
+let result = compiler.load(src());
+console.log(result);
 function src() {
 
   return `
