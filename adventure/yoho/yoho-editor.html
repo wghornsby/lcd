@@ -1,6 +1,7 @@
 <html>
 <head>
   <title>YOHO Editor</title>
+  <script type='text/javascript' src='lib/lcd-simple.js'></script>
   <script type='text/javascript' src='yoho-compiler.js'></script>
   <style>
 body {
@@ -26,19 +27,22 @@ body {
 .grow35 {flex-grow:0;flex-basis:35%;}
 .grow45 {flex-grow:0;flex-basis:45%;}
 .grow50 {flex-grow:0;flex-basis:50%;}
-.tile {
+.ui {
   flex-grow:1;
   display:flex;
   flex-direction:column;
   min-height:0;
 }
-.tile ui {
+.ui ui {
   flex-grow:1;
   max-height:100%;
-  border:1px solid transparent;
+  border:1px solid #2e2e2e;
 }
-.tile.sel ui {
+.ui.sel ui {
   border:1px dotted #696969;
+}
+.ui.sel .scroll::-webkit-scrollbar {
+  border-left:1px dotted #696969;
 }
 .scrollxy {
   overflow-x:scroll;
@@ -60,15 +64,15 @@ body {
   background-color:#252525;
 }
 .scroll::-webkit-scrollbar-thumb {
-  background-color:#454545;
+  background-color:#444444;
 }
 tile#body {
   height:100vh;
 }
 tile#head {
   background-color:#1c4c6d;
-  height:40px;
-  line-height:40px;
+  height:34px;
+  line-height:34px;
   padding:0 10px 0 10px;
   font-family:'Calibri';
   font-size:14pt;
@@ -77,44 +81,35 @@ tile#head {
 header {
   background-color:#2e2e2e;
   color:#bbbbbb;
-  height:30px;
-  line-height:32px;
+  height:26px;
+  line-height:28px;
   padding:0 10px;
   font-family:'Calibri';
   font-size:10.5pt;
+}
+ui {
+  background-color:#1e1e1e;
 }
 #editor {
   padding:1em;
   font-family:'Consolas';
   font-size:9pt;
-  background-color:#1e1e1e;
   color:#d4d4d4;
 }
 [contenteditable]:focus {
   outline:none;
 }
 #player {
-  background-color:#1e1e1e;
+  background-color:black;
 }
 #map {
-  background-color:#1e1e1e;
+  background-color:#444444;
 }
 #items {
   background-color:#333333;
 }
 #bits, #ctrs {
-  background-color:#3c3c3c;
-}
-tile.bitctr {
-  flex-grow:3;
-  display:flex;
-  flex-direction:row;
-}
-tile.bits {
-  flex-grow:1;
-}
-tile.ctrs {
-  flex-grow:1;
+  background-color:#333333;
 }
   </style>
   <body>
@@ -122,39 +117,40 @@ tile.ctrs {
       <tile id='head'>YOHO</tile>
       <tile class='grow1 flexrow'>
         <tile id='col1' class='grow45 flexcol'>
-          <tile class='tile sel'>
-            <header>Source</header>
+          <tile class='ui'>
+            <header id='editorhead'>Source</header>
             <ui id='editor' class='scroll' contenteditable></editor>
           </tile>
         </tile>
         <tile id='col2' class='grow35 flexcol'>
-          <tile class='tile'>
+          <tile class='ui'>
             <header>Player</header>
             <ui id='player' class='scroll'></player>
           </tile>
-          <tile class='tile'>
+          <tile class='ui'>
             <header>Map</header>
             <ui id='map'></map>
           </tile>
         </tile>
         <tile id='col3' class='grow1 flexcol'>
           <tile class='grow4 flexcol'>
-            <tile class='tile'>
+            <tile class='ui'>
               <header>Items</header>
               <ui id='items' class='scroll'></items>
             </tile>
           </tile>
           <tile class='grow3 flexrow'>
-            <tile class='tile grow50'>
+            <tile class='ui grow50'>
               <header>Bits</header>
               <ui id='bits' class='scroll'></bits>
             </tile>
-            <tile class='tile grow50'>
+            <tile class='ui grow50'>
               <header>Counters</header>
               <ui id='ctrs' class='scroll'></ctrs>
             </tile>
           </tile>
         </tile>
       </tile>
+    </tile>
   </body>
 </head>
