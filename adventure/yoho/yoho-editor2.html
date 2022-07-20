@@ -15,7 +15,6 @@ body {
   color:white;
   overflow:hidden;
   cursor:default;
-  font-family:'Calibri';
 }
 .flexrow {
   display:flex;
@@ -38,20 +37,17 @@ body {
 .grow4 {flex-grow:4;}
 .grow30 {flex-grow:0;flex-basis:30%;}
 .grow35 {flex-grow:0;flex-basis:35%;}
-.grow40 {flex-grow:0;flex-basis:40%;}
 .grow45 {flex-grow:0;flex-basis:45%;}
 .grow50 {flex-grow:0;flex-basis:50%;}
-.grow55 {flex-grow:0;flex-basis:55%;}
-.grow60 {flex-grow:0;flex-basis:60%;}
 .ui {
-  flex-grow:0;
-  flex-basis:100%;
+  flex-grow:1;
   display:flex;
   flex-direction:column;
   min-height:0;
   min-width:0;
 }
 ui {
+  flex-grow:1;
   max-height:100%;
   height:100%;
 }
@@ -104,17 +100,19 @@ header {
   font-family:'Calibri';
   font-size:10.5pt;
 }
+ui {
+}
 [contenteditable]:focus {
   outline:none;
 }
 #editorc {
   background-color:#1e1e1e;
-  padding:24px 0 0 10px;
+  padding:10px 0 0 10px;
 }
 #editor {
   background-color:#1e1e1e;
-  font-family:'Calibri';
-  font-size:10.5pt;
+  font-family:'Consolas';
+  font-size:8pt;
   color:#d0d0d0;
   white-space:nowrap;
 }
@@ -127,36 +125,26 @@ header {
 #editor div.t7 {margin-left:14ch}
 #editor div.t8 {margin-left:16ch}
 #editor div.t9 {margin-left:18ch}
-#editor blue, #editor about, #editor auto, #editor cmd, #editor items, #editor exits
+#editor blue, #editor about, #editor auto, #editor cmd, #editor if, #editor items, #editor exits
   {color:rgb(44,122,214)}
 #editor yellow, #editor word
   {color:rgb(226,192,141)}
 #editor orange, #editor arg
   {color:rgb(206,145,120)}
-#editor pink, #editor item, span.item
+#editor pink, #editor item
   {color:rgb(233, 146, 226)}
-#editor dkpink, #editor idesc, span.ioop
+#editor dkpink, #editor idesc
   {color:hsla(305, 35%, 65%, 0.799)}
-#editor ltblue, #editor section, #editor method, #editor if
+#editor ltblue, #editor section, #editor method
   {color:rgb(156,220,254)}
-#editor green, #editor room, span.room
-  {color:rgb(83, 212, 130)}
-#editor dkgreen, #editor rdesc, span.roop
-  {color:hsla(142, 51%, 57%, 0.699)}
-#editor string {
-  color:#999999;
-}
+#editor green, #editor room
+{color:rgb(83, 212, 130)}
+#editor dkgreen, #editor rdesc
+{color:hsla(142, 51%, 57%, 0.699)}
 #editor purple, #editor comment
   {color:rgb(122, 88, 201)}
 #editor section {
   font-weight:bold;
-}
-#editor bang {
-  font-weight:bold;
-  margin-right:2px;
-}
-#editor semi {
-  margin-left:1px;
 }
 #output {
   background-color:black;
@@ -174,39 +162,6 @@ header {
 #bits, #ctrs {
   background-color:#333333;
 }
-uih {
-  height:24px;
-  line-height:28px;
-  font-size:9pt;
-  padding-right:17px;
-  display:flex;
-  background-color:#0a0a0a;
-}
-#itemsh span {
-  flex-grow:0;
-  flex-basis:50%;
-  display:inline-block;
-  color:#d0d0d0;
-  padding-left:10px;
-}
-#items div {
-  font-family:'Calibri';
-  font-size:10.5pt;
-  display:flex;
-  background-color:#282828;
-}
-#items span {
-  padding-left:10px;
-  height:18px;
-  line-height:18px;
-  flex-grow:0;
-  flex-basis:50%;
-  border-left:1px solid #1e1e1e;
-  border-bottom:1px solid #1e1e1e;
-}
-#itemsui {
-  border-bottom:5px solid #2e2e2e;
-}
     </style>
   </head>
   <body>
@@ -216,7 +171,9 @@ uih {
         <tile id='col2' class='grow30 flexcol'>
           <tile class='ui'>
             <header>Map</header>
-            <ui id='map'></ui>
+            <ui id='map'>
+              <div>Hello<br>howdyHello<br>howdyHello<br>howdyHello<br>howdyHello<br>howdyHello<br>howdyHello<br>howdy</div>
+            </ui>
           </tile>
           <tile class='ui'>
             <header>Output</header>
@@ -230,18 +187,13 @@ uih {
           </tile>
         </tile>
         <tile id='col3' class='grow1 flexcol'>
-          <tile class='grow60 flexcol'>
-            <tile id='itemsui' class='ui'>
-              <header>Items</header>
-              <tile class='grow1 flexcol'>
-                <uih id='itemsh'><span>Item</span><span>Room</span></uih>
-                <ui id='items' class='scroll'>
-                  <div><span class='item'>stake</span><span class='room'>inventory</span></div>
-                </ui>
-              </tile>
+          <tile class='grow4 flexcol'>
+            <header>Items</header>
+            <tile class='grow1 flexcol'>
+              <ui id='items' class='scroll'></ui>
             </tile>
           </tile>
-          <tile class='grow40 flexrow'>
+          <tile class='grow3 flexrow'>
             <tile class='ui grow50'>
               <header>Bits</header>
               <ui id='bits' class='scroll'></ui>

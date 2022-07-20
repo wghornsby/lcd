@@ -1,6 +1,8 @@
-YOHO = window.YOHO || {};
+/** YOHO Compiler */
+YOHO = window.YOHO || {}, YC = YOHO.Compiler = {};
 //
-YOHO.Compiler = class {
+YC.Errors = [];
+YC.Compiler = class {
   //
   /*YC.Result*/load(raw) {
     YC.Errors = [];
@@ -9,10 +11,9 @@ YOHO.Compiler = class {
     return new YC.Result(this.game);
   }
 }
-YC = YOHO.Compiler;
-//
 YC.Result = class {
   /**
+   * s message
    * YC.Error[] errors
    * YC.Error[] warnings
    * s bytecode
@@ -23,10 +24,14 @@ YC.Result = class {
     if (this.errors.length == 0) {
       this.bytecode = game.toString();
     }
+    let a = [];
+    a.push(this.errors.length ? 'Unable to compile, with ' : 'Compiled with ');
+    a.push(this.errors.length == 1 ? '1 error ' : this.errors.length + ' errors ');
+    a.push('and ');
+    a.push(this.warnings.length == 1 ? '1 warning.' : this.warnings.length + ' warnings.');
+    this.message = a.join('');
   }
 }
-YC.Errors = [];
-//
 YC.Game = class {
   /**
    * About about
@@ -100,7 +105,7 @@ YC.Commands = class {
       } else {
         this.tokeThen(line);
       }
-    })    
+    }) 
   }
   tokeCommand(line) {
     if (line.text == 'auto') {
@@ -665,6 +670,9 @@ YC.Rooms = class extends Array {
       room.exits = exits;
     })
   }
+  getByRx(rx) {
+    return this[rx - 1];
+  }
   get(id, line) {
     let room = this.map[id];
     if (! room) {
@@ -786,6 +794,7 @@ YC.Item = class {
 }
 YC.Source = class {
   /**
+   * Lines lines
    * sections {name:lines[]} 
    */
   constructor(src) {

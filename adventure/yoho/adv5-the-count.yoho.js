@@ -1,0 +1,442 @@
+function src() {
+  return `// ADVENTURE 5 v 115: THE COUNT
+
+about
+
+  title(The Count) author(Scott Adams) version(5.115) date(1984)
+  wordlen(3) carrymax(7) lightlen(175)
+
+verbs
+
+  GO=RUN=WAL=ENT=USE LOO=EXA GET=TAK=PIC=CAT=REM=MOV OUT=EXI
+  PUT=DRO=LEA=LOW KIL=ATT CLO=SHU OPE=LIF=RAI UNL=EXT LIG=BUR=IGN
+  EMP=SPI CUT=BRE=FIL=TRI PUL=RIN EAT=DRI JAM=SMA=BUS SAY=YEL
+  SME=SNI FEE=TOU
+
+nouns
+
+  SHE=END WIN=BOX=LED POL=FLA BAT=VAM=DRA COF=LID FIL=NAI
+  BOT=BLO POS=CAR GAT=CRO FIS=HAN=FOO=FEE NEC=BIT
+
+inventory
+
+  stake "Tent STAKE" STA
+
+autos
+
+  auto
+    if !b(intro):
+      b(intro)=1; c(days-left)=3; c(moves-left)=65; c(help)=0
+      say "Welcome to ADVENTURE 5: 'THE COUNT'|I see I was put to bed. It's afternoon & I overslept!"
+
+  auto
+    c(moves-left)--
+    if !b(sleep):
+      if c(moves-left)>1 & c(moves-left)<=10 & !at(pit) & !at(crypt): say "It's getting DARK outside!"
+      if c(moves-left)=1: say "The sun has set!"
+      if c(moves-left)<=1: light(0)
+
+  auto
+    if !b(nodoz):
+      if !b(sleep):
+        if c(moves-left)>1 & c(moves-left)<=4: say "I'm getting very tired"
+        if c(moves-left)<=0: b(sleep)=1; cls
+    else:
+      c(nodoz-life)--
+      if c(nodoz-life)<=0: b(nodoz)=0
+      elseif c(nodoz-life)>=4 & c(nodoz-life)<=8: say "I'm getting very tired"
+
+  auto
+    if c(moves-left)<=0 & !b(sleep):
+      if rnd(25) & holds(garlic): say "A bat flew by & LAUGHED at me!|He smelled something & flew on"
+      elseif rnd(40) & !holds(garlic): say "A bat flew by & settled on my neck!"; b(sleep)=1
+
+  auto
+    if b(sleep):
+      b(sleep)=0; b(nodoz)=0; c(moves-left)=65
+      if !inplay(door-locked): put(door-open, workroom); remove(door-closed)
+      elseif !inplay(stake, closet): remove(stake); b(robbed)=1
+      remove(sheet-into-window, sheet-tied-pole, sheet-tied-bed, sheet-tied-ring, sheet-over-ledge, sheet-end, window-open)
+      put(window-closed, bedroom)
+      if inplay(package): remove(package); b(robbed)=1
+      if inplay(cig-pack): put(cig-pack, coffin); b(robbed)=1
+      if b(robbed): b(robbed)=0; say "I've a hunch I've been robbed!"
+      say "I see I was put to bed. It's afternoon & I overslept!"
+      go(bed); drop(sheets); light(1)
+      if with(bottle-blood): 
+        swap(bottle-blood, bottle-empty); say "Odd; I wasn't bitten last nite!"
+      else:
+        c(days-left)-- 
+        if c(days-left)<=0: say "I've turned into a VAMPIRE!"; die 
+        if !inplay(neck-bite): forceget(neck-bite); say "My neck looks BITTEN!"
+
+rooms
+  
+  bed "I'm lying in a large brass bed" start-room
+    items
+      sheets "Sheets" SHE
+      pillow "Pillow" PIL
+    cmd(GET SHE)
+      if with(sheets): get(sheets); ok
+    cmd(GET UP)
+      if at(bed): go(bedroom); ok
+    cmd(HEL) 
+      if at(bed): say "GET UP you sleepy head!"
+    cmd(MAK BED) 
+      ok
+
+  bedroom "I am in a bedroom" 
+    exits
+      n(hall)
+    items  
+      window-closed "Closed window"
+      bed "Brass bed"
+    out-of-play
+      window-open "Open window"
+      sheet-tied-bed "Sheet tied to bed"
+      sheet-end "The other end of the sheet"
+      sheet-into-window "Sheet going into window"
+    cmd(GET SHE)
+      if with(sheet-end): get(sheet-end); ok
+    cmd(TIE SHE)
+      if with(sheets): say "Tell me to what? i.e. 'TO TREE'"
+    cmd(TO BED)
+      if with(sheets) & here(bed): remove(sheets); drop(sheet-tied-bed, sheet-end)
+    cmd(UNT)
+      if here(sheet-tied-bed): remove(sheet-tied-bed, sheet-into-window, sheet-end, sheet-over-ledge); drop(sheets); ok        
+    cmd(LOO WIN) 
+      if at(bedroom): say "I'm up in a castle; in the distance I see VOODOO CASTLE.|There's standing room outside the window"
+    cmd(OPE WIN)
+      if here(window-closed): swap(window-open, window-closed); ok
+    cmd(CLO WIN)
+      if here(window-open): swap(window-open, window-closed); ok
+    cmd(GO WIN)
+      if here(window-open):
+        go(ledge); ok
+        if holds(sheet-end): drop(sheet-into-window)
+
+  ledge "I'm on a ledge outside an open window"
+    items
+      pole "Flag pole in wall"
+    out-of-play
+      sheet-over-ledge "Loose end of sheet going over ledge"
+      sheet-tied-pole "End of sheet tied to flag-pole"
+    cmd(JUM)
+      if at(ledge): say "As I fall to my death...|I notice a DARK WINDOW UNDER the bedroom window ledge!"; die
+    cmd(TO POL)
+      if with(sheets) & here(pole): remove(sheets); drop(sheet-tied-pole, sheet-over-ledge)
+    cmd(DRO SHE)
+      if holds(sheet-end): drop(sheet-over-ledge); remove(sheet-end); ok
+    cmd(CLI) 
+      if here(sheet-over-ledge): go(sheet); ok
+
+  sheet "I'm hanging on the end of a sheet. I made a fold. There's a window box here on the side of the castle"
+    auto
+      if at(sheet):
+        if rnd(33) & inplay(sheet-tied-pole): say "I hear the flagpole splinter as I fall to my death!"; die
+        elseif rnd(50) & inplay(torch-lit): say "The torch burnt thru my sheet and I fall to my death!"; die
+    cmd(GO WIN)
+      if at(sheet): go(flower-box); ok
+    cmd(CLI)
+      if at(sheet): go(ledge); ok
+    cmd(OPE WIN)
+      if at(sheet): say "Sorry.|There's something there; maybe I should go there?"
+
+  hall "I am in a hall inside the castle"
+    exits
+      n(bathroom) s(bedroom) e(outside) w(kitchen)
+    auto
+      if at(hall) & holds(sheet-end): remove(sheet-tied-bed); swap(sheet-end, sheets); say "Sheet came untied"
+
+  coffin "I am in a large COFFIN"
+    exits
+      u(crypt)
+    items
+      lid-open "Coffin lid is open"
+      bolt "Lockable slide bolt"
+    out-of-play
+      bolt-broken "Broken slide bolt"
+
+  outside "I'm outside the castle"
+    exits
+      e(path) w(hall)
+    items
+      coat-arms "Coat of arms" COA
+      bell-pull "Bell pull"
+    out-of-play
+      package "Package" PAC
+      box-empty "Empty box" BOX
+      postcard "Postcard" POS
+      cig-pack "Pack of Transylvanian cigarettes" PAC
+      cig "Cigarette" CIG
+      cig-lit "LIT cigarette" CIG
+      bottle-blood "Bottle of type V blood" BOT
+      bottle-empty "Empty bottle" BOT
+      letter "Letter" LET
+      note "Note" NOT
+      clip "Paper clip" CLI
+    auto
+      if rnd(30) & !at(outside) & c(moves-left)<25 & c(days-left)=2 & !inplay(package) & !inplay(box-empty): 
+        put(package, outside); put(letter, outside); say "|A bell rings somewhere: 'DING-DONG'"
+    cmd(OPE PAC)
+      if with(package): drop(box-empty, cig-pack, bottle-blood); remove(package); ok
+    cmd(DRI BOT)
+      if with(bottle-blood): say "I've turned into a VAMPIRE!"; die
+    cmd(EMP BOT)
+      if with(bottle-blood): swap(bottle-blood, bottle-empty); ok
+    cmd(LOO LET)
+      if with(letter): say "There's writing on it"
+    cmd(REA LET)
+      if with(letter): say "DeAr DRACKY; Don't open this present till HALLOWEEN.|signed COUNT YORGA."
+    cmd(REA POS)
+      if with(postcard):
+        say "Its for DRACULA; its and EATING & GHOULING bill from a|local mortuary!"
+        if !inplay(note):
+          say "There's a note PAPER CLIPPED to the postcard"
+    cmd(REA NOT)
+      if with(postcard) & !inplay(note): say "The paper clip is in the way!"
+      if with(note): say "Postmaster says he'll be delivering a package tomorrow."
+    cmd(GET CLI) cmd(UNC)
+      if with(postcard) & !inplay(clip): forceget(clip, note); ok
+      elseif with(clip): forceget(clip); ok
+    cmd(GET CIG)
+      if with(cig): get(cig); ok
+      elseif with(cig-lit): get(cig-lit); ok
+    cmd(LIG CIG)
+      if with(cig) & with(matches): c(cig-life) = 8; swap(cig, cig-lit)       
+  
+  path "I am on a Meandering path"
+    exits
+      w(outside)
+    items
+      "Castle towering above me"
+      "Fence with an open gate & a crowd beyond"
+    cmd(LOO GAT)
+      if at(path): say "Mob looks ANGRY"
+    cmd(GO GAT)
+      if at(path): say "Peasants attack me; I was SUPPOSED to destroy the VAMPIRE!|You have LOST!"; gameover
+
+  bathroom "I am in a Bathroom"
+    exits
+      s(hall)
+    items
+      mirror "Mirror" MIR
+      watch "Pocket watch" WAT
+      "Toilet"
+    out-of-play
+      glass "Broken glass"
+      neck-bite "2 small holes in my neck"
+    cmd(LOO MIR)
+      if with(mirror):
+        if inplay(neck-bite): 
+          say "My neck looks BITTEN!"
+          say "I appear pale & drained!|I think I can only take "; sayc(days-left); say " more days of this!"
+        else:
+          say "TODAY I look healthy..."
+    cmd(DRO MIR)
+      if holds(mirror):
+        if here(pillow): drop(mirror); ok; say "I set the mirror on the pillow."
+        else: remove(mirror); drop(glass); say "Mirror shatters! That's 7 years bad luck!"
+    cmd(GET GLA)
+      if here(glass): say "Sorry I can't do that"
+    cmd(LOO WAT)
+      if with(watch): say "Strange watch says "; sayc(moves-left); say " moves till sunset"
+    cmd(LOO TOI)
+      if at(bathroom): say "There's something there; maybe I should go there?"
+    cmd(GO TOI)
+      if at(bathroom): ok; say "Ah that's much better!"
+    cmd(FLU TOI)
+      if at(bathroom): ok
+  
+  kitchen "I am in a kitchen"
+    exits
+      e(hall)
+    items
+      oven "Oven"
+      dumb "Dumb-waiter" 
+    cmd(LOO OVE)
+      if with(oven):
+        if c(moves-left)>0: say "There's a tremendous amount of HEAT & SUNLIGHT coming out."
+        else: say "There's something there; maybe I should go there?"
+    cmd(GO OVE)
+      if with(oven):
+        if c(moves-left)>0: say "Sorry; too much HEAT & SUNLIGHT!"
+        else: ok; go(oven)
+    cmd(OPE OVE)
+      if with(oven): say "It's already open."
+    cmd(CLO OVE)
+      if with(oven): say "Sorry I can't do that."
+    cmd(LOO DUM)
+      if with(dumb): say "There's something there; maybe I should go there?"
+    cmd(GO DUM)
+      if at(kitchen): saveloc(kitchen); go(dumb); ok
+  
+  oven "I am in a giant SOLAR OVEN"
+    exits
+      w(kitchen)
+    items
+      file "Large tempered nail file" FIL
+      "Large dark lens set in the ceiling"
+    cmd(FIL NAI)
+      if with(file): ok; say "Some time passes..."; c(moves-left)-=2
+
+  pantry "I am in a pantry"
+    items
+      dumb "Dumb-waiter"
+      matches "Sulfur matches" MAT
+      garlic "Dusty clove of garlic" GAR    
+    cmd(EAT GAR)
+      if with(garlic): remove(garlic); ok
+    cmd(GO DUM)
+      if at(pantry): saveloc(pantry); go(dumb); ok
+
+  dumb "I am in a dumb-waiter"
+    cmd(RAI DUM)
+      if at(dumb):
+        if b(dumb-top): say "Sorry; it won't go any higher."
+        elseif b(dumb-bottom): b(dumb-bottom)=0; saveloc(kitchen); ok
+        else: b(dumb-top)=1; saveloc(pantry); ok
+    cmd(LOW DUM)
+      if at(dumb):
+        if b(dumb-bottom): say "Sorry; it won't go any lower."
+        elseif b(dumb-top): b(dumb-top)=0; saveloc(kitchen); ok
+        else: b(dumb-bottom)=1; saveloc(workroom); ok
+    cmd(LOO ROO)
+      if at(dumb): say "There's something there; maybe I should go there?"
+    cmd(GO ROO)
+      if at(dumb): swaploc; ok
+
+  workroom "I am in a workroom"
+    exits
+      d(dungeon)
+    items
+      door-locked "Locked door"
+      mallet "Rubber mallet" MAL
+      vent "Vent"
+    out-of-play
+      door-closed "Closed & UNLOCKED door"
+      door-open "Open door"
+    cmd(OPE DOR)
+      if here(door-closed): swap(door-closed, door-open); ok
+    cmd(CLO DOO)
+      if here(door-open): swap(door-closed, door-open); ok
+    cmd(LOC DOO)
+      if here(door-closed) & with(clip): swap(door-closed, door-locked); ok
+    cmd(PIC LOC)
+      if here(door-locked) & with(clip): swap(door-closed, door-locked); ok
+    cmd(GO DOO) 
+      if here(door-open): go(closet); ok
+    cmd(UNL DOO)
+      if here(door-locked): say "How?"
+    cmd(HEL)
+      if at(workroom): say "I'm a pretty good LOCK PICK!"
+  
+  closet "I am in a closet"
+    exits
+      w(workroom)
+    items
+      vial "Small vial" VIA
+      "Century worth of dust"
+    out-of-play
+      tabs-3 "3 no-doz tablets" TAB
+      tabs-2 "2 no-doz tablets" TAB
+      tabs-1 "1 no-doz tablet" TAB
+    cmd(LOO DUS)
+      if at(closet): say "A chooooo"; say "I see nothing special."
+    cmd(LOO VIA)
+      if with(vial) & !b(vial-emptied): say "There's something there; maybe I should empty it?"
+    cmd(EMP VIA)
+      if with(vial) & !b(vial-emptied): b(vial-emptied)=1; drop(tabs-3); ok
+    cmd(EAT TAB)
+      b(nodoz)=0
+      if with(tabs-3): swap(tabs-3, tabs-2); b(nodoz)=1
+      elseif with(tabs-2): swap(tabs-2, tabs-1); b(nodoz)=1
+      elseif with(tabs-1): remove(tabs-1); b(nodoz)=1
+      if b(nodoz): c(nodoz-life)=40; ok; say "I'm real PEPPY now!"
+
+  dungeon "I am in a dungeon"
+    exits
+      u(workroom)
+    items
+      pit "DARK pit"
+      rings "Iron rings in wall"
+    out-of-play
+      sheet-tied-ring "Sheet tied to ring going into pit"
+    cmd(TO RIN)
+      if with(sheets) & here(rings): remove(sheets); drop(sheet-tied-ring); put(sheet-end, pit)
+    cmd(UNT)
+      if with(sheet-tied-ring): remove(sheet-end, sheet-tied-ring)
+    cmd(CLI) 
+      if here(sheet-tied-ring): light(0); go(pit); ok
+    cmd(GO PIT)
+      if here(pit): light(0); go(pit); ok
+
+  pit "I am in a pit"
+    items
+      torch-unlit "Unlit torch" TOR
+    out-of-play
+      torch-lit "LIT torch" light-source TOR 
+    cmd(CLI) 
+      if at(pit) & here(sheet-end): go(dungeon); light(1); ok
+    cmd(LIG MAT)
+      if with(matches):
+        say "The match flares up briefly..."
+        if dark: light(1); wait(3); light(0) 
+        else: wait(3)
+        say "and then goes out!"
+    cmd(LIG TOR)
+      if with(torch-unlit) & with(matches): swap(torch-unlit, torch-lit); ok
+    cmd(UNL TOR)
+      if with(torch-lit): swap(torch-lit, torch-unlit); ok
+    cmd(CLI) 
+      if at(pit) & here(sheet-end): go(dungeon); light(1); ok
+
+  flower-box "I am in a flower box outside an open window"
+
+  doorless-room "I am in a DOORLESS room"
+    auto
+      if at(doorless-room) & dark: light(1)
+
+  crypt "I am in a CRYPT"
+    items
+      "Piles of extinguished cigarettes"
+    out-of-play
+      coffin "Stone COFFIN"
+      coffin-closed "Coffin is closed"
+      coffin-open "Coffin is open"
+    auto
+      if rnd(50) & inplay(cig-lit) & !at(coffin):
+        c(cig-life)--
+        if c(cig-life)=0:
+          remove(cig-lit, coffin, coffin-open, coffin-closed)
+          if at(crypt): say "The cigarette went out & the coffin VANISHED"
+    cmd(SMO)
+      if with(cig-lit):
+        if at(crypt) & !inplay(coffin):
+          say "There's a COUGHIN (sic) in the room."; drop(coffin); drop(coffin-closed)
+        else:
+          say "COUGH!"
+  
+  coffin "I am in a large COFFIN"
+  
+commands
+
+  cmd(GO SHE)
+    say "Try: 'CLIMB SHEET'"
+
+  cmd(GO SLE) cmd(SLE)
+    b(sleep)=1; ok
+
+  cmd(FIN)
+    say "Sorry|I don't know where to look"    
+
+  cmd(WAI)
+    if c(moves-left)>5: say "Some time passes..."; c(moves-left)-=5
+
+  cmd(HEL)
+    c(help)++
+    if c(help)>4: say "I'm getting very tired of you always asking for help!" 
+    else: say "Try examining things."
+
+  `;
+}
