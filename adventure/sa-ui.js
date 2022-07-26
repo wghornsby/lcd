@@ -11,7 +11,8 @@ SA.Screen$ = class extends Obj {
       .on('cls', (hard) => this.cls(hard))
       .on('look', (room, items) => this.look(room, items))
       .on('replay', (snapshots) => this.replay(snapshots))
-      .on('gameover', () => this.gameover());
+      .on('gameover', () => this.gameover())
+      .on('swapctr', i => this.debug(i))
     this.header$ = new SA.Header$();
     this.output$ = new SA.Output$();
     this.entry$ = new SA.Entry$()
@@ -19,16 +20,29 @@ SA.Screen$ = class extends Obj {
     this.wraplen = 64;
     this.reset();
   }
+  reset() {
+    this.game.load(game());
+  }
   ready() {
     this.entry$.ready();
+    this.debug();
+  }
+  debug(i) {
+    let b = '';
+    //if (i !== undefined) {
+      //b = 'swapping with ' + i;
+    //}
+    let s = ['ctr=', this.game.ctr, ' | '];
+    this.game.ctrs.forEach((v, i) => {
+      if (v !== null) {
+        s.push('c[', i, ']=', v, '  ');
+      }
+    })
+    $('#debug').innerHTML = b + '<br>' + s.join('');
   }
   enter(text, nosubmit) {
     this.say('&nbsp;-------> Tell me what to do? ' + text);
     ! nosubmit && this.game.submit(text);
-  }
-  reset() {
-    this.game.load(game());
-    return;
   }
   replay(snapshots) {
     snapshots.forEach((snap, i) => {

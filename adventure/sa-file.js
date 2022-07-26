@@ -27,7 +27,7 @@ SA.File = class {
     this._unknown = raw.next();
     this.rooms.applyAliases(raw);
     this.items.applyAliases(raw);
-    log(this.toString());
+    //log(this.toString());
   }
   filename() {
     return 'adv' + this.number + '.adv';
@@ -52,6 +52,7 @@ SA.File = class {
       case 'M':
         return this.messages[i];
       case '#':
+      case '%':
         return i;
       default:
         return '';
@@ -617,7 +618,7 @@ SA.File.Do = class {
     ['saynoun',''],
     ['saynouncr',''],
     ['cr',''],
-    ['swaploc2','#'],
+    ['swaploc2','%'],
     ['wait',''],
     ['saga',''],
     ['',''],['',''],['',''],['',''],['',''],['',''],['',''],['',''],['',''],['',''],['',''],['',''],

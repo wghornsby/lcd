@@ -1,5 +1,6 @@
 /** YOHO UI */
 YOHO = window.YOHO || {}, YU = YOHO.UI = {};
+YU.Version = '1.0';
 //
 YU.Page$ = class extends Obj {
   /**
@@ -10,16 +11,280 @@ YU.Page$ = class extends Obj {
     super();
     this.compiler = new YC.Compiler();
     this.output$ = new YU.Output$();
-    this.editor$ = new YU.Editor$();
+    this.editor$ = new YU.Editor$()
+      .on('save', text => this.save(text));
     this.items$ = new YU.Items$();
+    this.bits$ = new YU.Vars$($('#bits'));
+    this.ctrs$ = new YU.Vars$($('#ctrs'));
+    this.welcome();
     this.load(src());
   }
-  load(raw) {
+  load(raw, reload = 0) {
+    this.output$.log();
+    this.output$.log('Compilation started at ' + (new Date().toLocaleTimeString()) + '.');
     this.result = this.compiler.load(raw);
     this.output$.log(this.result.message);
-    this.editor$.load(raw);
-    this.items$.load(this.compiler.game);
+    this.result.errors.forEach(e => this.output$.log(e, 'error'));
+    this.result.warnings.forEach(e => this.output$.log(e, 'warning'));
+    if (this.result.bytecode) {
+      ! reload && this.editor$.load(raw);
+      this.items$.load(this.compiler.game);
+      this.bits$.load(this.compiler.game.commands.bits);
+      this.ctrs$.load(this.compiler.game.commands.ctrs);
+    }
   }
+  save(text) {
+    this.load(text, 1);
+  }
+  welcome() {
+    this.output$.log('YOHO Developer');
+    this.output$.log('Version ' + YU.Version + ' (c) Warren Hornsby');
+  }
+}
+YU.Editor$ = class extends Obj {
+  onsave(raw) {}
+  /**
+   * YU.Source src
+   */
+  constructor() {
+    super();
+    this.$edit = $('#editor')
+      .on('input', () => this.oninput())
+      .on('keydown', e => this.onkeydown(e))
+      .on('keyup', e => this.onkeyup(e))
+    this.reset();
+  }
+  load(raw) {
+    this.src = new YU.Source(raw);
+    this.reset(this.src.html());
+  }
+  //
+  reset(html) {
+    if (html) {
+      this.$edit.innerHTML = html;
+      this.src.lines.forEach((line, i) => {
+        this.$edit.children[i].line = line;
+      })
+    } else {
+      this.$edit.innerHTML = '<div class="t0"><br></div>';
+    } 
+    this.setRange(this.$edit.firstElementChild);
+    this.log();
+  }
+  oninput() {
+    let h = this.$edit.innerHTML;
+    if (h == '' || h == '<br>') {
+      this.reset();
+    } else {
+      let n = this.line();
+      let line = n.line;
+      if (! line) {
+        let prev = n.previousSibling;
+        line = prev.line.split(prev.innerText, n.innerText);
+        n.line = line;
+      }
+      this.reformat(n);
+    }
+    this.log();
+  }
+  onkeydown(e) {    
+    if (e.keyCode == 9) {
+      this.setTab(this.line(), e.shiftKey ? -1 : 1);
+      e.preventDefault();
+      return;
+    }
+    if (e.keyCode == 8) {
+      let div = this.line();
+      if (this.getCursorOffset(div) == 0 && this.getTab(div) > 0) {
+        this.setTab(div, -1);
+        e.preventDefault();
+        return;
+      }
+    }
+    if (e.key.toUpperCase() == 'S' && e.ctrlKey) {
+      this.onsave(this.text());
+      e.preventDefault();
+      return;
+    }
+  }
+  onkeyup(e) {
+    this.log();
+  }
+  hilite(n) {
+    // maybe todo
+  }
+  reformat(n) {
+    let offset = this.getCursorOffset(n);
+    n.innerHTML = n.line.setText(n.innerText).innerHtml();
+    this.setCursor(n, offset);
+  }
+  text() {
+    let a = [];
+    for (let i = 0, j = this.$edit.children.length; i < j; i++) {
+      let n = this.$edit.children[i], t = '';
+      if (n.innerText != '\n') {
+        t = '  '.repeat(this.getTab(n)) + n.innerText;
+      }
+      a.push(t);
+    }
+    return a.join('\n');
+  }
+  line() {
+    let node = window.getSelection().anchorNode;
+    while (node.tagName != 'DIV') {
+      node = node.parentElement;
+    }
+    return node;
+  }
+  setRange(node, offset = 0) {
+    let sel = window.getSelection();
+    let range = document.createRange();
+    range.setStart(node, offset);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  setTab(div, offset) {
+    if (div) {
+      let tab = this.getTab(div) + offset;
+      div.className = 't' + ((tab > 0) ? tab : 0);
+      div.line.indent = tab;
+      this.reformat(div);
+      this.log();
+    }
+  }
+  setCursor(node, offset, cp = 0) {
+    if (! node) {
+      return;
+    }
+    const go = (node, n, offset) => n ? this.setCursor(n, offset) : this.setCursor(node.parentElement, offset, 1);
+    if (node.tagName != 'BR' && node.nodeType == 1) {
+      if (cp) {
+        return go(node, node.nextSibling, offset);
+      } else {
+        return go(node, node.firstChild, offset);
+      }
+    }
+    if (node.nodeType == 3) {
+      let len = node.textContent.length;
+      if (offset > len) {
+        offset -= len;
+        return go(node, node.nextSibling, offset);
+      }
+      this.setRange(node, offset);
+    }
+  }
+  getTab(div) {
+    if (div && div.className) {
+      return +div.className.substring(1);
+    } else {
+      return 0;
+    }
+  }
+  getCursorOffset(node, range, offset = 0, cp = 0) {
+    if (! node) {
+      node = this.line();
+    }
+    if (! range) {
+      range = window.getSelection().getRangeAt(0);
+    }
+    if (node == range.startContainer) {
+      return offset + range.startOffset;
+    }
+    if (node.nodeType == 1) {
+      let next;
+      if (! cp) {
+        next = node.firstChild, cp = 0;
+      }
+      if (! next) {
+        next = node.nextSibling, cp = 0;
+      }
+      if (! next) {
+        next = node.parentElement, cp = 1;
+      }
+      return next ? this.getCursorOffset(next, range, offset, cp) : null;
+    }
+    if (node.nodeType == 3) {
+      offset += node.textContent.length;
+      if (node.nextSibling) {
+        return this.getCursorOffset(node.nextSibling, range, offset);
+      } else if (node.parentElement) {
+        return this.getCursorOffset(node.parentElement, range, offset, 1);
+      }
+    }
+  }
+  log() {
+    //$('#output').innerText = this.line().outerHTML;
+  }
+}
+YU.Vars$ = class extends Obj {
+  //
+  constructor($e) {
+    super();
+    this.$e = $e;
+    this.reset();
+  }  
+  reset() {
+    this.$e.innerHTML = '';
+  }
+  load(vars) {
+    this.vars = new YU.Vars(vars);
+    this.draw();
+  }
+  draw() {
+    this.reset();
+    this.$e.innerHTML = this.vars.html();
+  }
+}
+YU.Vars = class extends Array {
+  //
+  constructor(vars) {
+    super();
+    vars.forEach(v => this.push(new YU.Var(v.id)));
+    this.sort(1);
+  }
+  sort(dir/*1=asc,-1=desc*/) {
+    super.sort((a, b) => {
+      if (a.id > b.id) {
+        return dir;
+      }
+      if (a.id < b.id) {
+        return -dir;
+      }
+    })
+  }
+  html() {
+    let h = [];
+    this.forEach(ir => h.push(ir.html()));
+    return h.join('');
+  }
+  rid(item) {
+    switch (item.rx) {
+      case -1:
+        return '< inventory >';
+      case 0:
+        return '{ out-of-play }';
+      default:
+        return this.game.rooms.getByRx(item.rx).id;
+    }
+  }
+}
+YU.Var = class extends Obj {
+  /**
+   * s id
+   * i value
+   */
+  constructor(id) {
+    super();
+    this.id = id;
+    this.value = 0;
+  }
+  html() {
+    return ['<div>', this.span(this.id, 'arg var'), this.span(this.value, 'value val'), '</div>'].join('');
+  }
+  span(s, cls) {
+    return '<span class="' + cls + '">' + s + '</span>';
+  }  
 }
 YU.Items$ = class extends Obj {
   //
@@ -114,172 +379,11 @@ YU.Output$ = class extends Obj {
     this.reset();
   }
   reset() {
-    this.$out.innerHTML = '';
+    this.$out.innerHTML = '<br>'.repeat(30);
   }
-  log(text) {
-    this.$out.innerHTML += this.$out.innerHTML.length ? '<br>' + text : text;
-  }
-}
-YU.Editor$ = class extends Obj {
-  /**
-   * YU.Source src
-   */
-  constructor() {
-    super();
-    this.$edit = $('#editor')
-      .on('input', () => this.oninput())
-      .on('keydown', e => this.onkeydown(e))
-      //.on('keyup', e => this.onkeyup(e))
-    this.reset();
-  }
-  load(raw) {
-    this.src = new YU.Source(raw);
-    this.reset(this.src.html());
-  }
-  //
-  reset(html) {
-    if (html) {
-      this.$edit.innerHTML = html;
-      this.src.lines.forEach((line, i) => {
-        this.$edit.children[i].line = line;
-      })
-    } else {
-      this.$edit.innerHTML = '<div class="t0"><br></div>';
-    } 
-    this.setRange(this.$edit.firstElementChild);
-    this.log();
-  }
-  oninput() {
-    let h = this.$edit.innerHTML;
-    if (h == '' || h == '<br>') {
-      this.reset();
-    } else {
-      let n = this.line();
-      let offset = this.getCursorOffset(n);
-      let line = n.line;
-      if (line) {
-        n.innerHTML = line.setText(n.innerText).innerHtml();
-        this.setCursor(n, offset);
-      }
-    }
-    this.log();
-  }
-  onkeydown(e) {    
-    if (e.keyCode == 9) {
-      this.setTab(this.line(), e.shiftKey ? -1 : 1);
-      e.preventDefault();
-      return;
-    }
-    if (e.keyCode == 8) {
-      let div = this.line();
-      if (this.getCursorOffset(div) == 0 && this.getTab(div) > 0) {
-        this.setTab(div, -1);
-        e.preventDefault();
-        return;
-      }
-    }    
-  }
-  reformat(n) {
-    let offset = this.getCursorOffset(this.$edit);
-    this.src = new YU.Source(this.text());
-    this.$edit.innerHTML = this.src.html();
-    this.setCursor(this.$edit, offset);
-  }
-  text() {
-    let a = [];
-    for (let i = 0, j = this.$edit.children.length; i < j; i++) {
-      let n = this.$edit.children[i], t = '';
-      if (n.innerText != '\n') {
-        t = '  '.repeat(this.getTab(n)) + n.innerText;
-      }
-      a.push(t);
-    }
-    return a.join('\n');
-  }
-  line() {
-    let node = window.getSelection().anchorNode;
-    while (node.tagName != 'DIV') {
-      node = node.parentElement;
-    }
-    return node;
-  }
-  setRange(node, offset = 0) {
-    let sel = window.getSelection();
-    let range = document.createRange();
-    range.setStart(node, offset);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-  setTab(div, offset) {
-    if (div) {
-      let tab = this.getTab(div) + offset;
-      div.className = 't' + ((tab > 0) ? tab : 0); 
-      this.log();
-    }
-  }
-  setCursor(node, offset, cp = 0) {
-    if (! node) {
-      return;
-    }
-    const go = (node, n, offset) => n ? this.setCursor(n, offset) : this.setCursor(node.parentElement, offset, 1);
-    if (node.nodeType == 1) {
-      if (cp) {
-        return go(node, node.nextSibling, offset);
-      } else {
-        return go(node, node.firstChild, offset);
-      }
-    }
-    if (node.nodeType == 3) {
-      let len = node.textContent.length;
-      if (offset > len) {
-        offset -= len;
-        return go(node, node.nextSibling, offset);
-      }
-      this.setRange(node, offset);
-    }
-  }
-  getTab(div) {
-    if (div && div.className) {
-      return +div.className.substring(1);
-    } else {
-      return 0;
-    }
-  }
-  getCursorOffset(node, range, offset = 0, cp = 0) {
-    if (! node) {
-      node = this.line();
-    }
-    if (! range) {
-      range = window.getSelection().getRangeAt(0);
-    }
-    if (node == range.startContainer) {
-      return offset + range.startOffset;
-    }
-    if (node.nodeType == 1) {
-      let next;
-      if (! cp) {
-        next = node.firstChild, cp = 0;
-      }
-      if (! next) {
-        next = node.nextSibling, cp = 0;
-      }
-      if (! next) {
-        next = node.parentElement, cp = 1;
-      }
-      return next ? this.getCursorOffset(next, range, offset, cp) : null;
-    }
-    if (node.nodeType == 3) {
-      offset += node.textContent.length;
-      if (node.nextSibling) {
-        return this.getCursorOffset(node.nextSibling, range, offset);
-      } else if (node.parentElement) {
-        return this.getCursorOffset(node.parentElement, range, offset, 1);
-      }
-    }
-  }
-  log() {
-    //$('#output').innerText = editor.innerHTML;
+  log(text = '<br>', cls = 'normal') {
+    this.$out.innerHTML += '<div class="' + cls + '">' + text + '</div>';
+    this.$out.scrollTo(0, this.$out.scrollHeight);
   }
 }
 YU.Source = class {
@@ -326,20 +430,28 @@ YU.Source.Line = class {
    */
   constructor(s, x) {
     s = s.replaceAll('\t', '  ').trimEnd();
-    this.text = s.trimStart();
+    this.setText(s.trimStart());
     this.indent = Math.floor((s.length - this.text.length) / 2 + .5);
     this.x = x;
     this.sx = this.isSection();
   }
   setText(s) {
-    this.text = s;
+    this.text = s; 
     return this;
+  }
+  split(text1, text2) {
+    this.text = text1;
+    let me = new YU.Source.Line(text2, -1);
+    me.indent = this.indent;
+    me.section = this.section;
+    me.ri = this.ri || this.innerHtml().substring(0, 7) == '<items>';
+    return me;
   }
   html() {
     return '<div class="t' + this.indent + '">' + this.innerHtml() + '</div>';
   }
   innerHtml() {
-    let t = this.text;
+    let t = this.text.replaceAll('\n', '');
     let comment = '';
     if (t.trim()) {
       let a = t.split('//');
@@ -371,6 +483,9 @@ YU.Source.Line = class {
         }
       }
     }
+    if (t.slice(-1) == ' ') {
+      t = t.substr(0, t.length - 1) + '&nbsp;';
+    }
     t += comment;
     return t || '<br>';
   }
@@ -387,13 +502,15 @@ YU.Source.Line = class {
       }
       return a.join('"');        
     }
-    if (t == 'exits') {
-      return t.tag('exits');
+    if (this.indent == 2) {
+      if (t == 'exits') {
+        return t.tag('exits');
+      }
+      if (t == 'items' || t == 'out-of-play') {
+        return t.tag('items');
+      }
     }
-    if (t == 'items' || t == 'out-of-play') {
-      return t.tag('items');
-    }
-    if (this.ri) {
+    if (this.ri && this.indent == 3) {
       return this.htmlItem(t);
     } else {
       return this.htmlAction(t);
@@ -422,6 +539,7 @@ YU.Source.Line = class {
     return o.join('"');
   }
   htmlActionWord(w) {
+    w = w.replace(/\xA0/g," ");
     if (w == '') {
       return w;
     }
@@ -495,15 +613,18 @@ YU.Source.Line = class {
   }
   htmlCmd(t) {
     let o = [];
-    let a = (t + ' ').split(') ');
-    a.forEach(s => {
+    let a = t.split(')');
+    a.forEach((s, i) => {
       let b = s.split('(');
       if (b.length == 1) {
         o.push(s);
       } else {
         b[0] = b[0].tag('cmd');
         b[1] = b[1].tag('word');
-        o.push(b.join('(') + ') ');
+        o.push(b.join('('));
+        if (i < a.length - 1) {
+          o.push(')');
+        }
       }
     })
     return o.join('');

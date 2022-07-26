@@ -1,0 +1,224 @@
+// ADVENTURE 9 v 223: GHOST TOWN
+
+about
+
+  title(Ghost Town) author(Scott Adams) version(9.223) date(1984)
+  wordlen(4) carrymax(7) lightlen(175)
+
+verbs
+
+  GO=WALK=RUN=CLIM=ENTE=MOUN=RIDE
+  GET=TAKE=PICK=GRAB=COLL=LIFT
+  DROP=PUT=THRO=LEAV=REMO=TOSS
+  LOOK=EXAM=DESC=CHEC
+  SAY=YELL=SCRE=WHIS=SING
+  DIG=SHOV
+  MIX=MAKE
+  SMEL=TAST=EAT
+  BURN=IGNI=LIGH
+  OPEN=UNLO
+  CLOS=SHUT
+  WITH=USE
+  HIT=RING=BEAT
+  CLAP=APPL
+  UNLI=EXTI
+  LIST=HEAR
+  BREA=SMAS=BUST
+  JUMP=LEAP
+  CUT=SLIC
+  SHAK=WAVE
+  WEAR=PUTO
+  FIND=LOCA=SEEK
+  CONN=SPLI=REPA
+  MOVE=PUSH=PRES=TAP
+  EMPT=SPIL
+  KNOC=TOUC=FEEL=KISS
+  SPUR=KICK
+
+nouns
+
+  MANU=PILE
+  SULF=POWD
+  HORS=MAGN
+  GHOS=FIGU
+  HAND=FEET
+  KEY=KEYS
+  CAND=LIGH
+  DERR=GUN
+  TUMB=SAGE=BRUS
+  MINE=ENTR
+  GIDD=GITT=GIDY=GITY
+  TAPE=ROLL
+  TELE=OFFI
+  SNAK=RATT
+  WORM=SLIM
+  BOX=CASH
+  GO=BOAR
+  GOLD=NUGG
+  RAVI=RIDG
+  BAG=DUST
+
+inventory
+
+  // nothing
+
+actions
+  
+  auto
+    if !b(intro):
+      b(intro)=1; c(moves)=0; c(bonus)=0; c(matches)=12; c(ding-dong)=25; c(daylight)=170
+      saveloc(telegraph-office)
+      say "Welcome to Adventure 9 'GHOST TOWN'"
+      say "by Scott Adams dedicated: the Cherens"
+  auto
+    c(moves)++; c(daylight)--;
+    if !dark & c(daylight)>0 & c(daylight)<=25: 
+      say "Its getting|dark!"
+    if c(daylight)<0 & !b(sunset): 
+      say "Sunset!"; light(0); b(17)=1; c(ding-dong)--;
+  auto
+    if rnd(20) & c(moves)>225 & !b(moves-gt-225): 
+      b(moves-get-225)=1; c(bonus)-=3
+
+rooms
+
+  town-1 "I am in a Ghost Town" start-room
+    exits
+      e(road-e) w(town-2)
+    items
+      "Barbershop"
+      "Jail"
+
+  town-2 "I am in a Ghost Town"
+    exits
+      e(town-1) w(town-3)
+    items
+      "Saloon"
+      "Dry-Goods store"
+  
+  town-3 "I am in a Ghost Town"
+    exits
+      e(town-2) w(town-4)
+    items
+      "Telegraph office"
+      "Hotel"
+    
+  town-4 "I am in a Ghost Town"
+    exits
+      e(town-3) w(road-w)
+    items
+      "Stable"
+  
+  stable "I am in a stable"
+    exits
+      s(town-4)
+    items
+      "Stall"
+      "Manure pile"
+    
+  road-w "I am in a road"
+    exits
+      e(town-4) w(road-fork)
+  
+  road-fork "I am in a fork in the road"
+    exits
+      n(field) s(ridge) e(road-w)
+
+  ridge-1 "I'm on a ridge above a narrow ravine. I see mountains in the distance"
+    exits
+      n(road-fork)
+  
+  ravine
+    exits
+      u(ridge-1)
+    items
+      coal "Sagebrush charcoal" CHAR
+      "Entrance to a mine"
+
+  saloon
+    exits
+      s(town-2)
+    items
+      mirror "Mirror"
+      bell "Large bell" BELL
+    out-of-play
+      piano "Piano with a set of keys"
+      ghost-dance "Ghostly square dance"
+      ghost-pianist "Wraithlike figure playing equally ghostly piano"
+      map "Map" MAP
+      mirror-taped "Taped up mirror"
+      mirror-broken "Broken mirror"
+      saloon-hole "Hole in the wall"
+    auto
+      if !live(ghost-dance):
+        if at(saloon) & !with(candle-lit):
+          drop(ghost-dance)
+        elseif !at(saloon):
+          put(ghost-dance, saloon)
+      else:
+        if !b(sunset):
+          remove(ghost-dance)
+        if at(saloon) & with(candle-lit):
+          remove(ghost-dance); say "something|scared them off!"
+    auto
+      c(ding-dong)--;
+      if !b(applaud):
+        if c(ding-dong)<0:
+          say "Ding-Ding|Bell rings somewhere"
+          put(ghost-pianist, saloon)
+          c(ding-dong)=30; c(ghost-pianist-life)=10
+        if inplay(ghost-pianist):
+          c(ghost-pianist-life)--
+          if c(ghost-pianist-life)<=0: remove(ghost-pianist)
+    auto
+      if !in-play(piano): 
+        say "Ghostly voice whispers:|Vain..."
+    cmd(OPEN PIAN):
+      if here(piano) & !b(piano-open):
+        say "something|falls out"; b(piano-open)=1; drop(map)
+    cmd(GET KEY):
+      if here(piano) & !here(key): say "Silly, wrong type keys!"
+    cmd(PLAY):
+      if here(piano):
+        if !b(piano-open): ok; say "Odd|something|goes thunk!"
+        else: ok; say "very pretty"
+    cmd(BREA MIRR):
+      if here(mirror): say "Crack!|flying glass slices me up"; die
+    cmd(LOOK MIRR):
+      if here(mirror): ok; say "very pretty"
+    cmd(TAPE MIRR):
+      if with(tape) & here(mirror): ok; swap(mirror, mirror-taped)
+    cmd(BREA MIRR):
+      if here(mirror-taped): ok; swap(mirror-taped, mirror-broken); drop(saloon-hole)
+    cmd(GO HOLE):
+      if here(saloon-hole): ok; go(saloon-office)
+    cmd(HIT GHOS):
+      if here(ghost-pianist): say "Sorry I can't|My hand passes thru!"
+    cmd(CLAP):
+      if here(ghost-pianist): 
+        b(applaud)=1; swap(ghost-pianist, piano); say "Ghost stands, bows, vanishes!"
+        if c(moves)<=30: c(bonus)+=3
+    cmd(READ MAP):
+      if with(map): ok; "Its mine, dig roof!"
+    cmd(BURN MAP):
+      if with(map):
+        if with(candle-lit): ok; remove(map)
+        if with(matches): ok; remove(map); c(matches)--
+
+actions
+
+  auto
+    if b(burn-match): 
+      b(burn-match)=0; c(matches)--
+      if c(matches)<=0: swap(matches, matches-empty)
+  auto
+    if b(say-score):
+      say "You've made"; 
+      sayc(bonus); say "BONUS points out of a possible 50 in"
+      sayc(moves); say "moves"
+      score
+  cmd("GO SLEE")
+    say "Try: SLEEP"
+  
+  
+

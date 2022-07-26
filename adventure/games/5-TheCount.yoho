@@ -43,7 +43,7 @@ autos
     else:
       c(nodoz-life)--
       if c(nodoz-life)<=0: b(nodoz)=0
-        elseif c(nodoz-life)>=4 & c(nodoz-life)<=8: say "I'm getting very tired"
+      elseif c(nodoz-life)>=4 & c(nodoz-life)<=8: say "I'm getting very tired"
 
   auto
     if c(moves-left)<=0 & !b(sleep):
@@ -129,7 +129,7 @@ rooms
     cmd(CLI) 
       if here(sheet-over-ledge): go(sheet); ok
 
-  sheet "I'm hanging on the end of a sheet. I made a fold so I can leave things here. There's a window box here on the side of the castle"
+  sheet "I'm hanging on the end of a sheet. I made a fold. There's a window box here on the side of the castle"
     auto
       if at(sheet):
         if rnd(33) & inplay(sheet-tied-pole): say "I hear the flagpole splinter as I fall to my death!"; die
@@ -199,8 +199,8 @@ rooms
       if with(postcard) & !inplay(clip): forceget(clip, note); ok
       elseif with(clip): forceget(clip); ok
     cmd(GET CIG)
-      if with(cig): get(cig) ok
-      elseif with(cig-lit): get(cig-lit) ok
+      if with(cig): get(cig); ok
+      elseif with(cig-lit): get(cig-lit); ok
     cmd(LIG CIG)
       if with(cig) & with(matches): c(cig-life) = 8; swap(cig, cig-lit)       
   
@@ -228,7 +228,8 @@ rooms
     cmd(LOO MIR)
       if with(mirror):
         if inplay(neck-bite): 
-          say "My neck looks BITTEN!|I appear pale & drained!|I think I can only take "; sayc(days-left); say " more days of this!"
+          say "My neck looks BITTEN!"
+          say "I appear pale & drained!|I think I can only take "; sayc(days-left); say " more days of this!"
         else:
           say "TODAY I look healthy..."
     cmd(DRO MIR)

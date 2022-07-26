@@ -1,5 +1,6 @@
 /** YOHO Compiler */
 YOHO = window.YOHO || {}, YC = YOHO.Compiler = {};
+YC.Version = '1.0';
 //
 YC.Errors = [];
 YC.Compiler = class {
@@ -16,7 +17,7 @@ YC.Result = class {
    * s message
    * YC.Error[] errors
    * YC.Error[] warnings
-   * s bytecode
+   * s bytecode (if compile successful)
    */
   constructor(game) {
     this.errors = YC.Errors.filter(e => e.severity == 1);
@@ -381,6 +382,9 @@ YC.Commands = class {
       case 'gameover':
         op = 22, argct = 0;
         break;
+      case 'score':
+        op = 23, argct = 0;
+        break;
       default:
         YC.Errors.push(new YC.Error('Unknown action: ' + x.op, line));
       }
@@ -408,7 +412,7 @@ YC.Commands = class {
     }
     r.arg1 = args[0].trim();
     r.arg2 = args.length == 2 ? args[1].trim() : null;
-    r.rest = b[1].trim();
+    r.rest = b[1] ? b[1].trim() : '';
     return r;
   }
   get(a, id) {
@@ -664,7 +668,7 @@ YC.Rooms = class extends Array {
           if (i == -1) {
             YC.Errors.push(new YC.Error("Unknown direction: " + dir, k));
           }
-          exits[i] = room.rx;
+          exits[i] = room?.rx;
         }
       }
       room.exits = exits;

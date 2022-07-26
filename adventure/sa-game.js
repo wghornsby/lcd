@@ -20,9 +20,9 @@ SA.Game = class extends Obj {
     this.items = this.file.items;
     this.actions = this.file.actions;
     this.messages = this.file.messages;
-    this.locs = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    this.bits = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    this.ctrs = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    this.locs = new Array(16);
+    this.bits = new Array(32);
+    this.ctrs = new Array(16);
     this.ctr = 0;
     this.lampleft = this.file.header.lightlen;
     this.go(this.file.header.startroom);
@@ -62,6 +62,7 @@ SA.Game = class extends Obj {
     this.items.forEach((item, i) => item.rx = snap.itemsrx[i]);
   }
   submit(s) {
+    log('> ' + s);
     if (s == 'UNDO') {
       this.undo();
       return;
@@ -218,6 +219,7 @@ SA.Game = class extends Obj {
     let c = this.ctr;
     this.ctr = this.ctrs[i];
     this.ctrs[i] = c;
+    this.onswapctr(i);
   }
   swaploc(i) {
     let brx = this.locs[i];
@@ -298,7 +300,7 @@ SA.Game = class extends Obj {
     if (action.continuation.length) {
       actions.splice(0, 0, ...action.continuation);
     }
-    //log(action);
+    log(action.toString());
     let dos = [].concat(...action.dos);
     this.do(dos, () => this.doActions(actions, callback));
   }

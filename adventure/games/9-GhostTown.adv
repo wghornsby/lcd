@@ -484,25 +484,25 @@ auto(100%)
     say(scared them off!)
 
 auto(100%)
-  if ! bit1
+  if ! b1[intro]
     ctr = 0
     continue
-    swapct(ctr2)
+    swapct(c2[bonus])
     ctr = 12
 
 continue
-    swapct(ctr6)
+    swapct(c6[matches])
     say(Welcome to Adventure 9 'GHOST TOWN')
     say(by Scott Adams dedicated: the Cherens)
 
 continue
-    set(bit1)
+    set(b1[intro])
     ctr = 25
-    swapct(ctr3)
+    swapct(c3[ding-dong])
     ctr = 170
 
 continue
-    swapct(ctr7)
+    swapct(c7[daylight])
     go(I am in a Telegraph office)
     swaploc
     go(I am in a saloon)
@@ -514,48 +514,48 @@ continue
 
 auto(100%)
     ctr += 1
-    swapct(ctr7)
+    swapct(c7[daylight])
     continue
     ctr--
 
 continue
-  if ctr <= 25 & ! bit15 & ctr > 0
+  if ctr <= 25 & ! b15[dark] & ctr > 0
     say(Its getting)
     say(dark!)
 
 continue
-  if ctr <= 0 & ! bit17
+  if ctr <= 0 & ! b17[sunset]
     say(Sunset!)
     dark
     look2
-    set(bit17)
+    set(b17[sunset])
 
 continue
-    swapct(ctr7)
-    swapct(ctr3)
+    swapct(c7[daylight])
+    swapct(c3[ding-dong])
     ctr--
-    swapct(ctr3)
+    swapct(c3[ding-dong])
 
-continue
-  if at(I am in a ravine) & ! bit17
+continue  -- todo ; do this when exiting mine
+  if at(I am in a ravine) & ! b17[sunset]
     cleardark
     look2
 
-auto(100%)
-  if bit17 & ! live(Ghostly square dance) & at(I am in a saloon) & ! with(Lit candle)
+auto(100%)  -- todo at saloon
+  if b17[sunset] & ! live(Ghostly square dance) & at(I am in a saloon) & ! with(Lit candle)
     drop(Ghostly square dance)
 
 auto(100%)
-  if bit17 & ! at(I am in a saloon) & ! live(Ghostly square dance)
+  if b17[sunset] & ! at(I am in a saloon) & ! live(Ghostly square dance)
     dropat(Ghostly square dance, I am in a saloon)
 
 auto(20%)
   if ctr > 225
-    set(bit6)
+    set(b6[3-pt-deduction])
 
-auto(20%)
-  if ! bit12
-    swapct(ctr3)
+auto(20%)  -- todo at saloon
+  if ! b12[ghost-pianist]
+    swapct(c3[ding-dong])
     continue
 
 continue
@@ -567,20 +567,20 @@ continue
 continue
   if ctr <= 0
     ctr = 30
-    swapct(ctr4)
+    swapct(c4[ghost-pianist])
     ctr = 10
-    swapct(ctr4)
+    swapct(c4[ghost-pianist])
 
 continue
-    swapct(ctr3)
+    swapct(c3[ding-dong])
 
 auto(100%)
-  if ! bit17 & live(Ghostly square dance)
+  if ! b17[sunset] & live(Ghostly square dance)
     remove2(Ghostly square dance)
 
 auto(100%)
   if live(Wraithlike figure playing equally ghostly piano)
-    swapct(ctr4)
+    swapct(c4[ghost-pianist])
     ctr--
     continue
 
@@ -590,7 +590,7 @@ continue
     cls
 
 continue
-    swapct(ctr4)
+    swapct(c4[ghost-pianist])
 
 auto(4%)
   if ! live(Piano with set of keys)
@@ -598,9 +598,9 @@ auto(4%)
     say(Vain...)
 
 auto(100%)
-  if bit18
-    clear(bit18)
-    swapct(ctr6)
+  if b18[burn-match]
+    clear(b18[burn-match])
+    swapct(c6[matches])
     ctr--
     continue
 
@@ -609,7 +609,7 @@ continue
     swap(Matches, Empty matchbook)
 
 continue
-    swapct(ctr6)
+    swapct(c6[matches])
 
 auto(100%)
   if holds(Keg of gunpowder) & holds(Lit candle)
@@ -628,8 +628,8 @@ auto(100%)
     remove(Which I'm wearing)
 
 auto(100%)
-  if bit16
-    clear(bit16)
+  if b16[light-ran-out]
+    clear(b16[light-ran-out])
     remove2(Lit candle)
     look2
 
@@ -640,23 +640,23 @@ auto(100%)
 
 auto(100%)
   if at(I am in a lot of trouble!)
-    set(bit8)
+    set(b8[in-trouble])
 
 auto(100%)
-  if bit8
-    set(bit9)
+  if b8[in-trouble]
+    set(b9[say-score])
 
 auto(100%)
-  if bit9
-    clear(bit9)
+  if b9[say-score]
+    clear(b9[say-score])
     continue
-    swapct(ctr2)
+    swapct(c2[bonus])
 
 continue
     say(You've made)
     sayctr
     say(BONUS points out of a possible 50 in)
-    swapct(ctr2)
+    swapct(c2[bonus])
 
 continue
     sayctr
@@ -664,35 +664,35 @@ continue
     score
 
 auto(100%)
-  if bit8
+  if b8[in-trouble]
     gameover
 
 auto(100%)
-    swapct(ctr2)
+    swapct(c2[bonus])
     continue
 
 continue
-  if bit6
+  if b6[3-pt-deduction]
     ctr -= 3
-    clear(bit6)
+    clear(b6[3-pt-deduction])
 
 continue
-  if bit2
+  if b2[applaud]
     ctr += 3
-    clear(bit2)
+    clear(b2[applaud])
 
 continue
-  if bit3
+  if b3[bonus-add-10]
     ctr += 10
-    clear(bit3)
+    clear(b3[bonus-add-10])
 
 continue
-  if bit5
+  if b5[kill-worm]
     ctr += 1
-    clear(bit5)
+    clear(b5[kill-worm])
 
 continue
-    swapct(ctr2)
+    swapct(c2[bonus])
 
 action(MIX FUSE)
     say(How?)
@@ -701,14 +701,14 @@ action(GO SLEE)
     say(Try: SLEEP)
 
 action(SAVE GAME)
-    swapct(ctr2)
+    swapct(c2[bonus])
     ctr -= 2
-    swapct(ctr2)
+    swapct(c2[bonus])
     save
 
 action(QUIT)
-    set(bit8)
-    set(bit9)
+    set(b8[in-trouble])
+    set(b9[say-score])
 
 action(DIG)
   if ! holds(Shovel)
@@ -726,7 +726,7 @@ action(GET MANU)
     say(BARF!)
     say(OK)
     get(Male cow manure)
-    set(bit6)
+    set(b6[3-pt-deduction])
 
 action(GO MOUN)
     say(How?)
@@ -750,25 +750,25 @@ continue
 
 continue
   if ctr <= 80
-    set(bit3)
+    set(b3[bonus-add-10])
 
 action(GO RAVI)
-  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance) & ! bit10
+  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance) & ! b18[brush-burnt]
     say(Sorry I can't)
     say(its full of sage brush, tumbleweed & is impassable)
 
 action(GO RAVI)
-  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance) & bit10
+  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance) & b18[brush-burnt]
     say(OK)
     go(I am in a ravine)
     cls
 
 action(BURN)
-  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance) & ! bit10 & with(Matches)
+  if at(I'm on a ridge above a narrow ravine I see|mountains in the distance) & ! b18[brush-burnt] & with(Matches)
     say(OK)
     say(The dry wash is burnt clear)
-    set(bit10)
-    set(bit18)
+    set(b18[brush-burnt])
+    set(b18[burn-match])
 
 action(BREA MIRR)
   if here(Mirror)
@@ -791,7 +791,7 @@ action(SAY HOW)
 continue
   if ctr <= 100
     look2
-    set(bit3)
+    set(b3[bonus-add-10])
 
 action(GO HOLE)
   if here(Hole in the wall)
@@ -806,7 +806,7 @@ action(LOOK COMP)
     say(horseshoe)
 
 action(GO JAIL)
-  if here(Jail) & ! bit11
+  if here(Jail) & ! 1
     say(Sorry I can't)
     say(Doors closed, windows barred!)
 
@@ -817,9 +817,9 @@ action(HIT GHOS)
 
 action(CLAP)
   if here(Wraithlike figure playing equally ghostly piano)
-    set(bit12)
+    set(b12[ghost-pianist])
     swap(Wraithlike figure playing equally ghostly piano, Piano with set of keys)
-    set(bit2)
+    set(b2[applaud])
     say(Ghost stands, bows, vanishes!)
 
 action(GET KEY)
@@ -827,38 +827,38 @@ action(GET KEY)
     say(Silly, wrong type keys!)
 
 action(GO JAIL)
-  if here(Jail) & bit11 & live(* $200 *)
+  if here(Jail) & b11[jail-open] & live(* $200 *)
     say(OK)
     go(I am in a Jail)
     look2
 
 action(PLAY)
-  if here(Piano with set of keys) & ! bit13
+  if here(Piano with set of keys) & ! b13[piano-open]
     say(OK)
     say(Odd)
     say(something)
     say(goes thunk!)
 
 action(PLAY)
-  if here(Piano with set of keys) & bit13
+  if here(Piano with set of keys) & b13[piano-open]
     say(OK)
     say(very pretty)
 
 action(OPEN DOOR)
-  if here(Jail) & ! bit11
+  if here(Jail) & ! b11[jail-open]
     say(with what?)
     say(Inside bolt is latched!)
 
 action(WITH HORS)
-  if here(Jail) & ! bit11 & with(Horseshoe)
+  if here(Jail) & ! b11[jail-open] & with(Horseshoe)
     continue
     say(Magnet!)
-    set(bit11)
+    set(b11[jail-open])
     say(it worked!)
 
 continue
   if ctr <= 30
-    set(bit2)
+    set(b2[applaud])
 
 action(HIT BELL)
   if with(Large bell) & at(I am in a hotel room) & ! live(Bed)
@@ -868,15 +868,15 @@ action(HIT BELL)
     drop(Bed)
 
 action(WITH)
-  if here(Jail) & ! bit11
+  if here(Jail) & ! b11[jail-open]
     saynoun
     say( doesn't seem to do it!)
 
 action(OPEN PIAN)
-  if here(Piano with set of keys) & ! bit13
+  if here(Piano with set of keys) & ! b13[piano-open]
     say(something)
     say(falls out)
-    set(bit13)
+    set(b13[piano-open])
     drop(Map)
 
 action(BURN CAND)
@@ -884,7 +884,7 @@ action(BURN CAND)
     say(OK)
     swap(Unlit candle, Lit candle)
     look2
-    set(bit18)
+    set(b18[burn-match])
 
 action(UNLI CAND)
   if with(Lit candle)
@@ -935,7 +935,7 @@ action(OPEN DOOR)
     say(its locked!)
 
 action(SCOR)
-    set(bit9)
+    set(b9[say-score])
 
 action(GO STAB)
   if here(Stable)
@@ -999,7 +999,7 @@ action(SMEL MANU)
 action(SHAK HAT)
   if with(Stetson hat) & ! live(Small key)
     drop(Small key)
-    set(bit2)
+    set(b2[applaud])
     say(something)
     say(falls out)
 
@@ -1066,7 +1066,7 @@ action(DIG ROOF)
 
 continue
   if ctr <= 80
-    set(bit3)
+    set(b3[bonus-add-10])
 
 action(READ MAP)
   if with(Map)
@@ -1099,9 +1099,9 @@ action(GO HORS)
 
 action(BURN MATC)
   if with(Matches)
-    swapct(ctr6)
+    swapct(c6[matches])
     continue
-    set(bit18)
+    set(b18[burn-match])
 
 continue
     say(Match flares up...)
@@ -1109,29 +1109,29 @@ continue
     wait
 
 continue
-  if bit15
+  if b15[dark]
     cleardark
     look2
-    set(bit14)
+    set(b14)
 
 continue
-  if bit14
+  if b14
     wait
     wait
     wait
 
 continue
-  if bit14
-    clear(bit14)
+  if b14
+    clear(b14)
     dark
     look2
 
 continue
-    swapct(ctr6)
+    swapct(c6[matches])
     say(...and then goes out)
 
 action(SAY GIDD)
-  if at(I'm on back of 'Ole Paint) & ! bit20
+  if at(I'm on back of 'Ole Paint) & ! b20[horse-shoed]
     say(OK)
     saynouncr
     say(He won't budge)
@@ -1144,14 +1144,14 @@ action(GO MINE)
     say(OK)
 
 action(SLEE)
-    swapct(ctr7)
+    swapct(c7[daylight])
     ctr = 175
-    swapct(ctr7)
+    swapct(c7[daylight])
     continue
 
 continue
     say(Good night)
-    clear(bit17)
+    clear(b17[sunset])
     wait
     wait
 
@@ -1220,7 +1220,7 @@ action(KILL WORM)
     say(OK)
     swap(Purple worm, Purple Slime)
     say(That felt good!)
-    set(bit5)
+    set(b5[kill-worm])
 
 action(GET KEY)
   if with(Telegraph key)
@@ -1240,7 +1240,7 @@ action(CONN WIRE)
 
 continue
   if ctr <= 30
-    set(bit3)
+    set(b3[bonus-add-10])
 
 action(MOVE SAFE)
   if here(Large safe) & ! live(2 loose wires) & ! live(Spliced wire) & ! live(Pieces of wire)
@@ -1278,7 +1278,7 @@ action(DIG)
     say(something)
 
 action(GO JAIL)
-  if here(Jail) & bit11 & ! live(* $200 *)
+  if here(Jail) & b11[jail-open] & ! live(* $200 *)
     say(Ghostly voice whispers:)
     go(I am in a Jail)
     look2
@@ -1301,14 +1301,14 @@ action(GET WIRE)
     say(OK)
 
 action(OPEN DOOR)
-  if here(Jail) & bit11
+  if here(Jail) & b11[jail-open]
     say(it already is)
 
 action(WAIT)
     ctr += 45
-    swapct(ctr7)
+    swapct(c7[daylight])
     ctr -= 45
-    swapct(ctr7)
+    swapct(c7[daylight])
 
 action(WEAR SPUR)
   if holds(*SILVER SPURS*)
@@ -1319,17 +1319,17 @@ action(CLEA)
 
 action(LOOK MATC)
   if with(Matches)
-    swapct(ctr6)
+    swapct(c6[matches])
     sayctr
     say(left!)
-    swapct(ctr6)
+    swapct(c6[matches])
 
 action(JUMP)
     say(What?)
 
 action(BURN MAP)
   if with(Matches) & with(Map)
-    set(bit18)
+    set(b18[burn-match])
     remove2(Map)
     say(OK)
 
@@ -1346,7 +1346,7 @@ action(BURN GUNP)
 
 action(BURN GUNP)
   if here(Pile of gunpowder) & with(Matches)
-    set(bit18)
+    set(b18[burn-match])
     say(OK)
     remove2(Pile of gunpowder)
     say(Whoosh!)
@@ -1386,7 +1386,7 @@ continue
     remove2(Pile of gunpowder)
 
 action(SAY GIDD)
-  if at(I'm on back of 'Ole Paint) & bit20
+  if at(I'm on back of 'Ole Paint) & b20[horse-shoed]
     say(OK)
     saynouncr
     continue
@@ -1395,7 +1395,7 @@ action(SAY GIDD)
 continue
     say(He bucks, I'm thrown)
     say(he rides off without me)
-    clear(bit20)
+    clear(b20[horse-shoed])
 
 continue
     go(I am in a hidden canyon)
@@ -1464,10 +1464,10 @@ action(COVE SNAK)
     die
 
 action(MOVE BED)
-  if here(Bed) & ! bit19
+  if here(Bed) & ! b19[bed-move]
     say(OK)
     drop(Roll of tape)
-    set(bit19)
+    set(b19[bed-move])
 
 action(GO MIRR)
     say(Sorry I can't)
@@ -1627,7 +1627,7 @@ action(SHOE)
 
 continue
     remove2(Nails)
-    set(bit20)
+    set(b20[horse-shoed])
 
 action(SHOE)
   if here('ole Paint) & with(Keg of nails)

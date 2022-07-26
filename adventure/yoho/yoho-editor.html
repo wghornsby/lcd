@@ -90,10 +90,15 @@ tile#head {
   background-color:#1c4c6d;
   height:34px;
   line-height:34px;
-  padding:0 10px 0 33px;
+  padding:0 10px 0 32px;
   font-family:'Calibri';
   font-size:14pt;
   font-weight:bold;
+}
+tile#foot {
+  height:20px;
+  min-height:20px;
+  background-color:#0d3249;
 }
 #jolly {
   position:absolute;
@@ -102,7 +107,7 @@ tile#head {
 }
 header {
   background-color:#2e2e2e;
-  color:#bbbbbb;
+  color:white;
   height:26px;
   line-height:28px;
   padding:0 6px;
@@ -114,14 +119,16 @@ header {
 }
 #editorc {
   background-color:#1e1e1e;
-  padding:24px 0 0 10px;
+  padding:24px 0 0 0px;
 }
 #editor {
   background-color:#1e1e1e;
   font-family:'Calibri';
   font-size:10.5pt;
+  line-height:2.3ch;
   color:#d0d0d0;
   white-space:nowrap;
+  padding-left:10px;
 }
 #editor div.t1 {margin-left:2ch}
 #editor div.t2 {margin-left:4ch}
@@ -160,12 +167,30 @@ header {
   font-weight:bold;
   margin-right:1px;
 }
+#outputc {
+  background-color:#2e2e2e;
+  padding:0 0 0 0;
+}
 #output {
   background-color:black;
-  padding:1em;
   font-family:'Consolas';
   font-size:9pt;
+  padding:1em;
+}
+#output .normal {
   color:aquamarine;
+}
+#output .error {
+  color:red;
+}
+#output .warning {
+  color:yellow;
+}
+#player {
+  background-color:black;
+  font-family:'Consolas';
+  font-size:9pt;
+  padding:1em;
 }
 #map {
   background-color:#3a3a3a;
@@ -189,7 +214,7 @@ uih span {
   flex-basis:50%;
   display:inline-block;
   color:#d0d0d0;
-  padding-left:10px;
+  padding-left:7px;
 }
 ui.list div {
   font-family:'Calibri';
@@ -198,7 +223,7 @@ ui.list div {
   background-color:#282828;
 }
 ui.list span {
-  padding-left:10px;
+  padding-left:7px;
   height:18px;
   line-height:18px;
   flex-grow:0;
@@ -208,6 +233,14 @@ ui.list span {
 }
 #itemsui {
   border-bottom:5px solid #2e2e2e;
+}
+.var {
+  flex-basis:85% !important;
+}
+.val {
+  flex-basis:15% !important;
+  text-align:right;
+  padding-right:7px;
 }
     </style>
   </head>
@@ -230,12 +263,14 @@ ui.list span {
       <tile class='grow1 flexrow'>
         <tile id='col2' class='grow30 flexcol'>
           <tile class='ui'>
-            <header>Map</header>
-            <ui id='map'></ui>
+            <header>Output</header>
+            <tile id='outputc' class='grow1 flexcol h100'>
+              <ui id='output' class='scroll'></ui>
+            </tile>
           </tile>
           <tile class='ui'>
-            <header>Output</header>
-            <ui id='output'></ui>
+            <header>Interpreter</header>
+            <ui id='player'>I am in a bed.</ui>
           </tile>
         </tile>
         <tile id='col1' class='grow45 flexcol'>
@@ -251,7 +286,6 @@ ui.list span {
               <tile class='grow1 flexcol'>
                 <uih id='itemsh'><span>Item</span><span>Room</span></uih>
                 <ui id='items' class='list scroll'>
-                  <div><span class='item'>stake</span><span class='room'>inventory</span></div>
                 </ui>
               </tile>
             </tile>
@@ -259,19 +293,18 @@ ui.list span {
           <tile class='grow40 flexrow'>
             <tile class='ui grow50'>
               <header>Bits</header>
-              <uih id='bitsh'><span>Bit</span><span>Value</span></uih>
-              <ui id='bits' class='list scroll'>
-                <div><span class='arg'>intro</span><span class='value'>0</span></div>
-              </ui>
+              <uih id='bitsh'><span class='var'>Bit</span><span class='val'>Value</span></uih>
+              <ui id='bits' class='list scroll'></ui>
             </tile>
             <tile class='ui grow50'>
               <header>Counters</header>
-              <uih id='ctrsh'><span>Counter</span><span>Value</span></uih>
+              <uih id='ctrsh'><span class='var'>Counter</span><span class='val'>Value</span></uih>
               <ui id='ctrs' class='list scroll'></ui>
             </tile>
           </tile>
         </tile>
       </tile>
+      <tile id='foot'></tile>
     </tile>
   </body>
   <script nonce='wghornsby'>
