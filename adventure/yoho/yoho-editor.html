@@ -36,6 +36,7 @@ body {
 .grow2 {flex-grow:2;}
 .grow3 {flex-grow:3;}
 .grow4 {flex-grow:4;}
+.grow20 {flex-grow:0;flex-basis:20%;}
 .grow30 {flex-grow:0;flex-basis:30%;}
 .grow35 {flex-grow:0;flex-basis:35%;}
 .grow40 {flex-grow:0;flex-basis:40%;}
@@ -88,6 +89,7 @@ tile#body {
 }
 tile#head {
   background-color:#1c4c6d;
+  background-color:#3c3c3c;
   height:34px;
   line-height:34px;
   padding:0 10px 0 32px;
@@ -98,7 +100,7 @@ tile#head {
 tile#foot {
   height:20px;
   min-height:20px;
-  background-color:#0d3249;
+  background-color:rgb(0, 122, 204);
 }
 #jolly {
   position:absolute;
@@ -107,12 +109,12 @@ tile#foot {
 }
 header {
   background-color:#2e2e2e;
-  color:white;
+  color:#b0b0b0;
   height:26px;
   line-height:28px;
-  padding:0 6px;
-  font-family:'Calibri';
-  font-size:10.5pt;
+  padding:0 7px;
+  font-family:'Segoe UI';
+  font-size:8pt;
 }
 [contenteditable]:focus {
   outline:none;
@@ -188,8 +190,9 @@ header {
 }
 #player {
   background-color:black;
-  font-family:'Consolas';
-  font-size:9pt;
+  font-family:'Segoe UI';
+  font-size:11pt;
+  line-height:2.4ch;
   padding:1em;
 }
 #map {
@@ -263,18 +266,21 @@ ui.list span {
       <tile class='grow1 flexrow'>
         <tile id='col2' class='grow30 flexcol'>
           <tile class='ui'>
-            <header>Output</header>
+            <header>COMPILER</header>
             <tile id='outputc' class='grow1 flexcol h100'>
               <ui id='output' class='scroll'></ui>
             </tile>
           </tile>
           <tile class='ui'>
-            <header>Interpreter</header>
-            <ui id='player'>I am in a bed.</ui>
+            <header>INTERPRETER</header>
+            <ui id='player'>
+              I'm lying in a large brass bed. Visible items:<br><br>
+              Sheets. Pillows.
+            </ui>
           </tile>
         </tile>
         <tile id='col1' class='grow45 flexcol'>
-          <header id='editorhead'>Source</header>
+          <header id='editorhead'>SOURCE</header>
           <tile id='editorc' class='grow1 flexcol h100'>
             <ui id='editor' class='scrollxy' contenteditable></ui>
           </tile>
@@ -282,7 +288,7 @@ ui.list span {
         <tile id='col3' class='grow1 flexcol'>
           <tile class='grow60 flexcol'>
             <tile id='itemsui' class='ui'>
-              <header>Items</header>
+              <header>ITEM LIST</header>
               <tile class='grow1 flexcol'>
                 <uih id='itemsh'><span>Item</span><span>Room</span></uih>
                 <ui id='items' class='list scroll'>
@@ -292,12 +298,12 @@ ui.list span {
           </tile>
           <tile class='grow40 flexrow'>
             <tile class='ui grow50'>
-              <header>Bits</header>
+              <header>BITS</header>
               <uih id='bitsh'><span class='var'>Bit</span><span class='val'>Value</span></uih>
               <ui id='bits' class='list scroll'></ui>
             </tile>
             <tile class='ui grow50'>
-              <header>Counters</header>
+              <header>COUNTERS</header>
               <uih id='ctrsh'><span class='var'>Counter</span><span class='val'>Value</span></uih>
               <ui id='ctrs' class='list scroll'></ui>
             </tile>

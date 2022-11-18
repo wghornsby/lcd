@@ -1,0 +1,1654 @@
+/** ADVENTURE 11 v 133 */
+
+wordlen = 4
+carrymax = 6
+lightlen = 150
+nounverbs = 80
+messages = 96
+actions = 248
+items = 49
+rooms = 31
+startroom(30 I am in a lot of trouble)
+
+/** VOCABULARY */
+
+verbs(GO=ENTE=CRAW)
+verbs(GET=TAKE=GRAB=PICK=HOLD=CATC)
+verbs(DROP=LEAV=PUT=RELE=GIVE)
+verbs(LOOK=EXAM=DESC=SEE)
+verbs(PUSH=PRES)
+verbs(SAY=SPEA=TALK=ASK)
+verbs(USE=WITH)
+verbs(EAT=TAST)
+verbs(FEEL=TOUC)
+verbs(SMEL=SNIF)
+verbs(CRUS=CRUM=SMAS)
+verbs(HIT=TEAR=RIP=PUNC)
+verbs(UNRA=UNDO)
+verbs(CLOS=SHUT)
+verbs(DRAG=PULL)
+verbs(JUMP,READ,WALK,RUN,WORK,SAVE,QUIT,HELP,HYPE,BREA,INVE,WEAR,REMO,MOVE,OPEN,THIN,EXHA,TIE,UNTI,TO,SCOR,KICK)
+
+nouns(DIAL=SCRI)
+nouns(ATOM=PICT)
+nouns(CONT=CONS)
+nouns(LEVE=HAND)
+nouns(DISP=CASE)
+nouns(META=TUNN=ROOM)
+nouns(NEAN=CAVE)
+nouns(SELF=MYSE)
+nouns(BAND=THRE=LOOP=ITSE=END=CENT)
+nouns(BOXE=CRAT=BOX)
+nouns(BALL=MEDI)
+nouns(BAG=CLOT)
+nouns(OUTE=SPAC)
+nouns(NORT,SOUT,EAST,WEST,UP,DOWN,INVE,GAME,FIEL,BLUE,123,474,BUTT,DEEP,OUT,IN,PLAN,FLOW,FREE,ME,EYES,FREE,ARGH,CORP,BREA,PASS,HYDR,LIGH,MACH,RAIL)
+nouns(VIEW,SLID,PIRA,BLOC,SIGN,TREA,HOLE,RED,WAFE,PLAT,DEVI,LIFE,FAST,SLOW,HANG,ENGI)
+
+/** ROOMS */
+
+room(1 I am in a small metal room: I am in a small metal room)
+
+room(2 I am in a metal room: I am in a metal room)
+  E(3 I am in a metal lined tunnel)
+
+room(3 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  S(6 I am in a metal lined tunnel)
+  W(2 I am in a metal room)
+
+room(4 I am in a metal room: I am in a metal room)
+  E(5 I am in a metal lined tunnel)
+
+room(5 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  E(6 I am in a metal lined tunnel)
+  W(4 I am in a metal room)
+
+room(6 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  N(3 I am in a metal lined tunnel)
+  E(7 I am in a metal lined tunnel)
+  W(5 I am in a metal lined tunnel)
+
+room(7 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  N(9 I am in a metal lined tunnel)
+  W(6 I am in a metal lined tunnel)
+
+room(8 I am in a metal room: I am in a metal room)
+  N(19 I am in a metal lined tunnel)
+
+room(9 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  N(25 I am in a metal lined tunnel)
+  S(7 I am in a metal lined tunnel)
+
+room(10 I am in a metal room: I am in a metal room)
+  S(25 I am in a metal lined tunnel)
+
+room(11 I am in a metal room: I am in a metal room)
+  N(21 I am in a metal lined tunnel)
+
+room(12 I am in a red metal room: I am in a red metal room)
+  S(19 I am in a metal lined tunnel)
+  E(13 I am in a red metal room)
+
+room(13 I am in a red metal room: I am in a red metal room)
+  W(12 I am in a red metal room)
+
+room(14 I am in a cramped metal area: I am in a cramped metal area)
+
+room(15 I am in a metal storage hold: I am in a metal storage hold)
+
+room(16 I'm on a treadmill: I'm on a treadmill)
+
+room(17 I'm in an open display case: I'm in an open display case)
+  E(8 I am in a metal room)
+
+room(18 I am in a small metal room: I am in a small metal room)
+
+room(19 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  N(12 I am in a red metal room)
+  S(8 I am in a metal room)
+
+room(20 I am in a main control room: I am in a main control room)
+  W(21 I am in a metal lined tunnel)
+
+room(21 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  N(22 I am in a small metal cabin)
+  S(11 I am in a metal room)
+  E(20 I am in a main control room)
+  W(23 I am in a metal dormitory)
+
+room(22 I am in a small metal cabin: I am in a small metal cabin)
+  S(21 I am in a metal lined tunnel)
+
+room(23 I am in a metal dormitory: I am in a metal dormitory)
+  E(21 I am in a metal lined tunnel)
+  W(27 I am in a large metal room|with porcelain machinery)
+
+room(24 I am in a metal lifeboat hangar open to|outer space: I am in a metal lifeboat hangar open to|outer space)
+
+room(25 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  N(10 I am in a metal room)
+  S(9 I am in a metal lined tunnel)
+
+room(26 I am in a large metal room: I am in a large metal room)
+
+room(27 I am in a large metal room|with porcelain machinery: I am in a large metal room|with porcelain machinery)
+  E(23 I am in a metal dormitory)
+
+room(28 I am in a : I am in a )
+
+room(29 I am in a : I am in a )
+
+room(30 I am in a lot of trouble: I am in a lot of trouble)
+
+/** ITEMS */
+
+item(26 Machinery: Machinery)
+  at(26 I am in a large metal room)
+
+item(26 Control console: Control console)
+  at(26 I am in a large metal room)
+
+item(1 Force field: Force field)
+  at(1 I am in a small metal room)
+
+item(2 Control console: Control console)
+  at(2 I am in a metal room)
+
+item(4 Plants: Plants)
+  noun(PLAN)
+  at(out-of-play)
+
+item(5 Flower: Flower)
+  noun(FLOW)
+  at(out-of-play)
+
+item(4 Force field: Force field)
+  at(4 I am in a metal room)
+
+item(7 Bandanna: Bandanna)
+  noun(BAND)
+  at(out-of-play)
+
+item(8 Which I'm wearing: Which I'm wearing)
+  at(out-of-play)
+
+item(9 lite goes here.....: lite goes here.....)
+  at(out-of-play)
+
+item(10 Corpse: Corpse)
+  noun(CORP)
+  at(out-of-play)
+
+item(20 Control console: Control console)
+  at(20 I am in a main control room)
+
+item(12 Neanderthal: Neanderthal)
+  at(out-of-play)
+
+item(13 which I'm dragging: which I'm dragging)
+  at(out-of-play)
+
+item(14 Long glowing metal thread: Long glowing metal thread)
+  noun(BAND)
+  at(out-of-play)
+
+item(10 Force field: Force field)
+  at(10 I am in a metal room)
+
+item(12 Control console: Control console)
+  at(12 I am in a red metal room)
+
+item(17 Me: Me)
+  noun(ME)
+  at(out-of-play)
+
+item(8 Hydroponics: Hydroponics)
+  at(8 I am in a metal room)
+
+item(10 Blinking red light over force field: Blinking red light over force field)
+  at(10 I am in a metal room)
+
+item(20 Viewscreen: Viewscreen)
+  at(20 I am in a main control room)
+
+item(11 Control console: Control console)
+  at(11 I am in a metal room)
+
+item(22 Glowing thread tied to lever: Glowing thread tied to lever)
+  at(out-of-play)
+
+item(23 Loose end of glowing thread: Loose end of glowing thread)
+  noun(BAND)
+  at(out-of-play)
+
+item(11 Treadmill: Treadmill)
+  at(11 I am in a metal room)
+
+item(25 with thread tied to it: with thread tied to it)
+  at(out-of-play)
+
+item(26 Meter loop of glowing thread: Meter loop of glowing thread)
+  noun(BAND)
+  at(out-of-play)
+
+item(27 Dark hole: Dark hole)
+  at(out-of-play)
+
+item(16 Railing: Railing)
+  at(16 I'm on a treadmill)
+
+item(8 Display case: Display case)
+  at(8 I am in a metal room)
+
+item(30 which is open: which is open)
+  at(out-of-play)
+
+item(17 Button: Button)
+  at(17 I'm in an open display case)
+
+item(15 Pirate: Pirate)
+  at(15 I am in a metal storage hold)
+
+item(15 which is motionless: which is motionless)
+  at(15 I am in a metal storage hold)
+
+item(2 Large plastic block: Large plastic block)
+  noun(BLOC)
+  at(2 I am in a metal room)
+
+item(35 GLOWING large plastic block: GLOWING large plastic block)
+  noun(BLOC)
+  at(out-of-play)
+
+item(2 Large radiant glowing neon sign: Large radiant glowing neon sign)
+  at(2 I am in a metal room)
+
+item(15 Display cases: Display cases)
+  at(15 I am in a metal storage hold)
+
+item(15 Giant boxes & crates: Giant boxes & crates)
+  at(15 I am in a metal storage hold)
+
+item(15 Pulsating red force field: Pulsating red force field)
+  at(15 I am in a metal storage hold)
+
+item(11 Large medicine ball: Large medicine ball)
+  noun(BALL)
+  at(11 I am in a metal room)
+
+item(11 Freestanding punching bag: Freestanding punching bag)
+  noun(BAG)
+  at(11 I am in a metal room)
+
+item(42 Scraps of cloth: Scraps of cloth)
+  noun(BAG)
+  at(out-of-play)
+
+item(22 Soft platform: Soft platform)
+  at(22 I am in a small metal cabin)
+
+item(23 Rows of soft platforms: Rows of soft platforms)
+  at(23 I am in a metal dormitory)
+
+item(22 Small plastic wafer: Small plastic wafer)
+  noun(WAFE)
+  at(22 I am in a small metal cabin)
+
+item(9 Force field: Force field)
+  at(9 I am in a metal lined tunnel)
+
+item(9 which is weakly flickering: which is weakly flickering)
+  at(9 I am in a metal lined tunnel)
+
+item(48 Alien device: Alien device)
+  noun(DEVI)
+  at(out-of-play)
+
+/** AUTOS/COMMANDS */
+
+auto(100%)  // AIR NOW GOOD
+  if bit21
+    clear(bit7)
+
+auto(100%)  // LIFEBOAT AIR
+  if at(24 I am in a metal lifeboat hangar open to|outer space)
+    set(bit7)
+
+auto(100%)  // GOOD AIR
+  if at(9 I am in a metal lined tunnel) & live(9 which is weakly flickering) & bit21
+    clear(bit7)
+
+auto(100%)  // no pass
+  if bit1 & ! bit2
+    say(wrong)
+    gameover
+
+auto(100%)  // start
+  if ! bit1
+    say(Welcome to Adventure 11 'SAVAGE ISLAND PART 2'|by Scott Adams & Russ Wetmore. Dedicated to Adventure Fans|everywhere.)
+    set(bit1)
+    say(metallic voice whispers in my mind:)
+    say('Vocalize password Please')
+
+auto(100%)  // BLOCK SWAP
+  if at(18 I am in a small metal room) & with(2 Large plastic block)
+    swap(35 GLOWING large plastic block, 2 Large plastic block)
+    set(bit26)
+
+auto(100%)  // BLOCK SWAP
+  if at(8 I am in a metal room) & with(2 Large plastic block)
+    swap(35 GLOWING large plastic block, 2 Large plastic block)
+    set(bit26)
+
+auto(100%)  // BLOCK SWAP
+  if at(1 I am in a small metal room) & with(2 Large plastic block)
+    swap(35 GLOWING large plastic block, 2 Large plastic block)
+    set(bit26)
+
+auto(100%)  // BLOCK SWAP
+  if at(11 I am in a metal room) & with(2 Large plastic block)
+    swap(35 GLOWING large plastic block, 2 Large plastic block)
+    set(bit26)
+
+auto(100%)  // SET BLK CNTR
+  if bit26
+    clear(bit26)
+    swapct(ctr3)
+    ctr = 5
+    swapct(ctr3)
+
+auto(100%)  // MEDICINE BALL
+  if holds(11 Large medicine ball)
+    say(Argh)
+
+auto(100%)  // REMOVE ABND
+  if ! holds(7 Bandanna) & holds(8 Which I'm wearing)
+    remove2(8 Which I'm wearing)
+
+auto(100%)  // breathe out
+  if bit18
+    swapct(ctr1)
+    ctr--
+    continue
+
+continue
+  if ctr <= 2
+    say(Argh)
+
+continue  // die
+  if ctr <= 0 & bit7
+    clear(bit6)
+    clear(bit18)
+    wait
+    wait
+
+continue  // CONT DIE
+  if ! bit18
+    wait
+    wait
+    say(ASPHYXIATED)
+    die
+
+continue  // BREATHED
+  if ctr <= 0 & bit18 & ! bit7
+    say(I breathed)
+    clear(bit5)
+    clear(bit18)
+
+continue
+    swapct(ctr1)
+
+auto(100%)  // HURRICANE
+  if at(10 I am in a metal room) & bit21 & live(9 which is weakly flickering)
+    say(Hurricane winds suck me into outerspace!)
+    say(I quickly freeze to death!)
+    die
+    say(Time paradox shatters reality)
+
+auto(100%)  // .
+  if bit6 & bit7 & ! bit5
+    say(Vacuum!)
+    wait
+    wait
+    continue
+
+continue  // DIE VACUUM
+    wait
+    wait
+    say(lungs explode in red bubbling ruin)
+    die
+
+auto(100%)  // SET VACUUM
+  if bit7
+    say(Vacuum!)
+    set(bit6)
+
+auto(100%)  // RESET VACUUM
+  if bit6 & ! bit7
+    clear(bit6)
+
+auto(8%)  // CAVEMAN
+  if bit11 & ! bit10 & with(12 Neanderthal)
+    say(Neanderthal)
+    say(attacks)
+    say(briefly)
+    die
+
+auto(100%)  // CAVEMAN HERE
+  if ! bit11 & with(12 Neanderthal)
+    set(bit11)
+
+auto(100%)  // CAVE COUNT
+  if bit10
+    clear(bit11)
+    swapct(ctr2)
+    ctr--
+    continue
+
+continue
+  if ctr <= 4 & with(12 Neanderthal)
+    say(Neanderthal)
+    say(briefly)
+    say(moves)
+
+continue  // WAKES
+  if ctr <= 0
+    clear(bit10)
+
+continue
+    swapct(ctr2)
+
+auto(50%)  // CAVE FOLLOWS
+  if ! at(13 I am in a red metal room) & live(12 Neanderthal) & ! bit10 & ! live(10 Corpse)
+    drop(12 Neanderthal)
+
+auto(8%)  // ME DEAD?
+  if live(10 Corpse)
+    inventory
+    say(Time paradox shatters reality)
+    die
+
+auto(100%)  // .
+  if ! bit28 & live(17 Me)
+    swapct(ctr4)
+    continue
+    ctr--
+
+continue  // AWAKE ME
+  if ctr <= 0
+    set(bit28)
+
+continue
+    swapct(ctr4)
+
+auto(30%)  // NEAN ARGH
+  if with(12 Neanderthal) & ! bit10
+    say(Neanderthal)
+    say(says)
+    say(Argh)
+
+auto(100%)  // DROP NEAN
+  if ! bit10 & holds(13 which I'm dragging)
+    remove2(13 which I'm dragging)
+    drop(12 Neanderthal)
+
+auto(100%)  // CAVE RM 13
+  if at(13 I am in a red metal room) & here(12 Neanderthal)
+    set(bit13)
+
+auto(100%)
+  if at(13 I am in a red metal room) & ! here(12 Neanderthal) & ! here(17 Me)
+    clear(bit13)
+
+auto(100%)  // ME IN 13
+  if at(13 I am in a red metal room) & here(17 Me)
+    set(bit13)
+
+auto(100%)  // DEAD ME
+  if bit7 & with(17 Me)
+    swap(17 Me, 10 Corpse)
+
+auto(100%)  // DEAD NEAN
+  if bit7 & holds(13 which I'm dragging)
+    swap(12 Neanderthal, 10 Corpse)
+    remove2(13 which I'm dragging)
+
+auto(100%)  // ME WANDERS
+  if at(1 I am in a small metal room) & here(17 Me)
+    say(Me wanders off!)
+    dropat(17 Me, 2 I am in a metal room)
+
+auto(100%)  // DROP THREAD
+  if with(23 Loose end of glowing thread) & ! here(11 Control console) & ! here(11 Control console)
+    dropwith(23 Loose end of glowing thread, 26 Machinery)
+    say(metallic threads)
+    say(slips off)
+
+auto(100%)  // ROBOT MOVES
+  if ! live(15 which is motionless) & ! at(17 I'm in an open display case) & ! at(30 I am in a lot of trouble)
+    say(Robot Pirate looks strangely at me, picks me up|& carries me off)
+    go(17 I'm in an open display case)
+    look2
+    clear(bit7)
+
+auto(100%)  // BOMB
+  if ! at(30 I am in a lot of trouble) & live(35 GLOWING large plastic block)
+    swapct(ctr3)
+    ctr--
+    continue
+
+continue
+  if ctr <= 0
+    say(EXPLOSION!)
+    say(Time paradox shatters reality)
+    die
+
+continue
+    swapct(ctr3)
+
+auto(100%)  // CAPTAINS LOG
+  if holds(22 Small plastic wafer)
+    say(metallic voice whispers in my mind:)
+    say(Captain's LOG:|Wounded in mutiny, strength failing. Humanoid seed colony not|started, giant reptiles must be destroyed for species survival.)
+    wait
+    continue
+
+continue
+    wait
+    wait
+    wait
+    say(TimeSwap Plan implemented with ROBOPIRATE as catalyst agent.|If you scanning this are not of THIS TIME then the mission|can still succeed!)
+
+continue
+    wait
+    wait
+    wait
+    say(I'm jettisoning self from airlock. Good luck & forgive me for|involving you.)
+
+auto(100%)  // WIN FLAG
+  if ! live(15 which is motionless) & bit25 & ! with(17 Me) & ! live(10 Corpse)
+    set(bit22)
+
+auto(100%)  // ME WANDERS
+  if at(18 I am in a small metal room) & here(17 Me)
+    say(Me wanders off!)
+    dropat(17 Me, 2 I am in a metal room)
+
+auto(100%)  // DEAD END ROOM
+  if at(30 I am in a lot of trouble) & bit2
+    gameover
+
+action(MOVE RED)
+  if with(48 Alien device) & ! bit7
+    say(OK)
+    continue
+    say(alien voice says 'FREEHJLLGFREEUYE')
+
+continue
+  if at(2 I am in a metal room) & ! bit4
+    set(bit4)
+    say(metallic voice whispers in my mind:)
+    say('Ready')
+
+continue
+  if at(12 I am in a red metal room) & ! bit14
+    set(bit14)
+    say(metallic voice whispers in my mind:)
+    say('Prepare Rayshield, PSYCHOTRANSFIGURATION')
+    say('Ready')
+
+action(LOOK DEVI)
+  if with(48 Alien device) & ! bit15
+    say(OK)
+    say(I see)
+    say(red & blue slide switches)
+
+action(MOVE BLUE)
+  if with(48 Alien device)
+    say(High pitched electronic whine)
+    continue
+
+continue
+  if with(15 which is motionless)
+    remove2(15 which is motionless)
+    wait
+    wait
+    wait
+
+action(GET DEVI)
+  if with(48 Alien device)
+    say(OK)
+    get(48 Alien device)
+
+action(GET DEVI)  // .
+  if at(26 I am in a large metal room) & ! live(48 Alien device)
+    say(OK)
+    get(48 Alien device)
+
+action(READ DIAL)
+  if with(2 Control console) & bit12
+    say(strange)
+    say(I can)
+    say(read it!)
+    say(Timemachine set for 100,000 years in past and|nearest planetary body.)
+
+action(MOVE SLID)
+  if with(48 Alien device)
+    say(use color)
+
+action(READ DIAL)
+  if with(11 Control console) & bit12
+    say(picture of)
+    say(Large T shaped handle.)
+    say(picture of)
+    say(an atom)
+
+action(LOOK MACH)
+  if at(26 I am in a large metal room) & ! bit15
+    say(OK)
+    say(I see)
+    say(ship's engines, life support)
+    continue
+
+continue
+  if ! live(48 Alien device)
+    say(& another less obvious device)
+
+action(HELP)
+    say(Examine items & read messages carefully!)
+
+action(EXHA)
+    say(Try: 'BREATHE OUT')
+
+action(GO PLAT)
+    say(sorry)
+    say(I can't)
+
+action(WORK OUT)
+    say(How?)
+
+action(LOOK CONT)
+  if here(26 Control console) & ! bit15
+    say(OK)
+    say(I see)
+    say(button,dials,lever)
+
+action(LOOK CONT)
+  if here(20 Control console) & ! bit15
+    say(OK)
+    say(I see)
+    say(button,dials,lever)
+
+action(PUSH BUTT)  // CONTROL ROOM
+  if here(20 Control console)
+    say(OK)
+
+action(PUSH BUTT)  // EXERSISE ROOM
+  if here(11 Control console)
+    say(OK)
+
+action(GO FIEL)
+  if here(1 Force field) & at(18 I am in a small metal room)
+    go(2 I am in a metal room)
+    drop(1 Force field)
+    set(bit7)
+    continue
+
+continue
+  if with(35 GLOWING large plastic block)
+    clear(bit27)
+
+action(GO FIEL)  // .
+  if with(15 Pulsating red force field)
+    say(strange)
+    say(I can't)
+
+action(GO FIEL)
+  if bit24 & at(2 I am in a metal room)
+    go(18 I am in a small metal room)
+    drop(1 Force field)
+    clear(bit7)
+    continue
+
+continue
+  if with(2 Large plastic block)
+    set(bit27)
+
+action(GO FIEL)  // GOT BLOCK?
+  if ! bit24 & at(2 I am in a metal room)
+    go(1 I am in a small metal room)
+    drop(1 Force field)
+    clear(bit7)
+    continue
+
+continue
+  if with(2 Large plastic block)
+    set(bit27)
+
+action(GO FIEL)  // .
+  if here(10 Blinking red light over force field) & ! bit15
+    say(sorry)
+    say(Light mesmerizes me)
+
+action(GO FIEL)
+  if here(10 Force field) & at(10 I am in a metal room)
+    go(11 I am in a metal room)
+    drop(10 Force field)
+    clear(bit7)
+    look2
+
+action(GO FIEL)
+  if here(10 Force field) & at(11 I am in a metal room)
+    go(10 I am in a metal room)
+    drop(10 Force field)
+    set(bit7)
+    look2
+
+action(GET BREA)
+  if ! bit7
+    swapct(ctr1)
+    ctr = 5
+    swapct(ctr1)
+    continue
+
+continue
+    set(bit18)
+    clear(bit5)
+
+action(GO FIEL)
+  if here(4 Force field) & at(4 I am in a metal room)
+    go(8 I am in a metal room)
+    drop(4 Force field)
+    clear(bit7)
+    look2
+
+action(GO FIEL)
+  if here(4 Force field) & at(8 I am in a metal room)
+    go(4 I am in a metal room)
+    drop(4 Force field)
+    set(bit7)
+    look2
+
+action(HYPE)
+  if bit8 & ! bit7
+    say(I fainted)
+    clear(bit8)
+    wait
+    wait
+
+action(HYPE)
+  if ! bit7 & ! bit8
+    say(OK)
+    set(bit8)
+    clear(bit5)
+    clear(bit18)
+
+action(BREA DEEP)
+  if ! bit7
+    say(OK)
+    set(bit8)
+    clear(bit5)
+    clear(bit18)
+
+action(WEAR BAND)
+  if holds(26 Meter loop of glowing thread)
+    say(OK)
+    say(too large)
+    say(slips off)
+
+action(BREA OUT)
+  if ! bit5
+    set(bit5)
+    set(bit18)
+    swapct(ctr1)
+    continue
+
+continue
+  if ! bit8
+    ctr = 5
+    swapct(ctr1)
+    say(OK)
+
+continue
+  if bit8 & ! bit12
+    ctr = 7
+    swapct(ctr1)
+    clear(bit8)
+    say(OK)
+
+continue  // HYPER CAVE
+  if bit8 & bit12
+    ctr = 17
+    swapct(ctr1)
+    clear(bit8)
+    say(OK)
+
+action(GO FIEL)
+  if here(1 Force field) & at(1 I am in a small metal room)
+    go(2 I am in a metal room)
+    drop(1 Force field)
+    set(bit7)
+    continue
+
+continue
+  if with(35 GLOWING large plastic block)
+    clear(bit27)
+
+action(BREA IN)
+  if ! bit7
+    swapct(ctr1)
+    ctr = 5
+    swapct(ctr1)
+    continue
+
+continue
+    set(bit18)
+    clear(bit5)
+
+action(SAY 123)  // 123
+  if ! bit2 & ! bit18
+    set(bit2)
+    get(7 Bandanna)
+    continue
+    say(Blinding flash of light)
+
+continue
+    say(I'm stark naked)
+    say(except)
+    say(one item)
+    go(1 I am in a small metal room)
+
+action(SAY 474)
+  if ! bit2
+    say(Blinding flash of light)
+    set(bit2)
+    say(I'm stark naked)
+    go(1 I am in a small metal room)
+
+action(PUSH BUTT)  // AIRLOCK FIX
+  if here(26 Control console)
+    say(OK)
+    remove2(9 which is weakly flickering)
+
+action(LOOK CONT)
+  if with(2 Control console) & ! bit15
+    say(OK)
+    say(button,dials,lever)
+
+action(PUSH BUTT)
+  if with(2 Control console) & ! bit4
+    say(OK)
+    say(metallic voice whispers in my mind:)
+    say('Vocalize password Please')
+
+action(PUSH BUTT)
+  if here(12 Control console) & bit13 & bit14 & bit12
+    say(metallic voice whispers in my mind:)
+    say('Pull lever please')
+
+action(LOOK DIAL)
+  if ! bit15
+    say(OK)
+    say(alien script)
+
+action(LOOK META)
+  if ! bit15
+    say(OK)
+    say(I see)
+    say(it)
+    say(glowing)
+
+action(LOOK PLAN)
+  if ! bit9 & with(4 Plants)
+    say(something)
+    set(bit9)
+    dropwith(5 Flower, 4 Plants)
+    look2
+
+action(SMEL FLOW)
+  if with(5 Flower) & ! bit7 & ! bit18
+    say(OK)
+    say(I feel)
+    say(briefly)
+    say(sedated!)
+
+action(EAT FLOW)
+  if with(5 Flower)
+    say(sedated!)
+    say(I feel)
+    say(ASPHYXIATED)
+    die
+
+action(CRUS FLOW)
+  if with(5 Flower) & ! bit7
+    remove2(5 Flower)
+    continue
+
+continue
+  if ! bit18
+    say(sedated!)
+    say(I feel)
+    say(ASPHYXIATED)
+    die
+
+continue
+  if here(12 Neanderthal)
+    set(bit10)
+    say(Neanderthal)
+    say(sedated!)
+
+continue
+  if here(12 Neanderthal)
+    swapct(ctr2)
+    ctr = 40
+    swapct(ctr2)
+
+action(GET NEAN)
+  if here(12 Neanderthal)
+    say(How?)
+    say(too large)
+
+action(DRAG NEAN)
+  if here(12 Neanderthal) & bit10
+    say(OK)
+    get(12 Neanderthal)
+    get(13 which I'm dragging)
+    inventory
+
+action(CRUS FLOW)
+  if with(5 Flower) & bit7
+    say(OK)
+    remove2(5 Flower)
+
+action(HIT NEAN)  // .
+  if with(12 Neanderthal) & ! bit10
+    say(Neanderthal)
+    say(attacks)
+    say(briefly)
+    die
+
+action(GO OUTE)
+  if at(24 I am in a metal lifeboat hangar open to|outer space)
+    say(OK)
+    say(I quickly freeze to death!)
+    die
+
+action(MOVE NEAN)
+  if with(12 Neanderthal)
+    say(OK)
+
+action(LOOK DISP)
+  if with(15 Display cases) & ! bit15
+    say(I see)
+    say(row after row of)
+    say(Neanderthal)
+
+action(DROP NEAN)
+  if holds(12 Neanderthal)
+    say(OK)
+    drop(12 Neanderthal)
+    remove2(13 which I'm dragging)
+
+action(WEAR BAND)
+  if with(7 Bandanna)
+    say(OK)
+    get(7 Bandanna)
+    get(8 Which I'm wearing)
+
+action(REMO BAND)
+  if with(8 Which I'm wearing)
+    say(OK)
+    remove2(8 Which I'm wearing)
+
+action(UNRA BAND)
+  if with(7 Bandanna)
+    say(OK)
+    remove2(8 Which I'm wearing)
+    swap(7 Bandanna, 14 Long glowing metal thread)
+
+action(LOOK CONT)
+  if here(12 Control console) & ! bit15
+    say(OK)
+    say(I see)
+    say(button,dials,lever)
+
+action(HIT BAG)
+  if with(11 Freestanding punching bag)
+    say(OK)
+    say(EXPLOSION!)
+    swap(11 Freestanding punching bag, 42 Scraps of cloth)
+
+action(PUSH BUTT)
+  if here(12 Control console) & bit13 & ! bit14
+    say(OK)
+    say(metallic voice whispers in my mind:)
+    say('Vocalize password Please')
+
+action(PUSH BUTT)
+  if here(12 Control console) & ! bit13
+    say(metallic voice whispers in my mind:)
+    say('Prepare Rayshield, PSYCHOTRANSFIGURATION')
+    say('Not')
+    say('Ready')
+
+action(GO HOLE)
+  if here(27 Dark hole)
+    say(OK)
+    swaploc
+    look2
+
+action(PUSH BUTT)  // TRANSFER
+  if here(12 Control console) & bit13 & bit14 & ! bit12
+    say(OK)
+    say(Blinding flash of light)
+    continue
+    remove2(12 Neanderthal)
+
+continue
+  if ! holds(8 Which I'm wearing)
+    say(Brain fried!)
+    die
+    gameover
+
+continue
+    drop(17 Me)
+    remove2(8 Which I'm wearing)
+    remove2(7 Bandanna)
+    clear(bit14)
+
+continue
+    go(13 I am in a red metal room)
+    set(bit12)
+    dark
+    look2
+
+continue
+    say(I feel)
+    say(strange)
+    set(bit19)
+    clear(bit13)
+
+continue
+  if with(4 Plants)
+    remove2(4 Plants)
+
+continue
+    swapct(ctr4)
+    ctr = 25
+    swapct(ctr4)
+
+action(LOOK MACH)
+  if at(27 I am in a large metal room|with porcelain machinery) & ! bit15
+    say(I see)
+    say(combined lavatory & mess hall! Reminds me of my|old school's cafeteria! UGH!)
+
+action(OPEN EYES)
+  if bit15
+    say(OK)
+    cleardark
+    look2
+
+action(LOOK SELF)
+  if ! bit15 & bit12
+    say(OK)
+    say(I see)
+    say(Neanderthal)
+    say(body)
+
+action(TIE BAND)
+  if with(23 Loose end of glowing thread)
+    say(OK)
+    say(To what?)
+
+action(SAY FREE)
+  if here(12 Control console) & bit13 & ! bit14 & ! bit12
+    set(bit14)
+    say(metallic voice whispers in my mind:)
+    say('Prepare Rayshield, PSYCHOTRANSFIGURATION')
+    say('Ready')
+
+action(CLOS EYES)
+    say(OK)
+    dark
+    look2
+
+action(EAT PLAN)
+  if with(4 Plants)
+    say(OK)
+    remove2(4 Plants)
+
+action(MOVE RED)  // .
+  if with(48 Alien device) & bit7
+    say(OK)
+    say(nothing special)
+    say(happens)
+
+action(PUSH LEVE)
+    say(sorry)
+    say(won't budge)
+
+action(DRAG LEVE)
+    say(sorry)
+    say(won't budge)
+
+action(LOOK HYDR)
+  if with(8 Hydroponics) & ! live(4 Plants)
+    say(I see)
+    say(something)
+    drop(4 Plants)
+    look2
+
+action(TIE BAND)  // TO WHAT?
+  if with(14 Long glowing metal thread)
+    say(OK)
+    say(To what?)
+
+action(LOOK CONT)
+  if with(11 Control console) & ! bit15
+    say(I see)
+    say(button,dials,lever)
+
+action(LOOK LEVE)
+  if with(11 Control console) & ! bit15
+    say(I see)
+    say(Large T shaped handle.)
+
+action(TO LEVE)
+  if with(11 Control console) & with(14 Long glowing metal thread)
+    remove2(14 Long glowing metal thread)
+    drop(22 Glowing thread tied to lever)
+    drop(23 Loose end of glowing thread)
+    say(OK)
+
+action(TO LEVE)
+  if with(11 Control console) & with(23 Loose end of glowing thread)
+    remove2(23 Loose end of glowing thread)
+    drop(22 Glowing thread tied to lever)
+    say(OK)
+
+action(TO TREA)
+  if with(11 Control console) & with(23 Loose end of glowing thread)
+    remove2(23 Loose end of glowing thread)
+    drop(25 with thread tied to it)
+    say(OK)
+
+action(TO TREA)
+  if with(11 Control console) & with(14 Long glowing metal thread)
+    remove2(14 Long glowing metal thread)
+    drop(25 with thread tied to it)
+    drop(23 Loose end of glowing thread)
+    say(OK)
+
+action(UNTI BAND)
+  if with(23 Loose end of glowing thread)
+    remove2(25 with thread tied to it)
+    remove2(22 Glowing thread tied to lever)
+    swap(23 Loose end of glowing thread, 14 Long glowing metal thread)
+    say(OK)
+
+action(UNTI BAND)
+  if with(25 with thread tied to it)
+    remove2(23 Loose end of glowing thread)
+    remove2(22 Glowing thread tied to lever)
+    swap(25 with thread tied to it, 14 Long glowing metal thread)
+    say(OK)
+
+action(LOOK ATOM)  // DIAL - AIR
+  if with(11 Control console) & ! bit15
+    say(OK)
+    say(it)
+    say(has)
+    say(8 electrons)
+
+action(UNTI BAND)
+  if with(26 Meter loop of glowing thread)
+    swap(26 Meter loop of glowing thread, 14 Long glowing metal thread)
+    say(OK)
+
+action(LOOK ATOM)  // BLOCK - BOMB
+  if with(2 Large plastic block) & ! bit15
+    say(OK)
+    say(it)
+    say(has)
+    say(293 electrons)
+
+action(TO BAND)
+  if with(14 Long glowing metal thread)
+    swap(26 Meter loop of glowing thread, 14 Long glowing metal thread)
+    say(OK)
+
+action(TIE BAND)
+  if with(26 Meter loop of glowing thread)
+    say(sorry)
+    say(doesn't work)
+
+action(TIE BAND)
+  if with(14 Long glowing metal thread)
+    say(sorry)
+    say(doesn't work)
+
+action(LOOK BAND)
+  if with(26 Meter loop of glowing thread) & ! bit15
+    say(OK)
+    say(I see)
+    say(utter blackness in center!)
+
+action(GO BAND)
+  if holds(26 Meter loop of glowing thread)
+    say(OK)
+    say(I feel)
+    say(something)
+    say(briefly)
+
+action(GO BAND)  // LOOP ROUTINE
+  if here(26 Meter loop of glowing thread)
+    say(OK)
+    continue
+
+continue  // IF HAVE LOOP
+  if here(26 Meter loop of glowing thread) & at(2 I am in a metal room)
+    swaploc
+    go(15 I am in a metal storage hold)
+    drop(27 Dark hole)
+    look2
+
+continue
+  if here(26 Meter loop of glowing thread) & at(20 I am in a main control room)
+    swaploc
+    go(26 I am in a large metal room)
+    drop(27 Dark hole)
+    look2
+
+continue
+  if here(26 Meter loop of glowing thread)
+    swaploc
+    go(14 I am in a cramped metal area)
+    drop(27 Dark hole)
+    look2
+
+action(DRAG NEAN)  // .
+  if with(12 Neanderthal) & ! bit10
+    say(Neanderthal)
+    say(attacks)
+    say(briefly)
+    die
+
+action(FEEL BAND)  // .
+  if with(26 Meter loop of glowing thread)
+    say(OK)
+    say(I feel)
+    say(something)
+    say(strange)
+
+action(READ SIGN)
+  if with(2 Large radiant glowing neon sign)
+    say(I see)
+    say('Compared to what you're about to go through you'll think Part I was a piece of cake! Good Luck and Adieu' - Scott Adams.|)
+
+action(LOOK BLOC)
+  if with(2 Large plastic block) & ! bit15
+    say(I see)
+    say(picture of)
+    say(an atom)
+    say(flying apart)
+
+action(DROP RAIL)
+  if with(16 Railing)
+    say(OK)
+    clear(bit20)
+
+action(LOOK CORP)
+  if bit19 & with(10 Corpse)
+    say(one item)
+    clear(bit19)
+    drop(7 Bandanna)
+
+action(GO TREA)
+  if here(11 Treadmill)
+    say(OK)
+    go(16 I'm on a treadmill)
+    look2
+
+action(GET RAIL)
+  if with(16 Railing)
+    say(OK)
+    set(bit20)
+    say(I'm holding it)
+
+action(WALK)
+  if at(16 I'm on a treadmill) & ! bit20
+    say(OK)
+    go(11 I am in a metal room)
+    look2
+
+action(RUN)
+  if at(16 I'm on a treadmill) & ! bit20
+    say(OK)
+    go(11 I am in a metal room)
+    look2
+
+action(WALK)  // WONT BUDGE
+  if at(16 I'm on a treadmill) & live(25 with thread tied to it) & live(22 Glowing thread tied to lever)
+    say(sorry)
+    say(won't budge)
+
+action(RUN)
+  if at(16 I'm on a treadmill) & live(25 with thread tied to it) & live(22 Glowing thread tied to lever) & ! bit21
+    set(bit21)
+    say(Large T shaped handle.)
+    say(moves)
+    say(briefly)
+
+action(RUN)
+  if at(16 I'm on a treadmill) & live(25 with thread tied to it) & live(22 Glowing thread tied to lever) & bit21
+    say(sorry)
+    say(won't budge)
+
+action(DRAG BAND)
+  if with(23 Loose end of glowing thread)
+    say(sorry)
+    say(won't budge)
+
+action(LOOK DISP)
+  if here(8 Display case) & ! bit15
+    say(I see)
+    say(Button at bottom.)
+    continue
+
+continue
+  if ! bit23
+    say(I see)
+    say(Neanderthal)
+
+action(PUSH BUTT)
+  if here(8 Display case) & ! bit23
+    set(bit23)
+    drop(30 which is open)
+    say(I see)
+    continue
+
+continue
+    drop(12 Neanderthal)
+    say(Neanderthal)
+    say(metallic voice whispers in my mind:)
+    say('WARNING - Non-transfigured controller of seed specimens|has been released')
+
+action(PUSH BUTT)
+  if here(17 Button) & ! bit22
+    say(Case closes, some gas comes out and I'm sedated!)
+    say(Time paradox shatters reality)
+    die
+
+action(PUSH BUTT)  // END GAME
+  if here(17 Button) & bit22
+    say(Case closes, some gas comes out and I'm sedated!)
+    say(Congratulations! You've finished Savage Island successfully!|Refer to instructions for following coded message:|U L K # $ + S ( V A 0 3 5 D B I H|O ; 7 E 8 / M P 4 J 1 T Q @ F % G|W X 6 C ? Y , Z = & R * - N 2 ) 9)
+    gameover
+
+action(LOOK PIRA)
+  if with(15 Pirate)
+    say(strange)
+    say(it)
+    say(is a robot!)
+
+action(PUSH BUTT)
+  if with(2 Control console) & bit4 & ! bit24
+    say(OK)
+    set(bit24)
+    say(Blinding flash of light)
+    continue
+
+continue
+  if bit27
+    set(bit25)
+    remove2(35 GLOWING large plastic block)
+
+action(LOOK VIEW)
+  if with(20 Viewscreen)
+    say(I see)
+    say(picture of)
+    say(this spaceship now orbiting Earth.)
+    continue
+
+continue
+  if ! bit25
+    say(Closeups show Dinosaurs everywhere!)
+
+action(PUSH BUTT)
+  if with(2 Control console) & bit24 & bit4
+    say(OK)
+    clear(bit24)
+    say(Blinding flash of light)
+    continue
+
+continue
+  if bit27
+    set(bit25)
+    remove2(35 GLOWING large plastic block)
+
+action(WALK)
+  if at(16 I'm on a treadmill) & bit20
+    say(OK)
+    say(it)
+    say(moves)
+
+action(RUN)
+  if at(16 I'm on a treadmill) & bit20
+    say(OK)
+    say(it)
+    say(moves)
+
+action(GO DISP)
+  if here(30 which is open)
+    say(OK)
+    go(17 I'm in an open display case)
+    look2
+
+action(LOOK NEAN)  // .
+  if with(8 Display case) & ! bit23 & ! bit15
+    say(OK)
+    say(I see)
+    say(thick headed)
+    say(Neanderthal)
+
+action(LOOK NEAN)  // .
+  if with(12 Neanderthal) & ! bit15 & bit10
+    say(sedated!)
+
+action(SAY)
+  if ! bit7 & bit12 & ! bit18
+    say(OK)
+    say(Argh)
+
+action(LOOK NEAN)
+  if with(12 Neanderthal) & ! bit15
+    say(OK)
+    say(I see)
+    say(thick headed)
+    say(Neanderthal)
+
+action(LOOK BAND)
+  if with(7 Bandanna) & ! bit15
+    say(nothing special)
+    say(except)
+    say(glowing)
+    say(metallic threads)
+
+action(READ DIAL)
+  if here(26 Control console) & bit12 & ! bit15
+    say(OK)
+    say(I see)
+    say(force field reset)
+
+action(READ DIAL)
+  if here(20 Control console) & bit12 & ! bit15
+    say(OK)
+    say(I see)
+    say('Main landing sequence set for lever pull!')
+
+action(READ DIAL)
+  if here(12 Control console) & bit12 & ! bit15
+    say(strange)
+    say(I can)
+    say(read it!)
+    say('Pull lever to reverse Transfiguration Process')
+
+action(JUMP)
+    say(Try: 'GO')
+
+action(RUN)
+    say(Try: 'GO')
+
+action(WALK)
+    say(Try: 'GO')
+
+action(TO)
+    say(sorry)
+    say(doesn't work)
+    say(slips off)
+
+action(HIT)
+    say(sorry)
+    say(doesn't work)
+
+action(INVE)
+  if ! bit15
+    inventory
+
+action(GET INVE)
+  if ! bit15
+    inventory
+
+action(USE)
+    say(sorry)
+    say(doesn't work)
+
+action(PUSH BUTT)
+  if here(8 Display case) & ! live(30 which is open)
+    say(OK)
+    drop(30 which is open)
+
+action(SAY)
+  if ! bit7 & ! bit12 & ! bit18
+    say(OK)
+    saynouncr
+
+action(SAVE GAME)
+    say(OK)
+    save
+
+action(QUIT)
+    say(OK)
+    gameover
+
+action(FEEL)
+    say(OK)
+    say(I feel)
+    say(nothing special)
+
+action(THIN)
+    say(OK)
+    saynouncr
+
+action(READ)
+  if ! bit15
+    say(sorry)
+    say(I can't)
+    say(read it!)
+
+action(PUSH NEAN)
+  if with(12 Neanderthal)
+    say(it)
+    say(moves)
+
+action(PUSH BUTT)
+  if with(30 which is open)
+    say(OK)
+    remove2(30 which is open)
+
+action(GO FIEL)
+  if here(9 which is weakly flickering) & at(9 I am in a metal lined tunnel)
+    say(OK)
+    go(24 I am in a metal lifeboat hangar open to|outer space)
+    drop(9 Force field)
+    drop(9 which is weakly flickering)
+
+action(GO FIEL)
+  if here(9 which is weakly flickering) & at(24 I am in a metal lifeboat hangar open to|outer space)
+    say(OK)
+    go(9 I am in a metal lined tunnel)
+    drop(9 Force field)
+    drop(9 which is weakly flickering)
+
+action(GO FIEL)
+  if ! here(9 which is weakly flickering) & at(9 I am in a metal lined tunnel)
+    say(OK)
+    go(24 I am in a metal lifeboat hangar open to|outer space)
+    drop(9 Force field)
+
+action(GO FIEL)
+  if ! here(9 which is weakly flickering) & at(24 I am in a metal lifeboat hangar open to|outer space)
+    say(OK)
+    go(9 I am in a metal lined tunnel)
+    drop(9 Force field)
+
+action(OPEN)
+    say(sorry)
+    say(I can't)
+
+action(LOOK PLAT)
+  if ! bit15
+    say(shaped for strange narrow alien bodies)
+
+action(LOOK HOLE)
+  if here(27 Dark hole) & ! bit15
+    say(I see)
+    say(utter blackness in center!)
+
+action(DRAG BAND)
+  if with(7 Bandanna)
+    say(OK)
+    remove2(8 Which I'm wearing)
+    swap(7 Bandanna, 14 Long glowing metal thread)
+
+action(GO LIFE)
+  if at(24 I am in a metal lifeboat hangar open to|outer space)
+    say(sorry)
+    say(I can't)
+
+action(BREA)
+  if ! bit7
+    say(OK)
+    clear(bit5)
+    clear(bit18)
+    say(I breathed)
+
+action(KICK BALL)
+  if with(11 Large medicine ball)
+    say(OK)
+    say(OUCH!)
+
+action(LOOK ME)
+  if ! bit15 & with(17 Me)
+    continue
+
+continue
+  if ! bit28
+    say(sedated!)
+
+continue
+  if bit19
+    say(one item)
+    drop(7 Bandanna)
+    clear(bit19)
+
+continue
+  if bit28
+    say(Awake!)
+
+action(LOOK)
+  if ! bit15
+    say(OK)
+    say(I see)
+    say(nothing special)
+    look2

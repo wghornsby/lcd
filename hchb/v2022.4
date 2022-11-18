@@ -1,0 +1,193 @@
+/// 
+Class HchbLib.Vendors.CellTrak.EVV.ProcessStateStatusBPL Extends (Ens.BusinessProcessBPL, HchbLib.Vendors.CellTrak.EVV.ProcessStateStatusBPLOptions) [ ClassType = persistent ]
+{
+
+Storage Default
+{
+<Data name="ProcessStateStatusBPLDefaultData">
+<Subscript>"ProcessStateStatusBPL"</Subscript>
+<Value name="1">
+<Value>ApplicationID</Value>
+</Value>
+</Data>
+<DefaultData>ProcessStateStatusBPLDefaultData</DefaultData>
+<Type>%Library.CacheStorage</Type>
+}
+
+/// BPL Definition
+XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
+{
+<process language='objectscript' request='HchbLib.Vendors.CellTrak.EVV.DataModels.InboundAck' response='HchbLib.Customer.Response.StateMessage' height='3050' width='2000' >
+<context>
+<property name='statusCode' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='datastream' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='100' />
+</parameters>
+</property>
+<property name='ApplicationID' type='%Integer' instantiate='0' />
+<property name='ApplicationRouteVendor' type='HchbLib.Interface.DataModels.ApplicationRouteVendor' instantiate='0' />
+<property name='QueryApplicationRouteVendor' type='HchbLib.Interface.Request.IntSysGetApplicationRouteVendorByMatch' instantiate='0' />
+<property name='Guid' type='%String' initialexpression='$System.Util.CreateGUID()' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='Transaction' type='HchbLib.Vendors.CellTrak.EVV.Transaction' instantiate='0' />
+<property name='EpisodeID' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='connectionString' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='250' />
+</parameters>
+</property>
+<property name='userName' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='RejectionFlag' type='%Integer' initialexpression='0' instantiate='0' />
+<property name='cevid' type='%Integer' instantiate='0' />
+<property name='csvid' type='%Integer' instantiate='0' />
+<property name='vcesid' type='%Integer' instantiate='0' />
+</context>
+<sequence xend='200' yend='2800' >
+<scope xpos='200' ypos='250' xend='200' yend='2700' >
+<trace name='t0' value='"start"' xpos='200' ypos='350' />
+<transform name='Transform to ARV request' class='HchbLib.Vendors.CellTrak.EVV.GetApplicationRouteVendorFromAck' source='request' target='context.QueryApplicationRouteVendor' xpos='200' ypos='450' />
+<trace name='t1' value='"getting ARV..."' xpos='200' ypos='550' />
+<call name='Get ARV' target='CellTrak EVV - Interfaces SQL Database Op' async='0' xpos='200' ypos='650' >
+<annotation><![CDATA[HchbLib.Interface.Request.IntSysGetApplicationRouteVendorByMatch]]></annotation>
+<request type='HchbLib.Interface.Request.IntSysGetApplicationRouteVendorByMatch' >
+<assign property="callrequest" value="context.QueryApplicationRouteVendor" action="set" />
+</request>
+<response type='HchbLib.Interface.Response.IntSysGetApplicationRouteVendorByMatch' >
+<assign property="context.ApplicationRouteVendor" value="callresponse.ApplicationRouteVendor" action="set" />
+</response>
+</call>
+<trace name='t2' value='"checking the db name..."' xpos='200' ypos='750' />
+<if name='Check if DB found?' condition='context.ApplicationRouteVendor.DatabaseName &apos;= ""' xpos='200' ypos='850' xend='200' yend='2450' >
+<true>
+<trace value='"DB found"' xpos='470' ypos='1000' />
+<if name='Incomplete visit refnum?' condition='$FIND(request.referenceNumber,"S") &gt; 0' xpos='470' ypos='1100' xend='470' yend='1450' >
+<true>
+<assign name="Assign refnum to csvid" property="context.csvid" value="$E(request.referenceNumber,2,*)" action="set" xpos='740' ypos='1250' />
+<call name='Get Incomplete Visit Info' target='CellTrak EVV - Get Visit Info Op' async='0' xpos='740' ypos='1350' >
+<request type='HchbLib.Customer.Request.GetIncompleteVisitInfo' >
+<assign property="callrequest.DataSourceName" value="context.ApplicationRouteVendor.DatabaseName" action="set" />
+<assign property="callrequest.csvId" value="context.csvid" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetIncompleteVisitInfo' >
+<assign property="context.EpisodeID" value="callresponse.VisitInfo.Visit.epiId" action="set" />
+</response>
+</call>
+</true>
+<false>
+<assign name="Assign refnum to cevid" property="context.cevid" value="request.referenceNumber" action="set" xpos='470' ypos='1250' />
+<call name='Get Visit Info' target='CellTrak EVV - Get Visit Info Op' async='0' xpos='470' ypos='1350' >
+<annotation><![CDATA[context.EpisodeID]]></annotation>
+<request type='HchbLib.Customer.Request.GetVisitInfo' >
+<assign property="callrequest.DataSourceName" value="context.ApplicationRouteVendor.DatabaseName" action="set" />
+<assign property="callrequest.cevId" value="context.cevid" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetVisitInfo' >
+<assign property="context.EpisodeID" value="callresponse.VisitInfo.Visit.epiId" action="set" />
+</response>
+</call>
+</false>
+</if>
+<assign name="Connection String" property="context.connectionString" value="&quot;Data Source=&quot;_context.ApplicationRouteVendor.DatabaseServer_&quot;;Initial Catalog=&quot;_context.ApplicationRouteVendor.DatabaseName_&quot;;Integrated Security=SSPI;&quot;" action="set" xpos='470' ypos='1550' />
+<switch name='Response Status' xpos='470' ypos='1650' xend='470' yend='2000' >
+<case condition='request.status = "Payer Processed"' name='Payer Processed' >
+<call name='Update Submission Status' target='CellTrak EVV - Update Rejection Notice' async='0' xpos='470' ypos='1800' >
+<request type='HchbLib.Customer.Request.StateMessage' >
+<assign property="callrequest.DataSourceName" value="context.ApplicationRouteVendor.DatabaseName" action="set" />
+<assign property="callrequest.Message.visitID" value="request.visitID" action="set" />
+<assign property="callrequest.Message.agencyID" value="request.agencyID" action="set" />
+<assign property="callrequest.Message.refNum" value="context.cevid" action="set" />
+<assign property="callrequest.Message.rejMessage" value="request.status" action="set" />
+<assign property="callrequest.StatusFlag" value="&quot;Y&quot;" action="set" />
+<assign property="callrequest.Message.csvid" value="context.csvid" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.StateMessage' >
+<assign property="context.vcesid" value="callresponse.vcesid" action="set" />
+</response>
+</call>
+</case>
+<case condition='request.status = "DeliveryCancelledDuplicate"' name='DeliveryCancelledDuplicate' >
+<call name='Update Submission Duplicate' target='CellTrak EVV - Update Rejection Notice' async='0' xpos='740' ypos='1800' >
+<request type='HchbLib.Customer.Request.StateMessage' >
+<assign property="callrequest.DataSourceName" value="context.ApplicationRouteVendor.DatabaseName" action="set" />
+<assign property="callrequest.Message.visitID" value="request.visitID" action="set" />
+<assign property="callrequest.Message.agencyID" value="request.agencyID" action="set" />
+<assign property="callrequest.Message.refNum" value="context.cevid" action="set" />
+<assign property="callrequest.Message.rejMessage" value="request.status" action="set" />
+<assign property="callrequest.StatusFlag" value="&quot;D&quot;" action="set" />
+<assign property="callrequest.Message.csvid" value="context.csvid" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.StateMessage' >
+<assign property="context.vcesid" value="callresponse.vcesid" action="set" />
+</response>
+</call>
+</case>
+<default name='default' >
+<call name='Update Rejection Notice' target='CellTrak EVV - Update Rejection Notice' async='0' xpos='1010' ypos='1800' >
+<request type='HchbLib.Customer.Request.StateMessage' >
+<assign property="callrequest.DataSourceName" value="context.ApplicationRouteVendor.DatabaseName" action="set" />
+<assign property="callrequest.Message.visitID" value="request.visitID" action="set" />
+<assign property="callrequest.Message.agencyID" value="request.agencyID" action="set" />
+<assign property="callrequest.Message.refNum" value="context.cevid" action="set" />
+<assign property="callrequest.Message.rejMessage" value="request.rejectionReasons" action="set" />
+<assign property="callrequest.StatusFlag" value="&quot;R&quot;" action="set" />
+<assign property="callrequest.Message.csvid" value="context.csvid" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.StateMessage' >
+<assign property="context.vcesid" value="callresponse.vcesid" action="set" />
+</response>
+</call>
+<assign name="Set rejection flag" property="context.RejectionFlag" value="1" action="set" xpos='1010' ypos='1900' />
+</default>
+</switch>
+<if name='check for status' condition='(context.vcesid &gt; 0) &amp;&amp; (context.RejectionFlag = 1)' xpos='470' ypos='2100' xend='470' yend='2350' >
+<true>
+<call name='Rejection Logic Order' target='CellTrak EVV - Workflow Service Op' async='0' xpos='605' ypos='2250' >
+<request type='HchbLib.Services.WorkflowSvc.Request.OpenStageRequest' >
+<assign property="callrequest.request.EpisodeId" value="context.EpisodeID" action="set" />
+<assign property="callrequest.request.StageId" value="&quot;8051&quot;" action="set" />
+<assign property="callrequest.request.EventId" value="&quot;3050&quot;" action="set" />
+<assign property="callrequest.request.ConnectionString" value="context.connectionString" action="set" />
+<assign property="callrequest.request.LoginProfileId" value="&quot;0&quot;" action="set" />
+<assign property="callrequest.request.WorkflowCommand" value="&quot;OpenStage&quot;" action="set" />
+<assign property="callrequest.request.UserName" value="&quot;&quot;" action="set" />
+<assign property="callrequest.request.RequestId" value="context.Guid" action="set" />
+<assign property="callrequest.request.ClientEpisodeVisitId" value="context.cevid" action="set" />
+<assign property="callrequest.request.ReportParameter" value="context.vcesid" action="set" />
+</request>
+<response type='HchbLib.Services.WorkflowSvc.Response.OpenStageResponse' />
+</call>
+</true>
+</if>
+</true>
+<false>
+<trace value='"DB not found"' xpos='200' ypos='1000' />
+<throw name='DB not found' fault='"No ARV match found for agencyID ["_request.agencyID_"] in application [CellTrak EVV Rejection Message]"' xpos='200' ypos='1100' />
+</false>
+</if>
+<faulthandlers>
+<catchall xpos='200' ypos='2550' xend='200' yend='350' >
+<throw name='catchall' fault='$System.Status.GetOneStatusText(..%Context.%LastError)' xpos='200' ypos='250' />
+</catchall>
+</faulthandlers>
+</scope>
+</sequence>
+</process>
+}
+
+}

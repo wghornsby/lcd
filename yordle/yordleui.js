@@ -54,6 +54,7 @@ class UiPage extends Ui {
     var words = this.ai.wordlist.length - 1;
     var left = trays - words;
     var odds = left >= 0 ? 100. : pct(trays, words);
+    console.log(ix+','+words+','+left+','+odds);
     if (odds == 100) {
       if (words == 0) {
         this.winlose({win:1});

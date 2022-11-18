@@ -1,0 +1,41 @@
+<html>
+<head>
+  <script type='text/javascript' src='../words.js?1'></script>
+</head>
+<body>
+</body>
+<script>
+function log(o) {
+  if (typeof o === 'object') { 
+    console.log(JSON.stringify(o));
+  } else {
+    console.log(o);
+  }
+}
+var counts = new Array(26);
+validwords.forEach(word => {
+  for (let i = 0; i <= 4; i++) {
+    let c = word.charCodeAt(i) - 65; 
+    if (! counts[c]) {
+      counts[c] = 1;
+    } else {
+      counts[c] = counts[c] + 1;
+    }
+  }
+})
+counts.forEach((c, i) => {
+  counts[i] = {letter:String.fromCharCode(65 + i), count:c};
+})
+counts.sort((a, b) => {
+  if (a.count < b.count) {
+    return 1;
+  }
+  if (a.count > b.count) {
+    return -1;
+  }
+  return 0;
+})
+counts.forEach(o => {
+  log(o.letter + ':' + o.count);
+})
+</script>

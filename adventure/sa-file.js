@@ -27,7 +27,7 @@ SA.File = class {
     this._unknown = raw.next();
     this.rooms.applyAliases(raw);
     this.items.applyAliases(raw);
-    //log(this.toString());
+    log(this.toString());
   }
   filename() {
     return 'adv' + this.number + '.adv';
@@ -117,7 +117,7 @@ SA.File.AliasArray = class extends Array {
       if (raw.length) {
         e.alias = raw.next();
       } else {
-        e.alias = e.text;
+        e.alias = (e.rx || e.ix) + ' ' + e.text;
       }
     })
   }

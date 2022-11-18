@@ -1,7 +1,7 @@
 <html>
 <head>
   <script type='text/javascript' src='lib/lcd-simple.js'></script>
-  <script type='text/javascript' src='games/adv05.js'></script>
+  <script type='text/javascript' src='games/adv10.js'></script>
   <script type='text/javascript' src='sa-game.js'></script>
   <script type='text/javascript' src='sa-file.js'></script>
   <script type='text/javascript' src='sa-ui.js'></script>
@@ -21,6 +21,9 @@ screen {
   color:aquamarine;
   width:830pt;
 }
+span.cmd {
+  color:#909090;
+}
 header {
   color:white;
   position:absolute;
@@ -35,6 +38,13 @@ footer {
   z-index:11;
   background-color:black;
   width:830pt;
+}
+debug {
+  position:absolute;
+  top:750pt;
+  left:20;
+  width:100%;
+  color:coral;
 }
 visible, obvious, divider {
   display:none;
@@ -58,7 +68,8 @@ cursor {
       <divider><br>&lt;------------------------------------------------------------------------&gt;<br><br></divider>
     </header>
     <output></output>
-    <footer>&nbsp;-------> Tell me what to do? <entry></entry><cursor>&nbsp;</cursor></footer>
+    <footer>&nbsp;-------> Tell me what to do? <entry></entry><cursor>&nbsp;&nbsp;</cursor></footer>
+    
   </screen>
 </body>
 <script nonce='wghornsby'>

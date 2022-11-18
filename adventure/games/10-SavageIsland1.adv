@@ -1,0 +1,1759 @@
+/** ADVENTURE 10 v 123 */
+
+wordlen = 4
+carrymax = 6
+lightlen = 1023
+nounverbs = 85
+messages = 100
+actions = 272
+items = 59
+rooms = 35
+startroom(1 I am in a Beach by ocean)
+
+/** VOCABULARY */
+
+verbs(GO=WALK=RUN=CLIM=ENTE=CRAW)
+verbs(GET=TAKE=GRAB=PICK=HOLD=CATC)
+verbs(DROP=LEAV=PUT=RELE=GIVE)
+verbs(MOVE=PRES=PUSH=TURN=PULL)
+verbs(LOOK=EXAM=DESC=READ=SEE)
+verbs(BUIL=MAKE)
+verbs(WITH=USE)
+verbs(PET=TOUC=FEEL)
+verbs(KILL=DEST)
+verbs(BREA=SMAS)
+verbs(YELL=SCRE)
+verbs(DRIN=EAT=TAST)
+verbs(ASK=SAY=TELL=YELL)
+verbs(FIX=REPA)
+verbs(PADD=SAIL)
+verbs(EMPT,CUT,SCOR,SAVE,QUIT,HELP,INVE,FILL,SWIM,SPIL,YES,SWIM,WAIT,DIG,JUMP,SLEE,TREA,YOHO,OPEN)
+
+nouns(STOR=HURR)
+nouns(TREE=PALM)
+nouns(CLIF=EDGE)
+nouns(CASE=DISP)
+nouns(FORC=FIEL)
+nouns(NORT,SOUT,EAST,WEST,UP,DOWN,SAND,BOTT,RUM,SALT,SHIP,PIRA,ARGH,LOG,HEAD,WIRE,WATC,BAT,OCEA,JUNG,VINE,INVE,HAND,FEET,BREA,BASI,OUT,LEDG,BONE,RAFT)
+nouns(HOLE,CREV,CAVE,ASH,KNIF,STAL,NEAN,META,TUNN,PIRA,ANIM,LAKE,VOLC,FREE,TIDE,BUTT,WATE,HOL,GAME,BEAR,SWEA,ATOL,BEAC,DRAW,AROU,SHAR,PLAI,NOTE,BAND,COCO)
+nouns(BLOC,OPEN,GUAN,CONS,ROOF,HELL,DIAL,LEVE,MACH,GROU,ROCK,PUDD)
+
+/** ROOMS */
+
+room(1 I am in a Beach by ocean: I am in a Beach by ocean)
+  S(7 I am in a large plain)
+  E(4 I am in a Beach by ocean)
+  W(2 I am in a Beach by ocean, a cliff towers over|west end)
+  D(5 I am in a shallow tidepool)
+
+room(2 I am in a Beach by ocean, a cliff towers over|west end: I am in a Beach by ocean, a cliff towers over|west end)
+  E(1 I am in a Beach by ocean)
+
+room(3 I'm on the edge of a hot rocky cliff|outside the Volcano: I'm on the edge of a hot rocky cliff|outside the Volcano)
+
+room(4 I am in a Beach by ocean: I am in a Beach by ocean)
+  W(1 I am in a Beach by ocean)
+
+room(5 I am in a shallow tidepool: I am in a shallow tidepool)
+  S(1 I am in a Beach by ocean)
+
+room(6 I'm on the rim of an extinct volcano: I'm on the rim of an extinct volcano)
+  D(7 I am in a large plain)
+
+room(7 I am in a large plain: I am in a large plain)
+  N(1 I am in a Beach by ocean)
+
+room(8 I am in a volcano: I am in a volcano)
+  U(6 I'm on the rim of an extinct volcano)
+
+room(9 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  N(22 I am in a metal lined tunnel)
+  S(17 I am in a ancient cave)
+  E(20 I am in a metal room)
+  W(21 I am in a metal room)
+
+room(10 I'm on top of the head, offshore I see an atoll: I'm on top of the head, offshore I see an atoll)
+  D(1 I am in a Beach by ocean)
+
+room(11 I am in a deep cave: I am in a deep cave)
+  E(8 I am in a volcano)
+
+room(12 I am in a lake. There's shore to North,|South & East: I am in a lake. There's shore to North,|South & East)
+
+room(13 I'm above the lake bottom: I'm above the lake bottom)
+
+room(14 I'm on a raft: I'm on a raft)
+
+room(15 I'm on a small atoll: I'm on a small atoll)
+
+room(16 I am in a beach by ocean: I am in a beach by ocean)
+
+room(17 I am in a ancient cave: I am in a ancient cave)
+  S(16 I am in a beach by ocean)
+
+room(18 I'm west of lake on a small secluded ledge|on volcano's wall: I'm west of lake on a small secluded ledge|on volcano's wall)
+  E(12 I am in a lake. There's shore to North,|South & East)
+
+room(19 I am in a top of a palm tree: I am in a top of a palm tree)
+  D(4 I am in a Beach by ocean)
+
+room(20 I am in a metal room: I am in a metal room)
+  W(9 I am in a metal lined tunnel)
+
+room(21 I am in a metal room: I am in a metal room)
+  E(9 I am in a metal lined tunnel)
+
+room(22 I am in a metal lined tunnel: I am in a metal lined tunnel)
+  S(9 I am in a metal lined tunnel)
+  E(23 I am in a dimly lit rock room)
+  W(29 I am in a metal room)
+
+room(23 I am in a dimly lit rock room: I am in a dimly lit rock room)
+  S(24 I am in a rock room)
+  W(22 I am in a metal lined tunnel)
+
+room(24 I am in a rock room: I am in a rock room)
+  N(23 I am in a dimly lit rock room)
+
+room(25 I am in a maze of caves: I am in a maze of caves)
+  N(25 I am in a maze of caves)
+  S(27 I am in a maze of caves)
+  E(26 I am in a maze of caves)
+  W(27 I am in a maze of caves)
+
+room(26 I am in a maze of caves: I am in a maze of caves)
+  N(25 I am in a maze of caves)
+  S(26 I am in a maze of caves)
+  E(25 I am in a maze of caves)
+  W(27 I am in a maze of caves)
+
+room(27 I am in a maze of caves: I am in a maze of caves)
+  N(28 I am in a maze of caves)
+  S(26 I am in a maze of caves)
+  E(27 I am in a maze of caves)
+  W(25 I am in a maze of caves)
+
+room(28 I am in a maze of caves: I am in a maze of caves)
+  N(28 I am in a maze of caves)
+  S(26 I am in a maze of caves)
+  E(25 I am in a maze of caves)
+  W(33 I am in a maze of caves)
+
+room(29 I am in a metal room: I am in a metal room)
+  E(22 I am in a metal lined tunnel)
+
+room(30 I am in a small metal room: I am in a small metal room)
+
+room(31 I am in a small metal room: I am in a small metal room)
+
+room(32 I'm on the edge of a sandy cliff outside|the volcano: I'm on the edge of a sandy cliff outside|the volcano)
+  E(18 I'm west of lake on a small secluded ledge|on volcano's wall)
+
+room(33 I am in a maze of caves: I am in a maze of caves)
+  N(28 I am in a maze of caves)
+  S(27 I am in a maze of caves)
+  E(26 I am in a maze of caves)
+  W(25 I am in a maze of caves)
+  D(17 I am in a ancient cave)
+
+room(34 I am in a lot of trouble: I am in a lot of trouble)
+
+/** ITEMS */
+
+item(0 : )
+  at(out-of-play)
+
+item(1 Sand: Sand)
+  at(1 I am in a Beach by ocean)
+
+item(2 .: .)
+  at(out-of-play)
+
+item(4 Palm trees: Palm trees)
+  at(4 I am in a Beach by ocean)
+
+item(4 Surly pirate waiting for something: Surly pirate waiting for something)
+  at(out-of-play)
+
+item(5 Pirate ship: Pirate ship)
+  at(out-of-play)
+
+item(6 Bottle of Rum: Bottle of Rum)
+  noun(BOTT)
+  at(out-of-play)
+
+item(7 Empty bottle: Empty bottle)
+  noun(BOTT)
+  at(out-of-play)
+
+item(8 Bottle of seawater: Bottle of seawater)
+  noun(BOTT)
+  at(out-of-play)
+
+item(9 Glowing plastic block: Glowing plastic block)
+  noun(BLOC)
+  at(out-of-play)
+
+item(10 Pile of salt: Pile of salt)
+  noun(SALT)
+  at(out-of-play)
+
+item(11 Puddle: Puddle)
+  at(out-of-play)
+
+item(11 Fish bones: Fish bones)
+  noun(BONE)
+  at(11 I am in a deep cave)
+
+item(8 Lake: Lake)
+  at(8 I am in a volcano)
+
+item(14 Bottle freshwater: Bottle freshwater)
+  noun(BOTT)
+  at(out-of-play)
+
+item(11 Natural stone basin: Natural stone basin)
+  at(11 I am in a deep cave)
+
+item(16 with rum in it: with rum in it)
+  at(out-of-play)
+
+item(3 Crevice: Crevice)
+  at(3 I'm on the edge of a hot rocky cliff|outside the Volcano)
+
+item(5 Water: Water)
+  at(5 I am in a shallow tidepool)
+
+item(-1 Watch: Watch)
+  noun(WATC)
+  at(inventory)
+
+item(11 Bear: Bear)
+  at(11 I am in a deep cave)
+
+item(1 Large stone head: Large stone head)
+  at(1 I am in a Beach by ocean)
+
+item(1 Edge of impenetrable jungle: Edge of impenetrable jungle)
+  at(1 I am in a Beach by ocean)
+
+item(23 Pieces of pliable vines: Pieces of pliable vines)
+  noun(VINE)
+  at(out-of-play)
+
+item(24 Large knife: Large knife)
+  noun(KNIF)
+  at(out-of-play)
+
+item(25 Palm log: Palm log)
+  noun(LOG)
+  at(out-of-play)
+
+item(26 Small plastic block: Small plastic block)
+  noun(BLOC)
+  at(out-of-play)
+
+item(7 Extinct volcano: Extinct volcano)
+  at(7 I am in a large plain)
+
+item(28 Palm log: Palm log)
+  noun(LOG)
+  at(out-of-play)
+
+item(29 Raft of vines & logs: Raft of vines & logs)
+  at(out-of-play)
+
+item(11 Crevice: Crevice)
+  at(11 I am in a deep cave)
+
+item(31 WIND----->: WIND----->)
+  at(out-of-play)
+
+item(8 Cave: Cave)
+  at(8 I am in a volcano)
+
+item(33 Sweat: Sweat)
+  at(out-of-play)
+
+item(34 Ocean: Ocean)
+  at(out-of-play)
+
+item(35 Beach: Beach)
+  at(out-of-play)
+
+item(36 Tidepool: Tidepool)
+  at(out-of-play)
+
+item(37 Atoll: Atoll)
+  at(out-of-play)
+
+item(16 Cave in cliff: Cave in cliff)
+  at(16 I am in a beach by ocean)
+
+item(17 Primitve cave drawings: Primitve cave drawings)
+  at(17 I am in a ancient cave)
+
+item(40 Note: Note)
+  noun(NOTE)
+  at(out-of-play)
+
+item(41 Bandanna: Bandanna)
+  noun(BAND)
+  at(out-of-play)
+
+item(19 Coconuts: Coconuts)
+  noun(COCO)
+  at(19 I am in a top of a palm tree)
+
+item(17 Stalactite in roof: Stalactite in roof)
+  at(17 I am in a ancient cave)
+
+item(44 Neanderthal: Neanderthal)
+  at(out-of-play)
+
+item(45 Crevice in rock: Crevice in rock)
+  at(out-of-play)
+
+item(20 Sealed display case: Sealed display case)
+  at(20 I am in a metal room)
+
+item(21 Sealed display case: Sealed display case)
+  at(21 I am in a metal room)
+
+item(11 Dark opening: Dark opening)
+  at(11 I am in a deep cave)
+
+item(28 Opening: Opening)
+  at(28 I am in a maze of caves)
+
+item(28 Pile bat guano: Pile bat guano)
+  at(28 I am in a maze of caves)
+
+item(29 Force field: Force field)
+  at(29 I am in a metal room)
+
+item(29 Control console: Control console)
+  at(29 I am in a metal room)
+
+item(18 Narrow crevice: Narrow crevice)
+  at(18 I'm west of lake on a small secluded ledge|on volcano's wall)
+
+item(17 Dark opening in roof: Dark opening in roof)
+  at(17 I am in a ancient cave)
+
+item(55 2 centimeter piece of shiny wire: 2 centimeter piece of shiny wire)
+  noun(WIRE)
+  at(out-of-play)
+
+item(56 Open display case: Open display case)
+  at(out-of-play)
+
+item(24 Alien machinery: Alien machinery)
+  at(24 I am in a rock room)
+
+item(58 Coconut meat: Coconut meat)
+  noun(COCO)
+  at(out-of-play)
+
+/** AUTOS/COMMANDS */
+
+auto(100%)  // moves
+    ctr += 1
+
+auto(10%)  // evaporate
+  if live(11 Puddle) & ! bit2
+    remove2(11 Puddle)
+    continue
+
+continue  // salt
+  if bit1
+    dropat(10 Pile of salt, 3 I'm on the edge of a hot rocky cliff|outside the Volcano)
+    clear(bit1)
+
+auto(100%)  // WIND
+  if bit4 & ! here(31 WIND----->) & ! bit17 & ! bit18 & ! at(13 I'm above the lake bottom)
+    continue
+
+continue
+    drop(31 WIND----->)
+
+auto(100%)  // start
+  if ! bit3
+    set(bit3)
+    continue
+    ctr = 250
+    swapct(ctr1)
+
+continue
+    ctr = 70
+    swapct(ctr2)
+    ctr = 300
+    swapct(ctr3)
+
+continue
+    ctr = 0
+    ctr--
+    say(Welcome to Adventure 10: 'SAVAGE ISLAND, Part I'|by Scott Adams, dedicated: Dennis Brent.|)
+
+continue  // FORCE ROOM
+    go(30 I am in a small metal room)
+    swaploc
+    go(1 I am in a Beach by ocean)
+    look2
+
+auto(100%)  // NO TREAD
+  if ! at(12 I am in a lake. There's shore to North,|South & East)
+    clear(bit14)
+
+auto(100%)  // night?
+    swapct(ctr1)
+    ctr--
+    continue
+
+continue
+  if ctr <= 30 & ! bit2 & ! bit17 & ! bit18
+    say(Getting dark)
+
+continue  // nite!
+  if ctr <= 0 & ! bit2 & ! bit17 & ! bit18
+    set(bit2)
+    say(Sunset)
+    dark
+    look2
+
+continue
+    swapct(ctr1)
+    swapct(ctr3)
+    ctr--
+
+continue  // pirate here
+  if ctr <= 0 & ! bit6
+    dropat(5 Pirate ship, 15 I'm on a small atoll)
+    say(I hear cannon offshore)
+    set(bit6)
+
+continue  // hurricane
+    swapct(ctr3)
+    swapct(ctr2)
+    ctr--
+
+continue  // HURR COMING
+  if ctr <= 15 & ctr > 0 & ! bit4 & ! at(13 I'm above the lake bottom) & ! bit19
+    say(My bones ache)
+
+continue  // HUR HITS
+  if ! bit4 & ctr <= 0 & ! bit19
+    say(Hurricane Alexis hits island)
+    set(bit4)
+    ctr = 85
+
+continue  // HURR PAS
+  if bit4 & ctr <= 50 & bit5
+    clear(bit4)
+    set(bit19)
+    say(Storm passed)
+
+continue  // HURR 2 LONG
+  if bit4 & ctr <= 0 & here(31 WIND----->) & ! at(3 I'm on the edge of a hot rocky cliff|outside the Volcano)
+    say(Not safe)
+    say(to move in hurricane)
+    say(storm lifts me out to sea)
+    die
+
+continue
+    swapct(ctr2)
+
+auto(100%)  // NO TREAD
+  if holds(25 Palm log)
+    clear(bit14)
+
+auto(100%)  // NO TREAD
+  if holds(28 Palm log)
+    clear(bit14)
+
+auto(100%)  // PIRATE HERE
+  if live(5 Pirate ship) & ! live(4 Surly pirate waiting for something)
+    dropat(4 Surly pirate waiting for something, 15 I'm on a small atoll)
+
+auto(100%)  // BEAR SALT
+  if here(10 Pile of salt) & here(11 Bear)
+    remove2(10 Pile of salt)
+    set(bit5)
+    say(bear eats)
+    say(salt)
+
+auto(30%)  // BEAR ATTACKS
+  if here(11 Bear) & ! bit5 & holds(33 Sweat)
+    say(Bear smells something on me, licks me,)
+    say(bear eats)
+    say(me)
+    die
+
+auto(40%)  // CAVEMEN BUTT
+  if here(29 Control console) & bit22 & here(44 Neanderthal)
+    say(caveman)
+    say(pushes button)
+    say(Smiles & points at me then the force field)
+    say(There's blinding flash from Force Field)
+
+auto(40%)  // BEAR COMES
+  if at(8 I am in a volcano) & with(10 Pile of salt)
+    drop(11 Bear)
+    say(Bear smells something on me, licks me,)
+
+auto(10%)  // MOVE BEAR
+  if ! bit4
+    dropat(11 Bear, 8 I am in a volcano)
+
+auto(40%)  // MOVE BEAR
+  if bit18 & ! at(17 I am in a ancient cave) & ! here(11 Bear)
+    drop(11 Bear)
+
+auto(35%)  // MOVE BEAR
+  if bit4
+    dropat(11 Bear, 11 I am in a deep cave)
+
+auto(100%)  // HOLD BREATHE
+  if bit7
+    swapct(ctr4)
+    ctr--
+    continue
+
+continue  // WARNIGN AIR
+  if ctr <= 2
+    say(Argh!)
+
+continue
+  if ctr <= 0
+    clear(bit7)
+    say(I breathed!)
+
+continue
+    swapct(ctr4)
+
+auto(100%)  // DROP LOG
+  if holds(28 Palm log) & holds(25 Palm log)
+    say(Sorry)
+    say(too heavy or awkward)
+    drop(28 Palm log)
+
+auto(25%)  // TREE DOWN
+  if bit4 & ! live(25 Palm log) & ! live(29 Raft of vines & logs)
+    dropat(25 Palm log, 4 I am in a Beach by ocean)
+    say(CRASH!)
+
+auto(100%)  // WIN GAME
+  if at(30 I am in a small metal room) & bit22 & live(44 Neanderthal)
+    set(bit23)
+    say(caveman)
+
+auto(100%)  // WIN GAME
+  if at(31 I am in a small metal room) & bit22 & live(44 Neanderthal)
+    set(bit23)
+    say(caveman)
+
+auto(100%)  // WIN GAME
+  if bit23
+    say(pushes button)
+    say(There's blinding flash from Force Field)
+    say(Glowing sign appears: 'SAVE THIS PASSWORD FOR ADVENTURE 11:')
+    continue
+
+continue  // NO BAND
+  if ! with(41 Bandanna)
+    ctr = 474
+    sayctr
+    say(|Congrats!)
+    gameover
+
+continue  // GOT BAND
+  if with(41 Bandanna)
+    ctr = 123
+    sayctr
+    say(|Congrats!)
+    gameover
+
+auto(100%)  // RAFT LASTING
+  if bit10
+    swapct(ctr5)
+    ctr--
+    continue
+
+continue
+  if ctr <= 10
+    say(Its coming apart)
+
+continue
+  if ctr <= 0
+    say(CRASH!)
+    say(sharks)
+    say(I'm attacked by wild animal)
+    die
+
+continue
+    swapct(ctr5)
+
+auto(30%)  // NERVOUS
+  if here(11 Bear) & ! bit5
+    say(a bear)
+    say(makes me nervous)
+    get(33 Sweat)
+
+auto(15%)  // RAFT ATOL
+  if bit10
+    clear(bit10)
+    drop(37 Atoll)
+    look2
+
+auto(40%)  // RAFT TIDEPOOL
+  if bit10
+    clear(bit10)
+    drop(36 Tidepool)
+    look2
+
+auto(30%)  // RAFT BEACH
+  if bit10
+    clear(bit10)
+    drop(35 Beach)
+    look2
+
+auto(100%)  // RAFT OCEAN
+  if bit10
+    clear(bit10)
+    drop(34 Ocean)
+    look2
+
+auto(2%)  // TREE DOWN
+  if bit4 & ! live(28 Palm log) & ! live(29 Raft of vines & logs)
+    dropat(28 Palm log, 4 I am in a Beach by ocean)
+    say(CRASH!)
+
+auto(100%)  // PIRATE RUM
+  if here(6 Bottle of Rum) & here(4 Surly pirate waiting for something)
+    swap(40 Note, 6 Bottle of Rum)
+    continue
+    drop(41 Bandanna)
+    say(as pirate takes it his bandanna falls off|I see he has antennas|He drops a note, leaving chortling)
+
+continue
+    remove2(4 Surly pirate waiting for something)
+    remove2(5 Pirate ship)
+
+auto(5%)  // STORM DEAD
+  if bit4 & ! holds(28 Palm log) & here(31 WIND----->) & ! holds(25 Palm log)
+    say(Not safe)
+    say(to move in hurricane)
+    say(storm lifts me out to sea)
+    die
+
+auto(100%)  // NO LOG
+  if at(12 I am in a lake. There's shore to North,|South & East) & holds() & ! holds(25 Palm log) & ! holds(28 Palm log)
+    continue
+
+continue  // DROWN
+  if bit14
+    say(something)
+    say(too heavy or awkward)
+    go(13 I'm above the lake bottom)
+    look2
+
+continue  // TREADING
+  if ! bit14
+    set(bit14)
+    say(I'm treading water)
+    say(something)
+    say(too heavy or awkward)
+
+auto(100%)  // WIND GONE
+  if ! bit4 & live(31 WIND----->)
+    remove2(31 WIND----->)
+
+auto(100%)  // DARK ROOM
+  if at(24 I am in a rock room)
+    dark
+    look2
+
+auto(100%)  // LITE ROOM
+  if at(23 I am in a dimly lit rock room)
+    cleardark
+    look2
+
+auto(100%)  // LITE TUNNELS
+  if at(9 I am in a metal lined tunnel)
+    cleardark
+    look2
+
+auto(100%)  // OUT TUNLS LITE
+  if at(17 I am in a ancient cave) & ! bit2
+    clear(bit17)
+    clear(bit18)
+    cleardark
+
+auto(100%)  // LEFT CAVES
+  if at(8 I am in a volcano)
+    clear(bit18)
+
+auto(100%)  // OUT TUNLS DARK
+  if at(17 I am in a ancient cave) & bit2
+    clear(bit17)
+    clear(bit18)
+    dark
+    look2
+
+auto(100%)  // MAN FOLLOWS
+  if live(44 Neanderthal) & ! here(44 Neanderthal) & ! at(30 I am in a small metal room) & ! at(31 I am in a small metal room)
+    drop(44 Neanderthal)
+    look2
+
+auto(40%)  // CAVEMAN NO GO
+  if here(29 Control console) & here(44 Neanderthal) & ! bit22
+    say(caveman)
+    say(pushes button)
+    continue
+    say(Metallic voice whispers in my mind:)
+
+continue  // .
+    say('VOCALIZE PASSWORD PLEASE')
+    say(caveman says)
+    say(Argh!)
+    say(nothing happens)
+
+auto(100%)  // DINO SNACK
+  if bit25 & ! live(21 Sealed display case)
+    say(I'm dinosaur snack!)
+    die
+
+auto(100%)  // MAN OUT
+  if bit25 & ! live(20 Sealed display case) & ! live(44 Neanderthal)
+    drop(44 Neanderthal)
+
+auto(100%)  // ONE MOVE OK
+  if bit24
+    set(bit25)
+    clear(bit24)
+
+auto(100%)  // DEAD CAVE
+  if at(33 I am in a maze of caves) & ! with(9 Glowing plastic block)
+    say(tripped & fell!)
+    die
+
+auto(100%)  // NO TREAD
+  if at(12 I am in a lake. There's shore to North,|South & East) & ! holds()
+    clear(bit14)
+
+auto(100%)  // LAKE WATCH
+  if at(12 I am in a lake. There's shore to North,|South & East) & here(-1 Watch)
+    dropat(-1 Watch, 13 I'm above the lake bottom)
+
+auto(100%)  // LAKE KNIFE
+  if at(12 I am in a lake. There's shore to North,|South & East) & here(24 Large knife)
+    dropat(24 Large knife, 13 I'm above the lake bottom)
+
+auto(100%)  // LAKE BOTTLE
+  if at(12 I am in a lake. There's shore to North,|South & East) & here(6 Bottle of Rum)
+    dropat(6 Bottle of Rum, 13 I'm above the lake bottom)
+
+auto(100%)  // LAKE SALT
+  if at(12 I am in a lake. There's shore to North,|South & East) & with(10 Pile of salt)
+    remove2(10 Pile of salt)
+
+auto(100%)  // BLOCK GLOWS
+  if live(9 Glowing plastic block)
+    swapct(ctr7)
+    ctr--
+    remove2(26 Small plastic block)
+    continue
+
+continue  // BURNT OUT
+  if ctr <= 0
+    swap(9 Glowing plastic block, 26 Small plastic block)
+    look2
+
+continue
+    swapct(ctr7)
+
+auto(100%)  // FORCE LOG
+  if ! live(29 Raft of vines & logs) & bit19 & ! live(25 Palm log)
+    dropat(25 Palm log, 4 I am in a Beach by ocean)
+    say(CRASH!)
+
+auto(100%)  // FORCE LOG
+  if ! live(29 Raft of vines & logs) & bit19 & ! live(28 Palm log)
+    dropat(28 Palm log, 4 I am in a Beach by ocean)
+    say(CRASH!)
+
+auto(100%)  // SLIP ASH
+  if at(6 I'm on the rim of an extinct volcano) & bit12
+    wait
+    wait
+    wait
+    continue
+
+continue  // SLIP ASH
+    say(Sorry)
+    say(ash is loose, I slide down)
+    go(8 I am in a volcano)
+    look2
+
+continue  // DROP LOG OUTSIDE
+  if holds(28 Palm log) & bit28
+    say(hard work)
+    say(I dropped something)
+    dropat(28 Palm log, 7 I am in a large plain)
+    look2
+
+continue
+  if holds(25 Palm log) & bit28
+    say(hard work)
+    say(I dropped something)
+    dropat(25 Palm log, 7 I am in a large plain)
+    look2
+
+auto(100%)  // OUTSIDE VOLCANO
+  if at(7 I am in a large plain)
+    clear(bit28)
+
+auto(100%)  // INSIDE VOLCANO
+  if at(8 I am in a volcano)
+    set(bit28)
+
+auto(100%)  // LAKE BOTTLE
+  if at(12 I am in a lake. There's shore to North,|South & East) & here(14 Bottle freshwater)
+    dropat(14 Bottle freshwater, 13 I'm above the lake bottom)
+
+auto(100%)  // DROWN LAKE
+  if at(13 I'm above the lake bottom) & ! bit7
+    say(I drown)
+    die
+
+auto(100%)  // WIND
+  if at(8 I am in a volcano) & bit4 & ! here(31 WIND----->)
+    drop(31 WIND----->)
+
+auto(100%)  // END GAME
+  if at(34 I am in a lot of trouble)
+    remove2(11 Bear)
+    remove2(44 Neanderthal)
+    look2
+    gameover
+
+action(LOOK CLIF)
+  if at(3 I'm on the edge of a hot rocky cliff|outside the Volcano)
+    say(Far below)
+    say(I see)
+    say(a cave)
+    say(at sea level)
+
+action(GO RAFT)  // STORM DEAD
+  if bit4 & here(29 Raft of vines & logs)
+    say(storm lifts me out to sea)
+    die
+
+action(LOOK DOWN)
+  if at(3 I'm on the edge of a hot rocky cliff|outside the Volcano)
+    say(Far below)
+    say(I see)
+    say(a cave)
+    say(at sea level)
+
+action(GO HEAD)
+  if with(1 Large stone head)
+    say(OK)
+    go(10 I'm on top of the head, offshore I see an atoll)
+    look2
+
+action(LOOK OCEA)
+    say(OK)
+    say(I see)
+    say(sharks)
+
+action(LOOK JUNG)
+  if here(1 Edge of impenetrable jungle)
+    say(OK)
+    say(I see)
+    say(trees, wild animals,)
+    continue
+
+continue
+  if ! live(23 Pieces of pliable vines)
+    say(vines)
+
+action(CUT VINE)
+  if here(1 Edge of impenetrable jungle) & ! live(23 Pieces of pliable vines) & with(24 Large knife)
+    say(OK)
+    drop(23 Pieces of pliable vines)
+
+action(INVE)
+    inventory
+
+action(GET INVE)
+    inventory
+
+action(GO LEDG)
+  if at(12 I am in a lake. There's shore to North,|South & East) & ! bit14
+    say(OK)
+    go(18 I'm west of lake on a small secluded ledge|on volcano's wall)
+    look2
+
+action(SWIM WEST)
+  if at(12 I am in a lake. There's shore to North,|South & East) & ! bit14
+    say(OK)
+    go(18 I'm west of lake on a small secluded ledge|on volcano's wall)
+    look2
+
+action(SWIM DOWN)
+  if at(12 I am in a lake. There's shore to North,|South & East) & ! holds(28 Palm log) & ! holds(25 Palm log)
+    say(OK)
+    go(13 I'm above the lake bottom)
+    look2
+
+action(GET BREA)
+  if ! at(13 I'm above the lake bottom)
+    say(OK)
+    set(bit7)
+    swapct(ctr4)
+    continue
+
+continue
+    ctr = 7
+    swapct(ctr4)
+
+action(PET BEAR)
+  if here(11 Bear) & ! bit5
+    say(OK)
+    say(Bear smells something on me, licks me,)
+    say(I'm attacked by wild animal)
+    die
+
+action(PET BEAR)
+  if here(11 Bear) & bit5
+    say(OK)
+
+action(GET OUT)
+  if at(8 I am in a volcano)
+    say(Sorry)
+    say(ash is loose, I slide down)
+    say(I shawda picked another proffesion!)
+
+action(SWIM DOWN)
+  if at(12 I am in a lake. There's shore to North,|South & East)
+    say(?)
+    say(Sorry)
+    inventory
+
+action(WITH KNIF)
+  if with(19 Coconuts) & with(24 Large knife) & bit27
+    swap(19 Coconuts, 58 Coconut meat)
+    say(OK)
+
+action(SWIM UP)
+  if at(13 I'm above the lake bottom)
+    say(OK)
+    go(12 I am in a lake. There's shore to North,|South & East)
+    look2
+
+action(SWIM EAST)
+  if at(13 I'm above the lake bottom) & ! live(26 Small plastic block)
+    say(OK)
+    say(I see)
+    say(something)
+    drop(26 Small plastic block)
+
+action(SWIM NORT)
+  if at(13 I'm above the lake bottom) & ! live(24 Large knife)
+    say(OK)
+    say(I see)
+    say(something)
+    drop(24 Large knife)
+
+action(OPEN COCO)
+  if with(19 Coconuts)
+    say(How?)
+    set(bit27)
+
+action(SWIM)
+  if at(13 I'm above the lake bottom)
+    say(OK)
+
+action(GO VOLC)
+  if here(7 Extinct volcano)
+    say(hard work)
+    go(6 I'm on the rim of an extinct volcano)
+    look2
+    get(33 Sweat)
+
+action(GO OCEA)
+  if ! at(8 I am in a volcano) & ! at(11 I am in a deep cave) & ! at(12 I am in a lake. There's shore to North,|South & East) & ! at(13 I'm above the lake bottom)
+    say(OK)
+    say(I'm attacked by wild animal)
+    say(sharks)
+    die
+
+action(BUIL RAFT)  // .
+  if with(23 Pieces of pliable vines) & with(28 Palm log) & with(25 Palm log) & with(24 Large knife)
+    say(OK)
+    continue
+
+continue
+    drop(29 Raft of vines & logs)
+    remove2(23 Pieces of pliable vines)
+    remove2(28 Palm log)
+    remove2(25 Palm log)
+
+continue  // BUILT RITE
+  if at(5 I am in a shallow tidepool)
+    dropat(36 Tidepool, 14 I'm on a raft)
+    set(bit11)
+
+continue  // SET MOVES
+    swapct(ctr5)
+    ctr = 25
+    swapct(ctr5)
+
+action(ASK FREE)
+  if here(29 Control console) & ! bit22
+    saynouncr
+    say(Metallic voice whispers in my mind:)
+    say('READY')
+    set(bit22)
+
+action(QUIT)
+    gameover
+
+action(WAIT)
+    swapct(ctr1)
+    ctr -= 50
+    swapct(ctr1)
+    continue
+
+continue
+    swapct(ctr3)
+    ctr -= 50
+    swapct(ctr3)
+    swapct(ctr2)
+
+continue
+    ctr -= 50
+    swapct(ctr2)
+    ctr += 50
+
+action(WITH HAND)  // DIG
+  if here(1 Sand) & bit20
+    say(OK)
+    clear(bit20)
+    set(bit21)
+
+action(GO CREV)
+  if here(11 Crevice)
+    say(OK)
+    go(3 I'm on the edge of a hot rocky cliff|outside the Volcano)
+    look2
+    clear(bit18)
+
+action(GO CAVE)
+  if here(8 Cave)
+    say(OK)
+    go(11 I am in a deep cave)
+    look2
+    set(bit18)
+
+action(GO RAFT)
+  if here(29 Raft of vines & logs) & bit11
+    say(OK)
+    go(14 I'm on a raft)
+    look2
+
+action(GET VINE)
+  if with(23 Pieces of pliable vines)
+    say(OK)
+    get(23 Pieces of pliable vines)
+
+action(GET VINE)
+  if here(1 Edge of impenetrable jungle)
+    say(Sorry)
+    say(They're attached to)
+    say(trees, wild animals,)
+
+action(LOOK HEAD)
+  if with(1 Large stone head)
+    say(OK)
+    say(resembles)
+    say(me)
+    say(Wierd!)
+
+action(PADD)
+  if bit11 & at(14 I'm on a raft)
+    say(Hard to steer this thing!)
+    set(bit10)
+    continue
+
+continue
+    remove2(37 Atoll)
+    remove2(34 Ocean)
+    remove2(35 Beach)
+    remove2(36 Tidepool)
+
+continue
+    swapct(ctr5)
+    ctr--
+    swapct(ctr5)
+
+action(PADD)
+    say(How?)
+
+action(GO BEAC)
+  if here(35 Beach)
+    say(OK)
+    go(16 I am in a beach by ocean)
+    drop(29 Raft of vines & logs)
+    look2
+
+action(GO ATOL)
+  if here(37 Atoll)
+    say(OK)
+    go(15 I'm on a small atoll)
+    drop(29 Raft of vines & logs)
+    look2
+
+action(GO TIDE)
+  if here(36 Tidepool)
+    say(OK)
+    go(5 I am in a shallow tidepool)
+    drop(29 Raft of vines & logs)
+    look2
+
+action(GO CAVE)
+  if here(16 Cave in cliff)
+    say(OK)
+    go(17 I am in a ancient cave)
+    look2
+
+action(LOOK WEST)
+  if at(12 I am in a lake. There's shore to North,|South & East)
+    say(OK)
+    say(I see)
+    say(ledge in the wall of the volcano)
+
+action(WITH HAND)
+  if at(32 I'm on the edge of a sandy cliff outside|the volcano)
+    say(OK)
+    clear(bit20)
+    say(nothing)
+    say(special)
+
+action(SLEE)
+  if at(18 I'm west of lake on a small secluded ledge|on volcano's wall)
+    clear(bit2)
+    swapct(ctr1)
+    ctr = 170
+    continue
+
+continue
+    swapct(ctr1)
+    wait
+    wait
+    wait
+
+continue  // HURR SLEEP
+  if bit4
+    say(Not safe)
+    say(storm lifts me out to sea)
+    die
+
+continue
+    cleardark
+    say(Morning!)
+    look2
+
+action(GO BASI)
+  if here(11 Natural stone basin)
+    say(Sorry)
+    say(I'm too big)
+
+action(SLEE)
+  if ! at(18 I'm west of lake on a small secluded ledge|on volcano's wall)
+    say(Not safe)
+    say(I'm attacked by wild animal)
+    die
+
+action(JUMP)
+  if at(3 I'm on the edge of a hot rocky cliff|outside the Volcano)
+    say(OK)
+    die
+
+action(GO SHIP)
+    say(Sorry)
+    say(Not till)
+    say(|Congrats!)
+
+action(FILL HOLE)
+  if here(2 .)
+    say(OK)
+    remove2(2 .)
+
+action(WITH HAND)  // DIG GUANO
+  if bit20 & here(28 Pile bat guano) & ! live(55 2 centimeter piece of shiny wire)
+    drop(55 2 centimeter piece of shiny wire)
+    clear(bit20)
+    say(OK)
+    say(YUCK!)
+
+action(JUMP)
+  if at(32 I'm on the edge of a sandy cliff outside|the volcano)
+    say(OK)
+    go(2 I am in a Beach by ocean, a cliff towers over|west end)
+    look2
+
+action(DROP RUM)
+    say(Empty?)
+
+action(LOOK DRAW)
+  if here(17 Primitve cave drawings)
+    say(OK)
+    say(I see)
+    say(UFO landing among dinosaurs & picture of me!)
+    say(Wierd!)
+
+action(LOOK NOTE)
+  if with(40 Note)
+    say(OK)
+    say(Note says:|'What was, must be,|so send this note we|to tell you a word's free!')
+
+action(DRIN RUM)
+  if with(6 Bottle of Rum)
+    say(OK)
+
+action(DRIN WATE)
+  if with(8 Bottle of seawater)
+    say(OK)
+    say(Argh!)
+    say(salty)
+
+action(DRIN SWEA)
+  if with(33 Sweat)
+    say(OK)
+    say(Argh!)
+    say(salty)
+
+action(DRIN WATE)
+  if with(14 Bottle freshwater)
+    say(OK)
+
+action(YOHO)  // SAVE GAME
+    say(OK)
+    save
+
+action(GO TREE)
+  if here(4 Palm trees)
+    say(OK)
+    go(19 I am in a top of a palm tree)
+    look2
+
+action(SAVE GAME)
+  if ! bit4
+    say(OK)
+    save
+
+action(SWIM)
+  if at(5 I am in a shallow tidepool)
+    say(OK)
+
+action(SWIM)
+  if at(12 I am in a lake. There's shore to North,|South & East) & holds() & ! holds(28 Palm log) & ! holds(25 Palm log)
+    say(something)
+    say(too heavy or awkward)
+    say(I drown)
+    die
+
+action(LOOK BEAR)
+  if here(11 Bear) & ! bit5
+    say(look sickly)
+
+action(TREA WATE)
+  if at(12 I am in a lake. There's shore to North,|South & East)
+    clear(bit14)
+    say(OK)
+
+action(SWIM)  // OUT LAKE
+  if at(12 I am in a lake. There's shore to North,|South & East)
+    say(OK)
+    go(8 I am in a volcano)
+    look2
+
+action(ASK)
+  if here(44 Neanderthal)
+    say(OK)
+    saynouncr
+    say(caveman says)
+    say(Argh!)
+
+action(GET STAL)
+  if here(17 Stalactite in roof)
+    say(How?)
+
+action(WITH COCO)
+  if here(17 Stalactite in roof) & ! live(45 Crevice in rock) & holds(19 Coconuts)
+    say(I hit stone with)
+    say(it)
+    say(it)
+    continue
+
+continue  // HIT STAL
+    say(moves)
+    say(I see)
+    say(something)
+    drop(45 Crevice in rock)
+
+action(GO CREV)
+  if here(45 Crevice in rock)
+    say(OK)
+    go(9 I am in a metal lined tunnel)
+    look2
+    set(bit17)
+
+action(LOOK CASE)
+  if here(20 Sealed display case) & ! live(44 Neanderthal)
+    say(OK)
+    say(I see)
+    say(caveman)
+    say(replica full sized! There's button at bottom)
+
+action(LOOK STAL)
+  if here(17 Stalactite in roof)
+    say(Wierd!)
+    say(I see)
+    say(its hinged at top!)
+
+action(LOOK CASE)
+  if here(21 Sealed display case)
+    say(OK)
+    say(I see)
+    say(TYranosaurus)
+    say(replica full sized! There's button at bottom)
+
+action(LOOK META)
+    say(it)
+    say(glows)
+
+action(LOOK CONS)
+  if here(29 Control console)
+    say(OK)
+    say(I see)
+    say(button, dials, levers)
+
+action(LOOK HOLE)
+  if bit21 & ! bit9 & here(1 Sand)
+    say(I see)
+    set(bit9)
+    drop(6 Bottle of Rum)
+    say(something)
+
+action(WITH COCO)
+  if here(17 Stalactite in roof) & live(45 Crevice in rock) & holds(19 Coconuts)
+    say(I hit stone with)
+    say(it)
+    say(moves)
+    remove2(45 Crevice in rock)
+
+action(WITH WIRE)
+  if ! bit26 & here(24 Alien machinery) & with(55 2 centimeter piece of shiny wire)
+    say(OK)
+    remove2(55 2 centimeter piece of shiny wire)
+    set(bit26)
+
+action(WITH HAND)  // DIG GUANO
+  if bit20 & here(28 Pile bat guano)
+    clear(bit20)
+    say(I see)
+    say(nothing)
+    say(special)
+
+action(OPEN)
+    say(How?)
+
+action(KILL)
+    say(Sorry)
+    say(If you like to kill monsters play 'MACES & MAGIC'!)
+
+action(PET)
+    say(I feel)
+    say(nothing)
+    say(special)
+
+action(WITH)
+    clear(bit20)
+    saynoun
+    say( doesn't work)
+    clear(bit27)
+
+action(GO RAFT)  // BAD BUILT
+  if here(29 Raft of vines & logs) & ! bit11
+    say(Sorry)
+    say(it)
+    say(won't budge)
+    gameover
+
+action(DIG)
+    say(How?)
+    set(bit20)
+
+action(HELP)
+    say(Argh!)
+    say(I feel)
+    say(I shawda picked another proffesion!)
+
+action(DRIN COCO)
+  if with(58 Coconut meat)
+    say(OK)
+    remove2(58 Coconut meat)
+
+action(BREA)
+    say(How?)
+    clear(bit7)
+
+action(ASK)
+    say(OK)
+    saynouncr
+
+action(YELL)
+  if here(11 Bear)
+    say(OK)
+    saynouncr
+    say(I'm attacked by wild animal)
+    die
+
+action(JUMP)
+    say(OK)
+
+action(GO OPEN)
+  if here(11 Dark opening)
+    say(OK)
+    go(25 I am in a maze of caves)
+    dark
+    look2
+
+action(GO OPEN)
+  if here(28 Opening)
+    say(OK)
+    go(11 I am in a deep cave)
+    look2
+    continue
+
+continue  // NOT NITE
+  if ! bit2
+    cleardark
+    look2
+
+action(GO CREV)
+  if here(18 Narrow crevice) & ! holds(28 Palm log) & ! holds(25 Palm log)
+    say(OK)
+    go(32 I'm on the edge of a sandy cliff outside|the volcano)
+    look2
+
+action(LOOK CLIF)
+  if at(32 I'm on the edge of a sandy cliff outside|the volcano)
+    say(OK)
+    say(I see)
+    say(beach 3 meters below)
+
+action(LOOK DOWN)
+  if at(32 I'm on the edge of a sandy cliff outside|the volcano)
+    say(OK)
+    say(I see)
+    say(beach 3 meters below)
+
+action(GO CLIF)
+    say(Sorry)
+
+action(GO BEAC)
+    say(How?)
+
+action(YES)
+    say(Don't be 'YES' man. Do it yourself!)
+
+action(GET GUAN)
+  if here(28 Pile bat guano)
+    say(Sorry)
+    say(YUCK!)
+
+action(MOVE BUTT)  // NO WORD YET
+  if here(29 Control console) & ! bit22
+    say(OK)
+    say(Metallic voice whispers in my mind:)
+    say('VOCALIZE PASSWORD PLEASE')
+
+action(MOVE BUTT)  // OPEN CASE
+  if here(20 Sealed display case) & bit26
+    swap(20 Sealed display case, 56 Open display case)
+    continue
+    set(bit24)
+
+continue
+  if ! live(44 Neanderthal)
+    say(case opens. Its alive!)
+
+action(MOVE BUTT)
+  if here(21 Sealed display case)
+    swap(21 Sealed display case, 56 Open display case)
+    say(case opens. Its alive!)
+    set(bit24)
+
+action(MOVE BUTT)  // CLOSE
+  if here(56 Open display case) & at(20 I am in a metal room)
+    say(OK)
+    swap(20 Sealed display case, 56 Open display case)
+    clear(bit24)
+
+action(MOVE BUTT)  // CLOSE
+  if here(56 Open display case) & at(21 I am in a metal room)
+    swap(21 Sealed display case, 56 Open display case)
+    clear(bit24)
+    say(OK)
+
+action(MOVE BUTT)  // STILL BROKE
+  if here(20 Sealed display case) & ! bit26
+    say(OK)
+    say(nothing happens)
+
+action(DRIN)
+    say(Sorry)
+    say(I'm a bottle baby)
+
+action(MOVE LEVE)
+  if here(29 Control console)
+    say(How?)
+    say(won't budge)
+
+action(LOOK SAND)
+  if here(1 Sand) & bit21
+    say(OK)
+    say(I see)
+    say(a hole)
+
+action(GO VOLC)  // .
+  if at(6 I'm on the rim of an extinct volcano)
+    say(ash is loose, I slide down)
+    go(8 I am in a volcano)
+    set(bit12)
+    look2
+
+action(SPIL)
+    say(Empty?)
+
+action(EMPT BOTT)  // ON ROCKS
+  if at(3 I'm on the edge of a hot rocky cliff|outside the Volcano)
+    continue
+
+continue  // SALT
+  if with(8 Bottle of seawater)
+    say(OK)
+    swap(8 Bottle of seawater, 7 Empty bottle)
+    drop(11 Puddle)
+    set(bit1)
+
+continue  // RUM
+  if with(6 Bottle of Rum)
+    say(OK)
+    swap(6 Bottle of Rum, 7 Empty bottle)
+    drop(11 Puddle)
+
+continue
+  if with(14 Bottle freshwater)
+    say(OK)
+    swap(14 Bottle freshwater, 7 Empty bottle)
+    drop(11 Puddle)
+
+action(SCOR)
+    say(Sorry)
+    say( doesn't work)
+
+action(GO FORC)
+  if here(29 Force field)
+    swaploc
+    drop(29 Force field)
+    continue
+    say(OK)
+
+continue  // BLOCK GLOWS
+  if holds(26 Small plastic block)
+    superget(9 Glowing plastic block)
+    swapct(ctr7)
+    ctr = 85
+    swapct(ctr7)
+
+action(GO HOLE)
+  if here(1 Sand) & bit21
+    say(Sorry)
+    say(I'm too big)
+
+action(LOOK DIAL)
+  if here(29 Control console)
+    say(OK)
+    say(I see)
+    say(its an alien script!)
+
+action(LOOK MACH)
+  if ! bit26 & here(24 Alien machinery)
+    say(Piece wire missing from it!)
+
+action(FIX MACH)
+  if ! bit26 & here(24 Alien machinery)
+    say(How?)
+
+action(MOVE BUTT)
+  if bit22 & here(29 Control console)
+    say(OK)
+    say(There's blinding flash from Force Field)
+    continue
+    swaploc
+
+continue  // .
+  if at(30 I am in a small metal room)
+    go(31 I am in a small metal room)
+    swaploc
+    look2
+
+continue  // FORCE FIELD SWAP
+  if at(31 I am in a small metal room)
+    go(30 I am in a small metal room)
+    swaploc
+    look2
+
+action(CUT VINE)
+  if here(29 Raft of vines & logs) & with(24 Large knife) & ! at(14 I'm on a raft)
+    say(OK)
+    drop(28 Palm log)
+    drop(25 Palm log)
+    continue
+
+continue  // BREAK RAFT
+    remove2(29 Raft of vines & logs)
+
+action(CUT COCO)
+  if with(19 Coconuts)
+    say(How?)
+    set(bit27)
+
+action(GO LAKE)
+  if here(8 Lake)
+    say(OK)
+    continue
+    go(12 I am in a lake. There's shore to North,|South & East)
+    look2
+
+continue  // WATCH OFF
+  if holds(-1 Watch)
+    dropat(-1 Watch, 13 I'm above the lake bottom)
+    say(I dropped something)
+
+continue
+  if holds(33 Sweat)
+    remove2(33 Sweat)
+
+action(EMPT BOTT)  // IN CAVE
+  if with(6 Bottle of Rum) & here(11 Natural stone basin)
+    say(OK)
+    swap(6 Bottle of Rum, 7 Empty bottle)
+    drop(16 with rum in it)
+
+action(EMPT BOTT)
+  if with(8 Bottle of seawater)
+    say(OK)
+    swap(8 Bottle of seawater, 7 Empty bottle)
+    say(Soaks into ground.)
+    continue
+
+continue
+  if here(11 Bear)
+    say(bear paws ground & whines)
+
+action(EMPT BOTT)
+  if with(14 Bottle freshwater)
+    say(OK)
+    swap(14 Bottle freshwater, 7 Empty bottle)
+    say(Soaks into ground.)
+
+action(EMPT BOTT)
+  if with(6 Bottle of Rum)
+    say(OK)
+    swap(6 Bottle of Rum, 7 Empty bottle)
+    say(Soaks into ground.)
+
+action(GET WATE)  // FRESH WATER
+  if at(12 I am in a lake. There's shore to North,|South & East) & with(7 Empty bottle)
+    say(OK)
+    swap(7 Empty bottle, 14 Bottle freshwater)
+
+action(DROP WATE)
+    say(Empty?)
+
+action(GO CREV)
+  if here(3 Crevice)
+    say(OK)
+    go(11 I am in a deep cave)
+    look2
+    set(bit18)
+
+action(SWIM)
+    say(go there)
+    say(?)
+
+action(CUT)
+    say(How?)
+
+action(MOVE)
+    say(How?)
+
+action(GET RUM)  // GET
+  if with(7 Empty bottle) & here(16 with rum in it)
+    say(OK)
+    remove2(16 with rum in it)
+    swap(7 Empty bottle, 6 Bottle of Rum)
+
+action(GET WATE)  // GET
+  if with(7 Empty bottle) & here(8 Lake)
+    say(OK)
+    swap(14 Bottle freshwater, 7 Empty bottle)
+
+action(GET WATE)
+  if with(7 Empty bottle) & here(5 Water)
+    say(OK)
+    swap(8 Bottle of seawater, 7 Empty bottle)
+
+action(FILL BOTT)
+  if with(7 Empty bottle)
+    say(Try)
+    say(Get liquid)
+
+action(SAVE GAME)
+  if bit4
+    say(Sorry)
+    say(Not till)
+    say(Storm passed)
+
+action(LOOK WATC)
+  if with(-1 Watch)
+    say(I've been here )
+    sayctr
+    say(moves)
+
+action(LOOK VOLC)
+  if at(6 I'm on the rim of an extinct volcano)
+    say(I can)
+    say(go there)
+    continue
+    say(Far below)
+
+continue
+  if moved()
+    say(I see)
+    say(a bear)
+
+continue
+    say(I see)
+    say(a cave)
+
+action(LOOK)
+    say(I see)
+    say(nothing)
+    say(special)

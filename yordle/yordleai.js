@@ -14,6 +14,7 @@ class YordleAi {
     this.played = 0;
     this.redo = 0;
     this.candidates = null;
+    this.counts = {};
     YordleAi.VOWS = YordleAi.Letters.asVowels();
     YordleAi.CONS = YordleAi.Letters.asConsonants();
   }
@@ -27,8 +28,13 @@ class YordleAi {
       this.process(result);
     }
     if (! this.played) {
+      // this.played = 1;
+      // return 'STAND'; // best by test (tests/ai.html)
+      // return 'LEAST';  // wordlebot's choice, and it's damn good.
+      // return 'AROSE';
+      let guess = this.guess();
       this.played = 1;
-      return 'STAND'; // best by test (tests/ai.html)
+      return guess;
     }
     return this.guess();
   }
@@ -86,7 +92,7 @@ class YordleAi {
     } else {
       this.bcs_common();
     }
-    return this.candidates[0];
+    return this.played ? this.candidates[0] : this.candidates[rnd(30)];
   }
   bcs_letterCount() {
     var good = [];
@@ -266,4 +272,4 @@ const VOWS = ['E','A','I','O','U'];
 const CONS = ['R','T','N','S','L','C','D','P','M','H','G','B','F','Y','W','K','V','X','Z','J','Q'];
 const FREQ = ['E','A','R','I','O','T','N','S','L','C','U','D','P','M','H','G','B','F','Y','W','K','V','X','Z','J','Q'];
 const FREQ1 = ['S','C','P','D','B','R','A','M','T','F','E','I','H','G','L','U','W','O','N','V','J','K','Q','Y','Z','X'];
-
+const rnd = max => Math.floor(Math.random() * Math.floor(max));

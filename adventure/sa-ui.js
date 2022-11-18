@@ -38,10 +38,10 @@ SA.Screen$ = class extends Obj {
         s.push('c[', i, ']=', v, '  ');
       }
     })
-    $('#debug').innerHTML = b + '<br>' + s.join('');
+    //$('#debug').innerHTML = b + '<br>' + s.join('');
   }
   enter(text, nosubmit) {
-    this.say('&nbsp;-------> Tell me what to do? ' + text);
+    this.repeat('&nbsp;-------> Tell me what to do? ' + text);
     ! nosubmit && this.game.submit(text);
   }
   replay(snapshots) {
@@ -55,6 +55,9 @@ SA.Screen$ = class extends Obj {
   }
   say(msg, nocr) {
     this.output$.say(msg, nocr);
+  }
+  repeat(msg) {
+    this.output$.say('<span class="cmd">' + msg + '</span>');
   }
   sayinv(msg, items) {
     items = this.wrap(items) || 'Nothing At All';
