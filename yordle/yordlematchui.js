@@ -22,7 +22,7 @@ class UiPage extends Ui {
   }
   round() {
     let i = Math.floor(Math.random() * Math.floor(wordles.length));
-    let word = wordles[i];
+    let word = wordles.splice(i, 1)[0];
     this.yordle.reset(word);
     this.ai.reset();
     this.uiboardh.reset();
@@ -50,6 +50,9 @@ class UiPage extends Ui {
   }
   onkeydown(e) {
     var r;
+    if (this.turn == AI) {
+      return;
+    }
     switch (e.key) {
       case 'Backspace':
         this.uiboardh.backspace();
@@ -80,8 +83,9 @@ class UiPage extends Ui {
     if (r.win) {
       if (this.turn == HUMAN) {
         this.h = this.yordle.tray().ix;
+        this.uiboarda.background(this.h);
         delay(500, () => this.uiboardh.win());
-        delay(2000, () => this.aiturn());
+        delay(1500, () => this.aiturn());
       } else {
         this.a = this.yordle.tray().ix;
         delay(500, () => {
@@ -93,7 +97,8 @@ class UiPage extends Ui {
     if (r.lose) {
       if (this.turn == HUMAN) {
         this.h = 8;
-        delay(1100, () => this.aiturn());
+        this.uiboarda.background(5);
+        delay(800, () => this.aiturn());
       } else {
         this.a = 8;
         this.score();
@@ -102,10 +107,10 @@ class UiPage extends Ui {
     return 1;
   }
   score() {
-  let r = this.uiscore.record(this.h, this.a, this.word);
-  this.uidotsh.score(this.uiscore.h);
-  this.uidotsa.score(this.uiscore.a);
-  delay(1500, () => {
+    let r = this.uiscore.record(this.h, this.a, this.word);
+    this.uidotsh.score(this.uiscore.h);
+    this.uidotsa.score(this.uiscore.a);
+    delay(1500, () => {
       this.titles();
       if (r == NO_WINNER) {
         this.round();
@@ -129,7 +134,7 @@ class UiPage extends Ui {
     this.uiboarda.setGuess(guess);
     var r = this.uiboarda.enter();
     if (! this.winlose(r)) {
-      delay(1500, () => this.playai(r));
+      delay(1100, () => this.playai(r));
     }
   }
   setTitle() {
@@ -179,6 +184,14 @@ class UiBoard extends Ui {
     })
     this.refresh();    
   }
+  background(rows) {
+    for (let r = 0; r <= rows; r++) {
+      for (let c = 0; c < 5; c++) {
+        let id = '#AT' + r + 'x' + c;
+        $(id).className = 'bf';
+      }
+    }
+  }
   setGuess(guess) {
     var tray = this.yordle.tray();
     for (var i = 0; i < guess.length; i++) {
@@ -211,7 +224,9 @@ class UiBoard extends Ui {
     this.yordle.tiles(tile => {
       var $td = $('#' + this.cellid(tile));
       $td.innerText = tile.guess;
-      $td.className = 'c' + tile.color;
+      if (tile.guess) {
+        $td.className = 'c' + tile.color;
+      }
       if (! this.aimode && tile.in(tray)) {
         $td.className += ' pointer';
       }
@@ -266,23 +281,40 @@ class UiScore extends Ui {
   reset() {
     this.$score.innerHTML = '<tr><td class="spc"></td></tr>';
     this.h = 0;
+    this.ht = 0;
     this.a = 0;
-    $('#scoreh').innerText = '0';
-    $('#scorea').innerText = '0';
+    this.at = 0;
+    this.round = 0;
   }
   record(h, a, word) {
+    this.round++;
     let d = h - a, winner = NO_WINNER;
+    h++;
+    a++;
+    this.ht += h;
+    this.at += a;
     if (d == 0) {
-      this.tie(word);
+      this.tie(word, h, a);
     } else if (d < 0) {
-      winner = this.win_h(word, Math.abs(d));
+      winner = this.win_h(word, Math.abs(d), h, a);
     } else {
-      winner = this.win_a(word, d);
+      winner = this.win_a(word, d, h, a);
     }
-    $('#scoreh').innerText = this.h;
-    $('#scorea').innerText = this.a;
     return winner;
   }
+  // title(of) {
+  //   if (this.round == 0) {
+  //     return of == HUMAN ? 'YOU' : 'ME';
+  //   }
+  //   if (this.a >= this.pts) {
+  //     return of == HUMAN ? 'WINNER' : 'LOSER';
+  //   }
+  //   if (this.h >= this.pts) {
+  //     return of == HUMAN ? 'LOSER' : 'WINNER';
+  //   }
+  //   let t = of == HUMAN ? this.ht : this.at;
+  //   return (t / this.round).toFixed(2);
+  // }
   title(of) {
     let title = of == HUMAN ? 'YOU' : 'ME';
     let d = this.h - this.a;
@@ -303,27 +335,29 @@ class UiScore extends Ui {
     }
     return title;
   }
-  //
-  tie(word = '') {
+  tie(word = '', h, a) {
+    if (word.length) {
+      word = h + ' ' + word + ' ' + a;
+    }
     let ch = this.a < this.h ? 'r' : '';
     let ca = this.h < this.a ? 'r' : '';
-    this.$score.innerHTML += '<tr><td></td><td class="' + ch + '">' + this.h + '</td><td>' + word + '</td><td class="' + ca + '">' + this.a + '</td><td></td>';
+    this.$score.innerHTML += '<tr><td class="' + ch + '">' + this.h + '</td><td>' + word + '</td><td class="' + ca + '">' + this.a + '</td>';
     return NO_WINNER;
   }
-  win_h(word, pts) {
+  win_h(word, pts, h, a) {
     this.a += pts;
     let ch = this.a < this.h ? 'r' : '';
     let ca = this.h < this.a ? 'r' : '';
-    word += '+' + pts;
-    this.$score.innerHTML += '<tr><td></td><td class="' + ch + '">' + this.h + '</td><td></td><td class="' + ca + '">' + this.a + '</td><td class="w">' + word + '</td>';
+    word = h + ' ' + word + ' ' + a;
+    this.$score.innerHTML += '<tr><td class="' + ch + '">' + this.h + '</td><td class="h">' + word + '</td><td class="' + ca + '">' + this.a + '</td>';
     return this.a >= this.pts ? HUMAN : NO_WINNER;
   }
-  win_a(word, pts) {
+  win_a(word, pts, h, a) {
     this.h += pts;
     let ch = this.a < this.h ? 'r' : '';
     let ca = this.h < this.a ? 'r' : '';
-    word += '+' + pts;
-    this.$score.innerHTML += '<tr><td class="w">' + word + '</td><td class="' + ch + '">' + this.h + '</td><td></td><td class="' + ca + '">' + this.a + '</td><td></td>';
+    word = h + ' ' + word + ' ' + a;
+    this.$score.innerHTML += '<tr><td class="' + ch + '">' + this.h + '</td><td class="a">' + word + '</td><td class="' + ca + '">' + this.a + '</td>';
     return this.h >= this.pts ? AI : NO_WINNER;
   }
 }
@@ -336,8 +370,7 @@ class UiDots extends Ui {
   }
   score(pts) {
     for (let i = 0; i < pts && i < 10; i++) {
-      let j = this.who ? 9 - i : i;
-      this.$$dots[j].className = 'dot on';
+      this.$$dots[i].className = 'dot on';
     }
   }
   dead() {

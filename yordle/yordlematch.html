@@ -35,6 +35,7 @@ flexcol {
 .grow3 {flex-grow:3;}
 .grow4 {flex-grow:4;}
 .grow20 {flex-grow:0;flex-basis:20%;}
+.grow25 {flex-grow:0;flex-basis:25%;}
 .grow30 {flex-grow:0;flex-basis:30%;}
 .grow35 {flex-grow:0;flex-basis:35%;}
 .grow40 {flex-grow:0;flex-basis:40%;}
@@ -57,6 +58,9 @@ header {
   color:deepskyblue;
   letter-spacing:2px;
 }
+#titleh {
+  color:violet;
+}
 .grid {
   margin:2em auto 2em auto;
   border-spacing:4px;
@@ -70,6 +74,9 @@ header {
   font-size:26px;
   line-height:26px;
   text-align:center;
+}
+.grid td.bf {
+  background-color:#444;
 }
 .grid td.pointer {
   cursor:pointer;
@@ -89,7 +96,7 @@ header {
   animation:blink 0.2s 5;
 }
 @keyframes blink {
-  50% {background-color:black};
+  50% {background-color:black}
 }
 #keyboard {
   text-align:center;
@@ -148,13 +155,20 @@ header {
 }
 .score th {
   color:white;
-  width:20%;
+  width:25%;
   font-size:20pt;
   border-bottom:2px solid #a0a0a0;
+}
+.score th.h {
+  color:violet;
+}
+.score th.a {
+  color:deepskyblue;
 }
 .score th.b {
   color:deepskyblue;
   visibility:hidden;
+  width:50%;
 }
 .score td {
   text-align:center;
@@ -162,6 +176,12 @@ header {
 }
 .score td.w {
   color:deepskyblue;
+}
+.score td.a {
+  color:deepskyblue;
+}
+.score td.h {
+  color:violet;
 }
 .score td.l {
   background-color:#a0a0a0;
@@ -254,7 +274,7 @@ header {
           </div>
         </div>
       </flexcol>  
-      <flexcol class='grow30 h100'>
+      <flexcol class='grow40 h100'>
         <header>
           <div class='title' id='titlea'>ME</div>
         </header>
@@ -263,15 +283,13 @@ header {
         </div>
         <table class="grid" id='grida'></table>        
       </flexcol>
-      <flexcol class='grow35 h100'>
+      <flexcol class='grow25 h100'>
         <table class='score'>
           <thead>
             <tr>
-              <th class='b' id="scoreh"></th>
-              <th>YOU</th>
+              <th class='h'>YOU</th>
               <th class='b'></th>
-              <th>ME</th>
-              <th class='b' id="scorea"></th>
+              <th class='a'>ME</th>
             </tr>
           </thead>
           <tbody id='score'>

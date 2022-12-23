@@ -30,8 +30,7 @@ class YordleAi {
     if (! this.played) {
       // this.played = 1;
       // return 'STAND'; // best by test (tests/ai.html)
-      // return 'LEAST';  // wordlebot's choice, and it's damn good.
-      // return 'AROSE';
+      // return 'LEAST'; // wordlebot's choice, and it's damn good.
       let guess = this.guess();
       this.played = 1;
       return guess;
