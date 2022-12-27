@@ -157,7 +157,7 @@ class Controller extends LG.Controller {
   }
   totalRocksLeft() {    
     let left = 0;
-    this.rocks.forEach(rock => left += (rock.type == 'rb' ? 7 : (rock.type == 'rm' ? 3 : 1)));
+    this.rocks.forEach(rock => left += (rock.type == Rock.BIG ? 7 : (rock.type == Rock.MEDIUM ? 3 : 1)));
     return left;
   }
   checkUfoSpawn() {
@@ -206,14 +206,14 @@ class Controller extends LG.Controller {
     this.sprites.of(Shot).forEach(/*check for shot kills by either ufo or player*/shot => {
       let target = this.checkShot(shot);
       if (target) {
-        if (shot.type == 1/*from player*/) {
+        if (shot.type == Shot.PLAYER) {
           this.scoreboard.add(target.worth());
         }
         shot.kill(1);
         if (Rock.is(target)) {
           target.kill(newRocks/*accumulate any new rocks spawned by rock kill*/);
           rockhit = 1;
-          if (shot.type == 1) {
+          if (shot.type == Shot.PLAYER) {
             this.lastrock = this.fix/*most recent frame index of rock killed by player*/;
           }
         } else {
@@ -274,7 +274,7 @@ class Controller extends LG.Controller {
     let b = shot.bounds(), target;
     this.sprites.alive().forEach(s => {
       if (s.contains(b.cx, b.cy)) {
-        if (Rock.is(s) || (Ship.is(s) && shot.type == 2/*from ufo*/) || (Ufo.is(s) && shot.type == 1/*from player*/)) {
+        if (Rock.is(s) || (Ship.is(s) && shot.type == Shot.UFO) || (Ufo.is(s) && shot.type == Shot.PLAYER)) {
           target = s;
         }
       }
@@ -282,7 +282,7 @@ class Controller extends LG.Controller {
     return target;
   }
   checkZone() { /*ensure player spawn zone is clear*/
-    if (! this.checkZoneClear || (this.ufo && this.ufo.type == 2)) {
+    if (! this.checkZoneClear || (this.ufo && this.ufo.type == Ufo.SMALL)) {
       return;
     }
     let safe = true;
@@ -805,7 +805,7 @@ class Ship extends LG.Sprite {
   }
   kill(rock) {    
     if (rock) {
-      let sf = rock.type == 'rb' ? 4 : rock.type == 'rm' ? 2 : 1;
+      let sf = rock.type == Rock.BIG ? 4 : rock.type == Rock.MEDIUM ? 2 : 1;
       this.speed.add(Vector.byRadians(rock.compass.rad, rock.speed * sf))/*add rock impact to velocity*/;
     }
     this.onexplode();
@@ -892,7 +892,7 @@ class Shot extends LG.Sprite {
    * i type 1=ship 2=ufo
    */
   constructor(bounds, speed, rad, type, max, ufo) {
-    super($('#screen'), null, 'shot ' + (type == 1 ? 'sshot' : 'ushot'), bounds.cx - 2, bounds.cy - 2);
+    super($('#screen'), null, 'shot ' + (type == Shot.PLAYER ? 'sshot' : 'ushot'), bounds.cx - 2, bounds.cy - 2);
     this.velocity = new Shot.Velocity(rad, speed, ufo);
     this.type = type;
     this.steps = 0;
@@ -907,13 +907,15 @@ class Shot extends LG.Sprite {
   }
   //
   static fromShip(ship) {
-    return new Shot(ship.bounds(), ship.speed, ship.compass.rad, 1);
+    return new Shot(ship.bounds(), ship.speed, ship.compass.rad, Shot.PLAYER);
   }
   static fromUfo(ufo, rad) {
     let max = ufo.type == 1 ? 48 : 54;
-    return new Shot(ufo.bounds(), null, rad, 2, max, ufo);
+    return new Shot(ufo.bounds(), null, rad, Shot.UFO, max, ufo);
   }
   static STEPS = 45;
+  static PLAYER = 1;
+  static UFO = 2;
 }
 Shot.Velocity = class extends Vector {
   //
@@ -947,7 +949,7 @@ class Thruster extends LG.Sprite {
 class Rock extends LG.Sprite {
   /**
    * sf speed factor
-   * type 'rb', 'rm', or 'rs'
+   * type Rock.BIG, Rock.MEDIUM, or Rock.SMALL
    */
   constructor(x, y, cls, sf, speed, vmin, vmax, minHead = 0, maxHead = 359) {
     let r = rnd(2);
@@ -980,10 +982,10 @@ class Rock extends LG.Sprite {
     return super.withinCircle(x, y, 1.5);
   }
   shot(b, newRocks) {
-    if (this.type == 'rb') { /*spawn 2 mediums from a big*/
+    if (this.type == Rock.BIG) { /*spawn 2 mediums from a big*/
       newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
       newRocks.push(Rock.asMedium(b.cx - 30, b.cy - 30, this.sf));
-    } else if (this.type == 'rm') { /*spawn 2 littles from a medium*/
+    } else if (this.type == Rock.MEDIUM) { /*spawn 2 littles from a medium*/
       newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
       newRocks.push(Rock.asSmall(b.cx - 15, b.cy - 15, this.sf));
     }
@@ -1001,11 +1003,11 @@ class Rock extends LG.Sprite {
   }
   worth() {
     switch (this.type) {
-      case 'rb':
+      case Rock.BIG:
         return 20;
-      case 'rm':
+      case Rock.MEDIUM:
         return 50;
-      case 'rs':
+      case Rock.SMALL:
         return 100;
     }
   }
@@ -1040,14 +1042,17 @@ class Rock extends LG.Sprite {
     return us;
   }
   static asBig(x, y, sf, minHead, maxHead) {
-    return new Rock(x, y, 'rb', sf, 0.7, 30, 50, minHead, maxHead);
+    return new Rock(x, y, Rock.BIG, sf, 0.7, 30, 50, minHead, maxHead);
   }
   static asMedium(x, y, sf) {
-    return new Rock(x, y, 'rm', sf, 1, 50, 70);
+    return new Rock(x, y, Rock.MEDIUM, sf, 1, 50, 70);
   }
   static asSmall(x, y, sf) {
-    return new Rock(x, y, 'rs', sf, 1.5, 60, 80);
+    return new Rock(x, y, Rock.SMALL, sf, 1.5, 60, 80);
   }
+  static BIG = 'rb';
+  static MEDIUM = 'rm';
+  static SMALL = 'rs';
 }
 class Ufo extends LG.Sprite {
   onshoot(shot) {}
@@ -1057,8 +1062,8 @@ class Ufo extends LG.Sprite {
     this.ship = ship;
     this.demo = demo;
     this.shooting = 0;
-    this.type = cls == 'ub' ? 1/*big*/ : 2/*small*/;
-    this.shootmod = this.type == 1 ? 50 : 5;
+    this.type = cls == 'ub' ? Ufo.BIG : Ufo.SMALL;
+    this.shootmod = this.type == Ufo.BIG ? 50 : 5;
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -1113,15 +1118,15 @@ class Ufo extends LG.Sprite {
       return;
     }
     if (! this.ship.alive()) {
-      if (this.type == 1 && ! this.demo) {
+      if (this.type == Ufo.BIG && ! this.demo/*in game mode, big guy stops shooting once player dead*/) {
         return;
       }
-      this.rockmode = 1;
+      this.rockmode = 1/*player dead (or we're in demo mode), let's shoot rocks*/;
     } else {
       this.rockmode = 0;
     }
     let rad;
-    if (this.type == 1) {
+    if (this.type == Ufo.BIG) {
       rad = rnd(628) / 100/*big guy just shoots randomly*/;
     } else {
       let ub = this.bounds(), sb, fudge;
@@ -1141,7 +1146,7 @@ class Ufo extends LG.Sprite {
             }
           })
           fudge = (md / 1000) * 0.05 * (rnd(2) * -2 + 1);
-          fudge *= rs;
+          fudge *= rs/*shoot closest rock*/;
         } else {
           sb = this.ship.bounds();
           fudge = (rnd(30) - 15) / 50/*this is remarkably accurate at killing player*/;
@@ -1159,7 +1164,7 @@ class Ufo extends LG.Sprite {
       return super.kill(1);
     }
     if (rock) {
-      let sf = rock.type == 'rb' ? 4 : rock.type == 'rm' ? 2 : 1;
+      let sf = rock.type == Rock.BIG ? 4 : rock.type == Rock.MEDIUM ? 2 : 1;
       this.v.add(Vector.byRadians(rock.compass.rad, rock.speed * sf))/*displace from rock impact*/;
     }
     this.explode(() => {
@@ -1170,11 +1175,11 @@ class Ufo extends LG.Sprite {
     this.dead = 1;
     let b = this.bounds();
     let $e = document.createElement('div');
-    $e.className = 'pow ' + (this.type == 1 ? 'xufob' : 'xufos');
+    $e.className = 'pow ' + (this.type == Ufo.BIG ? 'xufob' : 'xufos');
     $e.innerHTML = $('#ufopowbp').innerHTML;
     $('#screen').appendChild($e);
-    $e.style.left = b.x - (this.type == 1 ? 20 : 10);
-    $e.style.top = b.y - (this.type == 1 ? 20 : 10);
+    $e.style.left = b.x - (this.type == Ufo.BIG ? 20 : 10);
+    $e.style.top = b.y - (this.type == Ufo.BIG ? 20 : 10);
     this.show(0);
     Sounds.explodeMedium();
     wait(1000, () => {
@@ -1183,7 +1188,7 @@ class Ufo extends LG.Sprite {
     })
   }
   worth() {
-    return this.type == 1 ? 200 : 1000;
+    return this.type == Ufo.BIG ? 200 : 1000;
   }
   past(dir, bval, val) {
     return dir == 1 ? bval >= val : bval <= val;
@@ -1207,6 +1212,8 @@ class Ufo extends LG.Sprite {
     let speed = (cls == 'ub' ? 3 : 4) * sf;
     return new Ufo(ship, rocks, x, y, cls, speed, x1, y1, x2, demo);
   }
+  static BIG = 1;
+  static SMALL = 2;
 }
 class ScoreEntry extends Obj {
   //
@@ -1337,11 +1344,11 @@ Sounds = {
   },
   explode:function(type) {
     switch (type) {
-      case 'rb':
+      case Rock.BIG:
         return this.explodeBig();
-      case 'rm':
+      case Rock.MEDIUM:
         return this.explodeMedium();
-      case 'rs':
+      case Rock.SMALL:
         return this.explodeSmall();
     }
   },
