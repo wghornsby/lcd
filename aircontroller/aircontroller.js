@@ -23,7 +23,9 @@ class Radar extends Obj {
       .on('click', () => this.$pause_onclick());
     $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
-    //this.advance(34);
+    
+            this.advance(28);
+    
     this.start();
   }
   start(unhide) {
@@ -65,7 +67,7 @@ class Radar extends Obj {
   step() {
     var d = new Date();
     var ms = '00' + d.getMilliseconds();
-    log(d.getMinutes() + ':' + d.getSeconds() + '.' + ms.substring(ms.length - 3));
+    //log(d.getMinutes() + ':' + d.getSeconds() + '.' + ms.substring(ms.length - 3));
     this.oort.step();
     let dead = this.jets.step();
     if (dead) {
@@ -139,6 +141,7 @@ class Oort extends Obj {
         this.test2.push((line.mi + this.test2ix) + ': ' + js(line.map));
         //$('#test2').innerText = this.test2.join("\n");
       }
+      //log(line);
       line.types.forEach(type => {
         this.spawn(type, line.sf);
       })
@@ -232,6 +235,7 @@ class Script extends Obj {
       score += Script.MAP.shift()[1];
     }
     this.build();
+    log(this.lines);
     return score;
   }
   static MAP = [
@@ -684,7 +688,7 @@ class Jet extends Obj {
       }
       if (this.landing == 1 && (! this.lx || (me.cx * this.type.compx > this.lx * this.type.compx))) {
         this.landing = 2;
-        this.freq = 1;
+        this.freq = this.type.id == 'chopper' ? 3 : 1;
         this.$svg.style.animation = this.type.lanim;
         this.$svg.style.transform = this.getRotate();
         if (this.type.id == 'chopper') {
@@ -853,7 +857,7 @@ class Jet extends Obj {
   static TYPES = [
     {id:'jet', speed:280, irot:45, lx:725, ly:483, lx2:1101, ly2:121, compx:1, lanim:'jetlanding 3.5s'},
     {id:'plane', speed:200, irot:90, lx:1230, ly:327, lx2:871, ly2:183, compx:-1, lanim:'planelanding 3s'},
-    {id:'chopper', speed:140, irot:0, lx2:1243, ly2:794, lanim:'chopperlanding 2.5s'},
+    {id:'chopper', speed:140, irot:0, lx2:1243, ly2:794, lanim:'chopperlanding 3s'},
   ];
 }
 class Scoreboard extends Obj {
