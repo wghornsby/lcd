@@ -1,8 +1,8 @@
 <html>
 <head>
   <script type='text/javascript' src='lib/lcd-simple.js'></script>
-  <script type='text/javascript' src='lib/lcd-gaming.js?0454'></script>
-  <script type='text/javascript' src='asteroids.js?0454'></script>
+  <script type='text/javascript' src='lib/lcd-gaming0.5.js'></script>
+  <script type='text/javascript' src='asteroids0.5.js'></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
@@ -36,17 +36,6 @@ body {
   width:100%;
   text-align:center;
   user-select:none;
-}
-@keyframes pulse {
-  0% {
-    opacity:1;
-  }
-  50% {
-    opacity:0.1;
-  }
-  100% {
-    opacity:1;
-  }
 }
 .blueprint {
   display:none;
@@ -366,7 +355,6 @@ body {
 }
 #inits {
   margin-top:20px;
-  padding-left:80px;
 }
 #inits span {
   color:white;
@@ -377,9 +365,6 @@ body {
   width:1.3em;
   display:inline-block;
   user-select:none;
-}
-#inits .co {
-  border-bottom:4px transparent;
 }
 #inits .curs {
   background-color:white;
@@ -406,113 +391,6 @@ body {
     background-color:white;
   }
 }
-#welcome, #highscores {
-  font-family:'Orbitron';
-  color:white;
-  position:absolute;
-  z-index:20;  
-  width:100%;
-  text-align:center;
-  user-select:none;
-  top:6%;
-  user-select:none;
-  text-shadow:-1px -1px 0px #000,0px -1px 0px #000,1px -1px 0px #000,-1px  0px 0px #000,1px  0px 0px #000,-1px  1px 0px #000,0px  1px 0px #000,1px  1px 0px #000;
-  display:none;
-}
-.fadein {
-  animation:fadein 3s normal 1;
-  display:block !important;
-}
-@keyframes fadein {
-  0% {
-    opacity:0;
-  }
-  50% {
-    opacity:0;
-  }
-  100% {
-    opacity:1;
-  }
-}
-#welcome h1, #highscores h1 {
-  font-size:46pt;
-  line-height:46pt;
-  margin-bottom:0.4em;
-}
-#welcome h1 {
-  color:rgb(0, 255, 21);
-  font-size:72pt;
-}
-#welcome h2 {
-  margin-top:1.5em;
-  font-size:30pt;
-}
-#welcome div {
-  font-size:22pt;
-  width:610px;
-  margin:0 auto;
-  padding-bottom:0.3em;
-  text-align:left;
-}
-#highscores div {
-  font-size:28pt;
-  width:430px;
-  text-align:left;
-  margin:0 auto;
-}
-#welcome .keys {
-  display:inline-block;
-  width:250px;
-  text-align:center;
-  padding-right:10px;
-}
-#welcome .keys span {
-  background-color:#e0e0e0;
-  color:black;
-  display:inline-block;
-  width:90px;
-  font-size:30pt;
-  border-radius:10px;
-}
-#welcome .keys span.sb {
-  background-color:#e0e0e0;
-  color:black;
-  display:inline-block;
-  width:250px;
-  font-size:24pt;
-  height:60px;
-  line-height:60px;
-}
-#highscores .rank {
-  display:inline-block;
-  width:50px;
-  text-align:center;
-  padding-right:15px;
-  color:#a0a0a0;
-}
-#highscores .score {
-  display:inline-block;
-  width:210px;
-  text-align:right;
-}
-#highscores .inits {
-  display:inline-block;
-  width:150px;
-  text-align:right;
-}
-#press1 {
-  font-family:'Orbitron';
-  font-size:26pt;
-  color:white;
-  position:absolute;
-  z-index:20;
-  bottom:50px;
-  width:100%;
-  text-align:center;
-  user-select:none;
-  animation:pulse 1s infinite;
-  text-shadow:-1px -1px 0px #000,0px -1px 0px #000,1px -1px 0px #000,-1px  0px 0px #000,1px  0px 0px #000,-1px  1px 0px #000,0px  1px 0px #000,1px  1px 0px #000;
-}
 </style>
 </head>
 <body>
@@ -527,18 +405,6 @@ body {
         <path d="M 94.6324614631855,36.00250586938022 300.1705854663462,193.5309023590188 342.0166705927379,44.6173400524073 401.0934966535268,195.9922835541695 564.785535530295,54.46286483300981 476.1702964391128,237.8357638717294 616.4777583334849,232.9130014814282 525.4009848231031,347.3672270559314 647.2469385734796,426.1314253007506 502.0164078407082,428.5928064959011 630.0161976390828,582.4291311928135 446.6318834087184,497.5114799601184 426.9396080551219,662.4240200352077 337.0936017543393,529.5094354970756 211.5553463751634,700.5754285600419 223.863018471161,486.4352645819405 52.7863763367938,520.8946013140482 159.8631235719732,380.5958731904649 72.47865169038992,237.8357638717299 194.3246054407665,261.2188852256607 94.6324614631855,36.00250586938069 z" id="path3508" style="fill:#ff0000;stroke:none"/>
         <path d="m 160.1985233083172,118.7982717399246 154.3242216264676,118.2770704473064 31.419302606586,-111.8087931572194 44.3566625034159,113.6568723829586 122.9049190198811,-106.2645554800019 -66.5349937551232,137.6819023175674 105.347073445612,-3.6961584514783 -68.3831880260988,85.9356839968712 91.4856164132948,59.1385352236531 -109.0434619875631,1.8480792257391 96.1061020907337,115.5049516086972 -137.6904731876862,-63.7587332880004 -14.7855541678056,123.8213081245232 -67.4590908906114,-99.7962781899145 -94.2579078197586,128.4415061888714 9.2409713548783,-160.7828926393062 -128.4495018328083,25.8731091603477 80.3964507874411,-105.3405158671315 -65.6108966196359,-107.1885950928715 91.4856164132951,17.5567526445221 -74.8518679745143,-169.0992491551333 z" id="path3512" style="fill:#ff8000;stroke:none"/>
         <path d="m 226.2365903979516,204.2096633100054 99.1022747159463,75.9539014973134 20.1765110200129,-71.8001725091792 28.4844861459008,72.9869522200746 78.9257636959331,-68.2398333764925 -42.7267292188508,88.4150884617163 67.6506545965139,-2.373559421791 -43.9135828082631,55.1852565566419 58.7492526759201,37.9769507486567 -70.0243617753388,1.1867797108955 61.7163866494512,74.17373193097 -88.4205924112332,-40.9439000258953 -9.4948287153004,79.5142406299997 -43.3201560135574,-64.0861043883581 -60.529533060039,82.4811899072385 5.9342679470626,-103.2498348479099 -82.4863244641708,16.614915952537 51.6281311394449,-67.6464435210443 -42.1333024241446,-68.8332232319403 58.7492526759201,11.2744072535075 -48.0675703712075,-108.5903435469403 z" id="path3514" style="fill:#ffff00;stroke:none"/>
-        <path d="m -57.96064186096192,305.2593994140625 a 30.91234397888183,30.91234397888183 0 1 1 -61.82468795776368,0 30.91234397888183,30.91234397888183 0 1 1 61.82468795776368,0 z" transform="translate(435.3488372093023,54.09660107334526)" id="path3516" style="fill:#000000;fill-opacity:1;stroke:none"/>
-      </g>
-    </svg>
-  </div>
-  <div id='ufopowbp' class='blueprint'>
-    <svg viewbox="0 0 720 720">
-      <g>
-        <path d="m 329.6885371631169,144.9454094414912 c 0,0 -9.3691648630806,-18.5615530306314 -37.6534361478519,-6.3639610390736" id="path2983" style="fill:none;stroke:#00ff80;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:none"/>
-        <path d="m 326.8905349710195,144.9454094414912 c 0,0 -9.3691648630806,-18.5615530306314 -37.6534361478519,-6.3639610390736" id="path2983-8" style="fill:none;stroke:#00ff80;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:none"/>
-        <path d="M 94.6324614631855,36.00250586938022 300.1705854663462,193.5309023590188 342.0166705927379,44.6173400524073 401.0934966535268,195.9922835541695 564.785535530295,54.46286483300981 476.1702964391128,237.8357638717294 616.4777583334849,232.9130014814282 525.4009848231031,347.3672270559314 647.2469385734796,426.1314253007506 502.0164078407082,428.5928064959011 630.0161976390828,582.4291311928135 446.6318834087184,497.5114799601184 426.9396080551219,662.4240200352077 337.0936017543393,529.5094354970756 211.5553463751634,700.5754285600419 223.863018471161,486.4352645819405 52.7863763367938,520.8946013140482 159.8631235719732,380.5958731904649 72.47865169038992,237.8357638717299 194.3246054407665,261.2188852256607 94.6324614631855,36.00250586938069 z" id="path3508" style="fill:#00ff80;stroke:none"/>
-        <path d="m 160.1985233083172,118.7982717399246 154.3242216264676,118.2770704473064 31.419302606586,-111.8087931572194 44.3566625034159,113.6568723829586 122.9049190198811,-106.2645554800019 -66.5349937551232,137.6819023175674 105.347073445612,-3.6961584514783 -68.3831880260988,85.9356839968712 91.4856164132948,59.1385352236531 -109.0434619875631,1.8480792257391 96.1061020907337,115.5049516086972 -137.6904731876862,-63.7587332880004 -14.7855541678056,123.8213081245232 -67.4590908906114,-99.7962781899145 -94.2579078197586,128.4415061888714 9.2409713548783,-160.7828926393062 -128.4495018328083,25.8731091603477 80.3964507874411,-105.3405158671315 -65.6108966196359,-107.1885950928715 91.4856164132951,17.5567526445221 -74.8518679745143,-169.0992491551333 z" id="path3512" style="fill:#00eeff;stroke:none"/>
-        <path d="m 226.2365903979516,204.2096633100054 99.1022747159463,75.9539014973134 20.1765110200129,-71.8001725091792 28.4844861459008,72.9869522200746 78.9257636959331,-68.2398333764925 -42.7267292188508,88.4150884617163 67.6506545965139,-2.373559421791 -43.9135828082631,55.1852565566419 58.7492526759201,37.9769507486567 -70.0243617753388,1.1867797108955 61.7163866494512,74.17373193097 -88.4205924112332,-40.9439000258953 -9.4948287153004,79.5142406299997 -43.3201560135574,-64.0861043883581 -60.529533060039,82.4811899072385 5.9342679470626,-103.2498348479099 -82.4863244641708,16.614915952537 51.6281311394449,-67.6464435210443 -42.1333024241446,-68.8332232319403 58.7492526759201,11.2744072535075 -48.0675703712075,-108.5903435469403 z" id="path3514" style="fill:#0066ff;stroke:none"/>
         <path d="m -57.96064186096192,305.2593994140625 a 30.91234397888183,30.91234397888183 0 1 1 -61.82468795776368,0 30.91234397888183,30.91234397888183 0 1 1 61.82468795776368,0 z" transform="translate(435.3488372093023,54.09660107334526)" id="path3516" style="fill:#000000;fill-opacity:1;stroke:none"/>
       </g>
     </svg>
@@ -616,54 +482,16 @@ body {
     <div id='highscore'>00</div>
     <div id='gameover'>GAME OVER</div>
     <div id='start'>START PLAYER 1</div>
-    <div id='welcome'>
-      <h1>ASTEROIDS.js</h1>
-      <h2>CONTROLS</h2>
-      <div>
-        <span class='keys'>
-          <span>A</span>
-          <span>S</span>
-        </span>
-        Rotate left and right
-      </div>
-      <div>
-        <span class='keys'>
-          <span>K</span>
-        </span>
-        Thrusters on
-      </div>
-      <div>
-        <span class='keys'>
-          <span>L</span>
-        </span>
-        Fire phaser
-      </div>
-      <div>
-        <span class='keys'>
-          <span class='sb'>SPACEBAR</span>
-        </span>
-        Jump to hyperspace
-      </div>
-    </div>
-    <div id='highscores'>
-      <h1>HIGH SCORES</h1>
-      <div id='list'></div>
-    </div>
     <div id='congrats'>
       <div>Your score is one of the ten best!</div>
       <div>Please enter your initials:</div>
       <div id='inits'>
-        <span class='curs'>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span class='co'>&nbsp;</span>
+        <span class='curs'>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span>
       </div>
     </div>
-    <div id='press1'>PRESS 1 TO START</div>
-    <div id='copy'>&copy;2022 by Warren</div>
+    <div id='copy'>0.5 version</div>
   </div>
 </body>
-<script nonce='wghornsby'>
-  window.on('DOMContentLoaded', () => {
-    cleanup();
-    new Controller();
-  })
+<script>
+  window.on('DOMContentLoaded', () => new Controller());
 </script>
-</html>

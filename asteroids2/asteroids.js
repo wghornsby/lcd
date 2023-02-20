@@ -73,7 +73,7 @@ class Controller extends LG.Controller {
     this.ufos = 0;
     this.ufo = null;
     if (this.mode.demo && this.script.rocks == 12) {
-      this.script.reset();
+      //this.script.reset();
     }
     this.script.next();
     if (! this.mode.demo) {
@@ -188,6 +188,7 @@ class Controller extends LG.Controller {
       }
       if (this.mode.demo) {
         cls = rnd(4) == 0 ? 'ub' : 'us';/*demo mode, 75% will be little guys*/
+        cls = 'us';
       }
     }
     if (cls) {
@@ -422,6 +423,7 @@ class Mode extends Obj {
     this.finishing = 1;
   }
   showDemoScreen() {
+    return;
     $('#welcome').classList.toggle('fadein', this.demob);
     $('#highscores').classList.toggle('fadein', ! this.demob);
   }
@@ -631,6 +633,7 @@ class HighScoreList extends LG.Obj {
   show(b) {
     this.$highscores.classList.toggle('hide', ! b);
     $('#press1').classList.toggle('hide', ! b);
+    $('#press1').className = 'hide';
   }
   draw() {
     var h = [];

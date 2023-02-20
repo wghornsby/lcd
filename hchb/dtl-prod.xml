@@ -1,0 +1,430 @@
+<transform sourceClass='HchbLib.Customer.DataModels.ConsolidatedPatientData' targetClass='HS.SDA3.Container' create='new' language='objectscript' >
+<assign value='source.VendorTransaction.DatabaseRoute' property='target.Patient.Organizations.(1).Organization.Code' action='set' />
+<assign value='source.Patient.Branch.name_" ("_source.Patient.Agency.name_")"' property='target.Patient.Organizations.(1).Organization.Description' action='set' />
+<assign value='source.Patient.Branch.street' property='target.Patient.Organizations.(1).Organization.Address.Street' action='set' />
+<assign value='source.Patient.Branch.city' property='target.Patient.Organizations.(1).Organization.Address.City.Description' action='set' />
+<assign value='source.Patient.Branch.state' property='target.Patient.Organizations.(1).Organization.Address.State.Code' action='set' />
+<assign value='source.Patient.Branch.zip' property='target.Patient.Organizations.(1).Organization.Address.Zip.Code' action='set' />
+<assign value='source.Patient.Branch.phone' property='target.Patient.Organizations.(1).Organization.ContactInfo.WorkPhoneNumber' action='set' />
+<assign value='source.EpisodeVendorMetaData.VendorReferralLink.externalId' property='target.Patient.ExternalId' action='set' />
+<assign value='source.Patient.Episode.lastName' property='target.Patient.Name.FamilyName' action='set' />
+<assign value='source.Patient.Episode.firstName' property='target.Patient.Name.GivenName' action='set' />
+<assign value='source.Patient.Episode.mi' property='target.Patient.Name.MiddleName' action='set' />
+<assign value='$P(source.Patient.Episode.dob, ".", 1)' property='target.Patient.Name.DOB' action='set' />
+<assign value='source.Patient.Episode.mrnum' property='target.Patient.Name.MRN' action='set' />
+<assign value='source.Patient.Episode.mrnum' property='target.Patient.PatientNumbers.(1).Number' action='set' />
+<if condition='((source.CustodianOID &apos;="") &amp; (source.CustodianOID &apos;= $CHAR(0)))' >
+<true>
+<assign value='$ZSTRIP(source.CustodianOID,"&lt;&gt;W")' property='target.Patient.PatientNumbers.(1).Organization.Code' action='set' />
+</true>
+</if>
+<assign value='"HCHB"' property='target.Patient.PatientNumbers.(1).Organization.Description' action='set' />
+<assign value='"MRN"' property='target.Patient.PatientNumbers.(1).NumberType' action='set' />
+<assign value='"HomeCommunity"' property='target.Patient.PatientNumbers.(1).ISOAssigningAuthority' action='set' />
+<assign value='source.Patient.Episode.PrimaryLanguage' property='target.Patient.PrimaryLanguage.Code' action='set' />
+<assign value='source.Patient.Episode.gender' property='target.Patient.Gender.Code' action='set' />
+<assign value='source.Patient.Episode.raceId' property='target.Patient.Race.Code' action='set' />
+<assign value='source.Patient.Episode.raceDescription' property='target.Patient.Race.Description' action='set' />
+<foreach property='source.Patient.ContactList()' key='k1' >
+<assign value='source.Patient.ContactList.(k1).lastName' property='target.Patient.SupportContacts.(k1).Name.FamilyName' action='set' />
+<assign value='source.Patient.ContactList.(k1).firstName' property='target.Patient.SupportContacts.(k1).Name.GivenName' action='set' />
+<assign value='source.Patient.ContactList.(k1).street' property='target.Patient.SupportContacts.(k1).Address.Street' action='set' />
+<assign value='source.Patient.ContactList.(k1).city' property='target.Patient.SupportContacts.(k1).Address.City.Code' action='set' />
+<assign value='source.Patient.ContactList.(k1).state' property='target.Patient.SupportContacts.(k1).Address.State.Code' action='set' />
+<assign value='source.Patient.ContactList.(k1).zip' property='target.Patient.SupportContacts.(k1).Address.Zip.Code' action='set' />
+<assign value='source.Patient.ContactList.(k1).homePhone' property='target.Patient.SupportContacts.(k1).ContactInfo.HomePhoneNumber' action='set' />
+<assign value='source.Patient.ContactList.(k1).workPhone' property='target.Patient.SupportContacts.(k1).ContactInfo.WorkPhoneNumber' action='set' />
+<assign value='source.Patient.ContactList.(k1).alternatePhone' property='target.Patient.SupportContacts.(k1).ContactInfo.MobilePhoneNumber' action='set' />
+<assign value='source.Patient.ContactList.(k1).email' property='target.Patient.SupportContacts.(k1).ContactInfo.EmailAddress' action='set' />
+</foreach>
+<assign value='$P(source.Patient.Episode.dob, ".", 1)' property='target.Patient.BirthTime' action='set' />
+<assign value='$P(source.Patient.Episode.DateTimeOfDeath, ".", 1)' property='target.Patient.DeathTime' action='set' />
+<assign value='source.Patient.Episode.PatientDeathIndicator' property='target.Patient.IsDead' action='set' />
+<foreach property='source.Patient.ServiceLocationList()' key='k1' >
+<if condition='k1 = 1' >
+<true>
+<assign value='source.Patient.ServiceLocationList.(k1).address' property='target.Patient.Addresses.(k1).Street' action='set' />
+<assign value='source.Patient.ServiceLocationList.(k1).city' property='target.Patient.Addresses.(k1).City.Code' action='set' />
+<assign value='source.Patient.ServiceLocationList.(k1).state' property='target.Patient.Addresses.(k1).State.Code' action='set' />
+<assign value='$P(source.Patient.ServiceLocationList.(k1).zip, "-", 1)' property='target.Patient.Addresses.(k1).Zip.Code' action='set' />
+<assign value='source.Patient.ServiceLocationList.(k1).phone' property='target.Patient.ContactInfo.HomePhoneNumber' action='set' />
+<assign value='source.Patient.Episode.workPhone' property='target.Patient.ContactInfo.WorkPhoneNumber' action='set' />
+<assign value='source.Patient.Episode.alternatePhone' property='target.Patient.ContactInfo.MobilePhoneNumber' action='set' />
+<assign value='source.Patient.Episode.email' property='target.Patient.ContactInfo.EmailAddress' action='set' />
+<foreach property='source.Patient.PhysicianList()' key='k2' >
+<if condition='k2 = k1' >
+<true>
+<assign value='"NPI"' property='target.Patient.FamilyDoctor.SDACodingStandard' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).NPI' property='target.Patient.FamilyDoctor.Code' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).lastName' property='target.Patient.FamilyDoctor.Name.FamilyName' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).firstName' property='target.Patient.FamilyDoctor.Name.GivenName' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).title' property='target.Patient.FamilyDoctor.Name.ProfessionalSuffix' action='set' />
+</true>
+</if>
+</foreach>
+</true>
+</if>
+</foreach>
+<assign value='source.Patient.Episode.id' property='target.Encounters.(1).EncounterNumber' action='set' />
+<assign value='source.Patient.Episode.admitType' property='target.Encounters.(1).AdmissionType.Code' action='set' />
+<assign value='"O"' property='target.Encounters.(1).EncounterType' action='set' />
+<foreach property='source.CareTeamMembers()' key='k1' >
+<assign value='source.CareTeamMembers.(k1).LastName_", "_source.CareTeamMembers.(k1).FirstName' property='target.Encounters.(1).AttendingClinicians.(k1).Code' action='set' />
+<assign value='source.CareTeamMembers.(k1).LastName' property='target.Encounters.(1).AttendingClinicians.(k1).Name.FamilyName' action='set' />
+<assign value='source.CareTeamMembers.(k1).FirstName' property='target.Encounters.(1).AttendingClinicians.(k1).Name.GivenName' action='set' />
+<assign value='source.CareTeamMembers.(k1).Title' property='target.Encounters.(1).AttendingClinicians.(k1).Name.ProfessionalSuffix' action='set' />
+<assign value='source.CareTeamMembers.(k1).Primary' property='target.Encounters.(1).AttendingClinicians.(k1).IdentifierTypeCode' action='set' />
+</foreach>
+<foreach property='source.Patient.PhysicianList()' key='k1' >
+<if condition='k1 &gt; 1' >
+<true>
+<assign value='"NPI"' property='target.Encounters.(1).ConsultingClinicians.(k1-1).SDACodingStandard' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).NPI' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Code' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).lastName' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Name.FamilyName' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).firstName' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Name.GivenName' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).title' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Name.ProfessionalSuffix' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).address' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Address.Street' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).city' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Address.City.Code' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).state' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Address.State.Code' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).zip' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Address.Zip.Code' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).title' property='target.Encounters.(1).ConsultingClinicians.(k1-1).CareProviderType.Code' action='set' />
+</true>
+</if>
+</foreach>
+<assign value='""' property='target.Encounters.(1).ReferringClinician.SDACodingStandard' action='set' />
+<assign value='source.Patient.ReferringPhysician.NPI' property='target.Encounters.(1).ReferringClinician.Code' action='set' />
+<assign value='source.Patient.ReferringPhysician.lastName' property='target.Encounters.(1).ReferringClinician.Name.FamilyName' action='set' />
+<assign value='source.Patient.ReferringPhysician.firstName' property='target.Encounters.(1).ReferringClinician.Name.GivenName' action='set' />
+<assign value='source.Patient.ReferringPhysician.title' property='target.Encounters.(1).ReferringClinician.Name.ProfessionalSuffix' action='set' />
+<assign value='source.Patient.ReferringPhysician.poAddress' property='target.Encounters.(1).ReferringClinician.Address.Street' action='set' />
+<assign value='source.Patient.ReferringPhysician.poCity' property='target.Encounters.(1).ReferringClinician.Address.City.Code' action='set' />
+<assign value='source.Patient.ReferringPhysician.poState' property='target.Encounters.(1).ReferringClinician.Address.State.Code' action='set' />
+<assign value='source.Patient.ReferringPhysician.poZip' property='target.Encounters.(1).ReferringClinician.Address.Zip.Code' action='set' />
+<assign value='source.Patient.Episode.referralSource' property='target.Encounters.(1).AdmissionSource.Code' action='set' />
+<assign value='source.Patient.Episode.asDesc' property='target.Encounters.(1).AdmitReason.Code' action='set' />
+<foreach property='source.Patient.PayorList()' key='k1' >
+<assign value='$P(source.Patient.PayorList.(k1).desc, " ", 1)' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Code' action='set' />
+<assign value='source.Patient.PayorList.(k1).desc' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Description' action='set' />
+<assign value='source.Patient.PayorList.(k1).address' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Address.Street' action='set' />
+<assign value='source.Patient.PayorList.(k1).city' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Address.City.Code' action='set' />
+<assign value='source.Patient.PayorList.(k1).state' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Address.State.Code' action='set' />
+<assign value='source.Patient.PayorList.(k1).zip' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Address.Zip.Code' action='set' />
+<assign value='$P(source.Patient.PayorList.(k1).agencyContact, " ", 2)' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.ContactPerson.FamilyName' action='set' />
+<assign value='$P(source.Patient.PayorList.(k1).agencyContact, " ", 1)' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.ContactPerson.GivenName' action='set' />
+<assign value='source.Patient.PayorList.(k1).phone' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.ContactInfo.WorkPhoneNumber' action='set' />
+<assign value='$P(source.Patient.PayorList.(k1).desc, " ", 1)' property='target.Encounters.(1).HealthFunds.(k1).HealthFundPlan.Code' action='set' />
+<assign value='source.Patient.PayorList.(k1).desc' property='target.Encounters.(1).HealthFunds.(k1).HealthFundPlan.Description' action='set' />
+<assign value='$ZSTRIP(source.Patient.PayorList.(k1).ptDesc, "*W")' property='target.Encounters.(1).HealthFunds.(k1).GroupName' action='set' />
+<assign value='source.Patient.PayorList.(k1).ptId' property='target.Encounters.(1).HealthFunds.(k1).GroupNumber' action='set' />
+<assign value='source.Patient.PayorList.(k1).cefsPolicyNumberBySL' property='target.Encounters.(1).HealthFunds.(k1).MembershipNumber' action='set' />
+<assign value='source.Patient.PayorList.(k1).cefsipiLastName' property='target.Encounters.(1).HealthFunds.(k1).InsuredName.FamilyName' action='set' />
+<assign value='source.Patient.PayorList.(k1).cefsipiFirstName' property='target.Encounters.(1).HealthFunds.(k1).InsuredName.GivenName' action='set' />
+<assign value='source.Patient.PayorList.(k1).cefsipiPhone' property='target.Encounters.(1).HealthFunds.(k1).InsuredContact.HomePhoneNumber' action='set' />
+<assign value='source.Patient.PayorList.(k1).cefsipiAddress' property='target.Encounters.(1).HealthFunds.(k1).InsuredAddress.Street' action='set' />
+<assign value='source.Patient.PayorList.(k1).cefsipiCity' property='target.Encounters.(1).HealthFunds.(k1).InsuredAddress.City.Code' action='set' />
+<assign value='source.Patient.PayorList.(k1).cefsipiState' property='target.Encounters.(1).HealthFunds.(k1).InsuredAddress.State.Code' action='set' />
+<assign value='source.Patient.PayorList.(k1).cefsipiZip' property='target.Encounters.(1).HealthFunds.(k1).InsuredAddress.Zip.Code' action='set' />
+<assign value='source.Patient.PayorList.(k1).relRelationDesc' property='target.Encounters.(1).HealthFunds.(k1).InsuredRelationship.Code' action='set' />
+<assign value='source.Patient.PayorList.(k1).relRelationDesc' property='target.Encounters.(1).HealthFunds.(k1).InsuredRelationship.Description' action='set' />
+</foreach>
+<assign value='source.Patient.Episode.id' property='target.Patient.EncounterNumber' action='set' />
+<assign value='$P(source.Patient.Episode.socDate, ".", 1)' property='target.Encounters.(1).FromTime' action='set' />
+<assign value='"HCHB"' property='target.Encounters.(1).HealthCareFacility.Code' action='set' />
+<assign value='"HCHB"' property='target.SendingFacility' action='set' />
+<assign value='$P(source.Patient.Episode.endOfEpisode, ".", 1)' property='target.Encounters.(1).ToTime' action='set' />
+<assign value='$P(source.Patient.Episode.endOfEpisode, ".", 1)' property='target.Encounters.(1).EndTime' action='set' />
+<assign value='source.Patient.Episode.id' property='target.Encounters.(1).ExternalId' action='set' />
+<assign value='source.Patient.Episode.status' property='target.Encounters.(1).VisitStatus' action='set' />
+<assign value='source.PlanOfCare.Discharge.pctGoalsMet' property='target.Encounters.(1).ActionScope' action='set' />
+<if condition='source.IsEnhancedMeds = "Y"' >
+<true>
+<foreach property='source.EnhancedMedications.patientMeds()' key='k1' >
+<assign value='source.EnhancedMedications.patientMeds.(k1).medepiid' property='target.Medications.(k1).EncounterNumber' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).updateDate' property='target.Medications.(k1).UpdatedOn' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).startDateTime' property='target.Medications.(k1).FromTime' action='set' />
+<assign value='"IP"' property='target.Medications.(k1).Status' action='set' />
+<if condition='source.EnhancedMedications.patientMeds.(k1).dcDateTime = ""' >
+<false>
+<assign value='source.EnhancedMedications.patientMeds.(k1).dcDateTime' property='target.Medications.(k1).ToTime' action='set' />
+<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
+</false>
+</if>
+<if condition='source.EnhancedMedications.patientMeds.(k1).voidedDateTime = ""' >
+<false>
+<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).voidedDateTime' property='target.Medications.(k1).ToTime' action='set' />
+</false>
+</if>
+<if condition='source.EnhancedMedications.patientMeds.(k1).endDateTime = ""' >
+<false>
+<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).endDateTime' property='target.Medications.(k1).ToTime' action='set' />
+</false>
+</if>
+<assign value='source.EnhancedMedications.patientMeds.(k1).dose' property='target.Medications.(k1).DoseQuantity' action='set' />
+<assign value='" "_source.EnhancedMedications.patientMeds.(k1).doseUom' property='target.Medications.(k1).DoseUoM.Code' action='set' />
+<if condition='source.EnhancedMedications.patientMeds.(k1).instructions = ""' >
+<true>
+<assign value='source.EnhancedMedications.patientMeds.(k1).dose_" "_source.EnhancedMedications.patientMeds.(k1).doseUom_" "_source.EnhancedMedications.patientMeds.(k1).frequency_" (route: "_source.EnhancedMedications.patientMeds.(k1).attributes.route_") "_source.EnhancedMedications.patientMeds.(k1).instructions' property='target.Medications.(k1).TextInstruction' action='set' />
+</true>
+<false>
+<assign value='source.EnhancedMedications.patientMeds.(k1).dose_" "_source.EnhancedMedications.patientMeds.(k1).doseUom_" "_source.EnhancedMedications.patientMeds.(k1).frequency_" (route: "_source.EnhancedMedications.patientMeds.(k1).attributes.route_")"' property='target.Medications.(k1).TextInstruction' action='set' />
+</false>
+</if>
+<assign value='source.EnhancedMedications.patientMeds.(k1).attributes.dosageForm' property='target.Medications.(k1).DosageForm.Description' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).attributes.route' property='target.Medications.(k1).Route.Description' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).reason' property='target.Medications.(k1).Indication' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).frequency' property='target.Medications.(k1).Frequency.Description' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).medicationAdministered' property='target.Medications.(k1).Administrations.(1).AdministrationStatus.Description' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).enteredByWkrName' property='target.Medications.(k1).EnteredBy.Description' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).insertDate' property='target.Medications.(k1).EnteredOn' action='set' />
+<assign value='"NPI"' property='target.Medications.(k1).OrderedBy.SDACodingStandard' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).phyLastName' property='target.Medications.(k1).OrderedBy.Name.FamilyName' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).phyFirstName' property='target.Medications.(k1).OrderedBy.Name.GivenName' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).npi' property='target.Medications.(k1).OrderedBy.Code' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).attributes.name' property='target.Medications.(k1).OrderItem.OriginalText' action='set' />
+<if condition='($LENGTH(source.EnhancedMedications.patientMeds.(k1).rxnormSCD) &gt; 0)' >
+<true>
+<assign value='"RXNorm"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSCDMedDesc' property='target.Medications.(k1).OrderItem.Description' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSCD' property='target.Medications.(k1).OrderItem.Code' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSCD' property='target.Medications.(k1).PrescriptionNumber' action='set' />
+</true>
+<false>
+<if condition='($LENGTH(source.EnhancedMedications.patientMeds.(k1).rxnormSBD) &gt; 0)' >
+<true>
+<assign value='"RXNorm"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSBD' property='target.Medications.(k1).OrderItem.Code' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSBDMedDesc' property='target.Medications.(k1).OrderItem.Description' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSBD' property='target.Medications.(k1).PrescriptionNumber' action='set' />
+</true>
+<false>
+<if condition='($LENGTH(source.EnhancedMedications.patientMeds.(k1).ndc) &gt; 0)' >
+<true>
+<assign value='"NDC"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).ndc' property='target.Medications.(k1).OrderItem.Code' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).ndc' property='target.Medications.(k1).PrescriptionNumber' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).ndcMedDesc' property='target.Medications.(k1).OrderItem.Description' action='set' />
+</true>
+<false>
+<assign value='"HCHB Medication"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).medId' property='target.Medications.(k1).PrescriptionNumber' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).medId' property='target.Medications.(k1).OrderItem.Code' action='set' />
+<assign value='source.EnhancedMedications.patientMeds.(k1).attributes.name' property='target.Medications.(k1).OrderItem.Description' action='set' />
+</false>
+</if>
+</false>
+</if>
+</false>
+</if>
+<if condition='(source.EnhancedMedications.patientMeds.(k1).attributes.classification &apos;= "") &amp;&amp; (source.EnhancedMedications.patientMeds.(k1).altRoute &apos;= "")' >
+<true>
+<assign value='"Alternate Route: "_source.EnhancedMedications.patientMeds.(k1).altRoute_". Med Classification: "_source.EnhancedMedications.patientMeds.(k1).attributes.classification' property='target.Medications.(k1).Comments' action='set' />
+</true>
+<false>
+<if condition='(source.EnhancedMedications.patientMeds.(k1).altRoute &apos;= "") &amp;&amp; (source.EnhancedMedications.patientMeds.(k1).attributes.classification = "")' >
+<true>
+<assign value='"Alternate Route: "_source.EnhancedMedications.patientMeds.(k1).altRoute' property='target.Medications.(k1).Comments' action='set' />
+</true>
+<false>
+<if condition='(source.EnhancedMedications.patientMeds.(k1).altRoute = "") &amp;&amp; (source.EnhancedMedications.patientMeds.(k1).attributes.classification &apos;= "")' >
+<true>
+<assign value='"Med Classification: "_source.EnhancedMedications.patientMeds.(k1).attributes.classification' property='target.Medications.(k1).Comments' action='set' />
+</true>
+</if>
+</false>
+</if>
+</false>
+</if>
+</foreach>
+</true>
+</if>
+<if condition='source.IsEnhancedMeds = "N"' >
+<true>
+<foreach property='source.Medications()' key='k1' >
+<assign value='source.Patient.Episode.id' property='target.Medications.(k1).EncounterNumber' action='set' />
+<if condition='source.Medications.(k1).NDC = ""' >
+<true>
+<assign value='"HCHB Medication"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
+<assign value='source.Medications.(k1).id' property='target.Medications.(k1).OrderItem.Code' action='set' />
+<assign value='source.Medications.(k1).id' property='target.Medications.(k1).PrescriptionNumber' action='set' />
+</true>
+<false>
+<assign value='"NDC"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
+<assign value='source.Medications.(k1).NDC' property='target.Medications.(k1).OrderItem.Code' action='set' />
+<assign value='source.Medications.(k1).NDC' property='target.Medications.(k1).PrescriptionNumber' action='set' />
+</false>
+</if>
+<assign value='source.Medications.(k1).meddescription' property='target.Medications.(k1).OrderItem.Description' action='set' />
+<if condition='source.Medications.(k1).Dose="N/A"' >
+<false>
+<assign value='source.Medications.(k1).Dose' property='target.Medications.(k1).DoseQuantity' action='set' />
+</false>
+</if>
+<assign value='source.Medications.(k1).reason' property='target.Medications.(k1).Condition' action='set' />
+<if condition='source.Medications.(k1).amount=""' >
+<true>
+<assign value='source.Medications.(k1).Instructions' property='target.Medications.(k1).TextInstruction' action='set' />
+</true>
+<false>
+<assign value='source.Medications.(k1).amount' property='target.Medications.(k1).RateAmount' action='set' />
+<if condition='source.Medications.(k1).Instructions=""' >
+<true>
+<assign value='source.Medications.(k1).amount' property='target.Medications.(k1).TextInstruction' action='set' />
+</true>
+<false>
+<assign value='source.Medications.(k1).amount_": "_source.Medications.(k1).Instructions' property='target.Medications.(k1).TextInstruction' action='set' />
+</false>
+</if>
+</false>
+</if>
+<assign value='source.Medications.(k1).EnteredBy' property='target.Medications.(k1).EnteredBy.Description' action='set' />
+<assign value='$P(source.Medications.(k1).DateEntered, ".", 1)' property='target.Medications.(k1).EnteredOn' action='set' />
+<assign value='$P(source.Medications.(k1).StartDate, ".", 1)' property='target.Medications.(k1).FromTime' action='set' />
+<assign value='$P(source.Medications.(k1).EndDate, ".", 1)' property='target.Medications.(k1).ToTime' action='set' />
+<if condition='source.Medications.(k1).EndDate = ""' >
+<false>
+<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
+</false>
+</if>
+<if condition='source.Medications.(k1).DCDate = ""' >
+<false>
+<assign value='$P(source.Medications.(k1).DCDate, ".", 1)' property='target.Medications.(k1).ToTime' action='set' />
+<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
+</false>
+</if>
+<if condition='source.Medications.(k1).VoidedDate = ""' >
+<false>
+<assign value='$P(source.Medications.(k1).VoidedDate, ".", 1)' property='target.Medications.(k1).ToTime' action='set' />
+<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
+</false>
+</if>
+</foreach>
+</true>
+</if>
+<foreach property='source.Patient.ProcedureList()' key='k1' >
+<assign value='source.Patient.ProcedureList.(k1).icdCode' property='target.Procedures.(k1).Procedure.Code' action='set' />
+<assign value='source.Patient.ProcedureList.(k1).Desc' property='target.Procedures.(k1).Procedure.OriginalText' action='set' />
+<assign value='source.Patient.ProcedureList.(k1).OEDate' property='target.Procedures.(k1).ProcedureTime' action='set' />
+<assign value='"I"_source.Patient.ProcedureList.(k1).icdType' property='target.Procedures.(k1).Procedure.SDACodingStandard' action='set' />
+</foreach>
+<foreach property='source.Patient.AllergyList()' key='k1' >
+<assign value='"HCHB Allergen"' property='target.Allergies.(k1).Allergy.SDACodingStandard' action='set' />
+<assign value='source.Patient.AllergyList.(k1).allergyId' property='target.Allergies.(k1).Allergy.Code' action='set' />
+<assign value='source.Patient.AllergyList.(k1).desc' property='target.Allergies.(k1).Allergy.Description' action='set' />
+<assign value='"420134006"' property='target.Allergies.(k1).AllergyCategory.Code' action='set' />
+<assign value='"Propensity to adverse reactions"' property='target.Allergies.(k1).AllergyCategory.Description' action='set' />
+<assign value='"SCT"' property='target.Allergies.(k1).AllergyCategory.SDACodingStandard' action='set' />
+<assign value='source.Patient.AllergyList.(k1).enteredBy' property='target.Allergies.(k1).EnteredBy.Code' action='set' />
+<assign value='source.Patient.AllergyList.(k1).enteredBy' property='target.Allergies.(k1).EnteredBy.Description' action='set' />
+<assign value='$P(source.Patient.AllergyList.(k1).dateEntered, ".", 1)' property='target.Allergies.(k1).DiscoveryTime' action='set' />
+<assign value='$P(source.Patient.AllergyList.(k1).dateEntered, ".", 1)' property='target.Allergies.(k1).EnteredOn' action='set' />
+<assign value='$P(source.Patient.AllergyList.(k1).dateEntered, ".", 1)' property='target.Allergies.(k1).FromTime' action='set' />
+<assign value='source.Patient.Episode.id_"."_source.Patient.AllergyList.(k1).allergyId' property='target.Allergies.(k1).ExternalId' action='set' />
+<assign value='source.Patient.Episode.id' property='target.Allergies.(k1).EncounterNumber' action='set' />
+<if condition='source.Patient.AllergyList.(k1).dateVoided = ""' >
+<true>
+<assign value='"A"' property='target.Allergies.(k1).Status' action='set' />
+</true>
+<false>
+<assign value='$P(source.Patient.AllergyList.(k1).dateVoided, ".", 1)' property='target.Allergies.(k1).InactiveTime' action='set' />
+<assign value='"I"' property='target.Allergies.(k1).Status' action='set' />
+</false>
+</if>
+</foreach>
+<foreach property='source.Patient.VitalSignList()' key='k2' >
+<assign value='source.Patient.Episode.id' property='target.Observations.(k2).EncounterNumber' action='set' />
+<assign value='source.Patient.VitalSignList.(k2).timeOfReading' property='target.Observations.(k2).ObservationTime' action='set' />
+<assign value='source.Patient.VitalSignList.(k2).hl7identifier' property='target.Observations.(k2).ObservationCode.Code' action='set' />
+<assign value='source.Patient.VitalSignList.(k2).description' property='target.Observations.(k2).ObservationCode.Description' action='set' />
+<if condition='source.Patient.VitalSignList.(k2).hl7identifier = "8310-5"' >
+<true>
+<assign value='"[degF]"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
+</true>
+</if>
+<if condition='source.Patient.VitalSignList.(k2).description = "Weight (lbs)"' >
+<true>
+<assign value='"[lb_av]"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
+</true>
+</if>
+<if condition='source.Patient.VitalSignList.(k2).description = "Respirations"' >
+<true>
+<assign value='"9279-1"' property='target.Observations.(k2).ObservationCode.Code' action='set' />
+<assign value='"/min"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
+</true>
+</if>
+<if condition='source.Patient.VitalSignList.(k2).description = "Height"' >
+<true>
+<assign value='"8302-2"' property='target.Observations.(k2).ObservationCode.Code' action='set' />
+<assign value='"[in_us]"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
+</true>
+</if>
+<if condition='source.Patient.VitalSignList.(k2).description = "BMI (%)"' >
+<true>
+<assign value='"39156-5"' property='target.Observations.(k2).ObservationCode.Code' action='set' />
+<assign value='"kg/m2"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
+</true>
+</if>
+<if condition='source.Patient.VitalSignList.(k2).description = "Head Circumference (cms)"' >
+<true>
+<assign value='"Head Occipital-frontal circumference"' property='target.Observations.(k2).ObservationCode.Description' action='set' />
+<assign value='"9843-4"' property='target.Observations.(k2).ObservationCode.Code' action='set' />
+<assign value='"cm"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
+</true>
+</if>
+<assign value='source.Patient.VitalSignList.(k2).reading' property='target.Observations.(k2).ObservationValue' action='set' />
+</foreach>
+<foreach property='source.Patient.DiagnosisList()' key='k3' >
+<assign value='"I"_source.Patient.DiagnosisList.(k3).icdtype' property='target.Problems.(k3).Problem.SDACodingStandard' action='set' />
+<assign value='source.Patient.DiagnosisList.(k3).icdcode' property='target.Problems.(k3).Problem.Code' action='set' />
+<assign value='source.Patient.DiagnosisList.(k3).desc' property='target.Problems.(k3).Problem.Description' action='set' />
+<assign value='"SCT"' property='target.Problems.(k3).Status.SDACodingStandard' action='set' />
+<assign value='"55561003"' property='target.Problems.(k3).Status.Code' action='set' />
+<assign value='"Active"' property='target.Problems.(k3).Status.Description' action='set' />
+<assign value='$P(source.Patient.DiagnosisList.(k3).OEDate, ".", 1)' property='target.Problems.(k3).FromTime' action='set' />
+<assign value='source.Patient.Episode.id_"."_source.Patient.DiagnosisList.(k3).icdcode' property='target.Problems.(k3).ExternalId' action='set' />
+</foreach>
+<assign value='source.Patient.Episode.id' property='target.PhysicalExams.(1).EncounterNumber' action='set' />
+<assign value='$P(source.Patient.Episode.startOfEpisode, ".", 1)' property='target.PhysicalExams.(1).PhysExamTime' action='set' />
+<assign value='"Height"' property='target.PhysicalExams.(1).PhysExamCode' action='set' />
+<assign value='source.Patient.Episode.height' property='target.PhysicalExams.(1).PhysExamObsValue' action='set' />
+<assign value='source.Patient.Episode.id' property='target.PhysicalExams.(2).EncounterNumber' action='set' />
+<assign value='$P(source.Patient.Episode.startOfEpisode, ".", 1)' property='target.PhysicalExams.(2).PhysExamTime' action='set' />
+<assign value='"Weight"' property='target.PhysicalExams.(2).PhysExamCode' action='set' />
+<assign value='source.Patient.Episode.weight' property='target.PhysicalExams.(2).PhysExamObsValue' action='set' />
+<foreach property='source.VisitNotes()' key='k1' >
+<assign value='source.VisitNotes.(k1).VisitNarrativeText()' property='target.Encounters.(1).RecommendationsProvided.(k1).NoteText' action='set' />
+</foreach>
+<foreach property='source.Patient.Vaccinations()' key='k1' >
+<assign value='source.Patient.Vaccinations.(k1).vaccine_", "_source.Patient.Vaccinations.(k1).type' property='target.Vaccinations.(k1).OrderItem.Description' action='set' />
+<assign value='source.Patient.Vaccinations.(k1).source' property='target.Vaccinations.(k1).EnteredAt.Description' action='set' />
+<assign value='$P(source.Patient.Vaccinations.(k1).dategiven, ".", 1)' property='target.Vaccinations.(k1).FromTime' action='set' />
+</foreach>
+<assign value='source.Patient.Episode.id' property='target.ClinicalRelationships.(1).EncounterNumber' action='set' />
+<assign value='"HCHB"' property='target.ClinicalRelationships.(1).FacilityCode' action='set' />
+<assign value='"text/xml"' property='target.StreamContentType' action='set' />
+<if condition='source.Patient.Episode.status = "DISCHARGED"' >
+<true>
+<assign value='source.PlanOfCare.Discharge.date' property='target.Encounters.(1).EnteredOn' action='set' />
+<assign value='source.PlanOfCare.Discharge.status' property='target.Encounters.(1).DischargeLocation.Description' action='set' />
+<assign value='source.PlanOfCare.Discharge.condition' property='target.Encounters.(1).VisitDescription' action='set' />
+<assign value='source.PlanOfCare.Discharge.reason' property='target.Encounters.(1).ActionCode' action='set' />
+</true>
+</if>
+<assign value='0' property='pocg' action='set' />
+<foreach property='source.PatientAdmissionGoals()' key='pg' >
+<assign value='pocg + 1' property='pocg' action='set' />
+<assign value='"Patient Goal - "_source.PatientAdmissionGoals.(pg).GoalText' property='target.Goals.(pg).Description' action='set' />
+<assign value='source.PatientAdmissionGoals.(pg).EffectiveFrom' property='target.Goals.(pg).FromTime' action='set' />
+<assign value='source.PatientAdmissionGoals.(pg).EffectiveTo' property='target.Goals.(pg).ToTime' action='set' />
+<assign value='source.Patient.Episode.lastName_","_source.Patient.Episode.firstName' property='target.Goals.(pg).Authors.(1).Provider.Description' action='set' />
+</foreach>
+<foreach property='source.PlanOfCare.Goals()' key='k1' >
+<assign value='pocg + k1' property='c1' action='set' />
+<assign value='"Provider Goal - "_source.PlanOfCare.Goals.(k1).goaltext' property='target.Goals.(c1).Description' action='set' />
+<assign value='target.Patient.FamilyDoctor.Name.FamilyName_","_target.Patient.FamilyDoctor.Name.GivenName' property='target.Goals.(c1).Authors.(1).Provider.Description' action='set' />
+</foreach>
+<foreach property='source.PlanOfCare.Orders()' key='k1' >
+<assign value='source.PlanOfCare.Orders.(k1).otext' property='target.OtherOrders.(k1).OrderItem.Description' action='set' />
+</foreach>
+</transform>

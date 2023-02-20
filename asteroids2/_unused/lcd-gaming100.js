@@ -1,6 +1,6 @@
 /** 
- * LCD gaming 
- * 1.0 (c)2022 Warren Hornsby 
+ * LCD gaming
+ * JavaScript library (c)2022 Warren Hornsby 
  **/
 var LG = {};
 //
@@ -16,7 +16,7 @@ LG.Controller = class extends LG.Obj {
     this.reset();
   }
   frequency() {
-    return 50;
+    return 100;
   }
   reset() {
     this.time0 = new Date().getTime();
@@ -51,7 +51,7 @@ LG.Controller = class extends LG.Obj {
     let ms = this.paused ? (this.timep0 - this.time0) : (new Date().getTime() - this.time0);
     return ms / 1000; // seconds
   }
-  register(sprite) {
+  sprite(sprite) {
     if (sprite.length) {
       this.sprites = this.sprites.concat(sprite);
     } else {
@@ -262,9 +262,6 @@ class Vector {
         this.y = Math.sign(this.y) * max;
       }  
     }
-  }
-  toRad() {
-    return Math.atan2(-this.y, this.x);
   }
   //
   static byRadians(rad, mag = 1) {
