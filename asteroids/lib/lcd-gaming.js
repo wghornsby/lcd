@@ -12,7 +12,7 @@ LG.Controller = class extends LG.Obj {
     super();
     this.period = 1 / this.frequency();
     this.periodms = this.period * 1000;
-    this.sprites = new LG.Sprites();
+    this.sprites$$ = new LG.Sprites();
     this.reset();
   }
   frequency() {
@@ -45,19 +45,19 @@ LG.Controller = class extends LG.Obj {
     }
   }
   step(fix) {
-    this.sprites.forEach(sprite => sprite.step(fix));
+    this.sprites$$.forEach(sprite$ => sprite$.step(fix));
   }
   elapsed() {
     let ms = this.paused ? (this.timep0 - this.time0) : (new Date().getTime() - this.time0);
     return ms / 1000; // seconds
   }
-  register(sprite) {
-    if (sprite.length) {
-      this.sprites = this.sprites.concat(sprite);
+  register(sprite$) {
+    if (sprite$.length) {
+      this.sprites$$ = this.sprites$$.concat(sprite$);
     } else {
-      this.sprites.push(sprite);
+      this.sprites$$.push(sprite$);
     }
-    return sprite;
+    return sprite$;
   }
 }
 LG.Sprites = class extends LG.Array {
@@ -68,8 +68,8 @@ LG.Sprites = class extends LG.Array {
   of(classname) {
     return this.filter(s => s.name() == classname.name);
   }
-  append(sprites) {
-    this.splice(this.length, 0, ...sprites);
+  append(sprites$$) {
+    this.splice(this.length, 0, ...sprites$$);
   }
 }
 LG.Sprite = class extends LG.Obj {
@@ -171,12 +171,13 @@ LG.Sprite = class extends LG.Obj {
     this.$e.className = 'sprite ' + className;
     if (html) {
       this.$e.innerHTML = html;
-      this.$$frames = this.$e.$$('.frame');
-      this.$frame = this.$$frames ? this.$$frames[0] : this.$e;
-      this.$$rots = this.$e.$$('.rot');
-    } else {
-      this.$frame = this.$e;
     }
+    this.$$frames = this.$e.$$('.frame');
+    if (this.$$frames.length == 0) {
+      this.$$frames = [this.$e];
+    }
+    this.$frame = this.$$frames[0];
+    this.$$rots = this.$e.$$('.rot');
     $screen.appendChild(this.$e);
     this.bf = this.$frame.getBoundingClientRect();
   }
@@ -184,14 +185,14 @@ LG.Sprite = class extends LG.Obj {
     this.$e.style.transform = 'translate(' + this.ix + 'px,' + this.iy + 'px)';
   }
   setRotateCss() {
-    if (! this.$$rots) {
+    if (this.$$rots.length == 0) {
       return;
     }
     let nr = this.iheading - this.compass.heading;
     if (nr < 360) {
       nr += 360;
     }
-    let rot = this.prevRot || 0;
+    let rot = this._rot || 0;
     let ar = rot % 360;
     if (ar < 0) {
       ar += 360;
@@ -204,7 +205,6 @@ LG.Sprite = class extends LG.Obj {
     }
     rot += (nr - ar);
     this._rot = rot;
-    this.prevRot = rot;
     this.$$rots.forEach($e => $e.style.transform = 'rotate(' + rot + 'deg)');
   }
 }

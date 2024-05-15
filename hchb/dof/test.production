@@ -1,0 +1,95 @@
+Class HchbLib.Productions.Demographics1.Production114 Extends Ens.Production
+{
+
+XData ProductionDefinition
+{
+<Production Name="HchbLib.Productions.Demographics1.Production114" TestingEnabled="true" LogGeneralTraceEvents="false">
+  <Description>This namespace contains the outbound ADT interfaces which sends episode demographic feeds to multiple vendors</Description>
+  <ActorPoolSize>2</ActorPoolSize>
+  <Setting Target="Adapter" Name="ShutdownTimeout">300</Setting>
+  <Item Name="Brookdale - Get Customer List" Category="Brookdale" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="@Brookdale Maintenance">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="GetTransactionsOp Target">Brookdale - Get Transactions Op</Setting>
+    <Setting Target="Host" Name="Target">Brookdale - ADT Interface</Setting>
+    <Setting Target="Adapter" Name="KeyFieldName"></Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">9</Setting>
+    <Setting Target="Adapter" Name="DatabaseRoute"></Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">68</Setting>
+    <Setting Target="Adapter" Name="SQL Stored Procedure">usp_IntSys_GetApplicationRouteVendorList</Setting>
+    <Setting Target="Host" Name="Asynchronous Processing">1</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+  </Item>
+  <Item Name="Brookdale - Get Transactions Op" Category="Brookdale" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">ADT</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_DeduplicateSingleVITDEventType</Setting>
+    <Setting Target="Host" Name="Suppress Early Updates">1</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+  </Item>
+  <Item Name="Brookdale - Customer DB Operation" Category="Brookdale" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">ADT</Setting>
+    <Setting Target="Host" Name="VendorTransactionTarget">Brookdale - ADT Interface</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_DeduplicateSingleVITDEventType</Setting>
+    <Setting Target="Host" Name="Suppress Early Updates">1</Setting>
+    <Setting Target="Host" Name="Asynchronous Processing">1</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+  </Item>
+  <Item Name="Brookdale - Get GL Code Operation" Category="Brookdale" ClassName="HchbLib.Vendors.Brookdale.GetGLCodeOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+  </Item>
+  <Item Name="Brookdale - ADT Interface" Category="Brookdale" ClassName="HchbLib.Vendors.Brookdale.ADTInterfaceBPL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+  </Item>
+  <Item Name="Brookdale - SFTP Production Output" Category="Brookdale" ClassName="EnsLib.HL7.Operation.FTPOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="FTPServer">transfer.brookdaleliving.com</Setting>
+    <Setting Target="Adapter" Name="FTPPort">22</Setting>
+    <Setting Target="Adapter" Name="Credentials">BrookdaleProductionSFTP</Setting>
+    <Setting Target="Adapter" Name="FilePath">/</Setting>
+    <Setting Target="Host" Name="Filename">%q(5).hl7</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">!SFTP</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="FailureTimeout">90</Setting>
+    <Setting Target="Host" Name="QueueCountAlert">500</Setting>
+    <Setting Target="Host" Name="QueueWaitAlert">600</Setting>
+    <Setting Target="Adapter" Name="StayConnected">-1</Setting>
+  </Item>
+  <Item Name="Brookdale - SFTP Training Output" Category="Brookdale" ClassName="EnsLib.HL7.Operation.FTPOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="FTPServer">transfer.brookdaleliving.com</Setting>
+    <Setting Target="Adapter" Name="FTPPort">22</Setting>
+    <Setting Target="Adapter" Name="Credentials">BrookdaleTestFTP</Setting>
+    <Setting Target="Adapter" Name="FilePath">/</Setting>
+    <Setting Target="Host" Name="Filename">%q(5).hl7</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">!SFTP</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="FailureTimeout">15</Setting>
+  </Item>
+  <Item Name="Brookdale - Email Op" Category="Brookdale" ClassName="HchbLib.Assembly.EmailOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="From">hchb-intdev-all@hchb.com</Setting>
+    <Setting Target="Adapter" Name="SMTPServer">securemail.hchb.com</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+  </Item>
+  <Item Name="Brookdale - Get Patient Info Operation" Category="Brookdale" ClassName="HchbLib.Customer.GetPatientInfoOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+  </Item>
+  <Item Name="Brookdale - Write File Op" Category="Brookdale" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="Filename">%q(5).hl7</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Host" Name="FailureTimeout">2</Setting>
+    <Setting Target="Host" Name="RetryInterval">1</Setting>
+  </Item>
+  <Item Name="Ens.Alert" Category="Alerting" ClassName="HchbLib.Assembly.Util.ErrorRoutingProcess" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="AlertOnError">0</Setting>
+  </Item>
+</Production>
+}
+
+}

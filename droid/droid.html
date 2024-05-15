@@ -1,0 +1,471 @@
+<html>
+<head>
+  <script type='text/javascript' src='lib/lcd-simple.js'></script>
+  <script type='text/javascript' src='lib/lcd-gaming.js'></script>
+  <script type='text/javascript' src='droid.js'></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+<style>
+body {
+  background:#111111;
+  margin:0;
+  width:100vw;
+  height:100vh;
+  justify-content:center;
+  display:flex;
+  overflow:hidden;
+}
+.hide {
+  display:none !important;
+}
+templates {
+  display:none;
+}
+screen {
+  position:relative;
+  display:block;
+  aspect-ratio:1.32;
+  background:black;
+  border-left:1px solid #444;
+  border-right:1px solid #444;
+}
+sprite {
+  position:absolute;
+  will-change:transition;
+  transition:transform ease-in-out;
+}
+sprite cel {
+  display:block;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+}
+sprite.ufo {
+  width:15%;
+  height:14%;
+  z-index:5;
+}
+sprite.ufo.moving {
+  animation:ufomove 13s linear infinite;
+}
+sprite.ufo.moving svg {
+  animation:ufobulge 1s ease-in-out infinite;
+}
+sprite.ufo.paused {
+  animation-play-state:paused;
+}
+@keyframes ufomove {
+  0% {
+    transform:translateX(0);
+  }
+  50% {
+    transform:translateX(540%);
+  }
+  100% {
+    transform:translateX(0);
+  }
+}
+@keyframes ufobulge2 {
+  0% {
+    transform:scaleX(1)
+  }
+  10% {
+    transform:scaleX(1.2)
+  }
+  20% {
+    transform:scaleX(1)
+  }
+  30% {
+    transform:scaleX(1)
+  }
+}
+sprite.ship {
+  height:7%;
+  width:7%;
+  z-index:4;
+}
+sprite.ship cel.ship {
+  z-index:10;
+}
+sprite.ship cel.thrust {
+  display:none;
+}
+sprite.ship.thrusting cel.thrust {
+  display:block;
+  animation:athrusting 0.6s ease infinite;
+}
+@keyframes athrusting {
+  0% {
+    transform:scale(0.3)
+  }
+  25% {
+    transform:scale(1.2)
+  }
+  50% {
+    transform:scale(0.5)
+  }
+  75% {
+    transform:scale(1.2)
+  }
+  100% {
+    transform:scale(0.3)
+  }
+}
+sprite.rock {
+  visibility:hidden;
+  z-index:3;
+}
+sprite.rock.big {
+  width:10.5%;
+}
+sprite.rock.big svg {
+  animation:rotatecw 15s linear infinite;
+}
+sprite.rock.med {
+  width:7%;
+}
+sprite.rock.med svg {
+  animation:rotatecw 7s linear infinite;
+}
+sprite.rock.lil {
+  width:3.5%;
+}
+sprite.rock.lil svg {
+  animation:rotatecw 3s linear infinite;
+}
+sprite.rock.ccw svg {
+  animation-name:rotateccw !important;
+}
+sprite.rock.show {
+  visibility:visible;
+}
+@keyframes rotatecw {
+  from {
+    transform:rotate(0deg);
+  }
+  to {
+    transform:rotate(1turn);
+  }
+}
+@keyframes rotateccw {
+  from {
+    transform:rotate(0deg);
+  }
+  to {
+    transform:rotate(-1turn);
+  }
+}
+sprite.droid {
+  height:5%;
+  width:5%;
+  z-index:11;
+}
+sprite.droid.lt {
+  top:61.5%;
+  left:0.5%;
+}
+sprite.droid.lm {
+  top:71.5%;
+  left:3.5%;
+}
+sprite.droid.lb {
+  top:81.5%;
+  left:6.5%;
+}
+sprite.droid.rt {
+  top:61.5%;
+  left:94.5%;
+}
+sprite.droid.rm {
+  top:71.5%;
+  left:91.5%;
+}
+sprite.droid.rb {
+  top:81.5%;
+  left:88.5%;
+}
+sprite.droid cel.armsup {
+  display:none;
+}
+sprite.droid cel.armsdown {
+  display:block;
+}
+sprite.droid.jump cel.armsdown {
+  display:none;
+}
+sprite.droid.jump cel.armsup {
+  display:block;
+  animation:droidjump 0.5s steps(3) 3;
+}
+sprite.droid.drop cel.armsdown {
+  animation:droiddrop 1s linear 1;
+}
+@keyframes droidjump {
+  0% {
+    transform:rotate(0deg);
+  }
+  25% {
+    transform:rotate(-30deg);
+  }
+  50% {
+    transform:rotate(0deg) translateY(-1vw);
+  }
+  75% {
+    transform:rotate(30deg);
+  }
+}
+@keyframes droiddrop {
+  from {
+    transform:translateY(0);
+  }
+  to {
+    transform:translateY(100vh);
+  }
+}
+pad {
+  position:absolute;
+  height:1.2%;
+  border-radius:0.7vw;
+  z-index:2;
+  background:hsl(125, 100%, 20%);
+  border:0.5vw solid hsl(125, 100%, 10%);
+}
+pad.lit {
+  animation:litpad 1s linear infinite;
+  background:hsl(189, 100%, 60%);
+  border:0.5vw solid hsl(125, 100%, 30%);
+}
+pad.top {
+  width:12.5%;
+}
+pad.middle {
+  width:9.5%;
+}
+pad.bottom {
+  width:6.5%;
+}
+@keyframes litpad {
+  0% {
+    background:hsl(125, 100%, 20%);
+    border:0.5vw solid hsl(125, 100%, 10%);
+  }
+  30% {
+    background:hsl(125, 100%, 60%);
+    border:0.5vw solid hsl(125, 100%, 30%);
+  }
+  100% {
+    background:hsl(125, 100%, 20%);
+    border:0.5vw solid hsl(125, 100%, 10%);
+  }
+}
+ledge {
+  position:absolute;
+  background:hsl(39, 47%, 28%);
+  border:0.5vw solid hsl(39, 47%, 22%);
+  border-radius:2vw;
+  z-index:10;
+}
+ledge.tl {
+  border-left:0.5vw solid transparent;  
+  border-top-left-radius:0;
+}
+ledge.tr {
+  border-right:0.5vw solid transparent;  
+  border-top-right-radius:0;
+}
+ledge.bottom {
+  border-left:0.5vw solid transparent;  
+  border-right:0.5vw solid transparent;  
+}
+score {
+  position:absolute;
+  font-size:2.5vw;
+  color:white;
+  top:-0.5%;
+  left:2%;
+  font-family:'Orbitron';
+  z-index:10;
+}
+star {
+  border-radius:50%;
+  position:absolute;
+}
+star.h0 {
+  height:3px;
+  width:3px;
+}
+star.h1 {
+  height:2px;
+  width:2px;
+}
+star.h2 {
+  height:1px;
+  width:1px;
+}
+star.c0 {
+  background-color:hsl(207, 100%, 36%);
+}
+star.c1 {
+  background-color:hsl(0, 0%, 70%);
+}
+star.c2 {
+  background-color:hsl(0, 0%, 60%);
+}
+star.c3 {
+  background-color:hsl(0, 0%, 50%);
+}
+star.c4 {
+  background-color:hsl(0, 0%, 40%);
+}
+star.c5 {
+  background-color:hsl(0, 0%, 50%);
+}
+
+</style>
+</head>
+<templates>
+  <template class='ufo'>
+    <svg viewBox="0 0 512 512" preserveAspectRatio="none" height="100%" width="100%">
+      <path style="fill:#FF5023;" d="M298.667,85.333c0-23.565-19.102-42.667-42.667-42.667c-23.565,0-42.667,19.102-42.667,42.667c0,15.791,8.583,29.567,21.333,36.945v34.166h42.667v-34.166C290.082,114.9,298.667,101.124,298.667,85.333z"/>
+      <path style="fill:#BF3C1A;" d="M256,42.667v113.778h21.333v-34.166c12.749-7.378,21.333-21.154,21.333-36.945C298.667,61.769,279.565,42.667,256,42.667z"/>
+      <rect x="184.889" y="241.778" style="fill:#1E2E3B;" width="142.222" height="56.889"/>
+      <path style="fill:#BFE4F8;" d="M426.667,305.778H384c0-70.579-57.421-128-128-128s-128,57.421-128,128H85.333c0-94.107,76.56-170.667,170.667-170.667S426.667,211.671,426.667,305.778z"/>
+      <path style="fill:#93C7EF;" d="M256,135.111v42.667c70.579,0,128,57.421,128,128h42.667C426.667,211.671,350.106,135.111,256,135.111z"/>
+      <polygon style="fill:#93C7EF;" points="389.794,374.044 122.206,374.044 63.566,469.333 113.664,469.333 148.673,412.444 234.667,412.444 234.667,469.333 277.333,469.333 277.333,412.444 363.327,412.444 398.336,469.333 448.434,469.333 "/>
+      <path style="fill:#5a8cb3;" d="M512,327.111c0,23.563-0.001,56.889-0.001,56.889H0c0,0,0-33.326,0-56.889l0,0c0-23.563,19.102-42.667,42.667-42.667h426.667C492.898,284.444,512,303.548,512,327.111L512,327.111z"/>
+      <g>
+        <circle style="fill:#FFDA44;" cx="64" cy="334.222" r="21.333"/>
+        <circle style="fill:#FFDA44;" cx="160" cy="334.222" r="21.333"/>
+      </g>
+      <path style="fill:#5A8BB0;" d="M469.333,284.444H256V384h255.999c0,0,0.001-33.326,0.001-56.889C512,303.548,492.898,284.444,469.333,284.444z"/>
+      <circle style="fill:#FFDA44;" cx="256" cy="334.222" r="21.333"/>
+      <g>
+        <path style="fill:#FF9811;" d="M256,312.889c11.782,0,21.333,9.552,21.333,21.333s-9.552,21.333-21.333,21.333"/>
+        <circle style="fill:#FF9811;" cx="352" cy="334.222" r="21.333"/>
+        <circle style="fill:#FF9811;" cx="448" cy="334.222" r="21.333"/>
+      </g>
+    </svg>
+  </template>
+  <template class='ship'>
+    <cel class='ship'>
+      <svg viewBox="0 0 460 460">
+        <g>
+          <path d="m391.78,356.97l0,-51.543c0,-22.857 -11.084,-37.559 -14.882,-41.925l-76.866,-83.428l0,152.156l80.955,37.293c3.02,1.172 10.793,2.713 10.793,-12.553z" fill="#3A5D74" id="svg_5"/>
+          <path d="m62.219,356.97l0,-51.543c0,-22.857 11.084,-37.559 14.882,-41.925l76.866,-83.428l0,152.156l-80.953,37.293c-3.022,1.172 -10.795,2.713 -10.795,-12.553z" fill="#3A5D74" id="svg_6"/>
+        </g>
+        <path stroke="null" d="m227.999,118.143c-4.599,0 -8.328,-2.93362 -8.328,-6.55167l0,-68.03966c0,-3.61805 3.729,-6.55167 8.328,-6.55167s8.328,2.93362 8.328,6.55167l0,68.03966c0,3.61805 -3.729,6.55167 -8.328,6.55167z" fill="#90C8EC" id="svg_7"/>
+        <path d="m234.525,65.363l-15.052,0c-37.406,0 -67.728,25.34943 -67.728,56.61843l0,213.29197c0,8.56629 8.306,15.51161 18.557,15.51161l113.395,0c10.248,0 18.557,-6.94532 18.557,-15.51161l0,-168.44331l0,-22.74284l0,-22.10666c-0.001,-31.269 -30.323,-56.61759 -67.729,-56.61759z" fill="#CAE9F7" id="svg_8" stroke="null"/>
+        <path d="m151.746,305.426l0,26.803c0,10.247 8.306,18.555 18.557,18.555l113.395,0c10.248,0 18.557,-8.308 18.557,-18.555l0,-26.803l-150.509,0z" fill="red" id="svg_9"/>
+        <circle cx="227" cy="229.137" r="32.988" fill="#00aeff" id="svg_10"/>
+        <g stroke="null">
+          <path d="m81.726,364.405l0,-51.543c0,-22.857 11.084,-37.559 14.882,-41.925l58.358,-63.341l0,-28.523l-76.866,83.428c-3.798,4.365 -14.882,19.067 -14.882,41.925l0,51.543c0,15.265 7.773,13.725 10.795,12.552l7.722,-3.558c-0.002,-0.186 -0.009,-0.365 -0.009,-0.558z" opacity="0.1" fill="#231F20" id="svg_12"/>
+          <path d="m171.253,336.33464l0,-214.13126c0,-30.90527 29.397,-56.03216 66,-56.80345c-0.576,-0.01175 -1.147,-0.03693 -1.728,-0.03693l-15.052,0c-37.406,0 -67.728,25.44917 -67.728,56.84121l0,214.13126c0,8.6 8.306,15.57265 18.557,15.57265l18.508,0c-10.251,-0.00084 -18.557,-6.97265 -18.557,-15.57349l0,0.00001z" opacity="0.1" fill="#231F20" id="svg_13" stroke="null"/>
+          <path d="m213.519,228.141c0,-15.005 10.021,-27.662 23.733,-31.664c-2.937,-0.856 -6.04,-1.325 -9.253,-1.325c-18.22,0 -32.988,14.769 -32.988,32.989c0,18.219 14.768,32.988 32.988,32.988c3.214,0 6.316,-0.467 9.253,-1.325c-13.713,-4.002 -23.733,-16.658 -23.733,-31.663z" opacity="0.1" fill="#231F20" id="svg_14"/>
+        </g>
+      </svg>  
+    </cel>
+    <cel class='thrust'>
+      <svg viewbox="0 0 460 460">
+        <g>
+          <path fill="#FF9737" d="m283.641,334.709c-0.816,-2.159 -2.885,-3.587 -5.192,-3.587l-98.899,0c-2.309,0 -4.375,1.428 -5.194,3.587c-4.157,10.99 -6.266,22.565 -6.266,34.405c0,38.873 23.042,73.976 58.701,89.428c0.705,0.305 1.457,0.457 2.208,0.457c0.752,0 1.504,-0.152 2.208,-0.457c35.66,-15.452 58.701,-50.554 58.701,-89.428c0.001,-11.844 -2.108,-23.419 -6.267,-34.405z"/>
+          <path fill="#FFD960" d="m265.446,328.352c-1.052,-1.136 -2.528,-1.782 -4.076,-1.782l-64.742,0c-1.548,0 -3.025,0.645 -4.076,1.782c-1.049,1.135 -1.579,2.659 -1.459,4.202c1.681,21.554 15.743,40.738 35.824,48.871c0.668,0.271 1.376,0.406 2.084,0.406c0.708,0 1.416,-0.135 2.084,-0.406c20.08,-8.133 34.14,-27.316 35.822,-48.871c0.117,-1.544 -0.412,-3.067 -1.461,-4.202z"/>
+        </g>
+      </svg>     
+    </cel>
+  </template>
+  <template class='droid'>  
+    <cel class='armsdown'>
+      <svg viewBox="0 0 512 512">
+        <rect x="398.851" y="174.74" transform="matrix(0.704, -0.7102, 0.7102, 0.704, -42.2075, 363.9888)" style="fill:#D7D7D7;" width="33.417" height="115.779"/>
+        <path style="fill:#B0B0B0;" d="M466.776,328.709l5.13-33.022c-0.903-0.14-2.228-0.555-3.405-1.732c-2.41-2.41-2.412-6.335,0-8.745 c2.412-2.41,6.335-2.412,8.746,0c1.177,1.177,1.592,2.502,1.732,3.405L512,283.487c-1.298-8.351-5.144-15.925-11.123-21.905 c-15.44-15.44-40.564-15.441-56.005,0s-15.44,40.565,0,56.005C450.852,323.566,458.426,327.412,466.776,328.709z"/>
+        <rect x="79.733" y="174.756" transform="matrix(-0.704, -0.7102, 0.7102, -0.704, -0.8879, 464.92041)" style="fill:#ECECED;" width="33.417" height="115.779"/>
+        <path style="fill:#79BBBC;" d="M360.457,182.403H151.542v-61.667c0-57.594,46.86-104.451,104.457-104.451 s104.457,46.856,104.457,104.451L360.457,182.403L360.457,182.403z"/>
+        <path style="fill:#79BBBC;" d="M360.457,182.403H255.999c0,0,0-143.614,0-166.119c57.598,0,104.457,46.856,104.457,104.451V182.403z "/>
+        <rect x="120.836" y="165.694" style="fill:#D7D7D7;" width="270.333" height="253.625"/>
+        <rect x="255.997" y="165.694" style="fill:#B0B0B0;" width="135.161" height="253.625"/>
+        <path style="fill:#C8F9FA;" d="M255.999,130.196c-17.012,0-30.853-13.84-30.853-30.852s13.84-30.852,30.853-30.852 c17.013,0,30.853,13.84,30.853,30.852S273.012,130.196,255.999,130.196z"/>
+        <path style="fill:#92E5EA;" d="M255.999,130.196V68.493c17.012,0,30.853,13.84,30.853,30.852S273.012,130.196,255.999,130.196z"/>
+        <path style="fill:#C8F9FA;" d="M334.663,309.217H177.337V218.35h157.327L334.663,309.217L334.663,309.217z"/>
+        <path style="fill:#92E5EA;" d="M334.663,309.217h-78.664V218.35h78.664V309.217z"/>
+        <path style="fill:#8B8B8B;" d="M189.799,495.715H85.288V322.484h104.511L189.799,495.715L189.799,495.715z"/>
+        <g>
+          <rect x="85.292" y="358.065" style="fill:#6F6F6F;" width="104.506" height="33.417"/>
+          <rect x="85.292" y="426.781" style="fill:#6F6F6F;" width="104.506" height="33.417"/>
+          <path style="fill:#6F6F6F;" d="M322.2,322.484h104.511v173.231H322.2V322.484z"/>
+        </g>
+        <g>
+          <rect x="322.197" y="358.065" style="fill:#444444;" width="104.506" height="33.417"/>
+          <rect x="322.197" y="426.781" style="fill:#444444;" width="104.506" height="33.417"/>
+        </g>
+        <path style="fill:#D7D7D7;" d="M45.224,328.709l-5.13-33.022c0.903-0.14,2.228-0.555,3.405-1.732c2.41-2.41,2.412-6.335,0-8.745 s-6.335-2.412-8.746,0c-1.177,1.177-1.592,2.502-1.732,3.405L0,283.487c1.298-8.351,5.144-15.925,11.123-21.905 c15.44-15.44,40.564-15.441,56.005,0s15.44,40.565,0,56.005C61.148,323.566,53.573,327.412,45.224,328.709z"/>
+      </svg>  
+    </cel>
+    <cel class='armsup'>
+      <svg viewBox="0 0 512 512">
+        <rect x="398.851" y="174.74" transform="matrix(-0.668053, -0.744114, 0.744114, -0.668053, 525.139526, 640.138)" style="fill:#D7D7D7;" width="33.417" height="115.779"/>
+        <path style="fill:#B0B0B0;" d="M 474.706 161.169 L 479.836 128.147 C 478.933 128.007 477.608 127.592 476.431 126.415 C 474.021 124.005 474.019 120.08 476.431 117.67 C 478.843 115.26 482.766 115.258 485.177 117.67 C 486.354 118.847 486.769 120.172 486.909 121.075 L 519.93 115.947 C 518.632 107.596 514.786 100.022 508.807 94.042 C 493.367 78.602 468.243 78.601 452.802 94.042 C 437.361 109.483 437.362 134.607 452.802 150.047 C 458.782 156.026 466.356 159.872 474.706 161.169 Z" transform="matrix(0.05816, -0.998307, 0.998307, 0.05816, 331.016388, 594.492859)"/>
+        <rect x="-79.733" y="-174.756" transform="matrix(-0.704, 0.7102, 0.7102, 0.704, 133.935532, 305.490509)" style="fill:#ECECED;" width="33.417" height="115.779"/>
+        <path style="fill:#79BBBC;" d="M360.457,182.403H151.542v-61.667c0-57.594,46.86-104.451,104.457-104.451 s104.457,46.856,104.457,104.451L360.457,182.403L360.457,182.403z"/>
+        <path style="fill:#79BBBC;" d="M360.457,182.403H255.999c0,0,0-143.614,0-166.119c57.598,0,104.457,46.856,104.457,104.451V182.403z "/>
+        <rect x="120.836" y="165.694" style="fill:#D7D7D7;" width="270.333" height="253.625"/>
+        <rect x="255.997" y="165.694" style="fill:#B0B0B0;" width="135.161" height="253.625"/>
+        <path style="fill:#C8F9FA;" d="M255.999,130.196c-17.012,0-30.853-13.84-30.853-30.852s13.84-30.852,30.853-30.852 c17.013,0,30.853,13.84,30.853,30.852S273.012,130.196,255.999,130.196z"/>
+        <path style="fill:#92E5EA;" d="M255.999,130.196V68.493c17.012,0,30.853,13.84,30.853,30.852S273.012,130.196,255.999,130.196z"/>
+        <path style="fill:#C8F9FA;" d="M334.663,309.217H177.337V218.35h157.327L334.663,309.217L334.663,309.217z"/>
+        <path style="fill:#92E5EA;" d="M334.663,309.217h-78.664V218.35h78.664V309.217z"/>
+        <path style="fill:#8B8B8B;" d="M189.799,495.715H85.288V322.484h104.511L189.799,495.715L189.799,495.715z"/>
+        <g>
+          <rect x="85.292" y="358.065" style="fill:#6F6F6F;" width="104.506" height="33.417"/>
+          <rect x="85.292" y="426.781" style="fill:#6F6F6F;" width="104.506" height="33.417"/>
+          <path style="fill:#6F6F6F;" d="M322.2,322.484h104.511v173.231H322.2V322.484z"/>
+        </g>
+        <g>
+          <rect x="322.197" y="358.065" style="fill:#444444;" width="104.506" height="33.417"/>
+          <rect x="322.197" y="426.781" style="fill:#444444;" width="104.506" height="33.417"/>
+        </g>
+        <path style="fill:#D7D7D7;" d="M 44.089 82.393 L 38.959 115.415 C 39.862 115.555 41.187 115.97 42.364 117.147 C 44.774 119.557 44.776 123.482 42.364 125.892 C 39.952 128.302 36.029 128.304 33.618 125.892 C 32.441 124.715 32.026 123.39 31.886 122.487 L -1.135 127.615 C 0.163 135.966 4.009 143.54 9.988 149.52 C 25.428 164.96 50.552 164.961 65.993 149.52 C 81.434 134.079 81.433 108.955 65.993 93.515 C 60.013 87.536 52.438 83.69 44.089 82.393 Z"/>
+      </svg>          
+    </cel>
+  </template>
+  <template class='rock'>
+    <svg viewbox="0 0 200 200">
+      <g style="stroke:white; stroke-width:12; stroke-linejoin:round; stroke-opacity:0.8; fill-opacity:0.8; fill:hsl(44, 33%, 66%);">
+        <path d="m7,109.9369l0,-64.37379l71.46798,0.86408l-21.07389,-35.42719l84.29556,0.86408l51.31034,32.83496l0,26.78641l-54.97537,27.65049l53.14286,31.1068l-43.06404,58.75729l-30.23645,-19.87379l-65.05419,19.87379l-45.81281,-79.06312z"/>
+      </g>
+    </svg>
+  </template>
+</templates>
+<body>
+  <screen vw='1056' vh='800'>
+    <ledge class='tl' style='top:68%; left:0%; width:7.5%; height:40%;'></ledge>
+    <ledge class='tl' style='top:78%; left:3%; width:7.5%; height:30%;'></ledge>
+    <ledge class='tl' style='top:88%; left:6%;width:7.5%; height:20%;'></ledge>
+    <ledge class='tr' style='top:68%; left:91.2%; width:7.5%; height:40%;'></ledge>
+    <ledge class='tr' style='top:78%; left:88.2%; width:7.5%; height:30%;'></ledge>
+    <ledge class='tr' style='top:88%; left:85.2%; width:7.5%; height:20%;'></ledge>
+    <ledge class='bottom' style='top:97%; left:12%; width:74.5%; height:10%;'></ledge>
+    <landingpad class='left'>
+      <pad class='top' style='left:18%; top:88%'></pad>
+      <pad class='middle' style='left:19.5%; top:91%'></pad>
+      <pad class='bottom' style='left:21%; top:94%'></pad>
+    </landingpad>
+    <landingpad class='middle'>
+      <pad class='top' style='left:43%; top:88%'></pad>
+      <pad class='middle' style='left:44.55%; top:91%'></pad>
+      <pad class='bottom' style='left:46%; top:94%'></pad>
+    </landingpad>
+    <landingpad class='right'>
+      <pad class='top' style='left:67.75%; top:88%'></pad>
+      <pad class='middle' style='left:69.25%; top:91%'></pad>
+      <pad class='bottom' style='left:70.75%; top:94%'></pad>
+    </landingpad>
+    <score>00</score>
+  </screen>
+</body>
+<script>
+  window.on('DOMContentLoaded', () => game = new DroidRescue());
+</script>
+</html>

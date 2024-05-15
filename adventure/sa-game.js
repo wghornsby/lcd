@@ -3,7 +3,7 @@ SA = window.SA || {};
 SA.Game = class extends Obj {
   onsay(msg) {}
   onsayinv(msg, items) {}
-  oncls() {}
+  oncls(hard) {}
   onlook(room, items) {}
   ongameover() {}
   onready() {}

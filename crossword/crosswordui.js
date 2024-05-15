@@ -6,6 +6,9 @@ class UiCrossword extends Obj {
     this.uieditor = new UiEditor()
       .on('lookup', (text) => this.uitabs.nav(text));
     this.uicluelist = new UiCluelist();
+    MyClient
+      .on('error', (msg) => alert(msg))
+      .on('expired', () => alert('expired'));
     this.setup();
   }
   async setup() {

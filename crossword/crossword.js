@@ -26,9 +26,6 @@ class Theme extends Obj {
     this.cids = cids || [];
     this.cix = cix;
     crossword && this.setCrossword(crossword);
-    MyClient
-      .on('error', (msg) => alert(msg))
-      .on('expired', () => alert('expired'));
   }
   async save(o = null) {
     if (o) {

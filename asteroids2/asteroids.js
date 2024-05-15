@@ -869,7 +869,7 @@ class Ship extends LG.Sprite {
     return super.moveTo(x, y);
   }
   //
-  static ROTC = 5.6;
+  static ROTC = 4.8;
 }
 Ship.Velocity = class extends Vector {
   //
@@ -1342,6 +1342,9 @@ Sounds = {
   SSAUCER:new Audio('audio/SSAUCER.wav'),
   //
   start:function() {
+
+      return;
+
     if (! this._muted) {
       this._started = 1;
     }

@@ -24,7 +24,7 @@ class Radar extends Obj {
     $$('.dock')
       .on('mouseover', e => this.pad_onmouseover(e));
     
-            this.advance(28);
+            this.advance(11);
     
     this.start();
   }

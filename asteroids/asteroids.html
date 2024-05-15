@@ -56,8 +56,8 @@ body {
   flex:1;
 }
 .sprite {
-  transition:transform 0s ease-in-out;
   position:absolute;
+  will-change:transition;
 }
 .rot {
   transition:all ease;
@@ -74,19 +74,22 @@ body {
   z-index:1;
 }
 .life .frame {
-  z-index:1;
   width:30px;
 }
 .ship {
   z-index:10;
 }
 .ship .frame {
-  z-index:10;
   width:50px;
 }
-.ship .frame.thrust {
-  display:none;
+.ship .frame:nth-of-type(1) {
+  z-index:10;
+}
+.ship .frame:nth-of-type(2) {
   z-index:9;
+}
+.ship svg.thrust {
+  display:none;
 }
 @keyframes dive {
   0% {
@@ -153,10 +156,10 @@ body {
     opacity:1;
   }
   20% {
-    transform:scale(3) rotate(25deg);
+    transform:scale(5) rotate(25deg);
   }
   40% {
-    transform:scale(2);
+    transform:scale(3);
   }
   60% {
     transform:scale(1) rotate(-25deg);
@@ -166,9 +169,12 @@ body {
     opacity:0;
   }
 }
-.ship .frame.thrusting {
+.ship .frame.thrusting svg {
   display:block;
   animation:athrusting 0.4s ease infinite;
+}
+.ship .frame.hide {
+  display:none;
 }
 @keyframes athrusting {
   0% {
@@ -216,18 +222,18 @@ body {
   position:absolute;
   z-index:5;
 }
-.rb .frame {
+.rb svg {
   width:120px;
   animation:rotatecw 10s linear infinite;
 }
-.ccw .frame {
+.ccw svg {
   animation-name:rotateccw !important;
 }
-.rm .frame {
+.rm svg {
   width:60px;
   animation:rotatecw 3s linear infinite;
 }
-.rs .frame {
+.rs svg {
   width:30px;
   animation:rotatecw 1s linear infinite;
 }
@@ -468,7 +474,7 @@ body {
 }
 #welcome .keys span {
   background-color:#e0e0e0;
-  color:black;
+  color:#606060;
   display:inline-block;
   width:90px;
   font-size:30pt;
@@ -476,7 +482,7 @@ body {
 }
 #welcome .keys span.sb {
   background-color:#e0e0e0;
-  color:black;
+  color:#606060;
   display:inline-block;
   width:250px;
   font-size:24pt;
@@ -584,12 +590,12 @@ body {
             <path d="m171.253,336.33464l0,-214.13126c0,-30.90527 29.397,-56.03216 66,-56.80345c-0.576,-0.01175 -1.147,-0.03693 -1.728,-0.03693l-15.052,0c-37.406,0 -67.728,25.44917 -67.728,56.84121l0,214.13126c0,8.6 8.306,15.57265 18.557,15.57265l18.508,0c-10.251,-0.00084 -18.557,-6.97265 -18.557,-15.57349l0,0.00001z" opacity="0.1" fill="#231F20" id="svg_13" stroke="null"/>
             <path d="m213.519,228.141c0,-15.005 10.021,-27.662 23.733,-31.664c-2.937,-0.856 -6.04,-1.325 -9.253,-1.325c-18.22,0 -32.988,14.769 -32.988,32.989c0,18.219 14.768,32.988 32.988,32.988c3.214,0 6.316,-0.467 9.253,-1.325c-13.713,-4.002 -23.733,-16.658 -23.733,-31.663z" opacity="0.1" fill="#231F20" id="svg_14"/>
           </g>
-        </svg>    
+        </svg>
       </div>
     </div>
-    <div class='frame thrust'>
+    <div class='frame'>
       <div class='rot'>
-        <svg viewbox="0 0 460 460">
+        <svg viewbox="0 0 460 460" class='thrust'>
           <g>
             <path fill="#FF9737" d="m283.641,334.709c-0.816,-2.159 -2.885,-3.587 -5.192,-3.587l-98.899,0c-2.309,0 -4.375,1.428 -5.194,3.587c-4.157,10.99 -6.266,22.565 -6.266,34.405c0,38.873 23.042,73.976 58.701,89.428c0.705,0.305 1.457,0.457 2.208,0.457c0.752,0 1.504,-0.152 2.208,-0.457c35.66,-15.452 58.701,-50.554 58.701,-89.428c0.001,-11.844 -2.108,-23.419 -6.267,-34.405z"/>
             <path fill="#FFD960" d="m265.446,328.352c-1.052,-1.136 -2.528,-1.782 -4.076,-1.782l-64.742,0c-1.548,0 -3.025,0.645 -4.076,1.782c-1.049,1.135 -1.579,2.659 -1.459,4.202c1.681,21.554 15.743,40.738 35.824,48.871c0.668,0.271 1.376,0.406 2.084,0.406c0.708,0 1.416,-0.135 2.084,-0.406c20.08,-8.133 34.14,-27.316 35.822,-48.871c0.117,-1.544 -0.412,-3.067 -1.461,-4.202z"/>
@@ -599,15 +605,11 @@ body {
     </div>
   </div>
   <div id='rockbp1' class='blueprint'>
-    <div class='frame'>
-      <div class='rot'>
-        <svg viewbox="0 0 200 200">
-          <g style="stroke:white; stroke-width:12; stroke-linejoin:round; stroke-opacity:0.8; fill-opacity:0.4; fill:hsl(39, 18%, 55%);">
-            <path d="m7,109.9369l0,-64.37379l71.46798,0.86408l-21.07389,-35.42719l84.29556,0.86408l51.31034,32.83496l0,26.78641l-54.97537,27.65049l53.14286,31.1068l-43.06404,58.75729l-30.23645,-19.87379l-65.05419,19.87379l-45.81281,-79.06312z"/>
-          </g>
-        </svg>
-      </div>
-    </div>
+    <svg viewbox="0 0 200 200">
+      <g style="stroke:white; stroke-width:12; stroke-linejoin:round; stroke-opacity:0.8; fill-opacity:0.4; fill:hsl(39, 18%, 55%);">
+        <path d="m7,109.9369l0,-64.37379l71.46798,0.86408l-21.07389,-35.42719l84.29556,0.86408l51.31034,32.83496l0,26.78641l-54.97537,27.65049l53.14286,31.1068l-43.06404,58.75729l-30.23645,-19.87379l-65.05419,19.87379l-45.81281,-79.06312z"/>
+      </g>
+    </svg>
   </div>
   <div id='screen'>
     <div id='stars2'></div>

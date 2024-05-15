@@ -1,0 +1,106 @@
+<html>
+<head>
+  <script type='text/javascript' src='lib/lcd.js'></script>
+  <script type='text/javascript' src='blackjack.js'></script>
+</head>
+<body>
+</body>
+<script>
+Logger = class {
+  //
+  constructor(table) {
+    this.table = table;
+    table.dealer
+      .on('wager', () => this.wagered())
+      .on('shuffled', () => this.shuffled())
+      .on('dealt', () => this.dealt())
+      .on('insured', () => this.insured())
+      .on('playing', (player, hand) => this.playing(player, hand))
+      .on('action', (player, hand, action) => this.action(player, hand, action))
+      .on('done', (player, hand) => this.done(player, hand))
+      .on('dealerplaying', (dealer, hand) => this.dealerplaying(dealer, hand))
+      .on('dealeraction', (dealer, action, hand) => this.dealeraction(dealer, action, hand))
+      .on('settled', () => this.settled());
+  }
+  wagered() {
+    this.table.activePlayers().forEach(player => {
+      log(`${player.name} wagers $${player.hands.wager}`);
+    })
+  }
+  shuffled() {
+  }
+  dealt() {
+    log('** DEAL **');
+    this.table.activePlayers().forEach(player => {
+      log(`${player.name} $${player.hands.wager} ${player.hands.hand().toString()}`)
+    })
+    log(`DEALER ${this.table.dealer.hand.toString()}`);
+  }
+  insured() {
+  }
+  playing(player, hand) {
+    log(`** NOW PLAYING: ${player.name} **`);
+    log(hand.toString());
+  }
+  action(player, hand, action) {
+    log(action.toString() + ' ' + hand.toString() + '(' + hand.score + ')');
+  }
+  done(player, hand) {    
+    log(`** RESULT: ${player.name} ${hand.resultText()}`);
+  }
+  dealerplaying(dealer, hand) {
+    log('** DEALER PLAYING **');
+    log(hand.toString());
+  }
+  dealeraction(dealer, action, hand) {
+    log(action.toString() + ' ' + hand.toString() + '(' + hand.score + ')');
+  }
+  settled() {
+    this.logTable();
+  }
+  logTable() {
+    //log(this.outTable());
+  }
+  outTable() {
+    //return table.seats.toString();
+    let a = [];
+    a.push('    ');
+    a.push(this.outDealer(this.table.dealer));
+    a.push('\n');
+    this.table.seats.forEach(seat => {
+      a.push((seat.pos + '').padStart(2));
+      a.push('. ');
+      if (seat.player) {
+        a.push(this.outPlayer(seat.player));
+      }
+      a.push('\n');
+    })
+    return a.join('');
+  }
+  outDealer(dealer) {
+    return 'todo';
+  }
+  outPlayer(player) {
+    return 'todo';
+  }
+}
+let rules = new B.Rules();
+let bankroll = 10000;
+let table = new B.Table(rules);
+new B.Player('Dumb1', bankroll).using(B.Strategy_Player_Dumb).sit(table);
+new B.Player('Dumb2', bankroll).using(B.Strategy_Player_Dumb).sit(table);
+//new B.Player('Basic1', bankroll).using(B.Strategy_Player_Basic).sit(table);
+//new B.Player('Basic2', bankroll).using(B.Strategy_Player_Basic).sit(table);
+new B.Player('*Uston*', bankroll).using(B.Strategy_Player_Basic_Uston).sit(table);
+//new B.Player('Dumb3', bankroll).using(B.Strategy_Player_Dumb).sit(table);
+//new B.Player('Dumb4', bankroll).using(B.Strategy_Player_Dumb).sit(table);
+(async () => {
+  log('here we go!');
+  let logger = new Logger(table);
+  for (let i = 0; i < 1; i++) {
+    await table.dealer.start();
+  }
+  log(table.seats.toString());
+})()
+</script>
+</html>

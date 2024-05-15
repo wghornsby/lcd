@@ -1,430 +1,446 @@
-<transform sourceClass='HchbLib.Customer.DataModels.ConsolidatedPatientData' targetClass='HS.SDA3.Container' create='new' language='objectscript' >
-<assign value='source.VendorTransaction.DatabaseRoute' property='target.Patient.Organizations.(1).Organization.Code' action='set' />
-<assign value='source.Patient.Branch.name_" ("_source.Patient.Agency.name_")"' property='target.Patient.Organizations.(1).Organization.Description' action='set' />
-<assign value='source.Patient.Branch.street' property='target.Patient.Organizations.(1).Organization.Address.Street' action='set' />
-<assign value='source.Patient.Branch.city' property='target.Patient.Organizations.(1).Organization.Address.City.Description' action='set' />
-<assign value='source.Patient.Branch.state' property='target.Patient.Organizations.(1).Organization.Address.State.Code' action='set' />
-<assign value='source.Patient.Branch.zip' property='target.Patient.Organizations.(1).Organization.Address.Zip.Code' action='set' />
-<assign value='source.Patient.Branch.phone' property='target.Patient.Organizations.(1).Organization.ContactInfo.WorkPhoneNumber' action='set' />
-<assign value='source.EpisodeVendorMetaData.VendorReferralLink.externalId' property='target.Patient.ExternalId' action='set' />
-<assign value='source.Patient.Episode.lastName' property='target.Patient.Name.FamilyName' action='set' />
-<assign value='source.Patient.Episode.firstName' property='target.Patient.Name.GivenName' action='set' />
-<assign value='source.Patient.Episode.mi' property='target.Patient.Name.MiddleName' action='set' />
-<assign value='$P(source.Patient.Episode.dob, ".", 1)' property='target.Patient.Name.DOB' action='set' />
-<assign value='source.Patient.Episode.mrnum' property='target.Patient.Name.MRN' action='set' />
-<assign value='source.Patient.Episode.mrnum' property='target.Patient.PatientNumbers.(1).Number' action='set' />
-<if condition='((source.CustodianOID &apos;="") &amp; (source.CustodianOID &apos;= $CHAR(0)))' >
+<process language='objectscript' request='HchbLib.Customer.DataModels.VendorTransaction' response='Ens.Response' height='4750' width='3365' >
+<context>
+<property name='Transaction' type='HchbLib.Vendors.HCHBStock.OutboundMDM.MDMMultiEvents.Transaction' instantiate='0' />
+<property name='VendorDetails' type='HchbLib.Customer.Response.VendorDetails' instantiate='0' />
+<property name='ReportList' type='HchbLib.Assembly.DataModels.Report' collection='list' instantiate='0' />
+<property name='MdmMessage' type='EnsLib.HL7.Message' instantiate='0' />
+<property name='reportCounter' type='%Integer' instantiate='0' />
+<property name='ACKMessage' type='EnsLib.HL7.Message' instantiate='0' />
+<property name='EID' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='250' />
+</parameters>
+</property>
+<property name='PAID' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='epiid' type='%Integer' instantiate='0' />
+<property name='ExternalMRN' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='250' />
+</parameters>
+</property>
+<property name='ExternalFIN' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='250' />
+</parameters>
+</property>
+<property name='FolderName' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='250' />
+</parameters>
+</property>
+<property name='ArchiveDirectory' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='2500' />
+</parameters>
+</property>
+<property name='Acknowledgement' type='HchbLib.Assembly.DataModels.Acknowledgement' instantiate='0' />
+<property name='isCarePlanApproved' type='%Integer' initialexpression='0' instantiate='0' />
+<property name='flagCarePlanApprovalException' type='%Integer' initialexpression='0' instantiate='0' />
+<property name='PatientData' type='HchbLib.Vendors.Generic.Transaction' instantiate='0' />
+<property name='flagTIFVisit' type='%Integer' initialexpression='0' instantiate='0' />
+<property name='flagVisitCompleted' type='%Integer' initialexpression='0' instantiate='0' />
+<property name='flagProcessPatientInstructReport' type='%Integer' initialexpression='0' instantiate='0' />
+</context>
+<sequence xend='200' yend='4300' >
+<scope xpos='200' ypos='250' xend='200' yend='4200' >
+<assign name="Vendor Transaction" property="context.Transaction.VendorTransaction" value="request" action="set" xpos='200' ypos='350' />
+<switch xpos='200' ypos='450' xend='200' yend='1150' >
+<case condition='context.Transaction.VendorTransaction.EntityTable="CLIENT_LOG"' name='CLIENT_LOG' >
+<call name='Get Client Log Details' target='@process."Get Client Log Details"' async='0' xpos='335' ypos='600' >
+<request type='HchbLib.Customer.Request.GetClientLog' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.clogId" value="request.EntityValueId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetClientLog' >
+<assign property="context.epiid" value="callresponse.ClientLog.epiId" action="set" />
+</response>
+</call>
+</case>
+<case condition='context.Transaction.VendorTransaction.EntityTable="CLIENT_EPISODES_ALL"' name='CLIENT_EPISODES_ALL' >
+<assign name="Assign epiid " property="context.epiid" value="request.EntityValueId" action="set" xpos='605' ypos='600' />
+</case>
+<case condition='context.Transaction.VendorTransaction.EntityTable="CLIENT_ORDERS_ALL"' name='CLIENT_ORDERS_ALL' >
+<call name='Get Client Order Details' target='@process."Get Client Order Op"' async='0' xpos='875' ypos='600' >
+<request type='HchbLib.Customer.Request.GetClientOrder' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.OrderID" value="request.EntityValueId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetClientOrder' >
+<assign property="context.epiid" value="callresponse.ClientOrder.oEpiid" action="set" />
+</response>
+</call>
+</case>
+<case condition='context.Transaction.VendorTransaction.EntityTable="CLIENT_ELECTRONIC_SIGNATURE_FORMS"' name='CLIENT_ELECTRONIC_SIGNATURE_FORMS' >
+<call name='Get Electronic Signature Form Details' target='@process."Get Client Electronic Signature Form Op"' async='0' xpos='1145' ypos='600' >
+<request type='HchbLib.Customer.Request.GetClientElectronicSignatureForms' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.ElectronicSingatureFormID" value="request.EntityValueId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetClientElectronicSignatureForms' >
+<assign property="context.epiid" value="callresponse.SignatureForms.epiid" action="set" />
+</response>
+</call>
+</case>
+<case condition='context.Transaction.VendorTransaction.EntityTable="CLIENT_EPISODE_VISITS_ALL"' name='CLIENT_EPISODE_VISITS_ALL' >
+<call name='Get Visit Details' target='@process."Get Visit Details Op"' async='0' xpos='1415' ypos='600' >
+<request type='HchbLib.Customer.Request.ValidatedTIFVisitByCEVID' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.cevId" value="request.EntityValueId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.ValidateTIFVisitByCEVIDResult' >
+<assign property="context.flagTIFVisit" value="callresponse.isTIFVisit" action="set" />
+</response>
+</call>
+<if name='Check if TIF Visit' condition='context.flagTIFVisit=1' xpos='1415' ypos='700' xend='1415' yend='950' >
 <true>
-<assign value='$ZSTRIP(source.CustodianOID,"&lt;&gt;W")' property='target.Patient.PatientNumbers.(1).Organization.Code' action='set' />
-</true>
-</if>
-<assign value='"HCHB"' property='target.Patient.PatientNumbers.(1).Organization.Description' action='set' />
-<assign value='"MRN"' property='target.Patient.PatientNumbers.(1).NumberType' action='set' />
-<assign value='"HomeCommunity"' property='target.Patient.PatientNumbers.(1).ISOAssigningAuthority' action='set' />
-<assign value='source.Patient.Episode.PrimaryLanguage' property='target.Patient.PrimaryLanguage.Code' action='set' />
-<assign value='source.Patient.Episode.gender' property='target.Patient.Gender.Code' action='set' />
-<assign value='source.Patient.Episode.raceId' property='target.Patient.Race.Code' action='set' />
-<assign value='source.Patient.Episode.raceDescription' property='target.Patient.Race.Description' action='set' />
-<foreach property='source.Patient.ContactList()' key='k1' >
-<assign value='source.Patient.ContactList.(k1).lastName' property='target.Patient.SupportContacts.(k1).Name.FamilyName' action='set' />
-<assign value='source.Patient.ContactList.(k1).firstName' property='target.Patient.SupportContacts.(k1).Name.GivenName' action='set' />
-<assign value='source.Patient.ContactList.(k1).street' property='target.Patient.SupportContacts.(k1).Address.Street' action='set' />
-<assign value='source.Patient.ContactList.(k1).city' property='target.Patient.SupportContacts.(k1).Address.City.Code' action='set' />
-<assign value='source.Patient.ContactList.(k1).state' property='target.Patient.SupportContacts.(k1).Address.State.Code' action='set' />
-<assign value='source.Patient.ContactList.(k1).zip' property='target.Patient.SupportContacts.(k1).Address.Zip.Code' action='set' />
-<assign value='source.Patient.ContactList.(k1).homePhone' property='target.Patient.SupportContacts.(k1).ContactInfo.HomePhoneNumber' action='set' />
-<assign value='source.Patient.ContactList.(k1).workPhone' property='target.Patient.SupportContacts.(k1).ContactInfo.WorkPhoneNumber' action='set' />
-<assign value='source.Patient.ContactList.(k1).alternatePhone' property='target.Patient.SupportContacts.(k1).ContactInfo.MobilePhoneNumber' action='set' />
-<assign value='source.Patient.ContactList.(k1).email' property='target.Patient.SupportContacts.(k1).ContactInfo.EmailAddress' action='set' />
-</foreach>
-<assign value='$P(source.Patient.Episode.dob, ".", 1)' property='target.Patient.BirthTime' action='set' />
-<assign value='$P(source.Patient.Episode.DateTimeOfDeath, ".", 1)' property='target.Patient.DeathTime' action='set' />
-<assign value='source.Patient.Episode.PatientDeathIndicator' property='target.Patient.IsDead' action='set' />
-<foreach property='source.Patient.ServiceLocationList()' key='k1' >
-<if condition='k1 = 1' >
-<true>
-<assign value='source.Patient.ServiceLocationList.(k1).address' property='target.Patient.Addresses.(k1).Street' action='set' />
-<assign value='source.Patient.ServiceLocationList.(k1).city' property='target.Patient.Addresses.(k1).City.Code' action='set' />
-<assign value='source.Patient.ServiceLocationList.(k1).state' property='target.Patient.Addresses.(k1).State.Code' action='set' />
-<assign value='$P(source.Patient.ServiceLocationList.(k1).zip, "-", 1)' property='target.Patient.Addresses.(k1).Zip.Code' action='set' />
-<assign value='source.Patient.ServiceLocationList.(k1).phone' property='target.Patient.ContactInfo.HomePhoneNumber' action='set' />
-<assign value='source.Patient.Episode.workPhone' property='target.Patient.ContactInfo.WorkPhoneNumber' action='set' />
-<assign value='source.Patient.Episode.alternatePhone' property='target.Patient.ContactInfo.MobilePhoneNumber' action='set' />
-<assign value='source.Patient.Episode.email' property='target.Patient.ContactInfo.EmailAddress' action='set' />
-<foreach property='source.Patient.PhysicianList()' key='k2' >
-<if condition='k2 = k1' >
-<true>
-<assign value='"NPI"' property='target.Patient.FamilyDoctor.SDACodingStandard' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).NPI' property='target.Patient.FamilyDoctor.Code' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).lastName' property='target.Patient.FamilyDoctor.Name.FamilyName' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).firstName' property='target.Patient.FamilyDoctor.Name.GivenName' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).title' property='target.Patient.FamilyDoctor.Name.ProfessionalSuffix' action='set' />
-</true>
-</if>
-</foreach>
-</true>
-</if>
-</foreach>
-<assign value='source.Patient.Episode.id' property='target.Encounters.(1).EncounterNumber' action='set' />
-<assign value='source.Patient.Episode.admitType' property='target.Encounters.(1).AdmissionType.Code' action='set' />
-<assign value='"O"' property='target.Encounters.(1).EncounterType' action='set' />
-<foreach property='source.CareTeamMembers()' key='k1' >
-<assign value='source.CareTeamMembers.(k1).LastName_", "_source.CareTeamMembers.(k1).FirstName' property='target.Encounters.(1).AttendingClinicians.(k1).Code' action='set' />
-<assign value='source.CareTeamMembers.(k1).LastName' property='target.Encounters.(1).AttendingClinicians.(k1).Name.FamilyName' action='set' />
-<assign value='source.CareTeamMembers.(k1).FirstName' property='target.Encounters.(1).AttendingClinicians.(k1).Name.GivenName' action='set' />
-<assign value='source.CareTeamMembers.(k1).Title' property='target.Encounters.(1).AttendingClinicians.(k1).Name.ProfessionalSuffix' action='set' />
-<assign value='source.CareTeamMembers.(k1).Primary' property='target.Encounters.(1).AttendingClinicians.(k1).IdentifierTypeCode' action='set' />
-</foreach>
-<foreach property='source.Patient.PhysicianList()' key='k1' >
-<if condition='k1 &gt; 1' >
-<true>
-<assign value='"NPI"' property='target.Encounters.(1).ConsultingClinicians.(k1-1).SDACodingStandard' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).NPI' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Code' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).lastName' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Name.FamilyName' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).firstName' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Name.GivenName' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).title' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Name.ProfessionalSuffix' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).address' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Address.Street' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).city' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Address.City.Code' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).state' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Address.State.Code' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).zip' property='target.Encounters.(1).ConsultingClinicians.(k1-1).Address.Zip.Code' action='set' />
-<assign value='source.Patient.PhysicianList.(k1).title' property='target.Encounters.(1).ConsultingClinicians.(k1-1).CareProviderType.Code' action='set' />
-</true>
-</if>
-</foreach>
-<assign value='""' property='target.Encounters.(1).ReferringClinician.SDACodingStandard' action='set' />
-<assign value='source.Patient.ReferringPhysician.NPI' property='target.Encounters.(1).ReferringClinician.Code' action='set' />
-<assign value='source.Patient.ReferringPhysician.lastName' property='target.Encounters.(1).ReferringClinician.Name.FamilyName' action='set' />
-<assign value='source.Patient.ReferringPhysician.firstName' property='target.Encounters.(1).ReferringClinician.Name.GivenName' action='set' />
-<assign value='source.Patient.ReferringPhysician.title' property='target.Encounters.(1).ReferringClinician.Name.ProfessionalSuffix' action='set' />
-<assign value='source.Patient.ReferringPhysician.poAddress' property='target.Encounters.(1).ReferringClinician.Address.Street' action='set' />
-<assign value='source.Patient.ReferringPhysician.poCity' property='target.Encounters.(1).ReferringClinician.Address.City.Code' action='set' />
-<assign value='source.Patient.ReferringPhysician.poState' property='target.Encounters.(1).ReferringClinician.Address.State.Code' action='set' />
-<assign value='source.Patient.ReferringPhysician.poZip' property='target.Encounters.(1).ReferringClinician.Address.Zip.Code' action='set' />
-<assign value='source.Patient.Episode.referralSource' property='target.Encounters.(1).AdmissionSource.Code' action='set' />
-<assign value='source.Patient.Episode.asDesc' property='target.Encounters.(1).AdmitReason.Code' action='set' />
-<foreach property='source.Patient.PayorList()' key='k1' >
-<assign value='$P(source.Patient.PayorList.(k1).desc, " ", 1)' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Code' action='set' />
-<assign value='source.Patient.PayorList.(k1).desc' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Description' action='set' />
-<assign value='source.Patient.PayorList.(k1).address' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Address.Street' action='set' />
-<assign value='source.Patient.PayorList.(k1).city' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Address.City.Code' action='set' />
-<assign value='source.Patient.PayorList.(k1).state' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Address.State.Code' action='set' />
-<assign value='source.Patient.PayorList.(k1).zip' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.Address.Zip.Code' action='set' />
-<assign value='$P(source.Patient.PayorList.(k1).agencyContact, " ", 2)' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.ContactPerson.FamilyName' action='set' />
-<assign value='$P(source.Patient.PayorList.(k1).agencyContact, " ", 1)' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.ContactPerson.GivenName' action='set' />
-<assign value='source.Patient.PayorList.(k1).phone' property='target.Encounters.(1).HealthFunds.(k1).HealthFund.ContactInfo.WorkPhoneNumber' action='set' />
-<assign value='$P(source.Patient.PayorList.(k1).desc, " ", 1)' property='target.Encounters.(1).HealthFunds.(k1).HealthFundPlan.Code' action='set' />
-<assign value='source.Patient.PayorList.(k1).desc' property='target.Encounters.(1).HealthFunds.(k1).HealthFundPlan.Description' action='set' />
-<assign value='$ZSTRIP(source.Patient.PayorList.(k1).ptDesc, "*W")' property='target.Encounters.(1).HealthFunds.(k1).GroupName' action='set' />
-<assign value='source.Patient.PayorList.(k1).ptId' property='target.Encounters.(1).HealthFunds.(k1).GroupNumber' action='set' />
-<assign value='source.Patient.PayorList.(k1).cefsPolicyNumberBySL' property='target.Encounters.(1).HealthFunds.(k1).MembershipNumber' action='set' />
-<assign value='source.Patient.PayorList.(k1).cefsipiLastName' property='target.Encounters.(1).HealthFunds.(k1).InsuredName.FamilyName' action='set' />
-<assign value='source.Patient.PayorList.(k1).cefsipiFirstName' property='target.Encounters.(1).HealthFunds.(k1).InsuredName.GivenName' action='set' />
-<assign value='source.Patient.PayorList.(k1).cefsipiPhone' property='target.Encounters.(1).HealthFunds.(k1).InsuredContact.HomePhoneNumber' action='set' />
-<assign value='source.Patient.PayorList.(k1).cefsipiAddress' property='target.Encounters.(1).HealthFunds.(k1).InsuredAddress.Street' action='set' />
-<assign value='source.Patient.PayorList.(k1).cefsipiCity' property='target.Encounters.(1).HealthFunds.(k1).InsuredAddress.City.Code' action='set' />
-<assign value='source.Patient.PayorList.(k1).cefsipiState' property='target.Encounters.(1).HealthFunds.(k1).InsuredAddress.State.Code' action='set' />
-<assign value='source.Patient.PayorList.(k1).cefsipiZip' property='target.Encounters.(1).HealthFunds.(k1).InsuredAddress.Zip.Code' action='set' />
-<assign value='source.Patient.PayorList.(k1).relRelationDesc' property='target.Encounters.(1).HealthFunds.(k1).InsuredRelationship.Code' action='set' />
-<assign value='source.Patient.PayorList.(k1).relRelationDesc' property='target.Encounters.(1).HealthFunds.(k1).InsuredRelationship.Description' action='set' />
-</foreach>
-<assign value='source.Patient.Episode.id' property='target.Patient.EncounterNumber' action='set' />
-<assign value='$P(source.Patient.Episode.socDate, ".", 1)' property='target.Encounters.(1).FromTime' action='set' />
-<assign value='"HCHB"' property='target.Encounters.(1).HealthCareFacility.Code' action='set' />
-<assign value='"HCHB"' property='target.SendingFacility' action='set' />
-<assign value='$P(source.Patient.Episode.endOfEpisode, ".", 1)' property='target.Encounters.(1).ToTime' action='set' />
-<assign value='$P(source.Patient.Episode.endOfEpisode, ".", 1)' property='target.Encounters.(1).EndTime' action='set' />
-<assign value='source.Patient.Episode.id' property='target.Encounters.(1).ExternalId' action='set' />
-<assign value='source.Patient.Episode.status' property='target.Encounters.(1).VisitStatus' action='set' />
-<assign value='source.PlanOfCare.Discharge.pctGoalsMet' property='target.Encounters.(1).ActionScope' action='set' />
-<if condition='source.IsEnhancedMeds = "Y"' >
-<true>
-<foreach property='source.EnhancedMedications.patientMeds()' key='k1' >
-<assign value='source.EnhancedMedications.patientMeds.(k1).medepiid' property='target.Medications.(k1).EncounterNumber' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).updateDate' property='target.Medications.(k1).UpdatedOn' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).startDateTime' property='target.Medications.(k1).FromTime' action='set' />
-<assign value='"IP"' property='target.Medications.(k1).Status' action='set' />
-<if condition='source.EnhancedMedications.patientMeds.(k1).dcDateTime = ""' >
-<false>
-<assign value='source.EnhancedMedications.patientMeds.(k1).dcDateTime' property='target.Medications.(k1).ToTime' action='set' />
-<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
-</false>
-</if>
-<if condition='source.EnhancedMedications.patientMeds.(k1).voidedDateTime = ""' >
-<false>
-<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).voidedDateTime' property='target.Medications.(k1).ToTime' action='set' />
-</false>
-</if>
-<if condition='source.EnhancedMedications.patientMeds.(k1).endDateTime = ""' >
-<false>
-<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).endDateTime' property='target.Medications.(k1).ToTime' action='set' />
-</false>
-</if>
-<assign value='source.EnhancedMedications.patientMeds.(k1).dose' property='target.Medications.(k1).DoseQuantity' action='set' />
-<assign value='" "_source.EnhancedMedications.patientMeds.(k1).doseUom' property='target.Medications.(k1).DoseUoM.Code' action='set' />
-<if condition='source.EnhancedMedications.patientMeds.(k1).instructions = ""' >
-<true>
-<assign value='source.EnhancedMedications.patientMeds.(k1).dose_" "_source.EnhancedMedications.patientMeds.(k1).doseUom_" "_source.EnhancedMedications.patientMeds.(k1).frequency_" (route: "_source.EnhancedMedications.patientMeds.(k1).attributes.route_") "_source.EnhancedMedications.patientMeds.(k1).instructions' property='target.Medications.(k1).TextInstruction' action='set' />
+<call name='Get Visit Info' target='@process."Get Visit Details Op"' async='0' xpos='1685' ypos='850' >
+<request type='HchbLib.Customer.Request.GetVisitInfo' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.cevId" value="request.EntityValueId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetVisitInfo' >
+<assign property="context.epiid" value="callresponse.VisitInfo.Visit.epiId" action="set" />
+</response>
+</call>
 </true>
 <false>
-<assign value='source.EnhancedMedications.patientMeds.(k1).dose_" "_source.EnhancedMedications.patientMeds.(k1).doseUom_" "_source.EnhancedMedications.patientMeds.(k1).frequency_" (route: "_source.EnhancedMedications.patientMeds.(k1).attributes.route_")"' property='target.Medications.(k1).TextInstruction' action='set' />
+<throw name='Not a TIF VIsit' fault='"Not a TIF Visit"' xpos='1415' ypos='850' />
 </false>
 </if>
-<assign value='source.EnhancedMedications.patientMeds.(k1).attributes.dosageForm' property='target.Medications.(k1).DosageForm.Description' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).attributes.route' property='target.Medications.(k1).Route.Description' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).reason' property='target.Medications.(k1).Indication' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).frequency' property='target.Medications.(k1).Frequency.Description' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).medicationAdministered' property='target.Medications.(k1).Administrations.(1).AdministrationStatus.Description' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).enteredByWkrName' property='target.Medications.(k1).EnteredBy.Description' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).insertDate' property='target.Medications.(k1).EnteredOn' action='set' />
-<assign value='"NPI"' property='target.Medications.(k1).OrderedBy.SDACodingStandard' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).phyLastName' property='target.Medications.(k1).OrderedBy.Name.FamilyName' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).phyFirstName' property='target.Medications.(k1).OrderedBy.Name.GivenName' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).npi' property='target.Medications.(k1).OrderedBy.Code' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).attributes.name' property='target.Medications.(k1).OrderItem.OriginalText' action='set' />
-<if condition='($LENGTH(source.EnhancedMedications.patientMeds.(k1).rxnormSCD) &gt; 0)' >
+</case>
+<case condition='context.Transaction.VendorTransaction.EntityTable="CLIENT_EPISODE_VISIT_NOTES"' name='CLIENT_EPISODE_VISIT_NOTES' >
+<call name='Get Visit Details to check its completion' target='@process."Get Visit Details Op"' async='0' xpos='1955' ypos='600' >
+<request type='HchbLib.Customer.Request.IsVisitCompleted' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.cevId" value="request.EntityValueId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.IsVisitCompletedResult' >
+<assign property="context.flagVisitCompleted" value="callresponse.isVisitCompleted" action="set" />
+</response>
+</call>
+<if name='CheckIfVisitCompleted' condition='context.flagVisitCompleted=1' xpos='1955' ypos='700' xend='1955' yend='950' >
 <true>
-<assign value='"RXNorm"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSCDMedDesc' property='target.Medications.(k1).OrderItem.Description' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSCD' property='target.Medications.(k1).OrderItem.Code' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSCD' property='target.Medications.(k1).PrescriptionNumber' action='set' />
+<call name='Get Visit Info by cevn_cevid' target='@process."Get Visit Details Op"' async='0' xpos='2225' ypos='850' >
+<request type='HchbLib.Customer.Request.GetVisitInfo' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.cevId" value="request.EntityValueId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetVisitInfo' >
+<assign property="context.epiid" value="callresponse.VisitInfo.Visit.epiId" action="set" />
+</response>
+</call>
 </true>
 <false>
-<if condition='($LENGTH(source.EnhancedMedications.patientMeds.(k1).rxnormSBD) &gt; 0)' >
+<throw name='Visit not completed' fault='"Visit is not completed"' xpos='1955' ypos='850' />
+</false>
+</if>
+</case>
+<case condition='context.Transaction.VendorTransaction.EntityTable="CLIENT_EPISODE_CAREPLAN"' name='CLIENT_EPISODE_CAREPLAN' >
+<call name='Get Care Plan Details' target='@process."Get Care Plan Details"' async='0' xpos='2495' ypos='600' >
+<request type='HchbLib.Customer.Request.ValidateCarePlanApproval' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.cecId" value="request.EntityValueId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.ValidateCarePlanApprovalResult' >
+<assign property="context.isCarePlanApproved" value="callresponse.isApproved" action="set" />
+</response>
+</call>
+<if name='Only proceed if care plan is approved' condition='context.isCarePlanApproved=1' xpos='2495' ypos='700' xend='2495' yend='1050' >
 <true>
-<assign value='"RXNorm"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSBD' property='target.Medications.(k1).OrderItem.Code' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSBDMedDesc' property='target.Medications.(k1).OrderItem.Description' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).rxnormSBD' property='target.Medications.(k1).PrescriptionNumber' action='set' />
+<call name='Get Episode Id By Care Plan' target='@process."Get Care Plan Details"' async='0' xpos='2495' ypos='850' >
+<request type='HchbLib.Customer.Request.GetEpisodeIdByCarePlanId' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.cecId" value="request.EntityValueId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetEpiIdFromCarePlan' >
+<assign property="context.epiid" value="callresponse.EpiId" action="set" />
+</response>
+</call>
 </true>
 <false>
-<if condition='($LENGTH(source.EnhancedMedications.patientMeds.(k1).ndc) &gt; 0)' >
+<assign name="Set Care Plan approval exception flag to 1" property="context.flagCarePlanApprovalException" value="1" action="set" xpos='2765' ypos='850' />
+<throw name='throw care plan approval exception' fault='"Care Plan is not approved or inactived"' xpos='2765' ypos='950' />
+</false>
+</if>
+</case>
+<default/>
+</switch>
+<if name='Nullguard' condition='process."Get Vendor Details" &apos;=""' xpos='200' ypos='1250' xend='200' yend='1500' >
+<annotation><![CDATA[Get Vendor Details]]></annotation>
 <true>
-<assign value='"NDC"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).ndc' property='target.Medications.(k1).OrderItem.Code' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).ndc' property='target.Medications.(k1).PrescriptionNumber' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).ndcMedDesc' property='target.Medications.(k1).OrderItem.Description' action='set' />
+<call name='Get Vendor Details' target='@process."Get Vendor Details"' async='0' xpos='335' ypos='1400' >
+<request type='HchbLib.Customer.Request.VendorDetails' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.VendorID" value="request.VendorId" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.VendorDetails' >
+<assign property="context.VendorDetails" value="callresponse" action="set" />
+</response>
+</call>
+</true>
+</if>
+<if name='Nullguard' condition='process."Get Episode Vendor Metadata"&apos;=""' xpos='200' ypos='1600' xend='200' yend='1850' >
+<annotation><![CDATA[Episode Vendor Meta Data]]></annotation>
+<true>
+<call name='Episode Vendor Meta Data' target='@process."Get Episode Vendor Metadata"' async='0' xpos='470' ypos='1750' >
+<request type='HchbLib.Customer.Request.GetEpisodeVendorMetaData' >
+<assign property="callrequest.vendorId" value="request.VendorId" action="set" />
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.episodeId" value="context.epiid" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetEpisodeVendorMetaData' >
+<assign property="context.Transaction.EpisodeVendorMetaData" value="callresponse.EpisodeVendorMetaData" action="set" />
+<assign property="context.EID" value="callresponse.EpisodeVendorMetaData.VendorReferralLink.externalId" action="set" />
+</response>
+</call>
 </true>
 <false>
-<assign value='"HCHB Medication"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).medId' property='target.Medications.(k1).PrescriptionNumber' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).medId' property='target.Medications.(k1).OrderItem.Code' action='set' />
-<assign value='source.EnhancedMedications.patientMeds.(k1).attributes.name' property='target.Medications.(k1).OrderItem.Description' action='set' />
+<throw name='Fault' fault='"Missing Required Setting : Get Episode Vendor Metadata"' xpos='200' ypos='1750' />
 </false>
 </if>
-</false>
-</if>
-</false>
-</if>
-<if condition='(source.EnhancedMedications.patientMeds.(k1).attributes.classification &apos;= "") &amp;&amp; (source.EnhancedMedications.patientMeds.(k1).altRoute &apos;= "")' >
+<if name='Nullguard' condition='process."Get Patient Info"&apos;=""' xpos='200' ypos='1950' xend='200' yend='2200' >
+<annotation><![CDATA[Get Patient Info]]></annotation>
 <true>
-<assign value='"Alternate Route: "_source.EnhancedMedications.patientMeds.(k1).altRoute_". Med Classification: "_source.EnhancedMedications.patientMeds.(k1).attributes.classification' property='target.Medications.(k1).Comments' action='set' />
+<call name='Get Patient Info' target='@process."Get Patient Info"' async='0' xpos='470' ypos='2100' >
+<request type='HchbLib.Customer.Request.GetPatientInfo' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.vendorId" value="request.VendorId" action="set" />
+<assign property="callrequest.epiId" value="context.epiid" action="set" />
+</request>
+<response type='HchbLib.Customer.Response.GetPatientInfo' >
+<assign property="context.PatientData.Patient" value="callresponse.Patient" action="set" />
+<assign property="context.PAID" value="callresponse.Patient.Episode.paid" action="set" />
+</response>
+</call>
 </true>
 <false>
-<if condition='(source.EnhancedMedications.patientMeds.(k1).altRoute &apos;= "") &amp;&amp; (source.EnhancedMedications.patientMeds.(k1).attributes.classification = "")' >
+<throw name='Fault' fault='"Missing Required Setting : Get Patient Info"' xpos='200' ypos='2100' />
+</false>
+</if>
+<if name='Check if the request if for Patient Instruction report' condition='context.Transaction.VendorTransaction.VendorInterfaceTransactionType="PINSTRUCT"' xpos='200' ypos='2300' xend='200' yend='3150' >
 <true>
-<assign value='"Alternate Route: "_source.EnhancedMedications.patientMeds.(k1).altRoute' property='target.Medications.(k1).Comments' action='set' />
+<if name='Check if the patient epsiode is home health' condition='context.PatientData.Patient.Episode.slId&apos;=1' xpos='335' ypos='2450' xend='335' yend='3050' >
+<true>
+<code name='Code to check Vendor Details setting' xpos='605' ypos='2600' >
+<![CDATA[ SET context.flagProcessPatientInstructReport=0
+ $$$TRACE("1")
+ IF $ISOBJECT(context.VendorDetails.Details.GetAt("OverwritePatientInstructionReportCondition"))
+  {  
+   $$$TRACE("2")
+  IF context.VendorDetails.Details.GetAt("OverwritePatientInstructionReportCondition").Value="Y" 
+  {
+   $$$TRACE("3")
+   SET context.flagProcessPatientInstructReport=1
+  }  
+  }
+   $$$TRACE("4")]]>
+</code>
+<if name='Throw exception' condition='context.flagProcessPatientInstructReport=0' xpos='605' ypos='2700' xend='605' yend='2950' >
+<true>
+<throw name='Throw exception for Patient Instruction Report' fault='"PINSTRUCT EXCEPTION"' xpos='740' ypos='2850' />
+</true>
+</if>
 </true>
 <false>
-<if condition='(source.EnhancedMedications.patientMeds.(k1).altRoute = "") &amp;&amp; (source.EnhancedMedications.patientMeds.(k1).attributes.classification &apos;= "")' >
-<true>
-<assign value='"Med Classification: "_source.EnhancedMedications.patientMeds.(k1).attributes.classification' property='target.Medications.(k1).Comments' action='set' />
+<assign name="Set process report to true" property="context.flagProcessPatientInstructReport" value="1" action="set" xpos='335' ypos='2600' />
+</false>
+</if>
 </true>
 </if>
+<if name='Nullguard' condition='process."Get Report List and Patient"&apos;=""' xpos='200' ypos='3250' xend='200' yend='3500' >
+<annotation><![CDATA[Get Report List and Patient]]></annotation>
+<true>
+<call name='Get Report List &amp; Patient' target='@process."Get Report List and Patient"' async='0' xpos='470' ypos='3400' >
+<request type='HchbLib.Assembly.Request.ProcessVendorTransactionReport' >
+<assign property="callrequest.VendorTransaction" value="request" action="set" />
+</request>
+<response type='HchbLib.Assembly.Response.ProcessVendorTransactionReport' >
+<assign property="context.Transaction.Patient" value="callresponse.Patient" action="set" />
+<assign property="context.ReportList" value="callresponse.ReportList" action="set" />
+<assign property="context.PAID" value="callresponse.Patient.Episode.paid" action="set" />
+</response>
+</call>
+</true>
+<false>
+<throw name='Fault' fault='"Missing Required Setting : Get Report List and Patient"' xpos='200' ypos='3400' />
 </false>
 </if>
+<if name='Multi Nullguard' condition='process."PDF Proxy Op"&apos;="" || process."File Write Op"&apos;="" || process."Destination Outbound"&apos;=""' xpos='200' ypos='3600' xend='200' yend='3850' >
+<annotation><![CDATA[PDF Proxy Op, File Write Op, Destination Outbound]]></annotation>
+<true>
+<foreach name='Report' property='context.ReportList' key='context.reportCounter' xpos='470' ypos='3750' xend='200' yend='3500' >
+<assign property="context.Transaction.ReportMetaData" value="context.ReportList.GetAt(context.reportCounter).ReportMetaData" action="set" xpos='200' ypos='250' />
+<if name='Report Generated?' condition='context.ReportList.GetAt(context.reportCounter).GetReportAsGlobalBinaryStream.StreamContainer.Stream.IsNull() = 0' xpos='200' ypos='350' xend='200' yend='3400' >
+<true>
+<call name='Encode Report as Base64' target='@process."PDF Proxy Op"' async='0' xpos='335' ypos='500' >
+<request type='HchbLib.Assembly.Request.EncodeStreamAsBase64' >
+<assign property="callrequest.StreamContainer" value="context.ReportList.GetAt(context.reportCounter).GetReportAsGlobalBinaryStream.StreamContainer" action="set" />
+</request>
+<response type='HchbLib.Assembly.Response.EncodeStreamAsBase64' >
+<assign property="context.Transaction.StreamContainer" value="callresponse.StreamContainer" action="set" />
+</response>
+</call>
+<trace name='Stream.Size' value='"Stream.Size: "_context.Transaction.StreamContainer.Stream.Size' xpos='335' ypos='600' />
+<trace name='ReportName' value='"ReportName: "_context.ReportList.GetAt(context.reportCounter).ReportMetaData.name' xpos='335' ypos='700' />
+<if name='Nullguard' condition='process."MDM DTL Transform"&apos;=""' xpos='335' ypos='800' xend='335' yend='1050' >
+<annotation><![CDATA[MDM DTL Transform]]></annotation>
+<true>
+<transform name='Transaction to MDM DTL' class='@process."MDM DTL Transform"' source='context.Transaction' target='context.MdmMessage' xpos='605' ypos='950' />
+</true>
+<false>
+<throw name='Fault' fault='"Missing Required Setting : MDM DTL Transform"' xpos='335' ypos='950' />
 </false>
+</if>
+<if name='Archive Op Defined?' condition='process."File Write Op" &apos;=""' xpos='335' ypos='1150' xend='335' yend='1950' >
+<true>
+<if name='Archive Dir Path Defined?' condition='process."Archive Dir Path" &apos;= ""' xpos='470' ypos='1300' xend='470' yend='1850' >
+<true>
+<assign name="Set Folder Name" property="context.FolderName" value="request.DataSourceName" action="set" xpos='740' ypos='1450' />
+<assign name="Folder Directory" property="context.ArchiveDirectory" value="process.&quot;Archive Dir Path&quot;" action="set" xpos='740' ypos='1550' />
+<call name='Create Folder' target='@process."File Write Op"' async='0' xpos='740' ypos='1650' >
+<request type='HchbLib.Assembly.Request.CreateFolder' >
+<assign property="callrequest.Folder" value="context.FolderName" action="set" />
+<assign property="callrequest.Path" value="context.ArchiveDirectory" action="set" />
+</request>
+<response type='Ens.Response' />
+</call>
+<call name='Write to Out' target='@process."File Write Op"' async='0' xpos='740' ypos='1750' >
+<request type='HchbLib.Assembly.Request.WriteHL7File' >
+<assign property="callrequest.HL7Message" value="context.MdmMessage" action="set" />
+<assign property="callrequest.FilePath" value="context.ArchiveDirectory_&quot;\&quot;_context.FolderName" action="set" />
+</request>
+<response type='Ens.Response' />
+</call>
+</true>
+<false>
+<call name='Archive without sub fodler' target='@process."File Write Op"' async='0' xpos='470' ypos='1450' >
+<request type='HchbLib.Assembly.Request.WriteHL7File' >
+<assign property="callrequest.HL7Message" value="context.MdmMessage" action="set" />
+</request>
+<response type='Ens.Response' />
+</call>
+</false>
+</if>
+</true>
+</if>
+<if name='Send via TCP ?' condition='process."Outbound TCP" &apos;= ""' xpos='335' ypos='2050' xend='335' yend='2750' >
+<true>
+<call name='Send TCP/IP Message' target='@process."Outbound TCP"' async='0' xpos='470' ypos='2200' >
+<request type='EnsLib.HL7.Message' >
+<assign property="callrequest" value="context.MdmMessage" action="set" />
+</request>
+<response type='EnsLib.HL7.Message' >
+<assign property="context.ACKMessage" value="callresponse" action="set" />
+</response>
+</call>
+<transform name='Transform to Ack' class='@process."DTL Acknowledgment"' source='context.ACKMessage' target='context.Acknowledgement' xpos='470' ypos='2300' />
+<if name='Acknowledgement' condition='(context.Acknowledgement.Code="AA") || (context.Acknowledgement.Code="CA")' xpos='470' ypos='2400' xend='470' yend='2650' >
+<false>
+<throw name='Throw Error' fault='"Message was not received by third party due to response "_context.Acknowledgement.Code_" "_context.Acknowledgement.Text' xpos='605' ypos='2550' />
+</false>
+</if>
+</true>
+</if>
+<if name='Send File Stream?' condition='process."Send File Stream" &apos;= ""' xpos='335' ypos='2850' xend='335' yend='3100' >
+<true>
+<call name='Send File' target='@process."Send File Stream"' async='0' xpos='470' ypos='3000' >
+<request type='Ens.StreamContainer' >
+<assign property="callrequest" value="context.Transaction.StreamContainer" action="set" />
+</request>
+<response type='%Persistent' />
+</call>
+</true>
+</if>
+<call name='Clear Stream' target='@process."PDF Proxy Op"' async='0' xpos='335' ypos='3200' >
+<request type='HchbLib.Assembly.Request.ClearStream' >
+<assign property="callrequest.StreamContainer" value="context.Transaction.StreamContainer" action="set" />
+</request>
+<response type='Ens.StringResponse' />
+</call>
+<trace name='Stream.Size' value='"Stream.Size: "_context.Transaction.StreamContainer.Stream.Size' xpos='335' ypos='3300' />
+</true>
 </if>
 </foreach>
 </true>
-</if>
-<if condition='source.IsEnhancedMeds = "N"' >
-<true>
-<foreach property='source.Medications()' key='k1' >
-<assign value='source.Patient.Episode.id' property='target.Medications.(k1).EncounterNumber' action='set' />
-<if condition='source.Medications.(k1).NDC = ""' >
-<true>
-<assign value='"HCHB Medication"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
-<assign value='source.Medications.(k1).id' property='target.Medications.(k1).OrderItem.Code' action='set' />
-<assign value='source.Medications.(k1).id' property='target.Medications.(k1).PrescriptionNumber' action='set' />
-</true>
 <false>
-<assign value='"NDC"' property='target.Medications.(k1).OrderItem.SDACodingStandard' action='set' />
-<assign value='source.Medications.(k1).NDC' property='target.Medications.(k1).OrderItem.Code' action='set' />
-<assign value='source.Medications.(k1).NDC' property='target.Medications.(k1).PrescriptionNumber' action='set' />
+<throw name='Fault' fault='"Missing Required Setting(s) : One or more of [PDF Proxy Op, File Write Op, Destination Outbound]"' xpos='200' ypos='3750' />
 </false>
 </if>
-<assign value='source.Medications.(k1).meddescription' property='target.Medications.(k1).OrderItem.Description' action='set' />
-<if condition='source.Medications.(k1).Dose="N/A"' >
-<false>
-<assign value='source.Medications.(k1).Dose' property='target.Medications.(k1).DoseQuantity' action='set' />
-</false>
-</if>
-<assign value='source.Medications.(k1).reason' property='target.Medications.(k1).Condition' action='set' />
-<if condition='source.Medications.(k1).amount=""' >
-<true>
-<assign value='source.Medications.(k1).Instructions' property='target.Medications.(k1).TextInstruction' action='set' />
-</true>
-<false>
-<assign value='source.Medications.(k1).amount' property='target.Medications.(k1).RateAmount' action='set' />
-<if condition='source.Medications.(k1).Instructions=""' >
-<true>
-<assign value='source.Medications.(k1).amount' property='target.Medications.(k1).TextInstruction' action='set' />
-</true>
-<false>
-<assign value='source.Medications.(k1).amount_": "_source.Medications.(k1).Instructions' property='target.Medications.(k1).TextInstruction' action='set' />
-</false>
-</if>
-</false>
-</if>
-<assign value='source.Medications.(k1).EnteredBy' property='target.Medications.(k1).EnteredBy.Description' action='set' />
-<assign value='$P(source.Medications.(k1).DateEntered, ".", 1)' property='target.Medications.(k1).EnteredOn' action='set' />
-<assign value='$P(source.Medications.(k1).StartDate, ".", 1)' property='target.Medications.(k1).FromTime' action='set' />
-<assign value='$P(source.Medications.(k1).EndDate, ".", 1)' property='target.Medications.(k1).ToTime' action='set' />
-<if condition='source.Medications.(k1).EndDate = ""' >
-<false>
-<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
-</false>
-</if>
-<if condition='source.Medications.(k1).DCDate = ""' >
-<false>
-<assign value='$P(source.Medications.(k1).DCDate, ".", 1)' property='target.Medications.(k1).ToTime' action='set' />
-<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
-</false>
-</if>
-<if condition='source.Medications.(k1).VoidedDate = ""' >
-<false>
-<assign value='$P(source.Medications.(k1).VoidedDate, ".", 1)' property='target.Medications.(k1).ToTime' action='set' />
-<assign value='"I"' property='target.Medications.(k1).Status' action='set' />
-</false>
-</if>
-</foreach>
-</true>
-</if>
-<foreach property='source.Patient.ProcedureList()' key='k1' >
-<assign value='source.Patient.ProcedureList.(k1).icdCode' property='target.Procedures.(k1).Procedure.Code' action='set' />
-<assign value='source.Patient.ProcedureList.(k1).Desc' property='target.Procedures.(k1).Procedure.OriginalText' action='set' />
-<assign value='source.Patient.ProcedureList.(k1).OEDate' property='target.Procedures.(k1).ProcedureTime' action='set' />
-<assign value='"I"_source.Patient.ProcedureList.(k1).icdType' property='target.Procedures.(k1).Procedure.SDACodingStandard' action='set' />
-</foreach>
-<foreach property='source.Patient.AllergyList()' key='k1' >
-<assign value='"HCHB Allergen"' property='target.Allergies.(k1).Allergy.SDACodingStandard' action='set' />
-<assign value='source.Patient.AllergyList.(k1).allergyId' property='target.Allergies.(k1).Allergy.Code' action='set' />
-<assign value='source.Patient.AllergyList.(k1).desc' property='target.Allergies.(k1).Allergy.Description' action='set' />
-<assign value='"420134006"' property='target.Allergies.(k1).AllergyCategory.Code' action='set' />
-<assign value='"Propensity to adverse reactions"' property='target.Allergies.(k1).AllergyCategory.Description' action='set' />
-<assign value='"SCT"' property='target.Allergies.(k1).AllergyCategory.SDACodingStandard' action='set' />
-<assign value='source.Patient.AllergyList.(k1).enteredBy' property='target.Allergies.(k1).EnteredBy.Code' action='set' />
-<assign value='source.Patient.AllergyList.(k1).enteredBy' property='target.Allergies.(k1).EnteredBy.Description' action='set' />
-<assign value='$P(source.Patient.AllergyList.(k1).dateEntered, ".", 1)' property='target.Allergies.(k1).DiscoveryTime' action='set' />
-<assign value='$P(source.Patient.AllergyList.(k1).dateEntered, ".", 1)' property='target.Allergies.(k1).EnteredOn' action='set' />
-<assign value='$P(source.Patient.AllergyList.(k1).dateEntered, ".", 1)' property='target.Allergies.(k1).FromTime' action='set' />
-<assign value='source.Patient.Episode.id_"."_source.Patient.AllergyList.(k1).allergyId' property='target.Allergies.(k1).ExternalId' action='set' />
-<assign value='source.Patient.Episode.id' property='target.Allergies.(k1).EncounterNumber' action='set' />
-<if condition='source.Patient.AllergyList.(k1).dateVoided = ""' >
-<true>
-<assign value='"A"' property='target.Allergies.(k1).Status' action='set' />
-</true>
-<false>
-<assign value='$P(source.Patient.AllergyList.(k1).dateVoided, ".", 1)' property='target.Allergies.(k1).InactiveTime' action='set' />
-<assign value='"I"' property='target.Allergies.(k1).Status' action='set' />
-</false>
-</if>
-</foreach>
-<foreach property='source.Patient.VitalSignList()' key='k2' >
-<assign value='source.Patient.Episode.id' property='target.Observations.(k2).EncounterNumber' action='set' />
-<assign value='source.Patient.VitalSignList.(k2).timeOfReading' property='target.Observations.(k2).ObservationTime' action='set' />
-<assign value='source.Patient.VitalSignList.(k2).hl7identifier' property='target.Observations.(k2).ObservationCode.Code' action='set' />
-<assign value='source.Patient.VitalSignList.(k2).description' property='target.Observations.(k2).ObservationCode.Description' action='set' />
-<if condition='source.Patient.VitalSignList.(k2).hl7identifier = "8310-5"' >
-<true>
-<assign value='"[degF]"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
-</true>
-</if>
-<if condition='source.Patient.VitalSignList.(k2).description = "Weight (lbs)"' >
-<true>
-<assign value='"[lb_av]"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
-</true>
-</if>
-<if condition='source.Patient.VitalSignList.(k2).description = "Respirations"' >
-<true>
-<assign value='"9279-1"' property='target.Observations.(k2).ObservationCode.Code' action='set' />
-<assign value='"/min"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
-</true>
-</if>
-<if condition='source.Patient.VitalSignList.(k2).description = "Height"' >
-<true>
-<assign value='"8302-2"' property='target.Observations.(k2).ObservationCode.Code' action='set' />
-<assign value='"[in_us]"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
-</true>
-</if>
-<if condition='source.Patient.VitalSignList.(k2).description = "BMI (%)"' >
-<true>
-<assign value='"39156-5"' property='target.Observations.(k2).ObservationCode.Code' action='set' />
-<assign value='"kg/m2"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
-</true>
-</if>
-<if condition='source.Patient.VitalSignList.(k2).description = "Head Circumference (cms)"' >
-<true>
-<assign value='"Head Occipital-frontal circumference"' property='target.Observations.(k2).ObservationCode.Description' action='set' />
-<assign value='"9843-4"' property='target.Observations.(k2).ObservationCode.Code' action='set' />
-<assign value='"cm"' property='target.Observations.(k2).ObservationCode.ObservationValueUnits.Code' action='set' />
-</true>
-</if>
-<assign value='source.Patient.VitalSignList.(k2).reading' property='target.Observations.(k2).ObservationValue' action='set' />
-</foreach>
-<foreach property='source.Patient.DiagnosisList()' key='k3' >
-<assign value='"I"_source.Patient.DiagnosisList.(k3).icdtype' property='target.Problems.(k3).Problem.SDACodingStandard' action='set' />
-<assign value='source.Patient.DiagnosisList.(k3).icdcode' property='target.Problems.(k3).Problem.Code' action='set' />
-<assign value='source.Patient.DiagnosisList.(k3).desc' property='target.Problems.(k3).Problem.Description' action='set' />
-<assign value='"SCT"' property='target.Problems.(k3).Status.SDACodingStandard' action='set' />
-<assign value='"55561003"' property='target.Problems.(k3).Status.Code' action='set' />
-<assign value='"Active"' property='target.Problems.(k3).Status.Description' action='set' />
-<assign value='$P(source.Patient.DiagnosisList.(k3).OEDate, ".", 1)' property='target.Problems.(k3).FromTime' action='set' />
-<assign value='source.Patient.Episode.id_"."_source.Patient.DiagnosisList.(k3).icdcode' property='target.Problems.(k3).ExternalId' action='set' />
-</foreach>
-<assign value='source.Patient.Episode.id' property='target.PhysicalExams.(1).EncounterNumber' action='set' />
-<assign value='$P(source.Patient.Episode.startOfEpisode, ".", 1)' property='target.PhysicalExams.(1).PhysExamTime' action='set' />
-<assign value='"Height"' property='target.PhysicalExams.(1).PhysExamCode' action='set' />
-<assign value='source.Patient.Episode.height' property='target.PhysicalExams.(1).PhysExamObsValue' action='set' />
-<assign value='source.Patient.Episode.id' property='target.PhysicalExams.(2).EncounterNumber' action='set' />
-<assign value='$P(source.Patient.Episode.startOfEpisode, ".", 1)' property='target.PhysicalExams.(2).PhysExamTime' action='set' />
-<assign value='"Weight"' property='target.PhysicalExams.(2).PhysExamCode' action='set' />
-<assign value='source.Patient.Episode.weight' property='target.PhysicalExams.(2).PhysExamObsValue' action='set' />
-<foreach property='source.VisitNotes()' key='k1' >
-<assign value='source.VisitNotes.(k1).VisitNarrativeText()' property='target.Encounters.(1).RecommendationsProvided.(k1).NoteText' action='set' />
-</foreach>
-<foreach property='source.Patient.Vaccinations()' key='k1' >
-<assign value='source.Patient.Vaccinations.(k1).vaccine_", "_source.Patient.Vaccinations.(k1).type' property='target.Vaccinations.(k1).OrderItem.Description' action='set' />
-<assign value='source.Patient.Vaccinations.(k1).source' property='target.Vaccinations.(k1).EnteredAt.Description' action='set' />
-<assign value='$P(source.Patient.Vaccinations.(k1).dategiven, ".", 1)' property='target.Vaccinations.(k1).FromTime' action='set' />
-</foreach>
-<assign value='source.Patient.Episode.id' property='target.ClinicalRelationships.(1).EncounterNumber' action='set' />
-<assign value='"HCHB"' property='target.ClinicalRelationships.(1).FacilityCode' action='set' />
-<assign value='"text/xml"' property='target.StreamContentType' action='set' />
-<if condition='source.Patient.Episode.status = "DISCHARGED"' >
-<true>
-<assign value='source.PlanOfCare.Discharge.date' property='target.Encounters.(1).EnteredOn' action='set' />
-<assign value='source.PlanOfCare.Discharge.status' property='target.Encounters.(1).DischargeLocation.Description' action='set' />
-<assign value='source.PlanOfCare.Discharge.condition' property='target.Encounters.(1).VisitDescription' action='set' />
-<assign value='source.PlanOfCare.Discharge.reason' property='target.Encounters.(1).ActionCode' action='set' />
-</true>
-</if>
-<assign value='0' property='pocg' action='set' />
-<foreach property='source.PatientAdmissionGoals()' key='pg' >
-<assign value='pocg + 1' property='pocg' action='set' />
-<assign value='"Patient Goal - "_source.PatientAdmissionGoals.(pg).GoalText' property='target.Goals.(pg).Description' action='set' />
-<assign value='source.PatientAdmissionGoals.(pg).EffectiveFrom' property='target.Goals.(pg).FromTime' action='set' />
-<assign value='source.PatientAdmissionGoals.(pg).EffectiveTo' property='target.Goals.(pg).ToTime' action='set' />
-<assign value='source.Patient.Episode.lastName_","_source.Patient.Episode.firstName' property='target.Goals.(pg).Authors.(1).Provider.Description' action='set' />
-</foreach>
-<foreach property='source.PlanOfCare.Goals()' key='k1' >
-<assign value='pocg + k1' property='c1' action='set' />
-<assign value='"Provider Goal - "_source.PlanOfCare.Goals.(k1).goaltext' property='target.Goals.(c1).Description' action='set' />
-<assign value='target.Patient.FamilyDoctor.Name.FamilyName_","_target.Patient.FamilyDoctor.Name.GivenName' property='target.Goals.(c1).Authors.(1).Provider.Description' action='set' />
-</foreach>
-<foreach property='source.PlanOfCare.Orders()' key='k1' >
-<assign value='source.PlanOfCare.Orders.(k1).otext' property='target.OtherOrders.(k1).OrderItem.Description' action='set' />
-</foreach>
-</transform>
+<call name='Mark Transaction Completed' target='Stock Outbound MDM(Multi Event) - Customer DB Op' async='0' xpos='200' ypos='3950' >
+<request type='HchbLib.Customer.Request.UpdateVendorTransactionProcessID' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.VendorTransactionId" value="request.VendorTransactionId" action="set" />
+<assign property="callrequest.ProcessedID" value="&quot;Y&quot;" action="set" />
+<assign property="callrequest.StatusMessage" value="&quot;Message processed successfully&quot;" action="set" />
+</request>
+<response type='Ens.Response' />
+</call>
+<faulthandlers>
+<catchall name='Error' xpos='200' ypos='4050' xend='200' yend='750' >
+<trace name='Trace Incoming Exception' value='"&lt;b&gt;Error :&lt;/b&gt; "_$System.Status.GetErrorCodes(..%Context.%LastError)_"  :  "_$System.Status.GetOneStatusText(..%Context.%LastError)' xpos='200' ypos='250' />
+<switch xpos='200' ypos='150' xend='1280' yend='400' >
+<case condition='(context.flagCarePlanApprovalException=1) &amp; (context.Transaction.VendorTransaction.EntityTable="CLIENT_EPISODE_CAREPLAN")' name='Flag Care Plan' >
+<call name='Update Processed ID - Care plan' target='@process."Customer DB exception Op"' async='0' xpos='200' ypos='300' >
+<request type='HchbLib.Customer.Request.UpdateVendorTransactionProcessID' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.VendorTransactionId" value="request.VendorTransactionId" action="set" />
+<assign property="callrequest.ProcessedID" value="&quot;X&quot;" action="set" />
+<assign property="callrequest.StatusMessage" value="&quot;Care Plan is not approved or its in inactivated state&quot;" action="set" />
+</request>
+<response type='Ens.StringResponse' />
+</call>
+</case>
+<case condition='(context.Transaction.VendorTransaction.VendorInterfaceTransactionType="PINSTRUCT") &amp; (context.flagProcessPatientInstructReport=1)' name='Client episode visit all' >
+<call name='Update Processed ID - Non TIF Visit' target='@process."Customer DB exception Op"' async='0' xpos='470' ypos='300' >
+<request type='HchbLib.Customer.Request.UpdateVendorTransactionProcessID' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.VendorTransactionId" value="request.VendorTransactionId" action="set" />
+<assign property="callrequest.ProcessedID" value="&quot;X&quot;" action="set" />
+<assign property="callrequest.StatusMessage" value="&quot;Non TIF Visit&quot;" action="set" />
+</request>
+<response type='Ens.StringResponse' />
+</call>
+</case>
+<case condition='(context.flagVisitCompleted=0) &amp; (context.Transaction.VendorTransaction.EntityTable="CLIENT_EPISODE_VISIT_NOTES")' name='CLIENT_EPISODE_VISIT_NOTES' >
+<call name='Update Processed ID - Visit Not Completed' target='@process."Customer DB exception Op"' async='0' xpos='740' ypos='300' >
+<request type='HchbLib.Customer.Request.UpdateVendorTransactionProcessID' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.VendorTransactionId" value="request.VendorTransactionId" action="set" />
+<assign property="callrequest.ProcessedID" value="&quot;X&quot;" action="set" />
+<assign property="callrequest.StatusMessage" value="&quot;Visit is not completed&quot;" action="set" />
+</request>
+<response type='Ens.StringResponse' />
+</call>
+</case>
+<case condition='(context.Transaction.VendorTransaction.VendorInterfaceTransactionType="PINSTRUCT") &amp; (context.flagProcessPatientInstructReport=0)' name='PINSTRUCT Failure' >
+<call name='Update Processed ID - Patient Instruction Report' target='@process."Customer DB exception Op"' async='0' xpos='1010' ypos='300' >
+<request type='HchbLib.Customer.Request.UpdateVendorTransactionProcessID' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.VendorTransactionId" value="request.VendorTransactionId" action="set" />
+<assign property="callrequest.ProcessedID" value="&quot;X&quot;" action="set" />
+<assign property="callrequest.StatusMessage" value="&quot;Patient Instruction Report is only availabe for Home Health serviceline. Use Vendor Details setting to run for all the servicelines.&quot;" action="set" />
+</request>
+<response type='Ens.StringResponse' />
+</call>
+</case>
+<default>
+<call name='Update Processed ID' target='@process."Customer DB exception Op"' async='0' xpos='1280' ypos='300' >
+<request type='HchbLib.Customer.Request.UpdateVendorTransactionProcessID' >
+<assign property="callrequest.DataSourceName" value="request.DataSourceName" action="set" />
+<assign property="callrequest.VendorTransactionId" value="request.VendorTransactionId" action="set" />
+<assign property="callrequest.ProcessedID" value="&quot;E&quot;" action="set" />
+<assign property="callrequest.StatusMessage" value="&quot;Error :&quot;_$System.Status.GetErrorCodes(..%Context.%LastError)_&quot;  :  &quot;_$System.Status.GetOneStatusText(..%Context.%LastError)" action="set" />
+</request>
+<response type='Ens.StringResponse' />
+</call>
+</default>
+</switch>
+</catchall>
+</faulthandlers>
+</scope>
+</sequence>
+</process>

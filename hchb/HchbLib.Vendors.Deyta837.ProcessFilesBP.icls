@@ -1,0 +1,201 @@
+Class HchbLib.Vendors.Deyta837.ProcessFilesBP Extends Ens.BusinessProcess [ ClassType = persistent ]
+{
+
+/// Base path of inbound files (will be appended with customer DB + industry, e.g. "HOM" or "HPC")
+Property "Inbound Path" As %String(MAXLEN = 500) [ InitialExpression = "hchb.local\pdfs\AppData\JOBS\PRD\Interfaces\HSPRD115\OutboundDrop\HospiceData1\Deyta837\" ];
+
+/// Base working path (will be appended with customer DB + industry, e.g. "HOM" or "HPC")
+Property "Working Path" As %String(MAXLEN = 500) [ InitialExpression = "G:\Work\HospiceData1\Deyta837\" ];
+
+/// Base outbound drop path for feeding outbound SFTP (will be appended with customer DB + industry, e.g. "HOM" or "HPC")
+Property "Outbound Drop Path" As %String(MAXLEN = 500) [ InitialExpression = "G:\OutboundDrop\HospiceData1\Deyta837\" ];
+
+/// Base archive path 
+Property "Archive Path" As %String(MAXLEN = 500) [ InitialExpression = "G:\Archive\HospiceData1\Deyta837\" ];
+
+Parameter SETTINGS = "Inbound Path:Additional,Working Path:Additional,Archive Path:Additional,Outbound Drop Path:Additional";
+
+Method OnRequest(pRequest As HchbLib.Interface.DataModels.ApplicationRouteVendor, Output pResponse As Ens.Response) As %Status
+{
+	set tSC = $$$OK
+	try
+	{
+		set clientId = ..GetClientID(pRequest)
+		set db = pRequest.DatabaseName
+		do ..ProcessFiles(db, clientId)
+	}
+	catch ex
+	{
+		$$$LOGERROR(ex.DisplayString())
+		set tSC = ex.AsStatus()
+	}
+  quit tSC
+}
+
+Method ProcessFiles(db, clientId)
+{
+	set inboundPath = .."Inbound Path"_db
+	set workingPath = .."Working Path"_db
+	set outboundPath = .."Outbound Drop Path"_db
+	set filenames = ..MoveFiles(inboundPath, workingPath)
+	$$$TRACE(filenames.Count())
+	if (filenames.Count() > 0) 
+	{
+		set folders = ""
+		set companionFilename = "_CLAIMS_"_clientId_"_"_..Timestamp()_".csv"
+		set wpl = $LENGTH(workingPath) + 2
+		set i = 1
+		while (i <= filenames.Count())
+		{
+			set file = filenames.GetAt(i)
+			set folder = ..ProcessFile(file, companionFilename, workingPath)
+			do ..Move837File(file, folder)
+			set folders(folder) = 1
+			set i = i + 1
+		}
+		set folder = $O(folders(""))
+			while folder '= ""
+			{
+				do ..ProcessFolder(folder, workingPath, outboundPath, companionFilename)
+				set folder = $O(folders(folder))
+			}
+	}
+}
+
+Method ProcessFile(file, companionFilename, workingPath) As %String  
+{
+	set req = ##class(HchbLib.Vendors.Deyta837.ProcessFileRequest).%New()
+	set req.CompanionFilename = companionFilename
+	set req.WorkingPath = workingPath
+	set req.Document = ..Extract837(file)
+	set sc = ..SendRequestSync("Deyta 837 - Process File BPL", req, .resp)
+	if $$$ISERR(sc) throw ##class(%Exception.StatusException).CreateFromStatus(sc)
+	quit resp.Folder
+}
+
+Method ProcessFolder(folder, workingPath, outboundPath, companionFilename)
+{
+	set workingPath = workingPath_"\"_folder
+	set outboundPath = outboundPath_"\"_folder
+	set companionFilename = folder_companionFilename
+	do ..ZipFiles(workingPath, companionFilename)
+	do ..ArchiveFiles(workingPath)  // move .837 files to archive
+	do ..MoveFiles(workingPath, outboundPath)  // move .zip and .csv (companion) files to outbound drop
+}
+
+Method Extract837(file) As EnsLib.EDI.X12.Document
+{
+	set x = ##class(EnsLib.EDI.X12.Document).ImportFromFile(file)
+	set g = ""
+	set g = x.NextChild(g, x.GetSegmentIndex("GroupDocsRef", .ok))
+	do g.PokeDocType("HIPAA_5010:Group")
+	do g.BuildMap()
+	set ts = ""
+	set ts = g.NextChild(ts, g.GetSegmentIndex("TransactionSetDocsRef", .ok))
+	do ts.PokeDocType("HIPAA_5010:837I")
+	quit ts
+}
+
+Method MoveFiles(fromPath, toPath, archive837 = 0) As %ListOfDataTypes  
+{
+	set filenames = ##class(%Library.ListOfDataTypes).%New()
+	set rs = ##class(%ResultSet).%New("%File:FileSet")
+	do rs.Execute(fromPath)
+	while rs.Next()
+	{
+		set from = rs.Get("Name")
+		set to = toPath_"\"_rs.Get("ItemName")
+		set move = 1
+		if (archive837 = 1)
+		{
+			set ext = $e(rs.Get("ItemName"), *-3, *)
+			if (ext = ".csv") || (ext = ".zip")
+			{
+				set move = 0
+			}
+			else
+			{
+				set to = to_"."_..Timestamp()
+			}
+		}
+		if (move = 1) 
+		{
+			do ..MoveFile(from, to)
+			do filenames.Insert(to)
+		}
+	}
+	quit filenames
+}
+
+Method ArchiveFiles(fromPath) As %ListOfDataTypes
+{
+	quit ..MoveFiles(fromPath, .."Archive Path", 1)
+}
+
+Method MoveFile(from, to)
+{
+	set sc = ##class(%File).Rename(from, to, .return)
+	if (sc = 0) 
+	{
+		throw ##class(%Exception.General).%New(,,,"Unable to copy "_from_" to "_to_", status="_return)
+	}
+}
+
+Method Move837File(file, folder)
+{
+	set to = workingPath_"\"_folder_"\"_$E(file, wpl, *)
+	do ..MoveFile(file, to)
+}
+
+Method ZipFiles(path, companionFilename)
+{
+	set zipFilename = path_"\"_$e(companionFilename, 1, *-3)_"zip"
+	set filesToZip = path_"\*"
+    set cmd="""C:\Program Files\7-Zip\7z.exe"" a -tzip "_zipFilename_" "_filesToZip_" -x!*.csv"  // exclude companion file
+    set sc = $zf(-1, cmd)
+    if (sc '= 0)
+    {
+	    throw ##class(%Exception.General).%New(,,,"Unable to zip "_filesToZip_" - status="_sc)
+    }
+}
+
+Method GetClientID(pRequest As HchbLib.Interface.DataModels.ApplicationRouteVendor) As %String
+{
+	set req = ##class(HchbLib.Interface.DataModels.ApplicationRouteVendor).%New()
+	set req.ApplicationRouteVendorID = pRequest.ApplicationRouteVendorID
+	set sc = ..SendRequestSync("Deyta 837 - Interface DB Op", req, .arv)
+	set cid = arv.ApplicationRouteVendorAssignments.GetAt("ClientID")
+	if (cid = "")
+	{
+		throw ##class(%Exception.General).%New(,,,"Client ID not found in ARV assignments")
+	}
+	quit cid.Value
+}
+
+Method Timestamp() As %String
+{
+	quit $REPLACE($REPLACE($REPLACE($ZDT($HOROLOG,3,1),"-","")," ",""),":","")
+}
+
+Storage Default
+{
+<Data name="ProcessFilesBPDefaultData">
+<Subscript>"ProcessFilesBP"</Subscript>
+<Value name="1">
+<Value>Inbound Path</Value>
+</Value>
+<Value name="2">
+<Value>Working Path</Value>
+</Value>
+<Value name="3">
+<Value>Archive Path</Value>
+</Value>
+<Value name="4">
+<Value>Outbound Drop Path</Value>
+</Value>
+</Data>
+<DefaultData>ProcessFilesBPDefaultData</DefaultData>
+<Type>%Library.CacheStorage</Type>
+}
+
+}

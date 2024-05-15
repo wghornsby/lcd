@@ -1,0 +1,45 @@
+<html>
+<head>
+  <script type='text/javascript' src='lcd-core.js?3'></script>
+  <script type='text/javascript' src='lcd-xml.js?6'></script>
+  <script type='text/javascript' src='isprod-train.js?15'></script>
+  <style>
+BODY {
+  background-color:rgb(76,144,179);
+  overflow:hidden;
+}
+TEXTAREA {
+  width:calc(50vw - 10px);
+  height:99%;
+  font-family:Consolas;
+  font-size:8pt;
+  background-color:black;
+  color:#ddd;
+  display:inline-block;
+}
+DIV.dbut {
+  padding:10px;
+  text-align:center;
+}
+#but {
+  background-color:rgb(46,86,109);
+  color:white;
+  border:1px solid white;
+  padding:4px 10px;
+  font-size:12pt;
+  font-family:Calibri;
+}
+.h {
+  display:none;
+}
+  </style>
+</head>
+<body>
+  <textarea id='tbefore'></textarea>
+  <textarea id='tafter'></textarea>
+</body>
+<script>
+var ui;
+window.on('DOMContentLoaded', () => {ui = new PageUi()});
+</script>
+</html>

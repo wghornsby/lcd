@@ -1,0 +1,1305 @@
+Class HchbLib.Productions.VISITEVV.Production110 Extends Ens.Production
+{
+
+XData ProductionDefinition
+{
+<Production Name="HchbLib.Productions.VISITEVV.Production110" TestingEnabled="true" LogGeneralTraceEvents="true">
+  <Description></Description>
+  <ActorPoolSize>2</ActorPoolSize>
+  <Item Name="Worldview - Customer DB Operation" Category="Worldview" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="VendorTransactionTarget"></Setting>
+  </Item>
+  <Item Name="Worldview - Get Scheduling Info Op" Category="Worldview" ClassName="HchbLib.Customer.GetScheduleInfoOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+  </Item>
+  <Item Name="Worldview - Write File Op" Category="Worldview" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Filename">%q(5).hl7</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Adapter" Name="FilePath"></Setting>
+    <Setting Target="Host" Name="FailureTimeout">1</Setting>
+  </Item>
+  <Item Name="Worldview - SIU Interface" Category="Worldview" ClassName="HchbLib.Vendors.WorldView.SIU.GetScheduleInfoBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Worldview - Get Customer List" Category="Worldview" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="GetTransactionsOp Target">WorldView - GetVendorTransactionsListOp</Setting>
+    <Setting Target="Host" Name="Target">Worldview - SIU Interface</Setting>
+    <Setting Target="Host" Name="Endpoint Target">Worldview - Write File Op</Setting>
+    <Setting Target="Adapter" Name="KeyFieldName"></Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">83</Setting>
+    <Setting Target="Adapter" Name="DatabaseRoute"></Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">91</Setting>
+    <Setting Target="Adapter" Name="SQL Stored Procedure">usp_IntSys_GetApplicationRouteVendorList</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">Worldview - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">Worldview - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="DedupSQLOp Target">Worldview - DOF Dedup Vendor Transactions Op</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">Worldview - DOF Get System Settings Op</Setting>
+  </Item>
+  <Item Name="WorldView - GetVendorTransactionsListOp" Category="Worldview" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_DeduplicateSingleVITDEventType</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Worldview - Email Op" Category="Worldview" ClassName="HchbLib.Assembly.EmailOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview - Get Vendor Details" Category="Worldview" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Private Duty Visits - Process BPL" Category="Inbound Private Duty Visits - THCN" ClassName="HchbLib.Vendors.MainLine.InboundProcessVisitsBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Private Duty Visits - Interface SQL Op" Category="Inbound Private Duty Visits - THCN" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Private Duty Visits - Process Schedule Op" Category="Inbound Private Duty Visits - THCN" ClassName="HchbLib.Customer.ProcessImportScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Private Duty Visits - Vendor Schedule Op" Category="Inbound Private Duty Visits - THCN" ClassName="HchbLib.Customer.VendorScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Private Duty Visits - PreProcess Schedule Op" Category="Inbound Private Duty Visits - THCN" ClassName="HchbLib.Vendors.MainLine.PreImportScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Private Duty Visits - Export Errors Svc" Category="Inbound Private Duty Visits - THCN" ClassName="HchbLib.Assembly.TimerSrc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="TargetConfigNames">Private Duty Visits - Export Errors Op</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+  </Item>
+  <Item Name="Private Duty Visits - Process File Svc" Category="Inbound Private Duty Visits - THCN" ClassName="HchbLib.Interface.GetApplicationRouteVendorSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Target">Private Duty Visits - Process BPL</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">177</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">215</Setting>
+  </Item>
+  <Item Name="Private Duty Visits - Inbound File Svc" Category="Inbound Private Duty Visits - THCN" ClassName="EnsLib.RecordMap.Service.FileService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TargetConfigNames">Private Duty Visits - File BPL</Setting>
+    <Setting Target="Host" Name="RecordMap">HchbLib.Vendors.MainLine.RecordMap</Setting>
+    <Setting Target="Adapter" Name="ArchivePath">G:\Archive\Visits1\MainLineHealth\Visits</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\InboundDrop\Visits1\MainLineHealth\Visits</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+  </Item>
+  <Item Name="Private Duty Visits - File BPL" Category="Inbound Private Duty Visits - THCN" ClassName="HchbLib.Vendors.MainLine.InboundVisitsBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="RuleLogging"></Setting>
+  </Item>
+  <Item Name="Inbound Footcare - Interface SQL Op" Category="VNACO Footcare - Visits" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Inbound Footcare - Vendor Schedule Op" Category="VNACO Footcare - Visits" ClassName="HchbLib.Customer.VendorScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Inbound Footcare Visits BPL" Category="VNACO Footcare - Visits" ClassName="HchbLib.Vendors.Visits.InboundVisitsBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Inbound Footcare Visits File Svc" Category="VNACO Footcare - Visits" ClassName="EnsLib.RecordMap.Service.FileService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="RecordMap">HchbLib.Vendors.Visits.RecordMap.Visits</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">Inbound Footcare Visits BPL</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\InboundDrop\Visits1\Footcare\CompletedVisits</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+    <Setting Target="Adapter" Name="ArchivePath">G:\Archive\Visits1\Footcare\CompletedVisits</Setting>
+    <Setting Target="Adapter" Name="FileSpec">*.csv</Setting>
+  </Item>
+  <Item Name="Inbound Footcare - PreImport Schedule Op" Category="VNACO Footcare - Visits" ClassName="HchbLib.Vendors.VNACO.PreImportScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="HchbLib.Interface.TraceBP" Category="" ClassName="HchbLib.Interface.TraceBP" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Inbound Footcare - Process Schedule Op" Category="VNACO Footcare - Visits" ClassName="HchbLib.Customer.ProcessImportScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Footcare - Process Import Schedule Svc" Category="VNACO Footcare - Visits" ClassName="HchbLib.Interface.GetApplicationRouteVendorSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="Target">Inbound Footcare Process Completed Visits BPL</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">164</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Inbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">204</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+  </Item>
+  <Item Name="Inbound Footcare Process Completed Visits BPL" Category="VNACO Footcare - Visits" ClassName="HchbLib.Vendors.Visits.InboundProcessVisitsBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Footcare - Send Email Op" Category="VNACO Footcare - Error processing" ClassName="HchbLib.Assembly.EmailOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="SMTPServer">securemail.hchb.com</Setting>
+  </Item>
+  <Item Name="Footcare - Email Errors Sql OP" Category="VNACO Footcare - Error processing" ClassName="HchbLib.Interface.EmailSqlDatabaseOp" PoolSize="4" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Target">Footcare - Send Email Op</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Footcare - Email Errors Process BPL" Category="VNACO Footcare - Error processing" ClassName="HchbLib.Vendors.Visits.EmailErrorsProcessBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Footcare - Email Errors Svc" Category="VNACO Footcare - Error processing" ClassName="HchbLib.Interface.SqlDatabaseSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="KeyFieldName"></Setting>
+    <Setting Target="Host" Name="Target">Footcare - Email Errors Process BPL</Setting>
+    <Setting Target="Adapter" Name="Query">exec usp_IntSys_GetApplicationRouteVendorList 164, null, 204, 2, 1</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+  </Item>
+  <Item Name="VNACO Footcare - Demographics File Service" Category="VNACO Footcare - Demographics" ClassName="EnsLib.RecordMap.Service.FileService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="ArchivePath">G:\Archive\Visits1\Footcare\ADT</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\InboundDrop\Visits1\Footcare\ADT</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">VNACO Footcare - Inbound Referral BPL</Setting>
+    <Setting Target="Adapter" Name="FileSpec">DEMOGR_VNACOFOOTCARE*.csv</Setting>
+    <Setting Target="Host" Name="RecordMap">HchbLib.Vendors.VNACO.RecordMap.Demographics</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+  </Item>
+  <Item Name="VNACO Footcare - Inbound Referral BPL" Category="VNACO Footcare - Demographics" ClassName="HchbLib.Vendors.VNACO.InboundReferralBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="VNACO Footcare - Vendor Import Op" Category="VNACO Footcare - Demographics" ClassName="HchbLib.Customer.AddVendorImportDataOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Interfaces - Sql Database Op" Category="VNACO Footcare - Demographics" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="VNACO - Email Op" Category="VNACO Footcare - Error processing" ClassName="HchbLib.Assembly.EmailOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="From">hchb-intdev-all@hchb.com</Setting>
+  </Item>
+  <Item Name="WorldView - HTTP StreamOp" Category="Worldview" ClassName="HchbLib.Assembly.HttpStreamOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Therapy Sync Inbound - Scheduled Visits File Svc" Category="Therapy Sync" ClassName="EnsLib.RecordMap.Service.FileService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="RecordMap">HchbLib.Vendors.TherapySync.Schedule</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">Therapy Sync - Inbound Schedule Visits BPL</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\InboundDrop\Visits1\TherapySync\ScheduledVisits</Setting>
+    <Setting Target="Adapter" Name="CallInterval">5</Setting>
+    <Setting Target="Adapter" Name="ArchivePath">G:\Archive\Visits1\TherapySync\ScheduledVisits</Setting>
+    <Setting Target="Adapter" Name="FileSpec">*.csv</Setting>
+    <Setting Target="Host" Name="UseSingleSession">1</Setting>
+    <Setting Target="Host" Name="SynchronousSend">1</Setting>
+  </Item>
+  <Item Name="Therapy Sync Inbound - Completed Visits File Svc" Category="Therapy Sync" ClassName="EnsLib.RecordMap.Service.FileService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="RecordMap">HchbLib.Vendors.TherapySync.CompletedVisits</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">Therapy Sync - Inbound Completed Visits BPL</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\InboundDrop\Visits1\TherapySync\CompletedVisits</Setting>
+    <Setting Target="Adapter" Name="CallInterval">5</Setting>
+    <Setting Target="Adapter" Name="ArchivePath">G:\Archive\Visits1\TherapySync\CompletedVisits</Setting>
+    <Setting Target="Adapter" Name="FileSpec">*.csv</Setting>
+    <Setting Target="Host" Name="SynchronousSend">1</Setting>
+    <Setting Target="Host" Name="UseSingleSession">1</Setting>
+  </Item>
+  <Item Name="Therapy Sync Scheduled Visits - Vendor Schedule Op" Category="Therapy Sync" ClassName="HchbLib.Customer.VendorScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Therapy Sync Scheduled Visits - Interface SQL Op" Category="Therapy Sync" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="Node">DBINTSYS110</Setting>
+  </Item>
+  <Item Name="Therapy Sync - Customer DB Op" Category="Therapy Sync" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="4" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Therapy Sync - Inbound Schedule Visits BPL" Category="Therapy Sync" ClassName="HchbLib.Vendors.TherapySync.Schedule.ScheduledVisitsBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="RuleLogging"></Setting>
+  </Item>
+  <Item Name="Therapy Sync - Inbound Completed Visits BPL" Category="Therapy Sync" ClassName="HchbLib.Vendors.TherapySync.CompletedVisits.CompletedVisitsBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="RuleLogging"></Setting>
+  </Item>
+  <Item Name="Therapy Sync - UpdateSchedContractorAgentOp" Category="Therapy Sync" ClassName="HchbLib.Customer.UpdateSchedContractorAgentOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN"></Setting>
+  </Item>
+  <Item Name="Therapy Sync Scheduled Visits - Pre Vendor Sched Op" Category="Therapy Sync" ClassName="HchbLib.Vendors.TherapySync.PreVendorScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Therapy Sync - Export Status" Category="Therapy Sync" ClassName="HchbLib.Assembly.TimerSrc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="TargetConfigNames">Therapy Sync - Export Status Op</Setting>
+    <Setting Target="Adapter" Name="CallInterval">60</Setting>
+  </Item>
+  <Item Name="Therapy Sync - Export Status Op" Category="Therapy Sync" ClassName="HchbLib.Assembly.ExecuteNExportOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="FileExtn"></Setting>
+    <Setting Target="Host" Name="FilePath"></Setting>
+    <Setting Target="Host" Name="Query">EXEC dbo.usp_IntSys_GetTherapySyncFileStatus 209, 'A'</Setting>
+    <Setting Target="Adapter" Name="DSN">TEMP_ANGMARTRN2_DPAI</Setting>
+    <Setting Target="Host" Name="IncludeHeaders">1</Setting>
+    <Setting Target="Host" Name="GenerateDynamicFileNameFromDB">1</Setting>
+    <Setting Target="Host" Name="Target">Therapy Sync - Write File Op,Therapy Sync - Export Status File Op</Setting>
+  </Item>
+  <Item Name="Therapy Sync - Export Status File Op" Category="Therapy Sync" ClassName="EnsLib.File.PassthroughOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Filename">%f</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\OutboundQueue\Visits1\TherapySync\Results</Setting>
+    <Setting Target="Adapter" Name="Overwrite">0</Setting>
+  </Item>
+  <Item Name="Therapy Sync - Update  Vendor Schedule Database Op" Category="Therapy Sync" ClassName="HchbLib.Customer.SqlVendorScheduleDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="RecordStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="RecordStatusToSearch">N</Setting>
+  </Item>
+  <Item Name="Private Duty Visits - Error File Op" Category="Inbound Private Duty Visits - THCN" ClassName="EnsLib.File.PassthroughOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Filename">%f</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\OutboundQueue\Visits1\MainLineHealth\Results</Setting>
+    <Setting Target="Adapter" Name="Overwrite">1</Setting>
+  </Item>
+  <Item Name="Private Duty Visits - Export Errors Op" Category="Inbound Private Duty Visits - THCN" ClassName="HchbLib.Assembly.ExecuteNExportOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="FileExtn">.csv</Setting>
+    <Setting Target="Host" Name="FilePath"></Setting>
+    <Setting Target="Host" Name="Query">EXEC usp_IntSys_PrivateDutyTHCN_ExportSchedulesResults 215</Setting>
+    <Setting Target="Adapter" Name="DSN">TEMP_THCN_20170530_DPAI</Setting>
+    <Setting Target="Host" Name="IncludeHeaders">1</Setting>
+    <Setting Target="Host" Name="GenerateDynamicFileNameFromDB">1</Setting>
+    <Setting Target="Host" Name="Target">Private Duty Visits - Error File Op</Setting>
+    <Setting Target="Host" Name="RecordTerminator"></Setting>
+    <Setting Target="Host" Name="FieldSeperator"></Setting>
+    <Setting Target="Host" Name="TargetType"></Setting>
+  </Item>
+  <Item Name="Optage - Demographics File Service" Category="Optage" ClassName="EnsLib.RecordMap.Service.FileService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="HeaderCount">1</Setting>
+    <Setting Target="Host" Name="RecordMap">HchbLib.Vendors.Optage.RecordMap.Demographics</Setting>
+    <Setting Target="Host" Name="SynchronousSend">1</Setting>
+    <Setting Target="Adapter" Name="ArchivePath">G:\Archive\VISITS1\Optage</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\InboundDrop\VISITS1\Optage</Setting>
+    <Setting Target="Adapter" Name="FileSpec">DEMOGR_OPTAGEMDS_*.csv</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">Optage - Inbound Referral BPL</Setting>
+  </Item>
+  <Item Name="Optage - Schedule File Service" Category="Optage" ClassName="EnsLib.RecordMap.Service.FileService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="HeaderCount">1</Setting>
+    <Setting Target="Host" Name="RecordMap">HchbLib.Vendors.Optage.RecordMap.Schedule</Setting>
+    <Setting Target="Host" Name="SynchronousSend">1</Setting>
+    <Setting Target="Adapter" Name="ArchivePath">G:\Archive\VISITS1\Optage</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\InboundDrop\VISITS1\Optage</Setting>
+    <Setting Target="Adapter" Name="FileSpec">SCH_OPTAGEPH_*.csv</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">Optage - Inbound Schedule BPL</Setting>
+  </Item>
+  <Item Name="Optage - Delivery File Service" Category="Optage" ClassName="EnsLib.RecordMap.Service.FileService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="HeaderCount">1</Setting>
+    <Setting Target="Host" Name="RecordMap">HchbLib.Vendors.Optage.RecordMap.Schedule</Setting>
+    <Setting Target="Host" Name="SynchronousSend">1</Setting>
+    <Setting Target="Adapter" Name="ArchivePath">G:\Archive\VISITS1\Optage</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\InboundDrop\VISITS1\OPTAGE</Setting>
+    <Setting Target="Adapter" Name="FileSpec">DLV_OPTAGEPH_*.csv</Setting>
+    <Setting Target="Adapter" Name="CallInterval">300</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">Optage - Inbound Delivery BPL</Setting>
+  </Item>
+  <Item Name="Optage - Inbound Referral BPL" Category="Optage" ClassName="HchbLib.Vendors.Optage.InboundReferralBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Optage - Inbound Schedule BPL" Category="Optage" ClassName="HchbLib.Vendors.Optage.InboundScheduleBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Optage - Inbound Delivery BPL" Category="Optage" ClassName="HchbLib.Vendors.Optage.InboundDeliveryBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Optage - TraceBP" Category="" ClassName="HchbLib.Interface.TraceBP" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Optage - Interface SQL Op" Category="Optage" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="4" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+  </Item>
+  <Item Name="Optage - Vendor Import Op" Category="Optage" ClassName="HchbLib.Customer.AddVendorImportDataOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+  </Item>
+  <Item Name="Optage - Vendor Schedule Op" Category="Optage" ClassName="HchbLib.Customer.VendorScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+  </Item>
+  <Item Name="Worldview - Visit Info Op" Category="Worldview" ClassName="HchbLib.Customer.GetVisitInfoOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Therapy Sync Visits - PreImportSchedules Op" Category="Therapy Sync" ClassName="HchbLib.Vendors.TherapySync.PreImportScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Get Care Plan Op" Category="CellTrak" ClassName="HchbLib.Customer.GetCarePlanOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Care Plan XML BPL" Category="CellTrak" ClassName="HchbLib.Vendors.CellTrak.CarePlanXMLBPL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Get Patient Info Op" Category="CellTrak" ClassName="HchbLib.Customer.GetPatientInfoOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Patient XML BPL" Category="CellTrak" ClassName="HchbLib.Vendors.CellTrak.PatientXMLBPL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Schedules XML BPL" Category="CellTrak" ClassName="HchbLib.Vendors.CellTrak.SchedulesXMLBPL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Get Schedules Op" Category="CellTrak" ClassName="HchbLib.Customer.GetSchedulesOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Workers XML BPL" Category="CellTrak" ClassName="HchbLib.Vendors.CellTrak.WorkersXMLBPL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Write File Op" Category="CellTrak" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="Filename">%f_%Q.xml</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\OBDropForTestFiles\CellTrak\Sorting</Setting>
+    <Setting Target="Adapter" Name="Default File Name">%f_%Q.xml</Setting>
+    <Setting Target="Adapter" Name="Default File Path">G:\OBDropForTestFiles\CellTrak\Sorting</Setting>
+  </Item>
+  <Item Name="CellTrak - Get Customer Transactions Svc" Category="CellTrak" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="GetTransactionsOp Target">CellTrak - Get Vendor Transactions Op</Setting>
+    <Setting Target="Host" Name="Target">CellTrak - Generate And Post XML BPL</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">256</Setting>
+    <Setting Target="Adapter" Name="DatabaseRoute"></Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">270</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="Endpoint Target">CellTrak - Write File Op</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Adapter" Name="CallInterval">60</Setting>
+  </Item>
+  <Item Name="CellTrak - SQL Database Op" Category="CellTrak" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="VendorTransactionTarget">CellTrak - Generate And Post XML BPL</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_QueueCancelledAideVisits</Setting>
+  </Item>
+  <Item Name="CellTrak - Generate And Post XML BPL" Category="CellTrak" ClassName="HchbLib.Vendors.CellTrak.GenerateAndPostXMLBPL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Get Worker Info Op" Category="CellTrak" ClassName="HchbLib.Customer.GetWorkerInfoOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Write Careplan Op" Category="CellTrak" ClassName="EnsLib.File.PassthroughOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="Filename">%f</Setting>
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\OBDropForTestFiles\CellTrak\CarePlan</Setting>
+  </Item>
+  <Item Name="CellTrak - Write Schedule Op" Category="CellTrak" ClassName="EnsLib.File.PassthroughOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="Filename">%f</Setting>
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\OBDropForTestFiles\CellTrak\Schedules</Setting>
+  </Item>
+  <Item Name="CellTrak - Write Patient Op" Category="CellTrak" ClassName="EnsLib.File.PassthroughOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="Filename">%f</Setting>
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\OBDropForTestFiles\CellTrak\Patient</Setting>
+  </Item>
+  <Item Name="CellTrak - Write Worker Op" Category="CellTrak" ClassName="EnsLib.File.PassthroughOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="Filename">%f</Setting>
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\OBDropForTestFiles\CellTrak\Worker</Setting>
+  </Item>
+  <Item Name="CellTrak - Write Careplan Svc" Category="CellTrak" ClassName="EnsLib.File.PassthroughService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\OBDropForTestFiles\CellTrak\Sorting</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">CellTrak - Write Careplan Op</Setting>
+    <Setting Target="Adapter" Name="FileSpec">careplan*.xml</Setting>
+    <Setting Target="Adapter" Name="CallInterval">60</Setting>
+  </Item>
+  <Item Name="CellTrak - Write Worker Svc" Category="CellTrak" ClassName="EnsLib.File.PassthroughService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\OBDropForTestFiles\CellTrak\Sorting</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">CellTrak - Write Worker Op</Setting>
+    <Setting Target="Adapter" Name="FileSpec">worker*.xml</Setting>
+    <Setting Target="Adapter" Name="CallInterval">60</Setting>
+  </Item>
+  <Item Name="CellTrak - Write Schedule Svc" Category="CellTrak" ClassName="EnsLib.File.PassthroughService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\OBDropForTestFiles\CellTrak\Sorting</Setting>
+    <Setting Target="Adapter" Name="FileSpec">schedule*.xml</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">CellTrak - Write Schedule Op</Setting>
+    <Setting Target="Adapter" Name="CallInterval">60</Setting>
+  </Item>
+  <Item Name="CellTrak - Write Patient Svc" Category="CellTrak" ClassName="EnsLib.File.PassthroughService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\OBDropForTestFiles\CellTrak\Sorting</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">CellTrak - Write Patient Op</Setting>
+    <Setting Target="Adapter" Name="FileSpec">patient*.xml</Setting>
+    <Setting Target="Adapter" Name="CallInterval">60</Setting>
+  </Item>
+  <Item Name="Sandata - Santrax SOAP Op" Category="Sandata" ClassName="HchbLib.Vendors.Sandata.Operation.SantraxTransferSoap" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="SSLConfig">Sandata</Setting>
+    <Setting Target="Adapter" Name="ConnectTimeout">10</Setting>
+    <Setting Target="Adapter" Name="WebServiceURL">https://evv-rt-qa.sandata.com/AccessSantrax/SantraxTransferService/SantraxTransfer.asmx</Setting>
+  </Item>
+  <Item Name="Sandata - Get Santrax Visits BPL" Category="Sandata" ClassName="HchbLib.Vendors.Sandata.GetSantraxVisitBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="TherapySync - Workers SOAP Op" Category="Therapy Sync" ClassName="HchbLib.Services.WMS.Operation.BasicHttpBindingIWorkerManagementService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="WebServiceClientClass">HchbLib.Services.WMS.BasicHttpBindingIWorkerManagementService</Setting>
+    <Setting Target="Adapter" Name="WebServiceURL">https://partnerlinkservicesdev.hchb.com/HCHB/WorkerManagementService.svc</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">PartnerLinkServicesDev</Setting>
+    <Setting Target="Adapter" Name="Credentials">hchb\provisioning-Z1FVfN</Setting>
+    <Setting Target="Adapter" Name="SOAPCredentials">hchb\provisioning-Z1FVfN</Setting>
+  </Item>
+  <Item Name="Sandata - Upload Service BPL" Category="Sandata" ClassName="HchbLib.Vendors.Sandata.UploadServices.UploadSchedulesBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Sandata - SQL Database Op" Category="Sandata" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata - Get Schedules Op" Category="Sandata" ClassName="HchbLib.Customer.GetSchedulesOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Sandata - Get Customer List" Category="Sandata" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="GetTransactionsOp Target">Sandata - Get Vendor Transactions Op</Setting>
+    <Setting Target="Host" Name="Target">Sandata - Upload Service BPL</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">287</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">293</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">Sandata - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">Sandata - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">Sandata - DOF Get System Settings Op</Setting>
+  </Item>
+  <Item Name="Sandata - Get Vendor Transactions Op" Category="Sandata" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+  </Item>
+  <Item Name="Sandata - Get Patient Info Op" Category="Sandata" ClassName="HchbLib.Customer.GetPatientInfoOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata - Get Worker Info Op" Category="Sandata" ClassName="HchbLib.Customer.GetWorkerInfoOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Sandata - File Write Op" Category="Sandata" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="Default File Path"></Setting>
+    <Setting Target="Host" Name="FailureTimeout">1</Setting>
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\g$\InboundDrop\Visits1\ArchiveSandata</Setting>
+  </Item>
+  <Item Name="Sandata - Get Input File" Category="Sandata" ClassName="EnsLib.EDI.XML.Service.FileService" PoolSize="1" Enabled="false" Foreground="false" Comment="Read the XML file for Sandata" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="DocSchemaCategory">realTimeSantrax_visit_ws</Setting>
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\g$\InboundDrop\Visits1\Sandata</Setting>
+    <Setting Target="Host" Name="TargetConfigNames">Sandata - Store Inbound Santrax Visit Schedule BPL</Setting>
+    <Setting Target="Adapter" Name="ArchivePath">\\dbintsys110\g$\InboundDrop\Visits1\ArchiveSandata</Setting>
+  </Item>
+  <Item Name="Sandata - Interface DB Operation" Category="Sandata" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Sandata - Vendor Schedule and Visits Op" Category="Sandata" ClassName="HchbLib.Customer.VendorScheduleOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata - Get Customer DB Op" Category="Sandata" ClassName="HchbLib.Customer.SqlVendorScheduleDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="RecordStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="RecordStatusToSearch">N</Setting>
+  </Item>
+  <Item Name="Sandata Download Visits - Get Customer List Svc" Category="Sandata" ClassName="HchbLib.Interface.GetApplicationRouteVendorSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="Target">Sandata - Get Santrax Visits BPL</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">291</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="DatabaseRoute">2836</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Inbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">293</Setting>
+    <Setting Target="Adapter" Name="CallInterval">900</Setting>
+  </Item>
+  <Item Name="Therapy Sync - Process Schedules Op" Category="Therapy Sync" ClassName="HchbLib.Customer.ProcessSchedulesOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Therapy Sync - Process Visits Op" Category="Therapy Sync" ClassName="HchbLib.Customer.ProcessCompletedVisitsOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Therapy Sync - Process Schedules BPL" Category="Therapy Sync" ClassName="HchbLib.Vendors.TherapySync.Schedule.ProcessSchedulesBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="RuleLogging"></Setting>
+  </Item>
+  <Item Name="Therapy Sync - Process Completed Visits BPL" Category="Therapy Sync" ClassName="HchbLib.Vendors.TherapySync.CompletedVisits.ProcessVisitsBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="RuleLogging"></Setting>
+  </Item>
+  <Item Name="Therapy Sync - Process Schedules Svc" Category="Therapy Sync" ClassName="HchbLib.Interface.GetApplicationRouteVendorSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="Target">Therapy Sync - Process Schedules BPL</Setting>
+    <Setting Target="Adapter" Name="CallInterval">1800</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">295</Setting>
+    <Setting Target="Adapter" Name="VendorID">209</Setting>
+    <Setting Target="Host" Name="Endpoint Target"></Setting>
+  </Item>
+  <Item Name="Therapy Sync - Process Completed Visits" Category="Therapy Sync" ClassName="HchbLib.Interface.GetApplicationRouteVendorSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="Target">Therapy Sync - Process Completed Visits BPL</Setting>
+    <Setting Target="Adapter" Name="CallInterval">1800</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">296</Setting>
+    <Setting Target="Adapter" Name="VendorID">209</Setting>
+    <Setting Target="Host" Name="Endpoint Target"></Setting>
+  </Item>
+  <Item Name="Worldview2 - Get Customer List" Category="Worldview2" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="GetTransactionsOp Target">WorldView2 - GetVendorTransactionsListOp</Setting>
+    <Setting Target="Host" Name="Target">Worldview2 - SIU Interface</Setting>
+    <Setting Target="Host" Name="Endpoint Target">Worldview2 - Write File To FTP Op</Setting>
+    <Setting Target="Adapter" Name="KeyFieldName"></Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">83</Setting>
+    <Setting Target="Adapter" Name="DatabaseRoute"></Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">91</Setting>
+    <Setting Target="Adapter" Name="SQL Stored Procedure">usp_IntSys_GetApplicationRouteVendorList</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">Worldview2 - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">Worldview2 - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="DedupSQLOp Target">Worldview2 - DOF Dedup Vendor Transactions Op</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">Worldview2 - DOF Get System Settings Op</Setting>
+  </Item>
+  <Item Name="Worldview2 - Customer DB Operation" Category="Worldview2" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="VendorTransactionTarget"></Setting>
+  </Item>
+  <Item Name="Worldview2 - Email Op" Category="Worldview2" ClassName="HchbLib.Assembly.EmailOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview2 - Get Scheduling Info Op" Category="Worldview2" ClassName="HchbLib.Customer.GetScheduleInfoOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+  </Item>
+  <Item Name="Worldview2 - Get Vendor Details" Category="Worldview2" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="WorldView2 - GetVendorTransactionsListOp" Category="Worldview2" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_DeduplicateSingleVITDEventType</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="WorldView2 - HTTP StreamOp" Category="Worldview2" ClassName="HchbLib.Assembly.HttpStreamOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview2 - Visit Info Op" Category="Worldview2" ClassName="HchbLib.Customer.GetVisitInfoOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview2 - Write ArchiveSIUMessage Op" Category="Worldview2" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Filename">%q(5).hl7</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Adapter" Name="FilePath"></Setting>
+  </Item>
+  <Item Name="WorldView2 SIU - Customer Update VT Op" Category="Worldview2" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="VendorTransactionTarget"></Setting>
+  </Item>
+  <Item Name="Worldview2 - Write File To FTP Op" Category="Worldview2" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Filename">%q(5).hl7</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Adapter" Name="FilePath"></Setting>
+  </Item>
+  <Item Name="Worldview3 - Get Customer List" Category="Worldview3" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Host" Name="GetTransactionsOp Target">WorldView3 - GetVendorTransactionsListOp</Setting>
+    <Setting Target="Host" Name="Target">Worldview3 - SIU Interface</Setting>
+    <Setting Target="Host" Name="Endpoint Target">Worldview3 - Write File To FTP Op</Setting>
+    <Setting Target="Adapter" Name="KeyFieldName"></Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">83</Setting>
+    <Setting Target="Adapter" Name="DatabaseRoute"></Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">91</Setting>
+    <Setting Target="Adapter" Name="SQL Stored Procedure">usp_IntSys_GetApplicationRouteVendorList</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">Worldview3 - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">Worldview3 - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="DedupSQLOp Target">Worldview3 - DOF Dedup Vendor Transactions Op</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">Worldview3 - DOF Get System Settings Op</Setting>
+  </Item>
+  <Item Name="Worldview3 - Customer DB Operation" Category="Worldview3" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="VendorTransactionTarget"></Setting>
+  </Item>
+  <Item Name="Worldview3 - Email Op" Category="Worldview3" ClassName="HchbLib.Assembly.EmailOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview3 - Get Scheduling Info Op" Category="Worldview3" ClassName="HchbLib.Customer.GetScheduleInfoOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+  </Item>
+  <Item Name="Worldview3 - Get Vendor Details" Category="Worldview3" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="WorldView3 - GetVendorTransactionsListOp" Category="Worldview3" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_DeduplicateSingleVITDEventType</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="WorldView3 - HTTP StreamOp" Category="Worldview3" ClassName="HchbLib.Assembly.HttpStreamOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview3 - Visit Info Op" Category="Worldview3" ClassName="HchbLib.Customer.GetVisitInfoOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview3 - Write ArchiveSIUMessage Op" Category="Worldview3" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Filename">%q(5).hl7</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Adapter" Name="FilePath"></Setting>
+  </Item>
+  <Item Name="Worldview3 - Write File To FTP Op" Category="Worldview3" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Filename">%q(5).hl7</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Adapter" Name="FilePath"></Setting>
+  </Item>
+  <Item Name="WorldView3 SIU - Customer Update VT Op" Category="Worldview3" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="StayConnected">0</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="VendorTransactionTarget"></Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Generate Visit Request" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.GenerateVisitRequestBPL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Get Patient Info Target">CellTrak EVV - Get Patient Info Op</Setting>
+    <Setting Target="Host" Name="Get Visit GPS Location Target">CellTrak EVV - Get GPS Location Op</Setting>
+    <Setting Target="Host" Name="Get Visit Info Target">CellTrak EVV - Get Visit Info Op</Setting>
+    <Setting Target="Host" Name="Get Visit Signature Target">CellTrak EVV - Get Visit Signature Op</Setting>
+    <Setting Target="Host" Name="Transform to Visit Request DTL">HchbLib.Vendors.CellTrak.EVV.DTL.PostSubmissionRequestDTL</Setting>
+    <Setting Target="Host" Name="Rest Op Target">CellTrak EVV - Rest Op</Setting>
+    <Setting Target="Host" Name="Get Worker Target">CellTrak EVV - Get Worker Info Op</Setting>
+    <Setting Target="Host" Name="Log Error">CellTrak EVV - Log Error Op</Setting>
+    <Setting Target="Host" Name="Update Vendor Transaction Status">CellTrak EVV - Update Transaction Status Op</Setting>
+    <Setting Target="Host" Name="Acknowledgement Target">CellTrak EVV - Get AcknowledgementOp</Setting>
+    <Setting Target="Host" Name="Authentication Target">CellTrak EVV - Authentication Op</Setting>
+    <Setting Target="Host" Name="Patient Info Target">CellTrak EVV - Get Patient Info Op</Setting>
+    <Setting Target="Host" Name="Visit GPS Location Target">CellTrak EVV - Get GPS Location Op</Setting>
+    <Setting Target="Host" Name="Visit Info Target">CellTrak EVV - Get Visit Op</Setting>
+    <Setting Target="Host" Name="Visit Payor Target">CellTrak EVV - Get Visit Payor Info Op</Setting>
+    <Setting Target="Host" Name="Visit Signature Target">CellTrak EVV - Get Visit Signature Op</Setting>
+    <Setting Target="Host" Name="Worker Target">CellTrak EVV - Get Worker Op</Setting>
+    <Setting Target="Host" Name="Episode Vendor Metadata Target">Celltrak EVV - Get Episode VendorMetadata</Setting>
+    <Setting Target="Host" Name="Exception Value Target">CellTrak EVV - Get Exception Value Op</Setting>
+    <Setting Target="Host" Name="Vendor Details Target">Celltrak EVV - Get Vendor Details Op</Setting>
+    <Setting Target="Host" Name="Vendor Map Target">CellTrak EVV - Vendor Map Op</Setting>
+    <Setting Target="Host" Name="Workflow Service">CellTrak EVV - Workflow Service Op</Setting>
+    <Setting Target="Host" Name="Visit Times Target">CellTrak EVV - Get Visit Times Op</Setting>
+    <Setting Target="Host" Name="Billing Visit Times Target">CellTrak EVV - Get BillingLineItems Info op</Setting>
+    <Setting Target="Host" Name="Invoice ID Target">CellTrak EVV - Get Invoice ID Op</Setting>
+    <Setting Target="Host" Name="Invoice Diagnosis Target">CellTrak EVV - Get Invoice Diagnosis Op</Setting>
+    <Setting Target="Host" Name="Paper Visit Audit Data Target">CellTrak EVV - Get Audit User Op</Setting>
+    <Setting Target="Host" Name="Worker Groups Target">CellTrak EVV - Get Worker Groups Op</Setting>
+    <Setting Target="Host" Name="Exception Target">CellTrak EVV - ExceptionOp</Setting>
+    <Setting Target="Host" Name="Workflow SQL Target">CellTrak EVV - Workflow SQL Op</Setting>
+    <Setting Target="Host" Name="Denial Of Visit Confirmation Target">CellTrak EVV - Denial of Visit Confirmation Op</Setting>
+    <Setting Target="Host" Name="Visit Confirmations Target">CellTrak EVV - Get Visit Confirmation Op</Setting>
+    <Setting Target="Host" Name="Visit Task List Non-Skilled Target">CellTrak EVV - Get Visit Task List Non-Skilled</Setting>
+    <Setting Target="Host" Name="GeteSignFormAnswer Target">CellTrak EVV - Get eSignFormAnswer Op</Setting>
+    <Setting Target="Host" Name="Visit Task List Skilled Target">CellTrak EVV - Get Visit Skilled Task List Op</Setting>
+    <Setting Target="Host" Name="Get ClientDesignee Target">CellTrak EVV - Get ClientDesignee Info Op</Setting>
+    <Setting Target="Host" Name="Get Payor Additional Fields Target">CellTrak EVV - Get Payor Source Additional Fields</Setting>
+    <Setting Target="Host" Name="Exception BPL Target">CellTrak EVV - Generate Visit Exceptions</Setting>
+    <Setting Target="Host" Name="ClientEpisodeFS Target">CellTrak EVV - Get CEFS Op</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get GPS Location Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitGPSlocationOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Visit Signature Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitSignatureOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - OAUTH Service" Category="CellTrak EVV, CellTrak EVV Inbound" ClassName="HchbLib.Vendors.CellTrak.OAUTHService" PoolSize="4" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="Port">1147</Setting>
+    <Setting Target="Host" Name="Interface SqlDatabaseOp">CellTrak EVV - Interfaces SQL Database Op</Setting>
+    <Setting Target="Host" Name="ARVID">5161</Setting>
+    <Setting Target="Host" Name="Target">CellTrak EVV - Process Rejection</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Interfaces SQL Database Op" Category="CellTrak EVV,CellTrak EVV Inbound" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get Patient Info Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetEpisodeDetailInformationOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Visit Info Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitInfoOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Vendor Transactions Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">11</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_DeduplicateGeneralVT</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get Invoice Transactions Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">31</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get Visits List" Category="CellTrak EVV" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="GetTransactionsOp Target">CellTrak EVV - Get Vendor Transactions Op</Setting>
+    <Setting Target="Host" Name="Target">CellTrak EVV - Generate Visit Request</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">343</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">318</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="CallInterval">60</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">CellTrak EVV - DOF Get System Settings Op</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">CellTrak EVV - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">CellTrak EVV - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">11</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get Invoices List" Category="CellTrak EVV" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="4" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="GetTransactionsOp Target">CellTrak EVV - Get Invoice Transactions Op</Setting>
+    <Setting Target="Host" Name="Target">CellTrak EVV - Trigger Visit Transactions</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">343</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">318</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">31</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">CellTrak EVV - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">CellTrak EVV - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">CellTrak EVV - DOF Get System Settings Op</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Rest Op" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.RestOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">uat-mycelltrak.com</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">CelltrakSSL</Setting>
+    <Setting Target="Adapter" Name="URL">/evv-link-api/visit-intake/visit/</Setting>
+    <Setting Target="Adapter" Name="Credentials">CelltrakUAT</Setting>
+    <Setting Target="Adapter" Name="SSLCheckServerIdentity">0</Setting>
+    <Setting Target="Host" Name="File Write Op">CellTrak EVV - File Write Op</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get Worker Info Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetWorkerInfoOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Log Error Op" Category="CellTrak EVV" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Update Transaction Status Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Authentication Op" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.Authentication" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">uat-mycelltrak.com</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">CelltrakSSL</Setting>
+    <Setting Target="Adapter" Name="SSLCheckServerIdentity">0</Setting>
+    <Setting Target="Host" Name="ArchiveIO">1</Setting>
+    <Setting Target="Adapter" Name="URL">/evv-link-auth/authenticate/</Setting>
+    <Setting Target="Adapter" Name="Credentials">CelltrakUAT</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - File Write Op" Category="CellTrak EVV" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="Default File Name">%f_%Q.json</Setting>
+    <Setting Target="Adapter" Name="Default File Path">G:\Archive\Visits1\Celltrak EVV</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\Archive\Visits1\Celltrak EVV</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get Visit Payor Info Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitPayorInfoOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Vendor Payor Map Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVendorMapOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get AcknowledgementOp" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.AcknowledgementOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Update Rejection Notice" Category="CellTrak EVV,CellTrak EVV Inbound" ClassName="HchbLib.Customer.UpdateRejNoticeOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Celltrak EVV - Rest Passthrough" Category="CellTrak EVV Inbound" ClassName="EnsLib.REST.GenericOperation" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Celltrak EVV - Get Episode VendorMetadata" Category="CellTrak EVV" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrakService" Category="CellTrak EVV, CellTrak EVV Inbound" ClassName="HchbLib.Vendors.CellTrak.OAUTHService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="Port">1147</Setting>
+    <Setting Target="Host" Name="Interface SqlDatabaseOp">CellTrak EVV - Interfaces SQL Database Op</Setting>
+    <Setting Target="Host" Name="ARVID">5161</Setting>
+    <Setting Target="Host" Name="Target">CellTrak EVV - Process Rejection</Setting>
+    <Setting Target="Host" Name="ArchiveIO">0</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Update Acknowledgement OP" Category="" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Celltrak EVV - Get Vendor Details Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Exception Value Op" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.GetExceptionValueOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV -  Process Rejections" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.ProcessStateStatusBPL" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="ApplicationID">348</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Process Rejection" Category="CellTrak EVV Inbound" ClassName="HchbLib.Vendors.CellTrak.EVV.ProcessStateStatusBPL" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="ApplicationID">348</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Workflow Service Op" Category="CellTrak EVV" ClassName="HchbLib.Services.WorkflowSvc.Operation.BasicHttpBindingIWorkflowService" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="WebServiceURL">https://workflowdev.hchb.local/WorkflowService.svc</Setting>
+    <Setting Target="Adapter" Name="WebServiceClientClass"></Setting>
+    <Setting Target="Adapter" Name="ProxyServer"></Setting>
+    <Setting Target="Adapter" Name="ProxyPort"></Setting>
+    <Setting Target="Adapter" Name="ProxyHTTPS">0</Setting>
+    <Setting Target="Adapter" Name="SSLCheckServerIdentity">0</Setting>
+    <Setting Target="Adapter" Name="ProxyHttpTunnel">0</Setting>
+    <Setting Target="Adapter" Name="ProxyHttpSSLConnect">0</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">CelltrakSSL</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - File Write Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="Default File Name">Test</Setting>
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\Archive\Visits1\Elara EVV\Schedules</Setting>
+    <Setting Target="Adapter" Name="Default File Path">\\dbintsys110\G$\Archive\Visits1\Elara EVV\Schedules\</Setting>
+    <Setting Target="Adapter" Name="Format File Name">1</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Adapter" Name="Overwrite">1</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Get Schedules" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="GetTransactionsOp Target">Sandata Connecticut EVV Scheds - Get Vendor Transactions Op</Setting>
+    <Setting Target="Host" Name="Target">Sandata Connecticut EVV Scheds - Schedules BPL</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">420</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">330</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">13</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">Sandata Connecticut EVV Scheds - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">Sandata Connecticut EVV Scheds - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">Sandata Connecticut EVV Scheds - DOF Get System Settings Op</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Schedules BPL" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Vendors.SandataConn.EVV.Schedules.SchedulesBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Log Error">Sandata Connecticut EVV Scheds - Log Error Op</Setting>
+    <Setting Target="Host" Name="Rest Op Target">Sandata Connecticut EVV Scheds - Rest Op</Setting>
+    <Setting Target="Host" Name="Update Vendor Transaction Status">Sandata Connecticut EVV Scheds - Update Transaction Status Op</Setting>
+    <Setting Target="Host" Name="Schedules Target">Sandata Connecticut EVV Scheds - Get Schedules Info Op</Setting>
+    <Setting Target="Host" Name="Transform to Schedules Json Request DTL">HchbLib.Vendors.SandataConn.EVV.Schedules.SchedulesDTL</Setting>
+    <Setting Target="Host" Name="Vendor Details Target">Sandata Connecticut EVV Clients - Get Vendor Details Op</Setting>
+    <Setting Target="Host" Name="Patient Target">Sandata Connecticut EVV Scheds - Get Patient Info Op</Setting>
+    <Setting Target="Host" Name="Vendor Maps Target">Sandata Connecticut EVV Scheds - Get Payor Source Map Op</Setting>
+    <Setting Target="Host" Name="Workflow Service">Sandata Connecticut EVV Scheds - Workflow Svc Op</Setting>
+    <Setting Target="Host" Name="Insert Messages Op">Sandata Connecticut EVV Scheds - Insert Messages Op</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Get Vendor Transactions Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">SIU</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">13</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Get Schedules Info Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Vendors.SandataConn.EVV.Schedules.GetSchedulesOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Log Error Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Rest Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Vendors.SandataConn.EVV.Schedules.SchedulesRestOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">uat-santrax.sandata.com</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">CelltrakSSL</Setting>
+    <Setting Target="Adapter" Name="URL">/cxf/opensam/schedules</Setting>
+    <Setting Target="Adapter" Name="Credentials">ElaraSandata</Setting>
+    <Setting Target="Adapter" Name="SSLCheckServerIdentity">0</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Update Transaction Status Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get BillingLineItems Info op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetUpdatedVisitTimeFromBillingLineOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Visit Times Op" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.GetVisitTimesOp" PoolSize="1" Enabled="true" Foreground="false" Comment="Operation to Fetch Visit times" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Invoice ID Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitInvoiceOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Invoice Diagnosis Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetInvoiceICDOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Trigger Visit Transactions" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.TriggerVisitTransactionsBPL" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Audit User Op" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.GetAuditUserForPaperVisitOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Employees BPL" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Vendors.SandataConn.EVV.Employees.BPL.EmployeesBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Log Error">Sandata Connecticut EVV Employees - Log Error Op</Setting>
+    <Setting Target="Host" Name="Rest Op Target">Sandata Connecticut EVV Employees - Rest Op</Setting>
+    <Setting Target="Host" Name="Transform to Employee Json Request DTL">HchbLib.Vendors.SandataConn.EVV.Employees.DTL.EmployeeSubmission</Setting>
+    <Setting Target="Host" Name="Update Vendor Transaction Status">Sandata Connecticut EVV Employees - Update Transaction Status Op</Setting>
+    <Setting Target="Host" Name="Worker Target">Sandata Connecticut EVV Employees - Get Worker Info Op</Setting>
+    <Setting Target="Host" Name="Vendor Details Target">Sandata Connecticut EVV Employees - Get Vendor Details Op</Setting>
+    <Setting Target="Host" Name="Vendor Maps Target">Sandata Connecticut EVV Employees - Rejection Error Maps</Setting>
+    <Setting Target="Host" Name="AlertOnError">0</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Rest Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Vendors.SandataConn.EVV.Employees.EmployeesRestOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">uat-santrax.sandata.com</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">CelltrakSSL</Setting>
+    <Setting Target="Adapter" Name="URL">/cxf/opensam/employees</Setting>
+    <Setting Target="Adapter" Name="Credentials">ElaraSandata</Setting>
+    <Setting Target="Adapter" Name="SSLCheckServerIdentity">0</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Get Workers List" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="GetTransactionsOp Target">Sandata Connecticut EVV Employees - Get Vendor Transactions Op</Setting>
+    <Setting Target="Host" Name="Target">Sandata Connecticut EVV Employees - Employees BPL</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">419</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">330</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">WKR</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">3</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">Sandata Connecticut EVV Employees - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">Sandata Connecticut EVV Employees - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">Sandata Connecticut EVV Employees - DOF Get System Settings Op</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Log Error Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Update Transaction Status Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Get Vendor Transactions Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">3</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">WKR</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - File Write Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="Default File Name">Test1</Setting>
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\Archive\Visits1\Elara EVV\</Setting>
+    <Setting Target="Adapter" Name="Default File Path">\\dbintsys110\G$\Archive\Visits1\Elara EVV\</Setting>
+    <Setting Target="Adapter" Name="Format File Name">1</Setting>
+    <Setting Target="Host" Name="Filename">%f_%Q%!+(_a)</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Get Worker Info Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Vendors.SandataConn.EVV.Employees.GetWorkerInfoOp" PoolSize="1" Enabled="false" Foreground="false" Comment="Worker Op only for EVV Sandata Conn" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Get Vendor Details Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Get Vendor Details Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - Get Clients" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="GetTransactionsOp Target">Sandata Connecticut EVV Clients - Get Vendor Transactions Op</Setting>
+    <Setting Target="Host" Name="Target">Sandata Connecticut EVV Clients - Clients BPL</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">424</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">330</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">ADT</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">6</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">Sandata Connecticut EVV Clients - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">Sandata Connecticut EVV Clients - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">Sandata Connecticut EVV Clients - DOF Get System Settings Op</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - File Write Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Assembly.WriteFileOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="Default File Name">Test</Setting>
+    <Setting Target="Adapter" Name="FilePath">\\dbintsys110\G$\Archive\Visits1\Elara EVV\Clients</Setting>
+    <Setting Target="Adapter" Name="Default File Path">\\dbintsys110\G$\Archive\Visits1\Elara EVV\Clients\</Setting>
+    <Setting Target="Adapter" Name="Format File Name">1</Setting>
+    <Setting Target="Host" Name="Framing">None</Setting>
+    <Setting Target="Adapter" Name="Overwrite">1</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - Get Clients Info Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Customer.GetEpisodeDetailInformationOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - Get Vendor Details Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - Get Vendor Transactions Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionTypeToSearch">ADT</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">6</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - Log Error Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - Update Transaction Status Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="Therapy Sync - Write File Op" Category="Therapy Sync" ClassName="EnsLib.File.PassthroughOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Filename">%f</Setting>
+    <Setting Target="Adapter" Name="FilePath">G:\Archive\Visits1\TherapySync</Setting>
+    <Setting Target="Adapter" Name="Overwrite">1</Setting>
+  </Item>
+  <Item Name="'CellTrak EVV - Split Invoice Transaction Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.SplitInvoiceTransactionOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Rejected Email Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Assembly.EmailOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Adapter" Name="From">hchb-intdev-all@hchb.com</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - Rejection Error Maps" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Customer.GetVendorMapOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Test" Category="VNACO Footcare - Visits" ClassName="HchbLib.Assembly.EmailOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="HchbLib.Customer.GetEpisodeDetailInformationOp" Category="" ClassName="HchbLib.Customer.GetEpisodeDetailInformationOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Get Patient Info Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Customer.GetEpisodeDetailInformationOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Get Payor Source Map Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Customer.GetVendorMapOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Worker Groups Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetWorkerGroupsOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Insert Messages Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Vendors.EVV.InsertVendorEVVMessagesOp" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - Workflow Svc Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Services.WorkflowSvc.Operation.BasicHttpBindingIWorkflowService" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="WebServiceURL">https://workflowdev.hchb.local/WorkflowService.svc</Setting>
+    <Setting Target="Adapter" Name="SSLCheckServerIdentity">1</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+  </Item>
+  <Item Name="Sandata Conn Test Email" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Vendors.SandataConn.EVV.Employees.BPL.EmployeesBPL" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Log Error">Sandata Connecticut EVV Employees - Log Error Op</Setting>
+    <Setting Target="Host" Name="Rest Op Target">Sandata Connecticut EVV Employees - Rest Op</Setting>
+    <Setting Target="Host" Name="Transform to Employee Json Request DTL">HchbLib.Vendors.SandataConn.EVV.Employees.DTL.EmployeeSubmission</Setting>
+    <Setting Target="Host" Name="Update Vendor Transaction Status">Sandata Connecticut EVV Employees - Update Transaction Status Op</Setting>
+    <Setting Target="Host" Name="Worker Target">Sandata Connecticut EVV Employees - Get Worker Info Op</Setting>
+    <Setting Target="Host" Name="Vendor Details Target">Sandata Connecticut EVV Employees - Get Vendor Details Op</Setting>
+    <Setting Target="Host" Name="Vendor Maps Target">Sandata Connecticut EVV Employees - Rejection Error Maps</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - ExceptionOp" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.ExceptionOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Workflow SQL Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.WorkflowSQLOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Visit Confirmation Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitConfirmations" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Visit Task List Non-Skilled" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitTaskListNonSkilled" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Submission Op" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.GetCellTrakSubmissionOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Incomplete Visits List" Category="CellTrak EVV" ClassName="HchbLib.Interface.GetCustomerTransactionsSvc" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="GetTransactionsOp Target">CellTrak EVV - Get Incomplete Transactions Op</Setting>
+    <Setting Target="Host" Name="Target">CellTrak EVV - Generate Incomplete Visit Request</Setting>
+    <Setting Target="Adapter" Name="ApplicationID">343</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+    <Setting Target="Adapter" Name="DirectionID">Outbound</Setting>
+    <Setting Target="Adapter" Name="VendorID">318</Setting>
+    <Setting Target="Adapter" Name="Active">1</Setting>
+    <Setting Target="Adapter" Name="CallInterval">400</Setting>
+    <Setting Target="Host" Name="GetDOFVTOp Target">CellTrak EVV - DOF Get Vendor Transactions HTTP Op</Setting>
+    <Setting Target="Host" Name="InterfaceHandleIdOp Target">CellTrak EVV - DOF Get Interface HandleId Op</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">13</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="DOFEnabled">1</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">13</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="SqlDatabaseOp Target">CellTrak EVV - DOF Get System Settings Op</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get Incomplete Transactions Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Host" Name="TransactionEntityTypeToSearch">13</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Generate Incomplete Visit Request" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.IncompleteVisitBPL" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="Transform to Visit Request DTL">HchbLib.Vendors.CellTrak.EVV.DTL.IncompleteSubmissionRequestDTL</Setting>
+    <Setting Target="Host" Name="Rest Op Target">CellTrak EVV - Rest Op</Setting>
+    <Setting Target="Host" Name="Log Error">CellTrak EVV - Log Error Op</Setting>
+    <Setting Target="Host" Name="Update Vendor Transaction Status">CellTrak EVV - Update Transaction Status Op</Setting>
+    <Setting Target="Host" Name="Acknowledgement Target">CellTrak EVV - Get AcknowledgementOp</Setting>
+    <Setting Target="Host" Name="Authentication Target">CellTrak EVV - Authentication Op</Setting>
+    <Setting Target="Host" Name="Patient Info Target">CellTrak EVV - Get Patient Info Op</Setting>
+    <Setting Target="Host" Name="Visit Info Target">CellTrak EVV - Get Visit Info Op</Setting>
+    <Setting Target="Host" Name="Visit Payor Target">CellTrak EVV - Get Visit Payor Info Op</Setting>
+    <Setting Target="Host" Name="Worker Target">CellTrak EVV - Get Worker Op</Setting>
+    <Setting Target="Host" Name="Episode Vendor Metadata Target">Celltrak EVV - Get Episode VendorMetadata</Setting>
+    <Setting Target="Host" Name="Vendor Details Target">Celltrak EVV - Get Vendor Details Op</Setting>
+    <Setting Target="Host" Name="Vendor Map Target">CellTrak EVV - Get Vendor Payor Map Op</Setting>
+    <Setting Target="Host" Name="Paper Visit Audit Data Target">CellTrak EVV - Get Audit User Op</Setting>
+    <Setting Target="Host" Name="Worker Groups Target">CellTrak EVV - Get Worker Groups Op</Setting>
+    <Setting Target="Host" Name="GeteSignFormAnswer Target">CellTrak EVV - Get eSignFormAnswer Op</Setting>
+    <Setting Target="Host" Name="Exception Target">CellTrak EVV - ExceptionOp</Setting>
+    <Setting Target="Host" Name="Workflow Service">CellTrak EVV - Workflow Service Op</Setting>
+    <Setting Target="Host" Name="Get ClientDesignee Target">CellTrak EVV - Get ClientDesignee Info Op</Setting>
+    <Setting Target="Host" Name="Get Payor Additional Fields Target">CellTrak EVV - Get Payor Source Additional Fields</Setting>
+    <Setting Target="Host" Name="ClientEpisodeFS Target">CellTrak EVV - Get CEFS Op</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get eSignFormAnswer Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitSignatureOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Get Visit Caregiver Info" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitInfoOp" PoolSize="4" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get ClientDesignee Info Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitInfoOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Payor Source Additional Fields" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetPayorSourceAdditionalFieldsOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Ens.Alert" Category="" ClassName="HchbLib.Assembly.Util.ErrorRoutingProcess" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Visit Skilled Task List Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetVisitTaskListSkilledOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak - Get Vendor Transactions Op" Category="CellTrak" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_QueueCancelledAideVisits</Setting>
+    <Setting Target="Host" Name="TransactionStatusProcessing">P</Setting>
+    <Setting Target="Host" Name="TransactionStatusToSearch">N</Setting>
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Generate Visit Exceptions" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.ExceptionBPL" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get CEFS Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.GetClientEpisodeFSOp" PoolSize="4" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="HTTP-MockEndpoints" Category="CellTrak,CellTrak EVV" ClassName="HchbLib.Interface.InteropAPI.JSONRestService" PoolSize="0" Enabled="false" Foreground="false" Comment="Mock Endpoint for responding with arbitrary response codes" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="Port"></Setting>
+  </Item>
+  <Item Name="CellTrak EVV - Get Worker Op" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.SQLOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get Visit Op" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.SQLOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Vendor Map Op" Category="CellTrak EVV" ClassName="HchbLib.Vendors.CellTrak.EVV.VendorMapSQLOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - Get PSF for Rejections" Category="CellTrak EVV Inbound" ClassName="HchbLib.Customer.GetPayorSourceAdditionalFieldsOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="CellTrak EVV - DOF Get Vendor Transactions HTTP Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.Operations.DOFHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">dof.k8s-dev.hchb.local</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">NoCert</Setting>
+    <Setting Target="Adapter" Name="URL">/api/v1/GetGeneralVendorTransaction</Setting>
+    <Setting Target="Host" Name="GetUserTokenOp">CellTrak EVV - DOF Get Auth Token HTTP Op</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="ArchiveIO">1</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - DOF Get Auth Token HTTP Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.Operations.TokenServiceHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">tokendev.hchb.com</Setting>
+    <Setting Target="Adapter" Name="URL">/connect/token</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">NoCert</Setting>
+    <Setting Target="Host" Name="clientID">dofdev.client</Setting>
+    <Setting Target="Host" Name="clientsecret">TokenServiceClientSecretDOF</Setting>
+    <Setting Target="Host" Name="granttype">interop_auth</Setting>
+    <Setting Target="Host" Name="nonce">TokenServiceNonceDOF</Setting>
+    <Setting Target="Host" Name="scope">dofdev.hchb.com hchb.identity</Setting>
+    <Setting Target="Adapter" Name="Credentials"></Setting>
+  </Item>
+  <Item Name="CellTrak EVV - DOF Get Interface HandleId Op" Category="CellTrak EVV" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="CellTrak EVV - DOF Dedup Vendor Transactions Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionDeduplicationProc"></Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationEventType"></Setting>
+  </Item>
+  <Item Name="CellTrak EVV - DOF Get System Settings Op" Category="CellTrak EVV" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview - DOF Get Vendor Transactions HTTP Op" Category="Worldview" ClassName="HchbLib.Customer.Operations.DOFHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">dof.k8s-prod.hchb.local</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Adapter" Name="URL">/api/v1/GetGeneralVendorTransaction</Setting>
+    <Setting Target="Host" Name="GetUserTokenOp">Worldview - DOF Get Auth Token HTTP Op</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="ArchiveIO">1</Setting>
+  </Item>
+  <Item Name="Worldview - DOF Get Auth Token HTTP Op" Category="Worldview" ClassName="HchbLib.Customer.Operations.TokenServiceHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">token.hchb.com</Setting>
+    <Setting Target="Adapter" Name="URL">/connect/token</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Host" Name="clientID">dof.client</Setting>
+    <Setting Target="Host" Name="clientsecret">TokenServiceClientSecretDOF</Setting>
+    <Setting Target="Host" Name="granttype">interop_auth</Setting>
+    <Setting Target="Host" Name="scope">dof.hchb.com hchb.identity</Setting>
+    <Setting Target="Adapter" Name="Credentials"></Setting>
+  </Item>
+  <Item Name="Worldview - DOF Get Interface HandleId Op" Category="Worldview" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Worldview - DOF Dedup Vendor Transactions Op" Category="Worldview" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_DeduplicateSingleVITDEventType</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationEventType"></Setting>
+  </Item>
+  <Item Name="Worldview - DOF Get System Settings Op" Category="Worldview" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata - DOF Get Vendor Transactions HTTP Op" Category="Sandata" ClassName="HchbLib.Customer.Operations.DOFHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">dof.k8s-prod.hchb.local</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Adapter" Name="URL">/api/v1/GetGeneralVendorTransaction</Setting>
+    <Setting Target="Host" Name="GetUserTokenOp">Sandata - DOF Get Auth Token HTTP Op</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="ArchiveIO">1</Setting>
+  </Item>
+  <Item Name="Sandata - DOF Get Auth Token HTTP Op" Category="Sandata" ClassName="HchbLib.Customer.Operations.TokenServiceHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">token.hchb.com</Setting>
+    <Setting Target="Adapter" Name="URL">/connect/token</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Host" Name="clientID">dof.client</Setting>
+    <Setting Target="Host" Name="clientsecret">TokenServiceClientSecretDOF</Setting>
+    <Setting Target="Host" Name="granttype">interop_auth</Setting>
+    <Setting Target="Host" Name="scope">dof.hchb.com hchb.identity</Setting>
+    <Setting Target="Adapter" Name="Credentials"></Setting>
+  </Item>
+  <Item Name="Sandata - DOF Get Interface HandleId Op" Category="Sandata" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Sandata - DOF Get System Settings Op" Category="Sandata" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview2 - DOF Get Vendor Transactions HTTP Op" Category="Worldview2" ClassName="HchbLib.Customer.Operations.DOFHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">dof.k8s-prod.hchb.local</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Adapter" Name="URL">/api/v1/GetGeneralVendorTransaction</Setting>
+    <Setting Target="Host" Name="GetUserTokenOp">Worldview2 - DOF Get Auth Token HTTP Op</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="ArchiveIO">1</Setting>
+  </Item>
+  <Item Name="Worldview2 - DOF Get Auth Token HTTP Op" Category="Worldview2" ClassName="HchbLib.Customer.Operations.TokenServiceHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">token.hchb.com</Setting>
+    <Setting Target="Adapter" Name="URL">/connect/token</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Host" Name="clientID">dof.client</Setting>
+    <Setting Target="Host" Name="clientsecret">TokenServiceClientSecretDOF</Setting>
+    <Setting Target="Host" Name="granttype">interop_auth</Setting>
+    <Setting Target="Host" Name="scope">dof.hchb.com hchb.identity</Setting>
+    <Setting Target="Adapter" Name="Credentials"></Setting>
+  </Item>
+  <Item Name="Worldview2 - DOF Get Interface HandleId Op" Category="Worldview2" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Worldview2 - DOF Dedup Vendor Transactions Op" Category="Worldview2" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_DeduplicateSingleVITDEventType</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationEventType"></Setting>
+  </Item>
+  <Item Name="Worldview2 - DOF Get System Settings Op" Category="Worldview2" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Worldview3 - DOF Get Vendor Transactions HTTP Op" Category="Worldview3" ClassName="HchbLib.Customer.Operations.DOFHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">dof.k8s-prod.hchb.local</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Adapter" Name="URL">/api/v1/GetGeneralVendorTransaction</Setting>
+    <Setting Target="Host" Name="GetUserTokenOp">Worldview3 - DOF Get Auth Token HTTP Op</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="ArchiveIO">1</Setting>
+  </Item>
+  <Item Name="Worldview3 - DOF Get Auth Token HTTP Op" Category="Worldview3" ClassName="HchbLib.Customer.Operations.TokenServiceHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">token.hchb.com</Setting>
+    <Setting Target="Adapter" Name="URL">/connect/token</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Host" Name="clientID">dof.client</Setting>
+    <Setting Target="Host" Name="clientsecret">TokenServiceClientSecretDOF</Setting>
+    <Setting Target="Host" Name="granttype">interop_auth</Setting>
+    <Setting Target="Host" Name="scope">dof.hchb.com hchb.identity</Setting>
+    <Setting Target="Adapter" Name="Credentials"></Setting>
+  </Item>
+  <Item Name="Worldview3 - DOF Get Interface HandleId Op" Category="Worldview3" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Worldview3 - DOF Dedup Vendor Transactions Op" Category="Worldview3" ClassName="HchbLib.Customer.Operations.GetVendorTransactionsListOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Host" Name="TransactionDeduplicationProc">usp_IntSys_DeduplicateSingleVITDEventType</Setting>
+    <Setting Target="Host" Name="TransactionDeduplicationEventType"></Setting>
+  </Item>
+  <Item Name="Worldview3 - DOF Get System Settings Op" Category="Worldview3" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - DOF Get Vendor Transactions HTTP Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Customer.Operations.DOFHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">dof.k8s-prod.hchb.local</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Adapter" Name="URL">/api/v1/GetGeneralVendorTransaction</Setting>
+    <Setting Target="Host" Name="GetUserTokenOp">Sandata Connecticut EVV Scheds - DOF Get Auth Token HTTP Op</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="ArchiveIO">1</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - DOF Get Auth Token HTTP Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Customer.Operations.TokenServiceHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">token.hchb.com</Setting>
+    <Setting Target="Adapter" Name="URL">/connect/token</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Host" Name="clientID">dof.client</Setting>
+    <Setting Target="Host" Name="clientsecret">TokenServiceClientSecretDOF</Setting>
+    <Setting Target="Host" Name="granttype">interop_auth</Setting>
+    <Setting Target="Host" Name="scope">dof.hchb.com hchb.identity</Setting>
+    <Setting Target="Adapter" Name="Credentials"></Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - DOF Get Interface HandleId Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Scheds - DOF Get System Settings Op" Category="Sandata Connecticut EVV Scheds" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - DOF Get Vendor Transactions HTTP Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Customer.Operations.DOFHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">dof.k8s-prod.hchb.local</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Adapter" Name="URL">/api/v1/GetGeneralVendorTransaction</Setting>
+    <Setting Target="Host" Name="GetUserTokenOp">Sandata Connecticut EVV Employees - DOF Get Auth Token HTTP Op</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="ArchiveIO">1</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - DOF Get Auth Token HTTP Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Customer.Operations.TokenServiceHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">token.hchb.com</Setting>
+    <Setting Target="Adapter" Name="URL">/connect/token</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Host" Name="clientID">dof.client</Setting>
+    <Setting Target="Host" Name="clientsecret">TokenServiceClientSecretDOF</Setting>
+    <Setting Target="Host" Name="granttype">interop_auth</Setting>
+    <Setting Target="Host" Name="scope">dof.hchb.com hchb.identity</Setting>
+    <Setting Target="Adapter" Name="Credentials"></Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - DOF Get Interface HandleId Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Employees - DOF Get System Settings Op" Category="Sandata Connecticut EVV Employees" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - DOF Get Vendor Transactions HTTP Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Customer.Operations.DOFHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">dof.k8s-prod.hchb.local</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Adapter" Name="URL">/api/v1/GetGeneralVendorTransaction</Setting>
+    <Setting Target="Host" Name="GetUserTokenOp">Sandata Connecticut EVV Clients - DOF Get Auth Token HTTP Op</Setting>
+    <Setting Target="Host" Name="AlertOnError">1</Setting>
+    <Setting Target="Host" Name="ArchiveIO">1</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - DOF Get Auth Token HTTP Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Customer.Operations.TokenServiceHTTPOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="HTTPPort">443</Setting>
+    <Setting Target="Adapter" Name="HTTPServer">token.hchb.com</Setting>
+    <Setting Target="Adapter" Name="URL">/connect/token</Setting>
+    <Setting Target="Adapter" Name="SSLConfig">SSL Config</Setting>
+    <Setting Target="Host" Name="clientID">dof.client</Setting>
+    <Setting Target="Host" Name="clientsecret">TokenServiceClientSecretDOF</Setting>
+    <Setting Target="Host" Name="granttype">interop_auth</Setting>
+    <Setting Target="Host" Name="scope">dof.hchb.com hchb.identity</Setting>
+    <Setting Target="Adapter" Name="Credentials"></Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - DOF Get Interface HandleId Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Interface.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+    <Setting Target="Adapter" Name="DSN">INTERFACES</Setting>
+  </Item>
+  <Item Name="Sandata Connecticut EVV Clients - DOF Get System Settings Op" Category="Sandata Connecticut EVV Clients" ClassName="HchbLib.Customer.SqlDatabaseOp" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  </Item>
+</Production>
+}
+
+}

@@ -1,0 +1,328 @@
+<transform sourceClass='HchbLib.Vendors.HCHBStock.OutboundADT.Transaction' targetClass='EnsLib.HL7.Message' targetDocType='HchbLib.Vendors.HchbStock.OutboundADT:ADT_A01' create='new' language='objectscript' >
+<assign value='source.VendorTransaction.GetDatabaseIdentifier()' property='target.{MSH:SendingApplication}' action='set' />
+<assign value='source.VendorTransaction.GetDatabaseSecurityKey()' property='target.{MSH:SendingFacility}' action='set' />
+<assign value='source.VendorTransaction.VendorName' property='target.{MSH:ReceivingApplication}' action='set' />
+<assign value='source.VendorTransaction.GetTransactionType()' property='target.{MSH:MessageType.MessageCode}' action='set' />
+<assign value='source.VendorTransaction.GetEventType()' property='target.{MSH:MessageType.TriggerEvent}' action='set' />
+<assign value='..CurrentDateTime("%q") _ source.Patient.Episode.mrnum' property='target.{MSH:MessageControlID}' action='set' />
+<assign value='2.5' property='target.{MSH:VersionID.VersionID}' action='set' />
+<assign value='source.EpisodeVendorMetaData.VendorsServicelinesBranches.vDefConfig4' property='target.{MSH:ReceivingFacility}' action='set' />
+<assign value='source.VendorTransaction.GetProcessingFlag()' property='target.{MSH:ProcessingID}' action='set' />
+<assign value='..CurrentDateTime("%q")' property='target.{MSH:DateTimeOfMessage}' action='set' />
+<assign value='"ASCII"' property='target.{MSH:CharacterSet(1)}' action='set' />
+<assign value='source.VendorTransaction.GetEventType()' property='target.{EVN:EventTypeCode}' action='set' />
+<assign value='..ConvertDateTime(source.VendorTransaction.TransactionDate,,"%q")' property='target.{EVN:RecordedDateTime}' action='set' />
+<assign value='..ConvertDateTime(source.VendorTransaction.TransactionDate,,"%q")' property='target.{EVN:DateTimePlannedEvent}' action='set' />
+<assign value='"01"' property='target.{EVN:EventReasonCode}' action='set' />
+<assign value='"12345"' property='target.{EVN:OperatorID()}' action='set' />
+<assign value='..ConvertDateTime(source.VendorTransaction.TransactionDate,,"%q")' property='target.{EVN:EventOccurred}' action='set' />
+<assign value='1' property='target.{PID:SetIDPID}' action='set' />
+<assign value='source.Patient.Episode.paid' property='target.{PID:PatientIdentifierList(1).IDNumber}' action='set' />
+<assign value='"HCHB"' property='target.{PID:PatientIdentifierList(1).AssigningAuthority}' action='set' />
+<assign value='"PN"' property='target.{PID:PatientIdentifierList(1).IdentifierTypeCode}' action='set' />
+<if condition='source.Admission.caid &apos;= ""' >
+<true>
+<assign value='source.Admission.caid' property='target.{PID:PatientIdentifierList(2).IDNumber}' action='set' />
+<assign value='"HCHB"' property='target.{PID:PatientIdentifierList(2).AssigningAuthority}' action='set' />
+<assign value='"PI"' property='target.{PID:PatientIdentifierList(2).IdentifierTypeCode}' action='set' />
+</true>
+</if>
+<assign value='source.EpisodeVendorMetaData.VendorReferralLink.externalId' property='target.{PID:PatientID}' action='set' />
+<assign value='source.Patient.Episode.id' property='target.{PID:AlternatePatientIDPID(1).IDNumber}' action='set' />
+<assign value='"HCHB"' property='target.{PID:AlternatePatientIDPID(1).AssigningAuthority}' action='set' />
+<assign value='"PI"' property='target.{PID:AlternatePatientIDPID(1).IdentifierTypeCode}' action='set' />
+<assign value='source.Patient.Episode.lastName' property='target.{PID:PatientName(1).FamilyName}' action='set' />
+<assign value='source.Patient.Episode.firstName' property='target.{PID:PatientName(1).GivenName}' action='set' />
+<assign value='source.Patient.Episode.mi' property='target.{PID:PatientName(1).SecondandFurtherGivenNamesor}' action='set' />
+<assign value='source.Patient.Episode.raceDescription' property='target.{PID:Race(1)}' action='set' />
+<assign value='1' property='target.{PV1:SetIDPV1}' action='set' />
+<assign value='$REPLACE(..ConvertDateTime(source.Patient.Episode.dob,,"%q(2)"),"-","")' property='target.{PID:DateTimeOfBirth}' action='set' />
+<assign value='..ConvertDateTime(source.Patient.Episode.DateTimeOfDeath,,"%q")' property='target.{PID:PatientDeathDateandTime.Time}' action='set' />
+<assign value='source.Patient.Episode.PatientDeathIndicator' property='target.{PID:PatientDeathIndicator}' action='set' />
+<assign value='source.Patient.Episode.MaritalStatusDesc' property='target.{PID:MaritalStatus}' action='set' />
+<if condition='source.Patient.Episode.gender="MALE"' >
+<true>
+<assign value='"M"' property='target.{PID:AdministrativeSex}' action='set' />
+</true>
+<false>
+<if condition='source.Patient.Episode.gender="FEMALE"' >
+<true>
+<assign value='"F"' property='target.{PID:AdministrativeSex}' action='set' />
+</true>
+<false>
+<assign value='"U"' property='target.{PID:AdministrativeSex}' action='set' />
+</false>
+</if>
+</false>
+</if>
+<foreach property='source.Patient.ServiceLocationList()' key='k1' >
+<if condition='k1=1' >
+<true>
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).FormatPhone(source.Patient.Episode.workPhone)' property='target.{PID:PhoneNumberBusiness(k1).TelephoneNumber}' action='set' />
+<assign value='source.Patient.Episode.PrimaryLanguage' property='target.{PID:PrimaryLanguage}' action='set' />
+<assign value='source.Patient.Episode.mrnum' property='target.{PID:PatientAccountNumber}' action='set' />
+<if condition='source.VendorDetails.GetValue("StockADTHideSSN") &apos;= "1"' >
+<true>
+<assign value='source.Patient.Episode.ssn' property='target.{PID:SSNNumberPatient}' action='set' />
+</true>
+</if>
+<assign value='"PH"' property='target.{PID:PhoneNumberHome(1).TelecommunicationEquipmentTy}' action='set' />
+<assign value='"CP"' property='target.{PID:PhoneNumberHome(2).TelecommunicationEquipmentTy}' action='set' />
+<if condition='source.Patient.ServiceLocationList.(k1).phone &apos;= ""' >
+<true>
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).FormatPhone(source.Patient.ServiceLocationList.(k1).phone)' property='target.{PID:PhoneNumberHome(1).TelephoneNumber}' action='set' />
+</true>
+</if>
+<if condition='source.Patient.Episode.alternatePhone &apos;= ""' >
+<true>
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).FormatPhone(source.Patient.Episode.alternatePhone)' property='target.{PID:PhoneNumberHome(2).TelephoneNumber}' action='set' />
+</true>
+</if>
+<if condition='source.Patient.Episode.email &apos;= ""' >
+<true>
+<assign value='source.Patient.Episode.email' property='target.{PID:PhoneNumberHome(k1).EmailAddress}' action='set' />
+</true>
+</if>
+<assign value='..SubString(source.Patient.ServiceLocationList.(k1).address,,50)' property='target.{PID:PatientAddress(k1).StreetAddress}' action='set' />
+<assign value='source.Patient.ServiceLocationList.(k1).city' property='target.{PID:PatientAddress(k1).City}' action='set' />
+<assign value='source.Patient.ServiceLocationList.(k1).state' property='target.{PID:PatientAddress(k1).StateorProvince}' action='set' />
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).CleanZipCode(source.Patient.ServiceLocationList.(k1).zip)' property='target.{PID:PatientAddress(k1).ZiporPostalCode}' action='set' />
+<assign value='source.Patient.ServiceLocationList.(k1).faId' property='target.{PID:PatientAddress(k1).CountyParishCode}' action='set' />
+<assign value='source.Patient.ServiceLocationList.(k1).faName' property='target.{PID:PatientAddress(k1).OtherGeographicDesignation}' action='set' />
+<assign value='source.Patient.ServiceLocationList.(k1).sloctDescription' property='target.{PID:PatientAddress(k1).AddressType}' action='set' />
+</true>
+</if>
+</foreach>
+<if condition='source.VendorTransaction.InterfaceTransactionType &apos;= "Revoke Consent"' >
+<true>
+<if condition='source.VendorTransaction.GetEventType()="A03"' >
+<true>
+<assign value='..ConvertDateTime(source.Patient.Episode.dischargeDate,,"%q")' property='target.{PV1:DischargeDateTime(1)}' action='set' />
+<assign value='source.Patient.Episode.drCode' property='target.{PV1:DischargeDisposition}' action='set' />
+</true>
+</if>
+<assign value='source.Patient.Episode.id' property='target.{PV1:VisitNumber}' action='set' />
+<assign value='source.Patient.Episode.admitType' property='target.{PV1:AdmissionType}' action='set' />
+<assign value='source.Patient.Episode.status' property='target.{PV1:AccountStatus}' action='set' />
+<assign value='1' property='zrdCounter' action='set' />
+<foreach property='source.Patient.PhysicianList()' key='k1' >
+<if condition='k1 = 1' >
+<true>
+<assign value='source.Patient.PhysicianList.(k1).firstName' property='target.{PV1:AttendingDoctor(k1).GivenName}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).lastName' property='target.{PV1:AttendingDoctor(k1).FamilyName}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).NPI' property='target.{PV1:AttendingDoctor(k1).IDNumber}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).degree' property='target.{PV1:AttendingDoctor(k1).Degree}' action='set' />
+</true>
+<false>
+<if condition='k1=2' >
+<true>
+<assign value='source.Patient.PhysicianList.(k1).NPI' property='target.{PV1:ConsultingDoctor(1).IDNumber}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).lastName' property='target.{PV1:ConsultingDoctor(1).FamilyName}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).firstName' property='target.{PV1:ConsultingDoctor(1).GivenName}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).degree' property='target.{PV1:ConsultingDoctor(1).Degree}' action='set' />
+</true>
+</if>
+</false>
+</if>
+<if condition='source.ExcludeZSegments&apos;="Y"' >
+<true>
+<assign value='source.Patient.PhysicianList.(k1).id' property='target.{ZRD(zrdCounter):ProviderRole.Identifier}' action='set' />
+<if condition='k1 = 1' >
+<true>
+<assign value='"attending"' property='target.{ZRD(zrdCounter):ProviderRole.Text}' action='set' />
+</true>
+<false>
+<assign value='"consulting"' property='target.{ZRD(zrdCounter):ProviderRole.Text}' action='set' />
+</false>
+</if>
+<assign value='source.Patient.PhysicianList.(k1).lastName' property='target.{ZRD(zrdCounter):ProviderName(1).FamilyName}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).firstName' property='target.{ZRD(zrdCounter):ProviderName(1).GivenName}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).id' property='target.{ZRD(zrdCounter):ProviderName(1).NameContext.Identifier}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).city' property='target.{ZRD(zrdCounter):ProviderAddress(1).City}' action='set' />
+<assign value='..SubString(source.Patient.PhysicianList.(k1).address,,50)' property='target.{ZRD(zrdCounter):ProviderAddress(1).StreetAddress}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).state' property='target.{ZRD(zrdCounter):ProviderAddress(1).StateorProvince}' action='set' />
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).CleanZipCode(source.Patient.PhysicianList.(k1).zip)' property='target.{ZRD(zrdCounter):ProviderAddress(1).ZiporPostalCode}' action='set' />
+<assign value='"USA"' property='target.{ZRD(zrdCounter):ProviderAddress(1).Country}' action='set' />
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).FormatPhone(source.Patient.PhysicianList.(k1).phone)' property='target.{ZRD(zrdCounter):ProviderTelephone(1).TelephoneNumber}' action='set' />
+<assign value='source.Patient.PhysicianList.(k1).NPI' property='target.{ZRD(zrdCounter):NPI.IDNumber}' action='set' />
+<assign value='"NPI"' property='target.{ZRD(zrdCounter):NPI.TypeOfIDNumber}' action='set' />
+<assign value='""' property='target.{ZRD(zrdCounter):EffectiveStartDate}' action='set' />
+<assign value='""' property='target.{ZRD(zrdCounter):EffectiveEndDate}' action='set' />
+<assign value='zrdCounter + 1' property='zrdCounter' action='set' />
+</true>
+</if>
+</foreach>
+<assign value='source.Patient.Episode.slDesc' property='target.{PV1:PatientType}' action='set' />
+<assign value='source.Patient.ReferringPhysician.NPI' property='target.{PV1:ReferringDoctor(1).IDNumber}' action='set' />
+<assign value='source.Patient.ReferringPhysician.lastName' property='target.{PV1:ReferringDoctor(1).FamilyName}' action='set' />
+<assign value='source.Patient.ReferringPhysician.firstName' property='target.{PV1:ReferringDoctor(1).GivenName}' action='set' />
+<assign value='source.Patient.ReferringPhysician.degree' property='target.{PV1:ReferringDoctor(1).Degree}' action='set' />
+<assign value='"O"' property='target.{PV1:PatientClass}' action='set' />
+<assign value='source.Patient.Agency.name' property='target.{PV1:AssignedPatientLocation.PointofCare}' action='set' />
+<assign value='source.Patient.Episode.slId' property='target.{PV1:AssignedPatientLocation.LocationStatus}' action='set' />
+<if condition='source.VendorTransaction.GetEventType()="A02"' >
+<true>
+<assign value='source.Patient.Branch.name' property='target.{PV1:AssignedPatientLocation.Facility.UniversalID}' action='set' />
+<assign value='source.Patient.Branch.code' property='target.{PV1:AssignedPatientLocation.Facility.NamespaceID}' action='set' />
+<assign value='source.Patient.Episode.teamName' property='target.{PV1:AssignedPatientLocation.LocationDescription}' action='set' />
+</true>
+<false>
+<assign value='source.Patient.Branch.name' property='target.{PV1:AssignedPatientLocation.Facility.UniversalID}' action='set' />
+<assign value='source.Patient.Branch.code' property='target.{PV1:AssignedPatientLocation.Facility.NamespaceID}' action='set' />
+<assign value='source.Patient.Episode.teamName' property='target.{PV1:AssignedPatientLocation.LocationDescription}' action='set' />
+</false>
+</if>
+<assign value='..ConvertDateTime(source.Patient.Episode.socDate,,"%q")' property='target.{PV1:AdmitDateTime}' action='set' />
+<if condition='source.CaseManager.LastName &apos;= ""' >
+<true>
+<assign value='source.CaseManager.LastName' property='target.{PV1:OtherHealthcareProvider(1).FamilyName}' action='set' />
+<assign value='source.CaseManager.FirstName' property='target.{PV1:OtherHealthcareProvider(1).GivenName}' action='set' />
+<assign value='source.CaseManager.Title' property='target.{PV1:OtherHealthcareProvider(1).Degree}' action='set' />
+</true>
+</if>
+<if condition='(source.Patient.Episode.startOfEpisode &apos;= "") || (source.Patient.Episode.endOfEpisode &apos;= "")' >
+<true>
+<assign value='..ConvertDateTime(source.Patient.Episode.startOfEpisode,,"%q")' property='target.{PV2:ExpectedAdmitDateTime}' action='set' />
+<assign value='..ConvertDateTime(source.Patient.Episode.endOfEpisode,,"%q")' property='target.{PV2:ExpectedDischargeDateTime}' action='set' />
+</true>
+</if>
+<foreach property='source.Patient.ServiceLocationList()' key='k1' >
+<if condition='k1=1' >
+<true>
+<assign value='source.Patient.ServiceLocationList.(k1).room' property='target.{PV1:AssignedPatientLocation.Room}' action='set' />
+<assign value='source.Patient.ServiceLocationList.(k1).sloctDescription' property='target.{PV1:AssignedPatientLocation.PersonLocationType}' action='set' />
+</true>
+</if>
+</foreach>
+<foreach property='source.Patient.ContactList()' key='k1' >
+<assign value='k1' property='target.{NK1(k1):SetIDNK1}' action='set' />
+<assign value='source.Patient.ContactList.(k1).type' property='target.{NK1(k1):Relationship.Identifier}' action='set' />
+<assign value='source.Patient.ContactList.(k1).lastName' property='target.{NK1(k1):Name(1).FamilyName}' action='set' />
+<assign value='source.Patient.ContactList.(k1).firstName' property='target.{NK1(k1):Name(1).GivenName}' action='set' />
+<assign value='source.Patient.ContactList.(k1).lastName' property='target.{NK1(k1):ContactPersonsName(1).FamilyName}' action='set' />
+<assign value='source.Patient.ContactList.(k1).firstName' property='target.{NK1(k1):ContactPersonsName(1).GivenName}' action='set' />
+<assign value='source.Patient.ContactList.(k1).city' property='target.{NK1(k1):Address(1).City}' action='set' />
+<assign value='source.Patient.ContactList.(k1).relRelationDesc' property='target.{NK1(k1):Relationship.Text}' action='set' />
+<assign value='..SubString(source.Patient.ContactList.(k1).street,,50)' property='target.{NK1(k1):Address(1).StreetAddress}' action='set' />
+<assign value='source.Patient.ContactList.(k1).state' property='target.{NK1(k1):Address(1).StateorProvince}' action='set' />
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).CleanZipCode(source.Patient.ContactList.(k1).zip)' property='target.{NK1(k1):Address(1).ZiporPostalCode}' action='set' />
+<assign value='"PH"' property='target.{NK1(k1):PhoneNumber(1).TelecommunicationEquipmentTy}' action='set' />
+<assign value='"CP"' property='target.{NK1(k1):PhoneNumber(2).TelecommunicationEquipmentTy}' action='set' />
+<if condition='source.Patient.ContactList.(k1).homePhone &apos;= ""' >
+<true>
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).FormatPhone(source.Patient.ContactList.(k1).homePhone)' property='target.{NK1(k1):PhoneNumber(1).TelephoneNumber}' action='set' />
+</true>
+</if>
+<if condition='source.Patient.ContactList.(k1).alternatePhone &apos;= ""' >
+<true>
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).FormatPhone(source.Patient.ContactList.(k1).alternatePhone)' property='target.{NK1(k1):PhoneNumber(2).TelephoneNumber}' action='set' />
+</true>
+</if>
+<if condition='source.Patient.ContactList.(k1).email &apos;= ""' >
+<true>
+<assign value='source.Patient.ContactList.(k1).email' property='target.{NK1(k1):PhoneNumber(1).EmailAddress}' action='set' />
+</true>
+</if>
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).FormatPhone(source.Patient.ContactList.(k1).homePhone)' property='target.{NK1(k1):ContactPersonsTelephoneNumbe(1)}' action='set' />
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).FormatPhone(source.Patient.ContactList.(k1).workPhone)' property='target.{NK1(k1):BusinessPhoneNumber(1).TelephoneNumber}' action='set' />
+</foreach>
+<foreach property='source.Patient.DiagnosisList()' key='k1' >
+<assign value='k1' property='target.{DG1(k1):SetIDDG1}' action='set' />
+<assign value='source.Patient.DiagnosisList.(k1).desc' property='target.{DG1(k1):DiagnosisCodeDG1.Text}' action='set' />
+<assign value='source.Patient.DiagnosisList.(k1).icdcode' property='target.{DG1(k1):DiagnosisCodeDG1.Identifier}' action='set' />
+<assign value='source.Patient.DiagnosisList.(k1).desc' property='target.{DG1(k1):DiagnosisDescription}' action='set' />
+<assign value='..ConvertDateTime(source.Patient.DiagnosisList.(k1).OEDate,,"%q")' property='target.{DG1(k1):DiagnosisDateTime}' action='set' />
+<assign value='"ICD"_source.Patient.DiagnosisList.(k1).icdtype' property='target.{DG1(k1):DiagnosisCodingMethod}' action='set' />
+<if condition='source.Patient.DiagnosisList.(k1).OnsetExac  = "EXACERBATION"' >
+<true>
+<assign value='"E"' property='target.{DG1(k1):DiagnosisType}' action='set' />
+</true>
+<false>
+<if condition='source.Patient.DiagnosisList.(k1).OnsetExac = "ONSET"' >
+<true>
+<assign value='"O"' property='target.{DG1(k1):DiagnosisType}' action='set' />
+</true>
+</if>
+</false>
+</if>
+<assign value='source.Patient.DiagnosisList.(k1).sortOrder' property='target.{DG1(k1):DiagnosisPriority}' action='set' />
+</foreach>
+<foreach property='source.Patient.AllergyList()' key='k1' >
+<assign value='k1' property='target.{AL1(k1):SetIDAL1}' action='set' />
+<assign value='source.Patient.AllergyList.(k1).desc' property='target.{AL1(k1):AllergenCodeMnemonicDescript.Text}' action='set' />
+<assign value='..ConvertDateTime(source.Patient.AllergyList.(k1).dateEntered,,"%q")' property='target.{AL1(k1):IdentificationDate}' action='set' />
+</foreach>
+<foreach property='source.Patient.PayorList()' key='k2' >
+<assign value='k2' property='target.{IN1grp(k2).IN1:SetIDIN1}' action='set' />
+<assign value='source.Patient.PayorList.(k2).cefsPolicyNumberBySL' property='target.{IN1grp(k2).IN1:InsurancePlanID}' action='set' />
+<assign value='source.Patient.PayorList.(k2).desc' property='target.{IN1grp(k2).IN1:InsuranceCompanyID(1)}' action='set' />
+<assign value='source.Patient.PayorList.(k2).desc' property='target.{IN1grp(k2).IN1:InsuranceCompanyName(1 ).OrganizationName}' action='set' />
+<assign value='source.Patient.PayorList.(k2).cefsPolicyNo' property='target.{IN1grp(k2).IN1:PolicyNumber}' action='set' />
+<assign value='source.Patient.PayorList.(k2).ptDesc' property='target.{IN1grp(k2).IN1:InsuranceCompanyName(1).IDNUmber}' action='set' />
+<assign value='..SubString(source.Patient.PayorList.(k2).address,,50)' property='target.{IN1grp(k2).IN1:InsuranceCompanyAddress(k2).StreetAddress}' action='set' />
+<assign value='source.Patient.PayorList.(k2).phone' property='target.{IN1grp(k2).IN1:InsuranceCoPhoneNumber(1)}' action='set' />
+<assign value='source.Patient.PayorList.(k2).agencyContact' property='target.{IN1grp(k2).IN1:InsuranceCoContactPerson(1).SecondandFurtherGivenNamesor}' action='set' />
+<assign value='source.Patient.PayorList.(k2).cefsipiLastName' property='target.{IN1grp(k2).IN1:NameOfInsured(1).FamilyName}' action='set' />
+<assign value='source.Patient.PayorList.(k2).cefsipiFirstName' property='target.{IN1grp(k2).IN1:NameOfInsured(1).GivenName}' action='set' />
+<assign value='source.Patient.PayorList.(k2).relRelationDesc' property='target.{IN1grp(k2).IN1:InsuredsRelationshipToPatien}' action='set' />
+<assign value='..ConvertDateTime(source.Patient.PayorList.(k2).cefsipiDob,,"%q")' property='target.{IN1grp(k2).IN1:InsuredsDateOfBirth}' action='set' />
+<assign value='source.Patient.PayorList.(k2).cefsipiAddress' property='target.{IN1grp(k2).IN1:InsuredsAddress(k2).StreetAddress.StreetorMailingAddress}' action='set' />
+<assign value='source.Patient.PayorList.(k2).cefsipiCity' property='target.{IN1grp(k2).IN1:InsuredsAddress(1).City}' action='set' />
+<assign value='source.Patient.PayorList.(k2).cefsipiState' property='target.{IN1grp(k2).IN1:InsuredsAddress(1).StateorProvince}' action='set' />
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).CleanZipCode(source.Patient.PayorList.(k2).cefsipiZip)' property='target.{IN1grp(k2).IN1:InsuredsAddress(1).ZiporPostalCode}' action='set' />
+<assign value='source.Patient.PayorList.(k2).city' property='target.{IN1grp(k2).IN1:InsuranceCompanyAddress(k2).City}' action='set' />
+<assign value='source.Patient.PayorList.(k2).state' property='target.{IN1grp(k2).IN1:InsuranceCompanyAddress(k2).StateorProvince}' action='set' />
+<assign value='source.Patient.PayorList.(k2).zip' property='target.{IN1grp(k2).IN1:InsuranceCompanyAddress(k2).ZiporPostalCode}' action='set' />
+</foreach>
+</true>
+</if>
+<if condition='source.Consent &apos;= ""' >
+<true>
+<assign value='source.Consent.isConsented' property='target.{PD1:PublicityCode}' action='set' />
+<assign value='..ConvertDateTime(source.Consent.submittedDate,,"%q")' property='target.{PD1:PublicityCodeEffectiveDate}' action='set' />
+</true>
+</if>
+<if condition='source.Patient.ReferringFacility &apos;= ""' >
+<true>
+<if condition='source.ExcludeZSegments&apos;="Y"' >
+<true>
+<assign value='source.Patient.ReferringFacility.id' property='target.{ZRD(zrdCounter):ProviderRole.Identifier}' action='set' />
+<assign value='"Referring Facility"' property='target.{ZRD(zrdCounter):ProviderRole.Text}' action='set' />
+<assign value='source.Patient.ReferringFacility.name' property='target.{ZRD(zrdCounter):ProviderName(1).FamilyName}' action='set' />
+<assign value='source.Patient.ReferringFacility.id' property='target.{ZRD(zrdCounter):ProviderName(1).NameContext.Identifier}' action='set' />
+<assign value='source.Patient.ReferringFacility.city' property='target.{ZRD(zrdCounter):ProviderAddress(1).City}' action='set' />
+<assign value='..SubString(source.Patient.ReferringFacility.street,,50)' property='target.{ZRD(zrdCounter):ProviderAddress(1).StreetAddress}' action='set' />
+<assign value='source.Patient.ReferringFacility.state' property='target.{ZRD(zrdCounter):ProviderAddress(1).StateorProvince}' action='set' />
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).CleanZipCode(source.Patient.ReferringFacility.zip)' property='target.{ZRD(zrdCounter):ProviderAddress(1).ZiporPostalCode}' action='set' />
+<assign value='"USA"' property='target.{ZRD(zrdCounter):ProviderAddress(1).Country}' action='set' />
+<assign value='##class(HchbLib.Assembly.Util.FunctionSet).FormatPhone(source.Patient.ReferringFacility.telephone)' property='target.{ZRD(zrdCounter):ProviderTelephone(1).TelephoneNumber}' action='set' />
+<assign value='source.Patient.ReferringFacility.rftDesc' property='target.{ZRD(zrdCounter):ProviderLocation(1).LocationDescription}' action='set' />
+<assign value='source.Patient.ReferringFacility.NPI' property='target.{ZRD(zrdCounter):NPI.IDNumber}' action='set' />
+<assign value='"NPI"' property='target.{ZRD(zrdCounter):NPI.TypeOfIDNumber}' action='set' />
+<assign value='""' property='target.{ZRD(zrdCounter):EffectiveStartDate}' action='set' />
+<assign value='""' property='target.{ZRD(zrdCounter):EffectiveEndDate}' action='set' />
+<assign value='zrdCounter + 1' property='zrdCounter' action='set' />
+</true>
+</if>
+</true>
+</if>
+<assign value='0' property='obxCounter' action='set' />
+<if condition='source.Patient.Episode.height &apos;= ""' >
+<true>
+<assign value='obxCounter + 1' property='obxCounter' action='set' />
+<assign value='obxCounter' property='target.{OBX(obxCounter):SetIDOBX}' action='set' />
+<assign value='"ST"' property='target.{OBX(obxCounter):ValueType}' action='set' />
+<assign value='"Height(in)"' property='target.{OBX(obxCounter):ObservationIdentifier}' action='set' />
+<assign value='source.Patient.Episode.height' property='target.{OBX(obxCounter):ObservationValue(1)}' action='set' />
+</true>
+</if>
+<if condition='source.Patient.Episode.weight &apos;= ""' >
+<true>
+<assign value='obxCounter + 1' property='obxCounter' action='set' />
+<assign value='obxCounter' property='target.{OBX(obxCounter):SetIDOBX}' action='set' />
+<assign value='"ST"' property='target.{OBX(obxCounter):ValueType}' action='set' />
+<assign value='"Weight(lb)"' property='target.{OBX(obxCounter):ObservationIdentifier}' action='set' />
+<assign value='source.Patient.Episode.weight' property='target.{OBX(obxCounter):ObservationValue(1)}' action='set' />
+</true>
+</if>
+</transform>
