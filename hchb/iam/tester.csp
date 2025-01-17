@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+</head>
+<body>
+<br/>IAM_Product_Editor: #($SYSTEM.Security.Check("IAM_Product_Editor"))#
+<br/>IAM_Manager: #($SYSTEM.Security.Check("IAM_Manager"))#
+</body>
+</html>

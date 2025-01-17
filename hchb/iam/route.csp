@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+  <CSP:INCLUDE PAGE="inc/head.csp">
+</head>
+<body>
+	<CSP:INCLUDE PAGE="inc/pagehead.csp">
+  <div class='body'>
+    <div class='title'>
+      <span class='left'><h1 id='h1'>Route</h1></span>
+      <span class='right'>
+      </span>
+    </div>
+    <div id='content'>
+      <div id='form' class='rec loading'>
+        <div class='action' style='visibility:hidden'></div>
+        <div class='line'>
+          <label>Database</label><span id='f_database' class='f f1'>&nbsp;</span>
+        </div>
+        <div class='line'>
+          <label>Server</label><span id='f_server' class='f f4'>&nbsp;</span>
+          <label>Tier</label><span id='f_tier' class='f'>&nbsp;</span>
+          <label>ID</label><span id='f_id' class='f nb'>&nbsp;</span>
+        </div>
+        <div class='line'>
+          <label>OID</label><span id='f_oid' class='f'>&nbsp;</span>
+        </div>
+      </div>
+      <div id='entry' class='entry rec hide'>
+      </div>
+    	<div id='extra'>
+	      <h2>ARVs for Route</h2>
+	      <CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Manager") = "READ,WRITE,USE"'>
+		      <div class='bar'>
+		      	<a id='a_newarv' class='act' href="javascript:void(0)"><span class='check'>&#10010;</span>New ARV</a> 
+		     	</div>
+	     	</CSP:IF>
+				<table id='arvtable' class='a w9 loading'>
+					<thead>
+		        <tr>
+		          <th width='20%'>ARVN</th>
+		          <th width='20%'>Last Update</th>
+		          <th width='60%'>Last Authorization</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+		      </tbody>
+		    </table>
+		  </div>
+    </div>
+  </div>  
+	<CSP:INCLUDE PAGE="inc/js.csp">
+	<script type='text/javascript' src='app/pages/RoutePage.js?#(v)#'></script>
+  <script language="javascript">
+  my.page = RoutePage($('#content'));
+</script>  
+</body>
+</html>

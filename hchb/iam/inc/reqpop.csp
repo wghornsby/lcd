@@ -1,0 +1,32 @@
+  <div class='hide'>
+	  <div id='req_pop'>
+      <div id='rp_entry' class='entry rec'>
+      	<div class='reqbox'>
+	      	<h2 id='rp_title'>&nbsp;</h2>
+	      	<span id='rp_subtitle'>&nbsp;</span>
+	      </div>
+        <div class='line'>
+          <label for='i_status'>Status</label>
+          <select id='i_status' class='i req'><option></option><option value='0'>Not Started</option><option value='1'>In Progress</option><option value='9'>Completed</option></select>
+          <label id='i_status_err' class='err'></label>
+        </div>
+        <div id='rp_score' class='line'>
+          <label for='i_score'>Score</label>
+          <select id='i_score' class='i req'><option></option><option value='1'>1 - Low</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5 - High</option></select>
+          <label id='i_score_err' class='err'></label>
+        </div>
+        <div class='line'>
+          <label for='i_comment'>Documentation</label>
+          <textarea id='i_comment' class='i w7' rows='8'></textarea>
+          <label id='i_comment_err' class='err'></label>
+        </div>
+      </div>
+      <div class="cssload-loader">
+				<div class="cssload-dot"></div>
+				<div class="cssload-dot"></div>
+				<div class="cssload-dot"></div>
+				<div class="cssload-dot"></div>
+				<div class="cssload-dot"></div>
+			</div>
+	  </div>
+	</div>

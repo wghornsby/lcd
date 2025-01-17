@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+  <CSP:INCLUDE PAGE="inc/head.csp">
+</head>
+<body>
+  <CSP:INCLUDE PAGE="inc/pagehead.csp">
+  <div class='body'>
+    <div class='title'>
+      <span class='left'><h1 id='h1'>Customer</h1></span>
+      <span class='right'>
+      </span>
+    </div> 
+    <div id='content'>
+      <div id='form' class='rec loading'>
+        <CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_PRODUCT") = "READ,WRITE,USE"'>
+          <div class='action'><a id='f_edit' class='act' href="#"><span class='check'>&#9998;</span>Edit</a></div>
+        </CSP:IF>
+        <div class='line'>
+          <label>Account No</label><span id='f_acctno' class='f f4'>&nbsp;</span>
+        </div>
+      </div>
+      <div id='entry' class='entry rec hide'>
+        <div class='line'>
+      	  <label for='i_accctno'>Account No</label>
+      	  <input id='i_acctno' class='i req f1' />
+      	  <label id='i_acctno_err' class='err'></label>
+        </div>
+        <div class='actions hide'>
+          <a class='button save' href="javascript:void(0)">&#128190; Save</a>
+          <a class='button cancel' href="javascript:void(0)">Cancel</a>
+        </div>
+      </div>
+      <div id='tabs' class='tabbar loading'>
+        <div class='tabs'>
+          <input id='tab1' type='radio' name='tabs' checked><label for='tab1'>Products</label><input id='tab2' type='radio' name='tabs'><label for='tab2'>History</label><input id='tab3' type='radio' name='tabs'><label for='tab3'><span id='reqwarn' class='hide'>&#9888;</span>Checklist</label>
+        </div>
+        <div id='tabcontents'>
+          <div class='tabcontent'>
+            <table id='table' class='a w100 loading' style='height:10px'>
+              <thead>
+                <tr>
+                  <th width='20%'>Product</th>
+                  <th width='20%'>Feed</th>
+                  <th width='10%'>Configured On</th>
+                  <th width='20%'>Last Update</th>
+                  <th width='30%'>Last Authorization</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <div class='tabcontent hide'>
+            <table id='histtable' class='a w100 tight'>
+              <thead>
+                <tr>
+                  <th class='pl'>Feed: Timestamp</th>
+                  <th>Customer</th>
+                  <th>User</th>
+                  <th>Action</th>
+                  <th>Auth/Comment</th>
+                </tr>
+              </thead>
+              <tbody>
+            </table>          
+          </div>
+          <div class='tabcontent hide'>
+            <table id='reqtable' class='a w100'>
+              <thead>
+                <tr>
+                  <th width='15%'>Category: Requirement</th>
+                  <th width='10%'>Status</th>
+                  <th width='5%'>Score</th>
+                  <th width='60%'>Documentation</th>
+                  <th width='20%'>Last Updated</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+         </div>
+      </div>
+    </div>
+  </div>  
+  <CSP:INCLUDE PAGE="inc/reqpop.csp">
+  <CSP:INCLUDE PAGE="inc/js.csp">
+  <script type='text/javascript' src='app/pages/CustomerPage.js?#(v)#'></script>
+  <script language="javascript">
+  my.page = CustomerPage($('#content'));
+</script>  
+</body>
+</html>

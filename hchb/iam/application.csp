@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+  <CSP:INCLUDE PAGE="inc/head.csp">
+</head>
+<body>
+	<CSP:INCLUDE PAGE="inc/pagehead.csp">
+  <div class='body'>
+    <div class='title'>
+      <span class='left'><h1 id='h1'>Application</h1></span>
+      <span class='right'>
+      </span>
+    </div>
+    <div id='content'>
+      <div id='form' class='rec loading'>
+				<CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Manager") = "READ,WRITE,USE"'>
+  	      <div class='action'><a id='f_edit' class='act' href="javascript:void(0)"><span class='check'>&#9998;</span>Edit</a></div>
+  	    </CSP:IF>
+        <div class='line'>
+          <label>Name</label><span id='f_name' class='f f1'>&nbsp;</span>
+        </div>
+        <div class='line'>
+          <label>Direction</label><span id='f_dir' class='f f2'>&nbsp;</span>
+        </div>
+        <div class='line tm'>
+          <label>ID</label><span id='f_id' class='f nb'>&nbsp;</span>
+          <label class='invisible'>Last Updated</label><span id='f_updated' class='f nb invisible'>&nbsp;</span>
+        </div>
+      </div>
+      <div id='entry' class='entry rec hide'>
+        <div class='line'>
+          <label for='i_name'>Name</label>
+          <input id='i_name' class='i req f1' />
+          <label id='i_name_err' class='err'></label>
+        </div>
+        <div class='line'>
+          <label for='i_dir'>Direction</label>
+          <select id='i_dir' class='i req'><option value=''></option><option value='1'>INBOUND</option><option value='2'>OUTBOUND</option><option value='3'>BOTH</option></select>
+        	<label id='i_dir_err' class='err'></label>
+        </div>
+        <div id='line_id' class='line'>
+        	<label for='i_newid'>ID</label>
+        	<input id='i_newid' class='i req f0' />
+        	<label id='i_newid_err' class='err'></label>
+        </div>
+        <div class='actions hide'>
+        	<a class='button save' href="javascript:void(0)">&#128190; Save</a>
+        	<a class='button cancel' href="javascript:void(0)">Cancel</a>
+        </div>
+      </div>
+    	<div id='extra'>
+	      <h2>ARV List for Application</h2>
+	      <CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Manager") = "READ,WRITE,USE"'>
+		      <div class='bar'>
+		      	<a id='a_newarv' class='act' href="javascript:void(0)"><span class='check'>&#10010;</span>New ARV</a> 
+		     	</div>
+	     	</CSP:IF>
+				<table id='arvtable' class='a w8 loading'>
+					<thead>
+		        <tr>
+		          <th>ARVN</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+		      </tbody>
+		    </table>
+	      <h2>Match List for Application</h2>
+				<table id='matchtable' class='a w9 loading'>
+					<thead>
+		        <tr>
+		          <th>&nbsp;</th>
+		        </tr>
+		      </thead>
+		      <tbody>
+		      </tbody>
+		    </table>
+		  </div>
+    </div>
+  </div>  
+	<CSP:INCLUDE PAGE="inc/js.csp">
+	<script type='text/javascript' src='app/pages/AppPage.js?#(v)#'></script>
+  <script language="javascript">
+  my.page = AppPage($('#content'));
+</script>  
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+  <CSP:INCLUDE PAGE="inc/head.csp">
+</head>
+<body>
+	<CSP:INCLUDE PAGE="inc/pagehead.csp">
+  <div class='body'>
+    <div class='title'>
+      <span class='left'><h1 id='h1'>Node</h1></span>
+      <span class='right'>
+      </span>
+    </div>
+    <div id='content'>
+      <div id='form' class='rec loading'>
+        <div class='action'><a id='f_edit' class='act' href="#"><span class='check'>&#9998;</span>Edit</a></div>
+        <div class='line'>
+          <label>Name</label><span id='f_name' class='f f1'>&nbsp;</span>
+        </div>
+        <div class='line'>
+          <label>Type</label><span id='f_dir' class='f f2'>&nbsp;</span>
+        </div>
+        <div class='line'>
+          <label>Active</label><span id='f_id' class='f'>&nbsp;</span>
+        </div>
+      </div>
+      <div id='entry' class='entry rec hide'>
+        <div class='line'>
+          <label for='i_name'>Name</label>
+          <input id='i_name' class='i req f1' />
+          <label id='i_name_err' class='err'></label>
+        </div>
+        <div class='line'>
+          <label for='i_dir'>Type</label>
+          <select id='i_dir' class='i req'><option value=''></option><option value='1'>INBOUND</option><option value='2'>OUTBOUND</option><option value='3'>BOTH</option></select>
+        	<label id='i_dir_err' class='err'></label>
+        </div>
+        <div class='line'>
+          <label for='i_dir'>Active</label>
+          <select id='i_dir' class='i req'><option value=''></option><option value='1'>INBOUND</option><option value='2'>OUTBOUND</option><option value='3'>BOTH</option></select>
+        	<label id='i_dir_err' class='err'></label>
+        </div>
+        <div class='actions hide'>
+        	<a class='button save' href="#">&#128190; Save</a>
+        	<a class='button cancel' href="#">Cancel</a>
+        </div>
+      </div>
+    	<div id='extra'>
+		  </div>
+    </div>
+  </div>  
+	<CSP:INCLUDE PAGE="inc/js.csp">
+	<script type='text/javascript' src='app/pages/NodePage.js?#(v)#'></script>
+  <script language="javascript">
+  my.start(NodePage);
+</script>  
+</body>
+</html>

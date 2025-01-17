@@ -1,0 +1,17 @@
+	<script type='text/javascript' src='lib/jquery-3.0.0.min.js'></script>
+	<script type='text/javascript' src='lib/jquery.autocomplete.min.js'></script>
+	<script type='text/javascript' src='lib/dialog-polyfill.js'></script>
+	<script type='text/javascript' src='lib/ckeditor/ckeditor.js'></script>
+	<script type='text/javascript' src='lib/lcd-2.2.js?#(v)#'></script>
+	<script type='text/javascript' src='app/env/env.js?#(v)#'></script>
+	<script type='text/javascript' src='app/env/MyEnv.js?#(v)#'></script>
+	<script type='text/javascript' src='app/my.js?#(v)#'></script>
+	<script type='text/javascript' src='app/data.js?#(v)#'></script>
+  <script type='text/javascript' src='app/servers.js?#(v)#'></script>
+	<script type='text/javascript' src='app/ui.js?#(v)#'></script>
+  <script language="javascript">
+  my.manager = '#($SYSTEM.Security.Check("IAM_Manager"))#';
+  my.user = '#(%session.Username)#';
+  my.editor = '#($SYSTEM.Security.Check("IAM_PRODUCT"))#';
+</script>  
+

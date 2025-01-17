@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+  <CSP:INCLUDE PAGE="inc/head.csp">
+</head>
+<body>
+	<CSP:INCLUDE PAGE="inc/pagehead.csp">
+  <div class='body'>
+    <div class='title'>
+      <span class='left'><h1 id='h1'>&nbsp;</h1></span>
+      <span class='right'>
+      </span>
+    </div>
+    <div id='content'>
+      <div id='form' class='rec loading'>
+				<CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Product_Editor") = "READ,WRITE,USE"'>
+  	      <div class='action'><a id='f_edit' class='act' href="javascript:void(0)"><span class='check'>&#9998;</span>Edit</a></div>
+  	    </CSP:IF>
+        <div class='line'>
+          <label>Name</label><span id='f_name' class='f'>&nbsp;</span>
+        </div>
+        <div class='line'>
+          <label>Description</label><span id='f_desc' class='f'>&nbsp;</span>
+        </div>
+        <div class='line'>
+          <label>Level</label><span id='f_entity' class='f'>&nbsp;</span>
+        </div>
+        <div class='line tm'>
+          <label>Category</label><span id='f_ircatid' class='f'>&nbsp;</span>
+        </div>
+        <div class='line'>
+          <label>Scored</label><span id='f_scorecard' class='f'>&nbsp;</span>         
+        </div>
+        <div class='line tm'>
+          <label>Active</label><span id='f_active' class='f'>&nbsp;</span>
+          <label>Last Updated</label><span id='f_updated' class='f nb'>&nbsp;</span>
+        </div>
+      </div>
+      <div id='entry' class='entry rec hide'>
+        <div class='line'>
+          <label for='i_name'>Name</label>
+          <input id='i_name' class='i req f4' />
+          <label id='i_name_err' class='err'></label>
+        </div>
+        <div class='line'>
+          <label for='i_desc'>Description</label>
+          <input id='i_desc' class='i w5' />
+          <label id='i_desc_err' class='err'></label>
+        </div>
+        <div class='line'>
+          <label for='i_entity'>Level</label>
+          <select id='i_entity' class='i req'><option></option><option value='5'>Product</option><option value='6'>Feed</option><option value='4'>Customer</option><option value='3'>Configuration</option></select> 
+          <label id='i_entity_err' class='err'></label>
+        </div>
+        <div class='line tm'>
+          <label for='i_ircatid'>Category</label>
+          <select id='i_ircatid' class='i req'></select> 
+          <label id='i_ircatid_err' class='err'></label>
+          <a id='editcats' class='act ml10' href="javascript:void(0)">&#9998; Edit Categories</a>
+        </div>
+        <div class='line'>
+          <label for='i_scorecard'>Scored</label>
+          <select id='i_scorecard' class='i req'><option></option><option value='0'>No</option><option value='1'>Yes</option></select>
+        	<label id='i_scorecard_err' class='err'></label>
+        </div>
+        <div class='line tm'>
+          <label for='i_active'>Active</label>
+          <select id='i_active' class='i req'><option></option><option value='0'>No</option><option value='1'>Yes</option></select>
+        	<label id='i_active_err' class='err'></label>
+        </div>
+        <div class='actions hide'>
+        	<a class='button save' href="javascript:void(0)">&#128190; Save</a>
+        	<a class='button cancel' href="javascript:void(0)">Cancel</a>
+        </div>
+      </div>
+    	<div id='extra'>
+		  	<table id='reqtable' class='a w100 tight mt20'>
+		  		<thead>
+		  			<tr>
+		  				<th width='30%' id='th-entity'>Entity</th>
+		  				<th width='25%'>Status</th>
+		  				<th width='5%'>Score</th>
+		  				<th width='40%'>Documentation</th> 
+		  			</tr>
+		  		</thead>
+		  		<tbody>
+		  		</tbody>
+		  	</table>
+		  </div>
+    </div>
+  </div>  
+  <div class='hide'>
+	  <div id='reqcats_pop'>
+	  	<div class='bar'>
+				<a id='reqcats_new' class='act' href="javascript:void(0)"><span class='check'>&#10010;</span>New Category</a> 
+			</div>
+			<div class='histbody'>
+				<table id='reqcats_table' class='a w100'>
+					<thead>
+		        <tr>
+		          <th width='25%'>Category</th>
+		          <th width='75%'>Description</th>
+		        	<th></th>
+		        </tr>
+		      	<tr class='edit'>
+		      		<td><input id='i_name' name='Category' class='i req'><label id='i_name_err' class='err'></label></td>
+		      		<td><input id='i_desc' name='Description' class='i'></label></td>
+		      		<td class='actions'><a class='button save' href="javascript:void(0)">&#128190; Save</a><a class='button cancel' href="javascript:void(0)">Cancel</a></td>
+		      	</tr>
+		      </thead>
+		      <tbody>
+		      </tbody>
+		    </table>
+		  </div>
+	  </div>
+	</div>
+	<CSP:INCLUDE PAGE="inc/js.csp">
+	<script type='text/javascript' src='app/pages/ReqPage.js?#(v)#'></script>
+  <script language="javascript">
+  my.page = ReqPage($('#content'));
+</script>  
+</body>
+</html>

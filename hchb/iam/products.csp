@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+  <CSP:INCLUDE PAGE="inc/head.csp">
+</head>
+<body>
+	<CSP:INCLUDE PAGE="inc/pagehead.csp">
+  <div class='body'>
+    <div class='title'>
+      <span class='left'><h1 id='h1'>Products</h1></span>
+      <span class='right'>
+      </span>
+    </div>
+    <div id='content'>
+			<CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Product_Editor") = "READ,WRITE,USE"'>
+	      <div class='bar loading'>
+	        <span class='left'>
+	          <span class='check'>&#10010;</span><a href="product.csp">New Product</a>
+	        </span>
+	        <span id='bar-right' class='right'>
+	          &nbsp;
+	        </span>    
+	      </div>
+    	</CSP:IF>
+      <table id='table' class='a prod w100 loading' style='height:10px'>
+				<thead>
+	        <tr>
+	          <th width="20%">Product</th>
+	          <th width="50%">Description</th>
+	          <th width="30%">Feeds</th>
+	        </tr>
+	      </thead>
+	      <tbody id='tbody' class='hide'>
+	      </tbody>
+	    </table>
+    </div>
+  </div>  
+	<CSP:INCLUDE PAGE="inc/js.csp">
+	<script type='text/javascript' src='app/pages/ProductsPage.js?#(v)#'></script>
+  <script language="javascript">
+  my.page = ProductsPage($('#content'));
+</script>  
+</body>
+</html>

@@ -1,0 +1,10 @@
+<div class='env-dev'>
+<span>
+Logged in as: <b>#(%session.Username)#</b> &bull;
+<a href="applications.csp?CacheLogout=end">Logout</a>
+</span>
+<span>
+Connected to: <b>DBINTSYS110</b> / <b>INTERFACES_DEV</b> &bull; 
+Switch to: <a href="http://qbintsys111:57772/csp/healthshare/iam/applications.csp">QA</a> | <a href="http://pbintsys114a:57772/csp/healthshare/iam/applications.csp">PROD 114A</a> | <a href="http://pbintsys114b:57772/csp/healthshare/iam/applications.csp">PROD 114B</a> | <a href="http://paintsys115a:57772/csp/healthshare/iam/applications.csp">PROD 115A</a> | <a href="http://paintsys115b:57772/csp/healthshare/iam/applications.csp">PROD 115B</a> 
+</span>
+</div>

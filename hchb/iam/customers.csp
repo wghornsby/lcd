@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+  <CSP:INCLUDE PAGE="inc/head.csp">
+</head>
+<body>
+	<CSP:INCLUDE PAGE="inc/pagehead.csp">
+  <div class='body'>
+    <div class='title'>
+      <span class='left'><h1 id='h1'>Customers</h1></span>
+      <span class='right'>
+      </span>
+    </div>
+    <div id='content'>
+      <table id='table' class='a prod w100 loading' style='height:100%'>
+				<thead>
+	        <tr>
+	          <th width="15%">Customer</th>
+	          <th width="85%">Products</th>
+	        </tr>
+	      </thead>
+	      <tbody id='tbody' class='hide'>
+	      </tbody>
+	    </table>
+    </div>
+  </div>  
+	<CSP:INCLUDE PAGE="inc/js.csp">
+	<script type='text/javascript' src='app/pages/CustomersPage.js?#(v)#'></script>
+  <script language="javascript">
+  my.page = CustomersPage($('#content'));
+</script>  
+</body>
+</html>

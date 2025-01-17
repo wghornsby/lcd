@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+  <CSP:INCLUDE PAGE="inc/head.csp">
+</head>
+<body>
+	<CSP:INCLUDE PAGE="inc/pagehead.csp">
+  <div class='body'>
+    <div id='content'>
+    	<div id='entities' class='tabbar loading'>
+    		<div class='tabs'>
+    			<input id='entity1' type='radio' name='tabs' checked><label for='entity1'>Product</label><input id='entity2' type='radio' name='tabs'><label for='entity2'>Feed</label><input id='entity3' type='radio' name='tabs'><label for='entity3'>Customer</label><input id='entity4' type='radio' name='tabs'><label for='entity4'>Config</label>
+    		</div>
+	    	<div class='tabcontent'>
+			    <div class='title'>
+			      <span class='left'><h1 id='h1'>Product Requirements</h1></span>
+			      <span class='right'>
+			      </span>
+			    </div>
+					<CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Product_Editor") = "READ,WRITE,USE"'>
+			      <div class='bar'><span class='check'>&#10010;</span><a href="requirement.csp?eid=5">New Requirement</a></div>
+		    	</CSP:IF>
+		      <table id='prodtable' class='a w100'>
+						<thead>
+			        <tr>
+			          <th width='20%'>Category: Requirement</th>
+			          <th width='5%'>Scored?</th>
+			          <th width='75%'>Description</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			      </tbody>
+			    </table>			    
+			    <h2>Products</h2>
+					<table id='prodetable' class='a grid mtn'>
+				   	<thead><th class='empty'></th></thead>
+				   	<tbody></tbody>
+				  </table>
+	    	</div>
+	    	<div class='tabcontent hide'>
+			    <div class='title'>
+			      <span class='left'><h1 id='h1'>Feed Requirements</h1></span>
+			      <span class='right'>
+			      </span>
+			    </div>
+					<CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Product_Editor") = "READ,WRITE,USE"'>
+			      <div class='bar'><span class='check'>&#10010;</span><a href="requirement.csp?eid=6">New Requirement</a></div>
+		    	</CSP:IF>
+		      <table id='feedtable' class='a w100'>
+						<thead>
+			        <tr>
+			          <th width='20%'>Category: Requirement</th>
+			          <th width='5%'>Scored?</th>
+			          <th width='75%'>Description</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			      </tbody>
+			    </table>    	
+			    <h2>Feeds</h2>
+					<table id='feedetable' class='a grid mtn'>
+				   	<thead><th class='empty'></th></thead>
+				   	<tbody></tbody>
+				  </table>
+	    	</div>
+	    	<div class='tabcontent hide'>
+			    <div class='title'>
+			      <span class='left'><h1 id='h1'>Customer Requirements</h1></span>
+			      <span class='right'>
+			      </span>
+			    </div>
+					<CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Product_Editor") = "READ,WRITE,USE"'>
+			      <div class='bar'><span class='check'>&#10010;</span><a href="requirement.csp?eid=4">New Requirement</a></div>
+		    	</CSP:IF>
+		      <table id='custtable' class='a w100'>
+						<thead>
+			        <tr>
+			          <th width='20%'>Category: Requirement</th>
+			          <th width='5%'>Scored?</th>
+			          <th width='75%'>Description</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			      </tbody>
+			    </table>    	
+			    <h2>Customers</h2>
+					<table id='custetable' class='a grid mtn'>
+				   	<thead><th class='empty'></th></thead>
+				   	<tbody></tbody>
+				  </table>
+	    	</div>
+	    	<div class='tabcontent hide'>
+			    <div class='title'>
+			      <span class='left'><h1 id='h1'>Config Requirements</h1></span>
+			      <span class='right'>
+			      </span>
+			    </div>
+					<CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Product_Editor") = "READ,WRITE,USE"'>
+			      <div class='bar'><span class='check'>&#10010;</span><a href="requirement.csp?eid=3">New Requirement</a></div>
+		    	</CSP:IF>
+		      <table id='arvtable' class='a w100'>
+						<thead>
+			        <tr>
+			          <th width='20%'>Category: Requirement</th>
+			          <th width='5%'>Scored?</th>
+			          <th width='75%'>Description</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			      </tbody>
+			    </table>    	
+			    <h2>Configurations</h2>
+					<table id='arvetable' class='a grid mtn'>
+				   	<thead><th class='empty'></th></thead>
+				   	<tbody></tbody>
+				  </table>
+	    	</div>    		
+    	</div>
+    </div>
+  </div>  
+	<CSP:INCLUDE PAGE="inc/js.csp">
+	<script type='text/javascript' src='app/pages/ReqsPage.js?#(v)#'></script>
+  <script language="javascript">
+  my.page = ReqsPage($('#content'));
+</script>  
+</body>
+</html>

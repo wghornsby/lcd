@@ -228,7 +228,7 @@ class UiBoard extends Ui {
         $td.className = 'c' + tile.color;
       }
       if (! this.aimode && tile.in(tray)) {
-        $td.className += ' pointer';
+        $td.classList.add('pointer');
       }
     })
   }

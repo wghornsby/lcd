@@ -1,0 +1,7 @@
+#[set v = "3.2.1"]#
+<link rel="shortcut icon" href="http://tbintsys113:57772/csp/healthshare/iam/favicon.ico">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<link rel='stylesheet' href='css/arv.css?#(v)#'>
+<link rel='stylesheet' href='css/loading.css?#(v)#'>
+<link rel='stylesheet' href='css/autocomplete.css?3.0'>
+<link rel='stylesheet' href='css/dialog-polyfill.css?3.0'>

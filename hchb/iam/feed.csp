@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IAM2</title>
+  <CSP:INCLUDE PAGE="inc/head.csp">
+</head>
+<body>
+	<CSP:INCLUDE PAGE="inc/pagehead.csp">
+  <div class='body'>
+    <div class='title'>
+      <span class='left'><h1 id='h1'>Feed</h1></span>
+      <span class='right'>
+      </span>
+    </div>
+    <div id='content'>
+      <div id='form' class='rec loading'>
+				<CSP:IF CONDITION='$SYSTEM.Security.Check("IAM_Product_Editor") = "READ,WRITE,USE"'>
+  	      <div class='action'><a id='f_edit' class='act' href="javascript:void(0)"><span class='check'>&#9998;</span>Edit</a></div>
+  	    </CSP:IF>
+        <div class='linearv'>
+          <label>Application</label><span id='f_app' class='f farv'></span><div class='arv' style="visibility:hidden"><span class='arv'>&nbsp;</span></div>
+        </div>
+        <div class='linearv'>
+          <label>Vendor</label><span id='f_vendor' class='f farv'></span><div class='arv' style="visibility:hidden"><span class='arv'>&nbsp;</span></div>
+        </div>
+        <div class='line linearv'>
+          <label>Product</label><span id='f_product' class='f farv'></span>
+          <label>Required?</label><span id='f_req' class='f'>&nbsp;</span>
+          <div class='arv p' style="visibility:hidden"><span class='arv p'>&nbsp;</span></div>
+        </div>
+        <div class='line tm'>
+          <label>Data Flow</label><span id='f_dataflow' class='f f4'>&nbsp;</span>
+        </div>
+        <div class='line'>
+          <label>Platform</label><span id='f_platform' class='f'>&nbsp;</span>         
+        </div>
+        <div class='line hide'>
+        	<label>Total Cost</label><span id='f_totalCost' class='f f0 rj'>&nbsp;</span>
+        	<label>Configuration Cost</label><span id='f_configCost' class='f f0 rj'>&nbsp;</span>
+        </div>
+        <div class='line tm'>
+          <label>Active</label><span id='f_active' class='f'>&nbsp;</span>
+          <label>Last Updated</label><span id='f_updated' class='f nb'>&nbsp;</span>
+        </div>
+      </div>
+      <div id='entry' class='entry rec hide'>
+        <div class='line'>
+          <label for='i_app'>Application</label>
+          <select id='i_aid' class='i req'></select> 
+        	<label id='i_aid_err' class='err'></label>
+        </div>
+        <div class='line'>
+          <label for='i_vid'>Vendor</label>
+          <select id='i_vid' class='i req'></select>
+        	<label id='i_vid_err' class='err'></label>
+        </div>
+        <div class='line'>
+          <label for='i_ipid'>Product</label>
+          <select id='i_ipid' class='i req'></select> 
+        	<label id='i_ipid_err' class='err'></label>
+          <label for='i_req'>Required?</label>
+          <select id='i_req' class='i'><option></option><option value='0'>No</option><option value='1'>Yes</option></select> 
+        </div>
+        <div class='line tm'>
+          <label for='i_idftid'>Data Flow</label>
+          <select id='i_idftid' class='i'></select> 
+          <a id='editdataflows' class='act ml10' href="javascript:void(0)">&#9998; Edit Data Flows</a>
+        </div>
+        <div class='line'>
+          <label for='i_iptid'>Platform</label>
+          <select id='i_iptid' class='i'></select>
+          <span class='sp_namespace'>
+	          <label for='i_iinid'>Namespace</label>
+	          <select id='i_iinid' class='i'></select> 
+	          <a id='editnamespaces' class='act ml10' href="javascript:void(0)">&#9998; Edit Namespaces</a>
+	        </span>
+        </div>        
+        <div class='line hide'>
+          <label for='i_totalCost'>Total Cost</label>
+          <input id='i_totalCost' class='i f0' />
+          <label for='i_configCost'>Configuration Cost</label>
+          <input id='i_configCost' class='i f0' />
+        </div>
+        <div class='line tm'>
+          <label for='i_active'>Active</label>
+          <select id='i_active' class='i req'><option></option><option value='0'>No</option><option value='1'>Yes</option></select>
+        	<label id='i_active_err' class='err'></label>
+        </div>
+        <div class='actions hide'>
+        	<a class='button save' href="javascript:void(0)">&#128190; Save</a>
+        	<a class='button cancel' href="javascript:void(0)">Cancel</a>
+        </div>
+      </div>
+    	<div id='tabs' class='tabbar loading'>
+    		<div class='tabs'>
+    			<input id='tab1' type='radio' name='tabs' checked><label for='tab1'>Customers</label><input id='tab2' type='radio' name='tabs'><label for='tab2'>History</label><input id='tab3' type='radio' name='tabs'><label for='tab3'><span id='reqwarn' class='hide'>&#9888;</span>Checklist</label>
+    		</div>
+    		<div id='tabcontents'>
+		    	<div class='tabcontent'>
+						<table id='arvtable' class='a w100 loading'>
+							<thead>
+				        <tr>
+				          <th width='25%'>Customer</th>
+				          <th width='25%'>Last Update</th>
+				          <th width='50%'>Last Authorization</th>
+				        </tr>
+				      </thead>
+				      <tbody>
+				      </tbody>
+				    </table>
+		    	</div>
+		    	<div class='tabcontent hide'>
+						<table id='histtable' class='a w100 tight'>
+							<thead>
+								<tr>
+									<th class='pl'>Feed: Timestamp</th>
+									<th>Customer</th>
+									<th>User</th>
+									<th>Action</th>
+									<th>Auth/Comment</th>
+								</tr>
+							</thead>
+							<tbody>
+						</table>		    	
+		    	</div>
+		    	<div class='tabcontent hide'>
+						<table id='reqtable' class='a w100'>
+							<thead>
+				        <tr>
+				          <th width='15%'>Category: Requirement</th>
+				          <th width='10%'>Status</th>
+				          <th width='5%'>Score</th>
+				          <th width='60%'>Documentation</th>
+				          <th width='20%'>Last Updated</th>
+				        </tr>
+				      </thead>
+				      <tbody>
+				      </tbody>
+				    </table>
+		    	</div>
+		    </div>
+		  </div>
+    </div>
+  </div>  
+  <div class='hide'>
+	  <div id='dataflows_pop'>
+	  	<div class='bar'>
+				<a id='dataflows_new' class='act' href="javascript:void(0)"><span class='check'>&#10010;</span>New Data Flow</a> 
+			</div>
+			<div class='histbody'>
+				<table id='dataflows_table' class='a w100'>
+					<thead>
+		        <tr>
+		          <th width='25%'>Name</th>
+		          <th width='75%'>Description</th>
+		        	<th></th>
+		        </tr>
+		      	<tr class='edit'>
+		      		<td><input id='i_name' name='Name' class='i req'><label id='i_name_err' class='err'></label></td>
+		      		<td><input id='i_desc' name='Description' class='i'></label></td>
+		      		<td class='actions'><a class='button save' href="javascript:void(0)">&#128190; Save</a><a class='button cancel' href="javascript:void(0)">Cancel</a></td>
+		      	</tr>
+		      </thead>
+		      <tbody>
+		      </tbody>
+		    </table>
+		  </div>
+	  </div>
+	  <div id='namespaces_pop'>
+	  	<div class='bar'>
+				<a id='namespaces_new' class='act' href="javascript:void(0)"><span class='check'>&#10010;</span>New Namespace</a> 
+			</div>
+			<div class='histbody'>
+				<table id='namespaces_table' class='a w100'>
+					<thead>
+		        <tr>
+		          <th width='100%'>Name</th>
+		        	<th></th>
+		        </tr>
+		      	<tr class='edit'>
+		      		<td><input id='i_name' name='Name' class='i req'><label id='i_name_err' class='err'></label></td>
+		      		<td class='actions'><a class='button save' href="javascript:void(0)">&#128190; Save</a><a class='button cancel' href="javascript:void(0)">Cancel</a></td>
+		      	</tr>
+		      </thead>
+		      <tbody>
+		      </tbody>
+		    </table>
+		  </div>
+	  </div>
+	</div>
+	<CSP:INCLUDE PAGE="inc/reqpop.csp">
+	<CSP:INCLUDE PAGE="inc/js.csp">
+	<script type='text/javascript' src='app/pages/FeedPage.js?#(v)#'></script>
+  <script language="javascript">
+  my.page = FeedPage($('#content'));
+</script>  
+</body>
+</html>

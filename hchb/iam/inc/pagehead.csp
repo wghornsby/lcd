@@ -1,0 +1,17 @@
+<div id='divhead' class='head'>
+  <CSP:INCLUDE PAGE="../app/env/envbar.csp">
+  <span class='left'>
+    <h1><span>IAM</span> : <span>i</span>nterop <span>a</span>pplication <span>m</span>anager v<span>3</span></h1>
+    <div class='nav'><a href="products.csp">products</a> <span>&bull;</span> <a href="applications.csp">applications</a> <span>&bull;</span> <a href="routes.csp">routes</a> <span>&bull;</span> <a href="vendors.csp">vendors</a> <span>&bull;</span> <a href="nodes.csp">nodes</a> <span>&bull;</span> <a href="requirements.csp">requirements</a></div>
+  </span>
+  <span class='right'>
+    <span class='search'><span id='smag'>&#128270;&#xFE0E;</span><input id='pagesearch' type='textbox' value='search for...'/></span>
+  </span>
+</div>
+<div class="cssload-loader">
+	<div class="cssload-dot"></div>
+	<div class="cssload-dot"></div>
+	<div class="cssload-dot"></div>
+	<div class="cssload-dot"></div>
+	<div class="cssload-dot"></div>
+</div>

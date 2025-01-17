@@ -1,0 +1,21 @@
+<html>
+<head>
+  <script type='text/javascript' src='lib/lcd-simple.js'></script>
+  <script type='text/javascript' src='wordfind.js'></script>
+</head>
+<body>
+</body>
+<script>
+var board = new WF.Board(12, 12);
+log(board.toString());
+let words = WF.Words.fromString('TIGER,ELEPHANT,ZEBRA,ANTEATER,CROCODILE,BAT,RHINOCEROS,GIRAFFE,JACKAL');
+log(words.toString());
+words.shuffle();
+log(words.toString());
+board.load(words);
+log(board.toString());
+log(`total crossings: ${board.crossings()}`);
+board.fill();
+log(board.toString());
+</script>
+</html>
